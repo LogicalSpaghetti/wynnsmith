@@ -9,7 +9,7 @@ const outputB = document.querySelector(`.output--B`);
 
 const data = document.querySelector(".data");
 
-const sound = new Audio("sounds/ding.wav");
+const sound = new Audio("sounds/mythic_old.ogg");
 
 //JSONs
 logData();
@@ -36,6 +36,7 @@ testButton.addEventListener("click", function () {
 window.addEventListener("load", function () {
 
   inputA.addEventListener("input", function () {
+    // if it's 
     setOutput();
   });
 });
