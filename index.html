@@ -8,9 +8,20 @@
         <h1>Wynnbuilder</h1>
         <p><button class="btn btn--test">Button that plays a sound!</button></p>
         <p><button class="btn btn--refresh">Button that refreshes!</button></p>
-        <p><input class="input input--A" type="text" placeholder="Helmet" /></p>
+        <p>
+            <input class="input input--helmet" type="text" placeholder="Helmet" data-slot="helmet" />
+            <input class="input input--ring input--ring1" type="text" placeholder="Ring 1" data-slot="ring" /><br />
+            <input class="input input--chestplate" type="text" placeholder="Chestplate" data-slot="chestplate" />
+            <input class="input input--ring input--ring2" type="text" placeholder="Ring 2" data-slot="ring" /><br />
+            <input class="input input--leggings" type="text" placeholder="Leggings" data-slot="leggings" />
+            <input class="input input--bracelet" type="text" placeholder="Bracelet" data-slot="bracelet" /><br />
+            <input class="input input--boots" type="text" placeholder="Boots" data-slot="boots" />
+            <input class="input input--necklace" type="text" placeholder="Neckalce" data-slot="necklace" /><br /><br />
+            <input class="input input--weapon" type="text" placeholder="Weapon" data-slot="weapons" />
+        </p>
 
         <pre><div class="output output--A"></div></pre>
+        <pre><div class="output output--B"></div></pre>
 
         <!-- all item data is saved here in JSON -->
         <data class="data--helmet"></data>
@@ -25,6 +36,7 @@
         <data class="data--wand"></data>
         <data class="data--bow"></data>
         <data class="data--dagger"></data>
+        <data class="data--weapons"></data>
 
         <script src="script.js"></script>
     </body>
