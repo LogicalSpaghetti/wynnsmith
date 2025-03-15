@@ -17,18 +17,18 @@ const item_types = [
     "weapons",
 ];
 
-const setup_details = document.querySelector(`.setup_details`);
+const output = document.querySelector(`.output--A`);
 
-
+const allItemCatas = {};
 
 logData();
 async function logData() {
+    output.textContent = 'setting up...';
     for (let i = 0; i < item_types.length; i++) {
-        const data = document.querySelector(".data--" + item_types[i]);
-        data.value = JSON.stringify(await fetchData(item_types[i]));
+        allItemCatas[item_types[i]] = await fetchData(item_types[i]);
     }
 
-    setup_details.textContent = "setup complete, press refresh or modify an entry to see stats";
+    addAllItemData();
 }
 
 async function fetchData(file) {

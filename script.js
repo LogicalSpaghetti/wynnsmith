@@ -5,11 +5,6 @@ const testButton = document.querySelector(`.btn--test`);
 const refreshButton = document.querySelector(`.btn--refresh`);
 const inputHelmet = document.querySelector(`.input--helmet`);
 const inputRings = document.querySelectorAll(`.input--ring`);
-const output = document.querySelector(`.output--A`);
-
-const data = document.querySelector(".data");
-
-const setupDetails = document.querySelector(`.setup_details`);
 
 const inputs = [
     document.querySelector(`.input--helmet`),
@@ -29,38 +24,58 @@ testButton.addEventListener("click", function () {
 });
 
 refreshButton.addEventListener("click", function () {
-    addAllItemData();
+    const combinedStats = addAllItemData();
+    //const processedStats = createDisplayStats(combinedStats);
 });
 
 const addAllItemData = function () {
-    const combined = Object();
-    addBasePlayerStats(combined);
-    // loop through each input, adding each id to the combined
+    const groupedStats = {}
+    
+    addBasePlayerStats(groupedStats);
+
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
-        addItemToCombined(input, combined);
+        addItemToCombined(input, groupedStats);
     }
 
-    output.textContent = JSON.stringify(combined);
-    setupDetails.textContent = "";
+    // this stat is incorrectly listed on one item in the API, and should be ignored
+    delete groupedStats['mainAttackFireDamage']
+
+    combineStats(groupedStats);
+
+    output.textContent = formatCombined(groupedStats);
+
+    return groupedStats;
 };
 
-const addBasePlayerStats = function (combined) {
-    combined["baseHealth"] = 535;
+function formatCombined(groupedStats) {
+    var combinedString = 'Build statistics:\n';
+    const keys = Object.keys(groupedStats);
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        combinedString += key + ': ' + groupedStats[key] + '\n';
+    }
+    return combinedString;
+}
+
+const addBasePlayerStats = function (groupedStats) {
+    groupedStats["sumHealth"] = 535;
 };
 
-const addItemToCombined = function (input, combined) {
-    const itemsString = document.querySelector(`.data--` + input.dataset["slot"]).value;
-    if (itemsString === undefined) return "itemString is undefined";
+const addItemToCombined = function (input, groupedStats) {
+    if (allItemCatas === undefined) return;
+    const itemCategory = allItemCatas[input.dataset["slot"]];
 
-    const item = JSON.parse(itemsString)[input.value];
-    if (item === undefined) return "item is undefined";
+    if (itemCategory === undefined) return;
+    const item = itemCategory[input.value];
 
-    addCategory(combined, item, "base");
-    addCategory(combined, item, "identifications");
+    if (item === undefined) return;
+
+    addCategory(groupedStats, item, "base");
+    addCategory(groupedStats, item, "identifications");
 };
 
-const addCategory = function (combined, item, subObjectName) {
+const addCategory = function (groupedStats, item, subObjectName) {
     if (item[subObjectName] === undefined) return;
     const subObject = Object.entries(item[subObjectName]);
 
@@ -72,53 +87,11 @@ const addCategory = function (combined, item, subObjectName) {
             result = result["max"];
         }
 
-        if (combined[id[0]] === undefined) {
-            combined[id[0]] = result;
-        } else {
-            combined[id[0]] += result;
-        }
+        groupedStats[id[0]] = groupedStats[id[0]] === undefined ? result : groupedStats[id[0]] + result;
     }
-};
-
-const addItemFromSlot = function (input) {
-    const inputString = document.querySelector(`.data--` + input.dataset["slot"]).value;
-    if (inputString === undefined) return "";
-
-    const item = JSON.parse(inputString)[input.value];
-    if (item === undefined) return "";
-    if (item["base"] === undefined) return "";
-    const base = Object.entries(item["base"]);
-
-    var strungTogether = "";
-    for (let i = 0; i < base.length; i++) {
-        const id = base[i];
-
-        var result = id[1];
-        if (!Number.isInteger(id[1])) {
-            result = result["max"];
-        }
-
-        strungTogether += id[0] + ": " + JSON.stringify(result) + "\n";
-    }
-
-    const ids = Object.entries(item["identifications"]);
-
-    for (let i = 0; i < ids.length; i++) {
-        const id = ids[i];
-
-        var result = id[1];
-        if (!Number.isInteger(id[1])) {
-            result = result["max"];
-        }
-
-        strungTogether += id[0] + ": " + JSON.stringify(result) + "\n";
-    }
-
-    return strungTogether;
 };
 
 // document.addEventListener() can be used to catch inputs on a global level
-// window.addEventListener() can be used to catch when the page fully loads, or wants to unload
 
 window.addEventListener("load", function () {
     inputs.forEach((input) => {
