@@ -2,10 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
+        <link rel="stylesheet" href="styles.css">
         <title>Wynnbuilder: LogicalSpaghetti</title>
     </head>
     <body>
         <h1>Wynnbuilder</h1>
+
         <p><button class="btn btn--test">Button that plays a sound!</button></p>
         <p><button class="btn btn--refresh">Button that refreshes!</button></p>
         <p>
@@ -21,7 +23,8 @@
         </p>
 
         <pre><div class="output output--A"></div></pre>
-        <pre><div class="output output--B"></div></pre>
+
+        <p class="setup_details">setting up</p>
 
         <!-- all item data is saved here in JSON -->
         <data class="data--helmet"></data>
@@ -38,6 +41,7 @@
         <data class="data--dagger"></data>
         <data class="data--weapons"></data>
 
+        <script src="gen_data.js"></script>
         <script src="script.js"></script>
     </body>
 </html>

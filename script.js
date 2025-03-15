@@ -5,10 +5,11 @@ const testButton = document.querySelector(`.btn--test`);
 const refreshButton = document.querySelector(`.btn--refresh`);
 const inputHelmet = document.querySelector(`.input--helmet`);
 const inputRings = document.querySelectorAll(`.input--ring`);
-const outputA = document.querySelector(`.output--A`);
-const outputB = document.querySelector(`.output--B`);
+const output = document.querySelector(`.output--A`);
 
 const data = document.querySelector(".data");
+
+const setupDetails = document.querySelector(`.setup_details`);
 
 const inputs = [
     document.querySelector(`.input--helmet`),
@@ -22,23 +23,6 @@ const inputs = [
     document.querySelector(`.input--weapon`),
 ];
 
-const item_types = [
-    "helmet",
-    "chestplate",
-    "leggings",
-    "boots",
-    "ring",
-    "ring",
-    "bracelet",
-    "necklace",
-    "relik",
-    "spear",
-    "wand",
-    "bow",
-    "dagger",
-    "weapons",
-];
-
 const sound = new Audio("sounds/mythic_old.ogg");
 testButton.addEventListener("click", function () {
     sound.play();
@@ -49,31 +33,34 @@ refreshButton.addEventListener("click", function () {
 });
 
 const addAllItemData = function () {
-
     const combined = Object();
+    addBasePlayerStats(combined);
     // loop through each input, adding each id to the combined
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
         addItemToCombined(input, combined);
-        console.log('inputs.length = ' + inputs.length + ', combined = ' + JSON.stringify(combined))
     }
 
-    outputB.textContent = JSON.stringify(combined)
+    output.textContent = JSON.stringify(combined);
+    setupDetails.textContent = "";
+};
+
+const addBasePlayerStats = function (combined) {
+    combined["baseHealth"] = 535;
 };
 
 const addItemToCombined = function (input, combined) {
-    console.log('start addItemToCombined');
     const itemsString = document.querySelector(`.data--` + input.dataset["slot"]).value;
-    if (itemsString === undefined) return 'itemString is undefined';
+    if (itemsString === undefined) return "itemString is undefined";
 
     const item = JSON.parse(itemsString)[input.value];
-    if (item === undefined) return 'item is undefined';
+    if (item === undefined) return "item is undefined";
 
-    addCategory(combined, item, 'base');
-    addCategory(combined, item, 'identifications');
-}
+    addCategory(combined, item, "base");
+    addCategory(combined, item, "identifications");
+};
 
-const addCategory = function(combined, item, subObjectName) {
+const addCategory = function (combined, item, subObjectName) {
     if (item[subObjectName] === undefined) return;
     const subObject = Object.entries(item[subObjectName]);
 
@@ -91,17 +78,15 @@ const addCategory = function(combined, item, subObjectName) {
             combined[id[0]] += result;
         }
     }
-}
-
-
+};
 
 const addItemFromSlot = function (input) {
     const inputString = document.querySelector(`.data--` + input.dataset["slot"]).value;
-    if (inputString === undefined) return '';
+    if (inputString === undefined) return "";
 
     const item = JSON.parse(inputString)[input.value];
-    if (item === undefined) return '';
-    if (item["base"] === undefined) return '';
+    if (item === undefined) return "";
+    if (item["base"] === undefined) return "";
     const base = Object.entries(item["base"]);
 
     var strungTogether = "";
@@ -136,36 +121,9 @@ const addItemFromSlot = function (input) {
 // window.addEventListener() can be used to catch when the page fully loads, or wants to unload
 
 window.addEventListener("load", function () {
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
         input.addEventListener("input", function () {
             addAllItemData(input);
         });
     });
 });
-
-
-// log the JSONs into HTML
-logData();
-async function logData() {
-    for (let i = 0; i < item_types.length; i++) {
-        const data = document.querySelector(".data--" + item_types[i]);
-        data.value = JSON.stringify(await fetchData(item_types[i]));
-    }
-    console.log('setup complete')
-}
-
-async function fetchData(file) {
-    try {
-        const response = await fetch(`database/${file}.json`);
-
-        if (!response.ok) {
-            throw new Error("Could not fetch resource: " + `database/${file}.json`);
-        }
-
-        //outputA.textContent = JSON.stringify(await response.json());
-        return response.json();
-    } catch (error) {
-        console.error(error + " " + file);
-    }
-}
-
