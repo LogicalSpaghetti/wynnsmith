@@ -32,7 +32,6 @@ function uZ(value) {
     return value === undefined ? 0 : value;
 }
 
-
 function getMultiplierForSkillPoints(sp) {
     return ((1 - Math.pow(0.9908, sp + 1)) / 0.0092 - 1) / 100;
 }

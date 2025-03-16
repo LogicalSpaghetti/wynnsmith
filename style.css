@@ -1,0 +1,14 @@
+body { 
+    color: #fff; /* Replace with your desired color */ 
+    background-color: #000;
+} 
+/* h1 {
+    color: green;
+  } */
+.inputs {
+    width: 334px;
+}
+.output--A {
+    width: 250px;
+    translate: 360px -200px;
+}

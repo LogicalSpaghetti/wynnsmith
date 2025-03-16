@@ -2,49 +2,39 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="style.css" />
         <title>Wynnbuilder: LogicalSpaghetti</title>
     </head>
     <body>
-        <h1>Wynnbuilder</h1>
-
-        <p><button class="btn btn--test">Button that plays a sound!</button></p>
-        <p><button class="btn btn--refresh">Button that refreshes!</button></p>
+        <h1>LogicalSpaghetti's Wynnbuilder</h1>
         <p>
+            <button class="btn btn--test">Button that plays a sound!</button>
+            <!-- <button class="btn btn--refresh">Button that refreshes!</button> -->
+        </p>
+        <p>
+            <div class = 'inputs'>
             <input class="input input--helmet" type="text" placeholder="Helmet" data-slot="helmet" />
-            <input class="input input--ring input--ring1" type="text" placeholder="Ring 1" data-slot="ring" /><br />
+            <input class="input input--ring input--ring0" type="text" placeholder="Ring 1" data-slot="ring" /><br />
             <input class="input input--chestplate" type="text" placeholder="Chestplate" data-slot="chestplate" />
-            <input class="input input--ring input--ring2" type="text" placeholder="Ring 2" data-slot="ring" /><br />
+            <input class="input input--ring input--ring1" type="text" placeholder="Ring 2" data-slot="ring" /><br />
             <input class="input input--leggings" type="text" placeholder="Leggings" data-slot="leggings" />
             <input class="input input--bracelet" type="text" placeholder="Bracelet" data-slot="bracelet" /><br />
             <input class="input input--boots" type="text" placeholder="Boots" data-slot="boots" />
             <input class="input input--necklace" type="text" placeholder="Neckalce" data-slot="necklace" /><br /><br />
-            <input class="input input--weapon" type="text" placeholder="Weapon" data-slot="weapons" />
+            <input class="input input--weapon" type="text" placeholder="Weapon" data-slot="weapon" />
+        </div>
         </p>
+
+        <p><button class="btn btn--short">Copy short</button> <button class="btn btn--long">Copy long</button></p>
 
         <pre><div class="output output--A"></div></pre>
 
-        <!-- all item data is saved here in JSON -->
-        <data class="data--helmet"></data>
-        <data class="data--chestplate"></data>
-        <data class="data--leggings"></data>
-        <data class="data--boots"></data>
-        <data class="data--ring"></data>
-        <data class="data--bracelet"></data>
-        <data class="data--necklace"></data>
-        <data class="data--relik"></data>
-        <data class="data--spear"></data>
-        <data class="data--wand"></data>
-        <data class="data--bow"></data>
-        <data class="data--dagger"></data>
-        <data class="data--weapons"></data>
-
-        <script src="gen_data.js"></script>
+        <script src="groupedItems.js"></script>
         <script src="script.js"></script>
         <script src="stat_bundle.js"></script>
 
         <!-- https://cdn.wynncraft.com/nextgen/abilities/2.1/nodes/abilityTree.nodeArcher.png -->
-         <!-- https://api.wynncraft.com/v3/ability/map/shaman -->
-          <!-- https://api.wynncraft.com/v3/item/database?fullResult -->
+        <!-- https://api.wynncraft.com/v3/ability/map/shaman -->
+        <!-- https://api.wynncraft.com/v3/item/database?fullResult -->
     </body>
 </html>
