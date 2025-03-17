@@ -1,14 +1,70 @@
-body { 
-    color: #fff; /* Replace with your desired color */ 
+body {
+    color: #fff; /* Replace with your desired color */
     background-color: #000;
-} 
-/* h1 {
-    color: green;
-  } */
+}
 .inputs {
     width: 334px;
 }
 .output--A {
+    position: absolute;
+    translate: 360px -180px;
     width: 250px;
-    translate: 360px -200px;
+}
+
+.abilityTreeTop {
+    background-image: url(img/background/tree_top.png);
+    width: 203px;
+    height: 22px;
+    background-size: 100% auto;
+}
+.abilityTreeLeft {
+    display: inline-block;
+    width: 20px;
+    height: 766px;
+    background-image: url(img/background/tree_left.png); 
+    background-repeat: repeat-y; 
+    /* background-size: 100% auto; */
+}
+.abilityTreeInside {
+    display: inline-block;
+    width: 162px;
+    height: 766px;
+    background-image: url(img/background/tree_scroll.png); 
+    background-repeat: repeat-y; 
+    background-size: 100% auto;
+    display: inline-block;
+}
+.abilityTreeRight {
+    display: inline-block;
+    width: 21px;
+    height: 766px;
+    background-image: url(img/background/tree_right.png); 
+    background-repeat: repeat-y; 
+    /* background-size: 100% auto; */
+}
+.abilityTreeBase {
+    background-image: url(img/background/tree_base.png);
+    width: 203px;
+    height: 22px;
+    background-size: 100% auto; 
+    transform: translate(0px, -4px);
+}
+
+.abilityTree {
+    width: 162px;
+    height: 756px;
+}
+
+.baller {
+    height: 14px;
+    width: 14px;
+
+    background-size: 100%;
+    scale: 128.571%;
+}
+
+.aTreeSection {
+    position: absolute;
+    translate: 550px -310px;
+    scale: 80%;
 }
