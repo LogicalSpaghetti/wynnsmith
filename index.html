@@ -6,13 +6,7 @@
         <title>Wynnbuilder: LogicalSpaghetti</title>
     </head>
     <body>
-        <h1>LogicalSpaghetti's Wynnbuilder</h1>
-        <p>
-            <button class="btn btn--test">Button that plays a sound!</button>
-            <!-- <button class="btn btn--refresh">Button that refreshes!</button> -->
-        </p>
-        <p>
-            <div class = 'inputs'>
+        <div class="inputs">
             <input class="input input--helmet" type="text" placeholder="Helmet" data-slot="helmet" />
             <input class="input input--ring input--ring0" type="text" placeholder="Ring 1" data-slot="ring" /><br />
             <input class="input input--chestplate" type="text" placeholder="Chestplate" data-slot="chestplate" />
@@ -23,18 +17,34 @@
             <input class="input input--necklace" type="text" placeholder="Neckalce" data-slot="necklace" /><br /><br />
             <input class="input input--weapon" type="text" placeholder="Weapon" data-slot="weapon" />
         </div>
+
+        <p>
+            <button class="btn btn--short" data-default="Copy Short">Copy Short</button>
+            <button class="btn btn--long" data-default="Copy Long">Copy Long</button>
         </p>
 
-        <p><button class="btn btn--short">Copy short</button> <button class="btn btn--long">Copy long</button></p>
+        <pre>
+            <div class="output output--A"></div>
+        </pre>
 
-        <pre><div class="output output--A"></div></pre>
+        <section class="aTreeSection">
+            <div class="abilityTreeTop"></div>
+            <div class="abilityTreeLeft"></div><div class="abilityTreeInside">
+                <table class="abilityTree" cellpadding=“0” cellspacing=“0” frame="void"></table>
+            </div><div class="abilityTreeRight"></div>
+            <div class="abilityTreeBase"></div>
+        </section>
+
+        <button class="btn btn--test">Button that plays a sound!</button>
 
         <script src="groupedItems.js"></script>
+        <script src="classTrees.js"></script>
+
         <script src="script.js"></script>
         <script src="stat_bundle.js"></script>
-
-        <!-- https://cdn.wynncraft.com/nextgen/abilities/2.1/nodes/abilityTree.nodeArcher.png -->
-        <!-- https://api.wynncraft.com/v3/ability/map/shaman -->
-        <!-- https://api.wynncraft.com/v3/item/database?fullResult -->
     </body>
 </html>
+
+<!-- https://cdn.wynncraft.com/nextgen/abilities/2.1/nodes/abilityTree.nodeArcher.png -->
+<!-- https://api.wynncraft.com/v3/ability/map/shaman -->
+<!-- https://api.wynncraft.com/v3/item/database?fullResult -->

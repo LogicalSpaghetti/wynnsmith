@@ -2,11 +2,14 @@
 
 // elements
 const testButton = document.querySelector(`.btn--test`);
-const refreshButton = document.querySelector(`.btn--refresh`);
+
 const copyShortButton = document.querySelector(`.btn--short`);
 const copyLongButton = document.querySelector(`.btn--long`);
 
 const output = document.querySelector(`.output--A`);
+
+var currentClass = "";
+const classes = ["warrior", "shaman", "mage", "assassin", "archer"];
 
 const inputs = [
     document.querySelector(`.input--helmet`),
@@ -26,11 +29,6 @@ const sound = new Audio("sounds/mythic_old.ogg");
 testButton.addEventListener("click", function () {
     sound.play();
 });
-
-if (refreshButton !== null)
-    refreshButton.addEventListener("click", function () {
-        const combinedStats = addAllItemData();
-    });
 
 copyShortButton.addEventListener("click", function () {
     navigator.clipboard.writeText(getBuildLink(false));
@@ -58,6 +56,10 @@ function getBuildLink(long) {
 }
 
 const addAllItemData = function () {
+    // resets the buttons if they were clicked
+    copyLongButton.textContent = copyLongButton.dataset["default"];
+    copyShortButton.textContent = copyShortButton.dataset["default"];
+
     const groupedStats = {};
 
     addBasePlayerStats(groupedStats);
@@ -125,20 +127,21 @@ const addCategory = function (groupedStats, item, subObjectName) {
 
 // document.addEventListener() can be used to catch inputs on a global level
 
+// called when the page finishes loading
 window.addEventListener("load", function () {
-    inputs.forEach((input) => {
-        input.addEventListener("input", function () {
-            addAllItemData(input);
-        });
-    });
+    addInputEventListeners();
 
-    // load the build from the link
+    loadBuildFromLink();
+
+    refreshOutputs();
+});
+
+function loadBuildFromLink() {
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
         const itemType = input.dataset["slot"];
         const inputParam = searchParams.get(itemType);
         const inputParams = searchParams.getAll(itemType);
-        console.log(inputParam);
         if (inputParam === undefined || inputParam === null) continue;
 
         const slotContent =
@@ -150,6 +153,133 @@ window.addEventListener("load", function () {
 
         input.value = slotContent.replaceAll("_", " ");
     }
+}
 
+function refreshOutputs() {
     addAllItemData();
-});
+    setUpAbilityTree();
+}
+
+function setUpAbilityTree() {
+    const previousClass = currentClass;
+    const weapon = getItemByInput(document.querySelector(`.input--weapon`));
+    if (weapon === undefined) return;
+    currentClass = weapon.requirements.classRequirement;
+    if (previousClass === currentClass) return;
+
+    const treeMap = classAbilities[currentClass]["map"]; // array
+    document.querySelector(".abilityTree").innerHTML = mapHTML(treeMap);
+
+    const treeNodes = classAbilities[currentClass]["tree"];
+    const treeAspects = classAbilities[currentClass]["aspects"];
+
+    const abilityTreeTable = document.querySelector(`.abilityTree`);
+
+    // create things for the map
+    var table = "";
+    const emptyCell = "<td></td>";
+
+    var currentPosition = 0;
+}
+
+function mapHTML(treeMap) {
+    console.log("we made it this far!");
+    var x = 0;
+    var y = 1;
+
+    // sort treeMap
+    const nodeIndexes = [];
+    for (let i = 0; i < treeMap.length; i++) {
+        const node = treeMap[i];
+        const coords = node["coordinates"];
+        nodeIndexes.push(coords["x"] + (coords["y"] - 1) * 9);
+    }
+    console.log(nodeIndexes);
+    const newTreeMap = [];
+    for (let i = 0; i < treeMap.length; i++) {
+        const node = treeMap[i];
+        if (node === undefined) continue;
+        const index = nodeIndexes[i];
+
+        while (newTreeMap.length < index) {
+            newTreeMap.push(undefined);
+        }
+        newTreeMap[index - 1] = node;
+    }
+    treeMap = newTreeMap;
+
+    var tablePieces = [];
+    for (let i = 0; i < treeMap.length; i++) {
+        const node = treeMap[i];
+        if (node === undefined) {
+            tablePieces.push(new TablePiece(i + 1, "", undefined));
+            continue;
+        }
+        const coords = node["coordinates"];
+        var index = coords.x + (coords.y - 1) * 9;
+
+        const temp = Object.toString(node);
+
+        tablePieces.push(new TablePiece(index, '<div class="filledNodeDiv"></div>', node));
+
+        //console.log('meta.id: ' + node.meta['id'] + ', family: ' + node.family, ', index: ' + index + ', coords: ' + coords);
+    }
+
+    var htmlOutput = "";
+    for (let i = 0; i < tablePieces.length; i++) {
+        htmlOutput += tablePieces[i].getHTML();
+        //console.log(tablePieces[i].index)
+    }
+
+    return htmlOutput;
+}
+
+class TablePiece {
+    constructor(index, content, node) {
+        this.index = index;
+        this.content = content;
+        this.node = node;
+        // console.log('pice created:' + index)
+    }
+
+    getHTML() {
+        if (this.node === undefined) return this.getEmpty();
+        return this.htmlStart() + this.encodeNodeData() + ">" + this.content + this.htmlEnd();
+    }
+
+    encodeNodeData() {
+        const nodeName = (
+            this.node.meta.icon.format === undefined ? this.node.meta.icon : this.node.meta.icon.value.name
+        ).replaceAll("abilityTree.", "");
+
+        var attrs = "";
+        attrs += ' class="baller" data-type="' + this.node.type + '"';
+        attrs += ' data-page="' + this.node.meta.page + '"';
+        attrs += ' data-id="' + this.node.meta.id + '"';
+        attrs += ' data-name="' + nodeName + '"';
+        attrs += 'style="background-image: url(img/abilities/' + this.node.type + "/" + nodeName + '.png)"';
+
+        return attrs;
+    }
+
+    getEmpty() {
+        return this.htmlStart() + ">" + this.content + this.htmlEnd();
+    }
+
+    htmlStart() {
+        return (this.index % 9 === 1 ? "<tr>" : "") + "<td";
+    }
+
+    htmlEnd() {
+        return "</td>" + (this.index % 9 === 0 ? "</tr>" : "");
+    }
+}
+
+// adds eventListeners to all inputs, such that when they're modified, it updates the build stats
+function addInputEventListeners() {
+    inputs.forEach((input) => {
+        input.addEventListener("input", function () {
+            refreshOutputs();
+        });
+    });
+}
