@@ -10,8 +10,6 @@ span {
 }
 
 .output--A {
-    font-family: consolas, monospace, "Lucida Console", "Courier New";
-    font-size: 12px;
     white-space: pre-line;
 }
 
@@ -32,19 +30,30 @@ span {
     width: 18px;
     height: 18px;
     border: 1px solid #121212;
-    
-}
-
-.display {
-    height: 100px;
     transition: all 0.5s ease;
 }
 
-.collapse {
-    height: 0px;
+.rotate {
+    transform: rotate(90deg);
 }
 
-.toggle:hover, .input:hover {
+.display {
+    transition: all 0.5s ease;
+    height: 0px;
+    border: 1px solid #777;
+    white-space: pre-line;
+    overflow: hidden;
+    padding: 4px;
+}
+
+.collapse {
+    height: 0px !important;
+    border: 0px;
+    padding: 0px;
+}
+
+.toggle:hover,
+.input:hover {
     border: 1px solid #444;
     background-color: #383838;
 }

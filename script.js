@@ -29,43 +29,16 @@ testButton.addEventListener("click", function () {
     sound.play();
 });
 
-const copyShortButton = document.querySelector(`.btn--short`);
-const copyLongButton = document.querySelector(`.btn--long`);
-
-copyShortButton.addEventListener("click", function () {
-    navigator.clipboard.writeText(getBuildLink(false));
-    copyShortButton.textContent = "Build copied!";
-});
-
-copyLongButton.addEventListener("click", function () {
-    navigator.clipboard.writeText(getBuildLink(true));
-    copyLongButton.textContent = "Build copied!";
-});
-
-function getBuildLink(long) {
-    console.log(window.location.pathname);
-    var text = document.URL.replace("index.html", "") + "?";
-    var appendedText = "";
-    for (let i = 0; i < inputs.length; i++) {
-        const input = inputs[i];
-
-        const item = getItemByInput(input);
-        if (item === undefined) continue;
-        if (text.charAt(text.length - 1) !== "?") text += "&";
-        text += input.dataset["slot"] + "=" + input.value.replaceAll(" ", "_");
-        if (long) appendedText += "\n> " + input.value;
-    }
-    return text + appendedText + "\n";
-}
-
 const displayToggles = document.querySelectorAll(".toggle");
-console.log(displayToggles)
 displayToggles.forEach((toggle) => {
     toggle.addEventListener("click", function () {
-        toggle.src = toggle.src.endsWith("open.png")
-            ? toggle.src.replace("open", "closed")
-            : toggle.src.replace("closed", "open");
-        console.log(toggle.dataset.slot)
+        const display = document.querySelector('.display--' + toggle.dataset.slot);
+        const fontHeight = parseInt(window.getComputedStyle(display, null).getPropertyValue('font-size'));
+        const itemData = display.textContent;
+        const height = ((itemData.split("\n").length - 1) + 3) * fontHeight;
+        display.style = 'height: ' + height + 'px;';
+
+        toggle.classList.toggle('rotate')
         document.querySelector('.display--' + toggle.dataset.slot).classList.toggle('collapse')
     });
 });
@@ -91,13 +64,13 @@ const addAllItemData = function () {
 
     combineStats(groupedStats);
 
-    output.textContent = formatCombined(groupedStats);
+    output.textContent = formatCombined("Build statistics:\n", groupedStats);
 
     return groupedStats;
 };
 
-function formatCombined(groupedStats) {
-    var combinedString = "Build statistics:\n";
+function formatCombined(message, groupedStats) {
+    var combinedString = message;
     const keys = Object.keys(groupedStats);
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -119,10 +92,9 @@ const addItemToCombined = function (input, groupedStats) {
 };
 
 function getItemByInput(input) {
-    if (itemGroups === undefined) return console.log("itemGroups is undefined");
-    const itemCategory = itemGroups[input.dataset["slot"]];
+    const itemCategory = itemGroups[input.dataset["slot"].replace('0','').replace('1','')];
 
-    if (itemCategory === undefined) return console.log("itemCategory " + input.dataset["slot"] + " is undefined");
+    if (itemCategory === undefined) return console.log("itemCategory " + input.dataset["slot"].replace('0','').replace('1','') + " is undefined");
     return itemCategory[input.value];
 }
 
@@ -146,9 +118,9 @@ const addCategory = function (groupedStats, item, subObjectName) {
 
 // called when the page finishes loading
 window.addEventListener("load", function () {
-    addInputEventListeners();
-
     loadBuildFromLink();
+
+    addInputEventListeners();
 
     refreshOutputs();
 });
@@ -156,7 +128,7 @@ window.addEventListener("load", function () {
 function loadBuildFromLink() {
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
-        const itemType = input.dataset["slot"];
+        const itemType = input.dataset["slot"].replace('0','').replace('1','');
         const inputParam = searchParams.get(itemType);
         const inputParams = searchParams.getAll(itemType);
         if (inputParam === undefined || inputParam === null) continue;
@@ -180,8 +152,42 @@ function refreshOutputs() {
 // adds eventListeners to all inputs, such that when they're modified, it updates the build stats
 function addInputEventListeners() {
     inputs.forEach((input) => {
+        refreshOwnData(input);
         input.addEventListener("input", function () {
             refreshOutputs();
+            refreshOwnData(input);
         });
     });
+}
+
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substring(0, index) + replacement + this.substring(index + replacement.length);
+}
+
+function refreshOwnData(input) {
+    const display = document.querySelector('.display--' + input.dataset.slot);
+    
+    const item = getItemByInput(input);
+    if (item === undefined) {// TODO: disable the dropdown, hide the icon for it
+        display.textContent = 'Invalid item!';
+        return;
+    }
+    var itemData = ''
+    if (item.type === 'weapon') {
+
+        var attackSpeed = item.attackSpeed
+        const uSPos = attackSpeed.indexOf('_')
+        attackSpeed = attackSpeed.replaceAt(0, attackSpeed[0].toUpperCase())
+        attackSpeed = attackSpeed.replaceAt(uSPos + 1, attackSpeed[uSPos + 1].toUpperCase())
+        attackSpeed = attackSpeed.replaceAll('_', ' ')
+
+        itemData += 'Attack Speed: ' + attackSpeed + '\n'
+    }
+    const groupedStats = {};
+    
+    addCategory(groupedStats, item, "base");
+    addCategory(groupedStats, item, "identifications");
+
+    itemData += formatCombined('Item Statistics:\n', groupedStats);
+    display.textContent = itemData;
 }
