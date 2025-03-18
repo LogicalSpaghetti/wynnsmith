@@ -1,16 +1,65 @@
 body {
-    color: #fff; /* Replace with your desired color */
-    background-color: #000;
-}
-.inputs {
-    width: 334px;
-}
-.output--A {
-    position: absolute;
-    translate: 360px -180px;
-    width: 250px;
+    color: #fff;
+    background-color: #121212;
+    font-family: consolas, monospace, "Lucida Console", "Courier New";
+    font-size: 12px;
 }
 
+span {
+    display: inline-block;
+}
+
+.output--A {
+    font-family: consolas, monospace, "Lucida Console", "Courier New";
+    font-size: 12px;
+    white-space: pre-line;
+}
+
+.input {
+    display: inline-block;
+    width: 150px;
+    position: relative;
+    translate: 32px, 0px;
+    color: #ddd;
+    background-color: #333;
+    border: 1px solid #121212;
+}
+
+.toggle {
+    position: absolute;
+    background-color: #333;
+    border-collapse: separate;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #121212;
+    
+}
+
+.display {
+    height: 100px;
+    transition: all 0.5s ease;
+}
+
+.collapse {
+    height: 0px;
+}
+
+.toggle:hover, .input:hover {
+    border: 1px solid #444;
+    background-color: #383838;
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid #cc7700 !important;
+}
+
+.input_section {
+    /* border: 1px solid #aaa; */
+    width: 176px;
+}
+
+/* Ability Tree */
 .abilityTreeTop {
     background-image: url(img/background/tree_top.png);
     width: 203px;
@@ -21,16 +70,15 @@ body {
     display: inline-block;
     width: 20px;
     height: 766px;
-    background-image: url(img/background/tree_left.png); 
-    background-repeat: repeat-y; 
-    /* background-size: 100% auto; */
+    background-image: url(img/background/tree_left.png);
+    background-repeat: repeat-y;
 }
 .abilityTreeInside {
     display: inline-block;
     width: 162px;
     height: 766px;
-    background-image: url(img/background/tree_scroll.png); 
-    background-repeat: repeat-y; 
+    background-image: url(img/background/tree_scroll.png);
+    background-repeat: repeat-y;
     background-size: 100% auto;
     display: inline-block;
 }
@@ -38,15 +86,14 @@ body {
     display: inline-block;
     width: 21px;
     height: 766px;
-    background-image: url(img/background/tree_right.png); 
-    background-repeat: repeat-y; 
-    /* background-size: 100% auto; */
+    background-image: url(img/background/tree_right.png);
+    background-repeat: repeat-y;
 }
 .abilityTreeBase {
     background-image: url(img/background/tree_base.png);
     width: 203px;
     height: 22px;
-    background-size: 100% auto; 
+    background-size: 100% auto;
     transform: translate(0px, -4px);
 }
 
@@ -55,7 +102,7 @@ body {
     height: 756px;
 }
 
-.baller {
+.ability_node {
     height: 14px;
     width: 14px;
 
@@ -63,8 +110,6 @@ body {
     scale: 128.571%;
 }
 
-.aTreeSection {
-    position: absolute;
-    translate: 550px -310px;
-    scale: 80%;
+.ability_node[data-type="ability"] {
+    cursor: pointer;
 }

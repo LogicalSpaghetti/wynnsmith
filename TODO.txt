@@ -1,0 +1,2 @@
+fix ability tree being slightly improperly scaled
+abstract the input stuff so it doesn't repeat as much information
