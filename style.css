@@ -9,28 +9,53 @@ span {
     display: inline-block;
 }
 
+.flexCol {
+    display: flex;
+}
+
+.input_section {
+    padding: 0%;
+}
+
+.inputs {
+    width: 250px;
+}
+
+.outputs {
+    width: 200px;
+}
+
 .output--A {
     white-space: pre-line;
 }
 
-.input {
+input {
     display: inline-block;
-    width: 150px;
     position: relative;
-    translate: 32px, 0px;
+    translate: 20px;
     color: #ddd;
     background-color: #333;
     border: 1px solid #121212;
 }
+.input {
+    width: 150px;
+}
+
+.powder {
+    resize: horizontal;
+    width: 50px;
+}
 
 .toggle {
-    position: absolute;
+    position:absolute;
+    background-image: url("img/icons/exper_closed.png");
     background-color: #333;
     border-collapse: separate;
     width: 18px;
     height: 18px;
     border: 1px solid #121212;
-    transition: all 0.5s ease;
+    background-size: 100%;
+    padding: 0%;
 }
 
 .rotate {
@@ -43,7 +68,8 @@ span {
     border: 1px solid #777;
     white-space: pre-line;
     overflow: hidden;
-    padding: 4px;
+    padding: 0px;
+    
 }
 
 .collapse {
@@ -53,7 +79,7 @@ span {
 }
 
 .toggle:hover,
-.input:hover {
+input:hover {
     border: 1px solid #444;
     background-color: #383838;
 }
@@ -61,11 +87,6 @@ span {
 input:focus {
     outline: none;
     border: 1px solid #cc7700 !important;
-}
-
-.input_section {
-    /* border: 1px solid #aaa; */
-    width: 176px;
 }
 
 /* Ability Tree */
