@@ -42,7 +42,7 @@ input {
 }
 
 .toggle {
-    position:absolute;
+    position: absolute;
     background-image: url("img/icons/exper_closed.png");
     background-color: #333;
     border-collapse: separate;
@@ -96,48 +96,69 @@ input:focus {
 
 /* -- Ability Tree: -- */
 
+table {
+    user-select: none;
+    border-spacing: 0;
+}
+
+td {
+    padding: 0px;
+}
+
 .abilityTreeSection {
-    width:166.4px;
+    width: 350px;
+    image-rendering: pixelated;
 }
 
 .abilityTreeContainer {
     transform-origin: 0 0;
-    scale: 80%;
+    scale: 150%;
+}
+
+.abilityTreeInside {
+    border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;
+    padding: 22px;
 }
 
 .abilityTree {
-    border-image: url(img/background/ability_tree.png) 22 fill / 22px / 0px repeat;
-    padding: 22px;
-    width: 208px;
-    height: 800px;
-    
-    image-rendering: pixelated;
+    background-image: url(img/background/tree_scroll.png);
 }
 
 .ability_node {
-    height: 14px;
-    width: 14px;
+    height: 16px;
+    width: 16px;
 
     background-size: 200%;
     scale: 128.571%;
     z-index: 0;
-    
+
     image-rendering: pixelated;
 }
 
-.ability_node[data-type="connector"] {
-    background-size: 100%;
-    image-rendering: pixelated;
-    position: static;
+.connector {
+    height: 18px;
+    width: 18px;
 }
 
-.highlight_node {
-    background-position: 100% 0%;
+img.highlight_node[data-type="ability"] {
+    translate: -50% 0%;
 }
 
 .ability_node[data-type="ability"] {
-    position: absolute;
     cursor: pointer;
+}
+
+.node_img[data-type="ability"] {
+    transform-origin: 0 0;
+    width: 200%;
+    object-fit: cover;
+    image-rendering: pixelated;
+}
+
+.node_img_box[data-type="ability"] {
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
 }
 
 /* -- Attacks: -- */

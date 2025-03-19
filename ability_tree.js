@@ -20,11 +20,18 @@ function refreshAbilityTree() {
 
     const treeNodes = classAbilities[currentClass]["tree"];
     const treeAspects = classAbilities[currentClass]["aspects"];
+
+    // prevent images from being dragged
+    document.querySelectorAll(".node_img").forEach((img) => {
+        img.ondragstart = () => {
+            return false;
+        };
+    });
 }
 
 function toggleNode(node) {
     node.classList.toggle("highlight_node");
-    node.classList.previousSibling.toggle("highlight_node");
+    node.parentElement.parentElement.classList.toggle("highlight_node");
 }
 
 function mapHTML(treeMap) {
@@ -55,7 +62,7 @@ function mapHTML(treeMap) {
     for (let i = 0; i < treeMap.length; i++) {
         const node = treeMap[i];
         if (node === undefined) {
-            tablePieces.push(new TablePiece(i + 1, "", undefined));
+            tablePieces.push(new TablePiece(i + 1, undefined));
             continue;
         }
         const coords = node["coordinates"];
@@ -63,7 +70,7 @@ function mapHTML(treeMap) {
 
         const temp = Object.toString(node);
 
-        tablePieces.push(new TablePiece(index, "", node));
+        tablePieces.push(new TablePiece(index, node));
     }
 
     var htmlOutput = "";
@@ -79,22 +86,62 @@ function mapHTML(treeMap) {
 }
 
 class TablePiece {
-    constructor(index, content, node) {
+    constructor(index, node) {
         this.index = index;
-        this.content = content;
         this.node = node;
     }
 
     getHTML() {
-        if (this.node === undefined) return this.getEmpty();
-        return this.htmlStart() + this.encodeNodeData() + ">" + this.content + this.htmlEnd();
+        return (
+            this.tdHead() +
+            (this.node === undefined ? "" : this.node.type === "connector" ? this.getConnector() : this.getAbility()) +
+            this.tdFoot()
+        );
     }
 
-    encodeNodeData() {
-        const nodeName = (
-            this.node.meta.icon.format === undefined ? this.node.meta.icon : this.node.meta.icon.value.name
-        ).replaceAll("abilityTree.", "");
+    tdHead() {
+        return (this.index % 9 === 1 ? "<tr>" : "") + "<td>";
+    }
+    tdFoot() {
+        return "</td>" + (this.index % 9 === 0 ? "</tr>" : "");
+    }
 
+    getConnector() {
+        const nodeName = this.node.meta.icon.replaceAll("abilityTree.", "");
+        return (
+            '<div class="connector" style="background-image: url(img/abilities/' +
+            this.node.type +
+            "/" +
+            nodeName +
+            '.png)"></div>'
+        );
+    }
+
+    getAbility() {
+        const nodeName = this.node.meta.icon.value.name.replaceAll("abilityTree.", "");
+
+        return "<div" + this.encodeNodeData(nodeName) + ">" + this.imgHTML(nodeName) + "</div>";
+    }
+
+    imgHTML(nodeName) {
+        return (
+            '<div class="node_img_box"' +
+            ' data-name="' +
+            nodeName +
+            '"' +
+            ' data-type="' +
+            this.node.type +
+            '"><img class="node_img" src="img/abilities/' +
+            this.node.type +
+            "/" +
+            nodeName +
+            '.png" data-type="' +
+            this.node.type +
+            '"></div>'
+        );
+    }
+
+    encodeNodeData(nodeName) {
         return (
             ' class="ability_node" data-type="' +
             this.node.type +
@@ -108,11 +155,6 @@ class TablePiece {
             ' data-name="' +
             nodeName +
             '"' +
-            ' style="background-image: url(img/abilities/' +
-            this.node.type +
-            "/" +
-            nodeName +
-            '.png)"' +
             ' data-index="' +
             this.index +
             '"' +
@@ -120,17 +162,5 @@ class TablePiece {
             this.node.family +
             '"'
         );
-    }
-
-    getEmpty() {
-        return this.htmlStart() + ">" + this.content + this.htmlEnd();
-    }
-
-    htmlStart() {
-        return (this.index % 9 === 1 ? "<tr>" : "") + "<td";
-    }
-
-    htmlEnd() {
-        return "</td>" + (this.index % 9 === 0 ? "</tr>" : "");
     }
 }

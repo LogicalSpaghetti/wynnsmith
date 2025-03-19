@@ -127,7 +127,6 @@ window.addEventListener("load", function () {
 function refreshOutputs() {
     addAllItemData();
     refreshAbilityTree();
-    console.log(document.querySelectorAll('td[data-type="ability"]'))
 }
 
 // adds eventListeners to all inputs, such that when they're modified, it updates the build stats
