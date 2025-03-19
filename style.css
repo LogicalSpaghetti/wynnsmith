@@ -96,16 +96,14 @@ input:focus {
 
 /* -- Ability Tree: -- */
 
-.abilityTreeContainer {
-    transform-origin: 0 0;
-    scale: 80%;
-}
-
 .abilityTreeSection {
     width:166.4px;
 }
 
-
+.abilityTreeContainer {
+    transform-origin: 0 0;
+    scale: 80%;
+}
 
 .abilityTree {
     border-image: url(img/background/ability_tree.png) 22 fill / 22px / 0px repeat;
@@ -130,6 +128,7 @@ input:focus {
 .ability_node[data-type="connector"] {
     background-size: 100%;
     image-rendering: pixelated;
+    position: static;
 }
 
 .highlight_node {
@@ -137,6 +136,7 @@ input:focus {
 }
 
 .ability_node[data-type="ability"] {
+    position: absolute;
     cursor: pointer;
 }
 
@@ -160,8 +160,4 @@ input:focus {
     width: 200px;
     height: 200px;
     overflow: hidden;
-}
-
-section {
-    border: 1px solid red;
 }

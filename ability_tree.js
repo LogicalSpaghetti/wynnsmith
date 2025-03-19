@@ -1,4 +1,13 @@
-function setUpAbilityTree() {
+function addTreeEventListener() {
+    const abilityTree = document.querySelector(".abilityTree");
+    abilityTree.addEventListener("click", (event) => {
+        const node = event.target;
+        if (node.dataset.type !== "ability") return;
+        toggleNode(node);
+    });
+}
+
+function refreshAbilityTree() {
     const previousClass = currentClass;
     const weapon = getItemByInput(document.querySelector(`.input--weapon`));
     if (weapon === undefined) return;
@@ -6,22 +15,16 @@ function setUpAbilityTree() {
     if (previousClass === currentClass) return;
 
     const treeMap = classAbilities[currentClass]["map"]; // array
-    document.querySelector(".abilityTree").innerHTML = mapHTML(treeMap);
-
-    document.querySelectorAll(".ability_node").forEach((node) => {
-        if (node.dataset["type"] !== "connector") {
-            node.addEventListener("click", function () {
-                toggleNode(node);
-            });
-        }
-    });
+    const abilityTree = document.querySelector(".abilityTree");
+    abilityTree.innerHTML = mapHTML(treeMap);
 
     const treeNodes = classAbilities[currentClass]["tree"];
     const treeAspects = classAbilities[currentClass]["aspects"];
 }
 
 function toggleNode(node) {
-    node.classList.toggle('highlight_node');
+    node.classList.toggle("highlight_node");
+    node.classList.previousSibling.toggle("highlight_node");
 }
 
 function mapHTML(treeMap) {
@@ -60,7 +63,7 @@ function mapHTML(treeMap) {
 
         const temp = Object.toString(node);
 
-        tablePieces.push(new TablePiece(index, '', node));
+        tablePieces.push(new TablePiece(index, "", node));
     }
 
     var htmlOutput = "";
@@ -92,16 +95,31 @@ class TablePiece {
             this.node.meta.icon.format === undefined ? this.node.meta.icon : this.node.meta.icon.value.name
         ).replaceAll("abilityTree.", "");
 
-        var attrs = "";
-        attrs += ' class="ability_node" data-type="' + this.node.type + '"';
-        attrs += ' data-page="' + this.node.meta.page + '"';
-        attrs += ' data-id="' + this.node.meta.id + '"';
-        attrs += ' data-name="' + nodeName + '"';
-        attrs += ' style="background-image: url(img/abilities/' + this.node.type + "/" + nodeName + '.png)"';
-        attrs += ' data-index="' + this.index + '"';
-        attrs += ' data-family="' + this.node.family + '"';
-
-        return attrs;
+        return (
+            ' class="ability_node" data-type="' +
+            this.node.type +
+            '"' +
+            ' data-page="' +
+            this.node.meta.page +
+            '"' +
+            ' data-id="' +
+            this.node.meta.id +
+            '"' +
+            ' data-name="' +
+            nodeName +
+            '"' +
+            ' style="background-image: url(img/abilities/' +
+            this.node.type +
+            "/" +
+            nodeName +
+            '.png)"' +
+            ' data-index="' +
+            this.index +
+            '"' +
+            ' data-family="' +
+            this.node.family +
+            '"'
+        );
     }
 
     getEmpty() {

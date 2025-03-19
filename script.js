@@ -119,13 +119,14 @@ window.addEventListener("load", function () {
     loadBuildFromLink();
 
     addInputEventListeners();
-
+    addTreeEventListener();
     refreshOutputs();
+
 });
 
 function refreshOutputs() {
     addAllItemData();
-    setUpAbilityTree();
+    refreshAbilityTree();
     console.log(document.querySelectorAll('td[data-type="ability"]'))
 }
 
