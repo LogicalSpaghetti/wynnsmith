@@ -11,7 +11,6 @@ function setUpAbilityTree() {
     document.querySelectorAll(".ability_node").forEach((node) => {
         if (node.dataset["type"] !== "connector") {
             node.addEventListener("click", function () {
-                // propagate toggle
                 toggleNode(node);
             });
         }
@@ -22,43 +21,7 @@ function setUpAbilityTree() {
 }
 
 function toggleNode(node) {
-    const oldImg = node.style["background-image"];
-    const darken = oldImg.includes('_a.png"');
-
-    // toggle
-    const newImg = darken ? oldImg.replaceAll("_a.png", ".png") : oldImg.replaceAll(".png", "_a.png");
-
-    node.style["background-image"] = newImg;
-
-    tryPropagateFromNode(node);
-
-    if (darken && node.dataset.type === 'ability') {
-        const abilities = document.querySelectorAll('[data-type="ability"]')
-        for (let i = 0; i < abilities.length; i++) {
-            const ability = abilities[i]
-            if (ability.style["background-image"].includes('_a.png"')) {
-                tryPropagateFromNode(ability);
-            }
-        }
-    }
-    
-}
-
-function tryPropagateFromNode(node) {
-    tryPropagateInDirection(node, 9, "up");
-    tryPropagateInDirection(node, 1, "left");
-    tryPropagateInDirection(node, -1, "right");
-}
-
-function tryPropagateInDirection(startNode, indexOffset, connectionDirection) {
-    const index = parseInt(startNode.dataset["index"]) + indexOffset;
-    const node = document.querySelector('[data-index="' + index + '"]');
-    if (node === null) return;
-    if (node.style["background-image"].includes('_a.png"') === startNode.style["background-image"].includes('_a.png"'))
-        return;
-    if (node.dataset.name.includes("_" + connectionDirection)) {
-        toggleNode(node);
-    }
+    node.classList.toggle('highlight_node');
 }
 
 function mapHTML(treeMap) {
@@ -97,7 +60,7 @@ function mapHTML(treeMap) {
 
         const temp = Object.toString(node);
 
-        tablePieces.push(new TablePiece(index, '<div class="filledNodeDiv"></div>', node));
+        tablePieces.push(new TablePiece(index, '', node));
     }
 
     var htmlOutput = "";

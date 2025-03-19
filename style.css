@@ -13,20 +13,15 @@ span {
     display: flex;
 }
 
+/* -- Inputs: -- */
+
 .input_section {
     padding: 0%;
+    width: 300px;
 }
 
 .inputs {
     width: 250px;
-}
-
-.outputs {
-    width: 200px;
-}
-
-.output--A {
-    white-space: pre-line;
 }
 
 input {
@@ -69,7 +64,7 @@ input {
     white-space: pre-line;
     overflow: hidden;
     padding: 0px;
-    
+    width: 90%;
 }
 
 .collapse {
@@ -89,57 +84,84 @@ input:focus {
     border: 1px solid #cc7700 !important;
 }
 
-/* Ability Tree */
-.abilityTreeTop {
-    background-image: url(img/background/tree_top.png);
-    width: 203px;
-    height: 22px;
-    background-size: 100% auto;
-}
-.abilityTreeLeft {
-    display: inline-block;
-    width: 20px;
-    height: 766px;
-    background-image: url(img/background/tree_left.png);
-    background-repeat: repeat-y;
-}
-.abilityTreeInside {
-    display: inline-block;
-    width: 162px;
-    height: 766px;
-    background-image: url(img/background/tree_scroll.png);
-    background-repeat: repeat-y;
-    background-size: 100% auto;
-    display: inline-block;
-}
-.abilityTreeRight {
-    display: inline-block;
-    width: 21px;
-    height: 766px;
-    background-image: url(img/background/tree_right.png);
-    background-repeat: repeat-y;
-}
-.abilityTreeBase {
-    background-image: url(img/background/tree_base.png);
-    width: 203px;
-    height: 22px;
-    background-size: 100% auto;
-    transform: translate(0px, -4px);
+/* -- Output: -- */
+
+.outputs {
+    width: 200px;
 }
 
+.output--A {
+    white-space: pre-line;
+}
+
+/* -- Ability Tree: -- */
+
+.abilityTreeContainer {
+    transform-origin: 0 0;
+    scale: 80%;
+}
+
+.abilityTreeSection {
+    width:166.4px;
+}
+
+
+
 .abilityTree {
-    width: 162px;
-    height: 756px;
+    border-image: url(img/background/ability_tree.png) 22 fill / 22px / 0px repeat;
+    padding: 22px;
+    width: 208px;
+    height: 800px;
+    
+    image-rendering: pixelated;
 }
 
 .ability_node {
     height: 14px;
     width: 14px;
 
-    background-size: 100%;
+    background-size: 200%;
     scale: 128.571%;
+    z-index: 0;
+    
+    image-rendering: pixelated;
+}
+
+.ability_node[data-type="connector"] {
+    background-size: 100%;
+    image-rendering: pixelated;
+}
+
+.highlight_node {
+    background-position: 100% 0%;
 }
 
 .ability_node[data-type="ability"] {
     cursor: pointer;
+}
+
+/* -- Attacks: -- */
+
+/* .attacksSection {
+    width: 500px;
+    height: 500px;
+    border: 1px solid red;
+} */
+
+.test_img {
+    transform-origin: 0 0;
+    width: 200%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    translate: 0% -50%;
+}
+
+.test_img_div {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+}
+
+section {
+    border: 1px solid red;
 }

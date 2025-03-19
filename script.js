@@ -22,8 +22,6 @@ const inputs = [
     document.querySelector(`.input--weapon`),
 ];
 
-const searchParams = new URLSearchParams(window.location.search);
-
 const sound = new Audio("sounds/mythic_old.ogg");
 testButton.addEventListener("click", function () {
     sound.play();
@@ -94,7 +92,7 @@ const addItemToCombined = function (input, groupedStats) {
 function getItemByInput(input) {
     const itemCategory = itemGroups[input.dataset["slot"].replace('0','').replace('1','')];
 
-    if (itemCategory === undefined) return console.log("itemCategory " + input.dataset["slot"].replace('0','').replace('1','') + " is undefined");
+    if (itemCategory === undefined) return;
     return itemCategory[input.value];
 }
 
@@ -125,28 +123,10 @@ window.addEventListener("load", function () {
     refreshOutputs();
 });
 
-function loadBuildFromLink() {
-    for (let i = 0; i < inputs.length; i++) {
-        const input = inputs[i];
-        const itemType = input.dataset["slot"].replace('0','').replace('1','');
-        const inputParam = searchParams.get(itemType);
-        const inputParams = searchParams.getAll(itemType);
-        if (inputParam === undefined || inputParam === null) continue;
-
-        const slotContent =
-            itemType !== "ring"
-                ? inputParam
-                : input === document.querySelector(`.input--ring0`)
-                ? inputParams[0]
-                : inputParams[1];
-
-        input.value = slotContent.replaceAll("_", " ");
-    }
-}
-
 function refreshOutputs() {
     addAllItemData();
     setUpAbilityTree();
+    console.log(document.querySelectorAll('td[data-type="ability"]'))
 }
 
 // adds eventListeners to all inputs, such that when they're modified, it updates the build stats
