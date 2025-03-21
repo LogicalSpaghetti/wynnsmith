@@ -1,17 +1,13 @@
-const copyShortButton = document.querySelector(`.btn--short`);
-const copyLongButton = document.querySelector(`.btn--long`);
+`use strict`;
+
+
 
 const searchParams = new URLSearchParams(window.location.search);
 
-copyShortButton.addEventListener("click", function () {
-    navigator.clipboard.writeText(getBuildLink(false));
-    copyShortButton.textContent = "Build copied!";
-});
-
-copyLongButton.addEventListener("click", function () {
-    navigator.clipboard.writeText(getBuildLink(true));
-    copyLongButton.textContent = "Build copied!";
-});
+function copyBuildLink(button, long) {
+    navigator.clipboard.writeText(getBuildLink(long));
+    button.textContent = "Build copied!";
+}
 
 function getBuildLink(long) {
     var text = location.href.replace(location.search, '') + '?';
@@ -32,7 +28,7 @@ function loadBuildFromLink() {
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
         const itemType = input.dataset["slot"];
-        const inputParam = searchParams.get(itemType);
+        const inputParam = searchParams.get(itemType).split('>')[0];
         if (inputParam === undefined || inputParam === null) continue;
 
         const slotContent = inputParam;

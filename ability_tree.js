@@ -1,17 +1,17 @@
-function addTreeEventListener() {
-    const abilityTree = document.querySelector(".abilityTree");
-    abilityTree.addEventListener("click", (event) => {
-        const node = event.target;
-        if (node.dataset.type !== "ability") return;
-        toggleNode(node);
-    });
+`use strict`;
+
+var currentClass = "";
+
+function treeClicked(event) {
+    const node = event.target;
+    if (node.dataset.type !== "ability") return;
+    toggleNode(node);
 }
 
-function refreshAbilityTree() {
+function refreshAbilityTree(build) {
     const previousClass = currentClass;
     const weapon = getItemByInput(document.querySelector(`.input--weapon`));
-    if (weapon === undefined) return;
-    currentClass = weapon.requirements.classRequirement;
+    if (weapon !== undefined) currentClass = weapon.requirements.classRequirement;
     if (previousClass === currentClass) return;
 
     const treeMap = classAbilities[currentClass]["map"]; // array
@@ -32,6 +32,7 @@ function refreshAbilityTree() {
 function toggleNode(node) {
     node.classList.toggle("highlight_node");
     node.parentElement.parentElement.classList.toggle("highlight_node");
+    refreshBuild();
 }
 
 function mapHTML(treeMap) {
@@ -163,4 +164,18 @@ class TablePiece {
             '"'
         );
     }
+}
+
+// called any time the build changes but the class doesn't
+function addNodesToBuild(build) {
+    const abilities = [];
+    const nodes = document.querySelectorAll('.ability_node');
+    nodes.forEach(node => {
+        if (node.classList.contains("highlight_node")) {
+            abilities.push(node.dataset.id);
+        }
+    });
+
+    build.abilities = abilities;
+    console.log('build.abilities: ' + JSON.stringify(abilities));
 }

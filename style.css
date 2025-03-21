@@ -59,12 +59,10 @@ input {
 
 .display {
     transition: all 0.5s ease;
-    height: 0px;
     border: 1px solid #777;
     white-space: pre-line;
     overflow: hidden;
     padding: 0px;
-    width: 90%;
 }
 
 .collapse {

@@ -1,2 +1,9 @@
+Things I don't want to forget:
+Fixes:
 abstract the input stuff so it doesn't repeat as much information
 https://websemantics.uk/tools/image-to-data-uri-converter/
+Handle Ability Tree display when no weapon has yet been provided
+Fix tree clearing between reloads
+    Don't generate it all with JS
+Features:
+Offhand weapons
