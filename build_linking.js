@@ -1,7 +1,5 @@
 `use strict`;
 
-
-
 const searchParams = new URLSearchParams(window.location.search);
 
 function copyBuildLink(button, long) {

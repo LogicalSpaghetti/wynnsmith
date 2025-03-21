@@ -85,12 +85,12 @@ input:focus {
 /* -- Output: -- */
 
 .outputs {
-    width: 200px;
+    width: 400px;
 }
 
-.output--A {
+/* .output--A {
     white-space: pre-line;
-}
+} */
 
 /* -- Ability Tree: -- */
 

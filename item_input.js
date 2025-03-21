@@ -8,18 +8,18 @@ function refreshItemData(build) {
         addMajorIds(build, item);
         addAllIdsToBuildSection(build, item, "base");
         addAllIdsToBuildSection(build, item, "identifications");
+        if (item.attackSpeed === undefined) continue;
+        addAttackSpeed(build, item);
     }
-    // this stat is incorrectly listed on one item in the API, and should be ignored
-    // delete build.identifications["mainAttackFireDamage"];
-
-    output.textContent =
-        "Build statistics:\n" + formatCombined(build.base) + "\n" + formatCombined(build.identifications);
-
-    // build.stats;
 }
 
 function addBasePlayerStats(build) {
     build.base["baseHealth"] = 535;
+}
+
+function addAttackSpeed(build, item) {
+    build.attackSpeed = item.attackSpeed;
+    console.log(Object.is(build.attackSpeed, item.attackSpeed));
 }
 
 function addAllIdsToBuildSection(build, source, section) {
@@ -36,8 +36,10 @@ function addAllIdsToBuildSection(build, source, section) {
 function addIdToBuildSection(build, id, idName, section) {
     if (build[section][idName] === undefined) {
         // this took so long to debug
-        build[section][idName] = JSON.parse(JSON.stringify(id));
-        return;
+        build[section][idName] = {
+            "min": 0,
+            "max": 0
+        };
     }
     build[section][idName].min += id.min;
     build[section][idName].max += id.max;
@@ -45,15 +47,15 @@ function addIdToBuildSection(build, id, idName, section) {
 
 function addMajorIds(build, item) {
     if (item.majorIds === undefined) return;
-    build.majorIds.push(Object.entries(item.majorIds)[0]);
+    build.majorIds.push(Object.keys(item.majorIds)[0]);
 }
 
-function formatCombined(groupedStats) {
+function formatCombined(groupedStats, simple) {
     var combinedString = "";
     const keys = Object.keys(groupedStats);
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        combinedString += key + ": " + JSON.stringify(groupedStats[key]) + "\n";
+        combinedString += key + ": " + JSON.stringify(simple ? groupedStats[key].max : groupedStats[key].min + ' to ' + groupedStats[key].max) + "\n";
     }
     return combinedString;
 }
@@ -82,7 +84,7 @@ function refreshOwnData(input) {
     addAllIdsToBuildSection(miniBuild, item, 'base')
     addAllIdsToBuildSection(miniBuild, item, 'identifications')
 
-    display.textContent = formatAttackSpeed(item) + formatCombined(miniBuild.base) + formatCombined(miniBuild.identifications);
+    display.textContent = formatAttackSpeed(item) + formatCombined(miniBuild.base, false) + formatCombined(miniBuild.identifications, false);
 }
 
 String.prototype.replaceAt = function (index, replacement) {

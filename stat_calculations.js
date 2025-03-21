@@ -15,10 +15,10 @@ function applyAdditiveEffects(build) {
     build.addedIds = {};
 
     // for every ability on the build
-    for (let i = 0; i < build.abilities.length; i++) {
+    for (let i = 0; i < build.nodes.length; i++) {
         // get the node data
-        const abilityId = build.abilities[i];
-        const node = nodes[abilityId];
+        const abilityId = build.nodes[i];
+        const node = abilities[abilityId];
         if (node === undefined) {
             console.log(abilityId + " does not exist in nodes");
             continue;

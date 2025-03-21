@@ -25,10 +25,16 @@ function refreshBuild() {
         "adds": {}
     };
     refreshAbilityTree(build);
+    refreshInputtedData(build);
+    abilityCalculations(build);
+    output.textContent = JSON.stringify(build);
+}
+
+function refreshInputtedData(build) {
     addNodesToBuild(build);
     refreshItemData(build);
-    abilityCalculations(build);
 }
+
 
 function resetLinkText() {
     // resets the buttons if they were clicked
