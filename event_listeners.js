@@ -50,3 +50,10 @@ function addTreeEventListener() {
         treeClicked(event);
     });
 }
+
+document.querySelectorAll(".effect").forEach(effectButton => {
+    effectButton.addEventListener("click", function() {
+        effectButton.classList.toggle("toggleOn");
+        refreshBuild()
+    })
+})

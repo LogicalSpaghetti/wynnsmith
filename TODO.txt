@@ -7,3 +7,5 @@ Fix tree clearing between reloads
     Don't generate it all with JS
 Features:
 Offhand weapons
+Consumables
+Custom Identification modifications

@@ -14,7 +14,7 @@ function refreshItemData(build) {
 }
 
 function addBasePlayerStats(build) {
-    build.base["baseHealth"] = 535;
+    build.base["baseHealth"] = getAsMinMax(535);
 }
 
 function addAttackSpeed(build, item) {
@@ -41,8 +41,7 @@ function addIdToBuildSection(build, id, idName, section) {
             "max": 0
         };
     }
-    build[section][idName].min += id.min;
-    build[section][idName].max += id.max;
+    addMinAndMaxTo(build[section][idName], id);
 }
 
 function addMajorIds(build, item) {
@@ -101,4 +100,12 @@ function formatAttackSpeed(item) {
     attackSpeed = attackSpeed.replaceAll("_", " ");
 
     return "Attack Speed: " + attackSpeed + "\n";
+}
+
+function addToggles(build) { 
+    document.querySelectorAll(".effect").forEach(toggle => {
+        if (toggle.classList.contains('toggleOn')) {
+            build.toggles.push(toggle.dataset.modifier);
+        }
+    })
 }

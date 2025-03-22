@@ -22,11 +22,13 @@ function refreshBuild() {
         "identifications": {},
         "majorIds": [],
         "abilities": [],
-        "adds": {}
+        "adds": {},
+        "toggles": []
     };
     refreshAbilityTree(build);
     refreshInputtedData(build);
-    abilityCalculations(build);
+    addToggles(build);
+    computeOutputs(build);
     output.textContent = JSON.stringify(build);
 }
 
@@ -34,7 +36,6 @@ function refreshInputtedData(build) {
     addNodesToBuild(build);
     refreshItemData(build);
 }
-
 
 function resetLinkText() {
     // resets the buttons if they were clicked
@@ -45,4 +46,8 @@ function resetLinkText() {
 
 function getMultiplierForSkillPoints(sp) {
     return ((1 - Math.pow(0.9908, sp + 1)) / 0.0092 - 1) / 100;
+}
+
+function roundForDisplay(number) {
+    return Math.round((number + Number.EPSILON) * 100) / 100;
 }

@@ -100,5 +100,8 @@ const abilities = {
             "category": "Totem",
             "mana": -10
         },
+    },
+    "protectiveBash": {
+        "radiance": 1.2
     }
 }
