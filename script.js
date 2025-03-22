@@ -15,18 +15,24 @@ const inputs = [
 const output = document.querySelector(`.output--A`);
 
 function refreshBuild() {
-    console.log('begin new refresh:')
+    console.log("begin new refresh:");
     resetLinkText();
     const build = {
-        "base": {},
-        "identifications": {},
-        "majorIds": [],
-        "abilities": [],
-        "adds": {},
-        "toggles": []
+        base: {},
+        identifications: {},
+        majorIds: [],
+        nodes: [],
+        adds: {},
+        toggles: [],
+        powders: {
+            armor: [],
+            weapon: [],
+        },
+        attacks: {}
     };
     refreshAbilityTree(build);
     refreshInputtedData(build);
+    refreshAbilities(build);
     addToggles(build);
     computeOutputs(build);
     output.textContent = JSON.stringify(build);

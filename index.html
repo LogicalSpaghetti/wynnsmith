@@ -12,55 +12,51 @@
                     <div class="input_section">
                         <span class="toggle toggle--helmet" data-slot="helmet"></span>
                         <input class="input input--helmet" type="text" placeholder="Helmet" data-slot="helmet" />
-                        <input class="powder" placeholder="0 Slots">
+                        <input class="powder" placeholder="0 Slots" slot="helmet">
                     </div>
                     <div class="display display--helmet collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="chestplate"></span>
                         <input class="input input--chestplate" type="text" placeholder="Chestplate" data-slot="chestplate" />
-                        <input class="powder" placeholder="0 Slots">
+                        <input class="powder" placeholder="0 Slots" slot="chestplate">
                     </div>
                     <div class="display display--chestplate collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="leggings"></span>
                         <input class="input input--leggings" type="text" placeholder="Leggings" data-slot="leggings" />
-                        <input class="powder" placeholder="0 Slots">
+                        <input class="powder" placeholder="0 Slots" slot="leggings">
                     </div>
                     <div class="display display--leggings collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="boots"></span>
                         <input class="input input--boots" type="text" placeholder="Boots" data-slot="boots" />
-                        <input class="powder" placeholder="0 Slots">
+                        <input class="powder" placeholder="0 Slots" slot="boots" maxlength="0">
                     </div>
                     <div class="display display--boots collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="ring0"></span>
                         <input class="input input--ring input--ring0" type="text" placeholder="Ring 1" data-slot="ring0" />
-                        <input class="powder" placeholder="0 Slots">
                     </div>
                     <div class="display display--ring0 collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="ring1"></span>
                         <input class="input input--ring input--ring1" type="text" placeholder="Ring 2" data-slot="ring1" />
-                        <input class="powder" placeholder="0 Slots">
                     </div>
                     <div class="display display--ring1 collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="bracelet"></span>
                         <input class="input input--bracelet" type="text" placeholder="Bracelet" data-slot="bracelet" />
-                        <input class="powder" placeholder="0 Slots">
                     </div>
                     <div class="display display--bracelet collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="necklace"></span>
                         <input class="input input--necklace" type="text" placeholder="Neckalce" data-slot="necklace" />
-                        <input class="powder" placeholder="0 Slots">
                     </div>
                     <div class="display display--necklace collapse"></div>
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="weapon"></span>
                         <input class="input input--weapon" type="text" placeholder="Weapon" data-slot="weapon" />
-                        <input class="powder" placeholder="0 Slots">
+                        <input class="powder" placeholder="0 Slots" slot="weapon" maxlength="0">
                     </div>
                     <div class="display display--weapon collapse"></div>
                 </section>
@@ -90,10 +86,12 @@
 
         <script src="data_grouped_items.js"></script>
         <script src="data_class_trees.js"></script>
+        <script src="powders.js"></script>
         <script src="build_linking.js"></script>
         <script src="item_input.js"></script>
         <script src="stat_calculations.js"></script>
-        <script src="nodes.js"></script>
+        <script src="abilities.js"></script>
+        <script src="attacks.js"></script>
         <script src="script.js"></script>
         <script src="ability_tree.js"></script>
         <script src="event_listeners.js"></script>

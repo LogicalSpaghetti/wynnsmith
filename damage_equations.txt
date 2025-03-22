@@ -5,9 +5,7 @@ Attack damage calculation:
 =>
 Radiance probably applies at the start?
 =>
-Consus surely apply here
-=>
-add base[netwfa]Damages to base[netwfa](Spell/Melee)Damages
+Consus surely apply here?
 =>
 Powders convert a % of the neutral damage into their element, up to 100% of it.
 Powders add a bit of base elemental damage to their element
@@ -21,10 +19,10 @@ Masteries Node base values are added to any non-zero damage values.
 Mastery multipliers are applied.
 Proficiencies are applied, damage is multiplicitive
 =>
+Armor Powder Specials add to ids as standard %s
 All elemental damages are multiplied by their coresponding % multiplier
 =>
 Raw damage values undergo attack conversions, and are then added on.
 For plain melee: (Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
 =>
 Apply Skill Points, Strength, Dexterity, and any other final multipliers.
-

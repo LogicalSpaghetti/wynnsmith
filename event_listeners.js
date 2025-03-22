@@ -57,3 +57,9 @@ document.querySelectorAll(".effect").forEach(effectButton => {
         refreshBuild()
     })
 })
+
+document.querySelectorAll(".powder").forEach((input) => {
+    input.addEventListener("input", function () {
+        refreshBuild();
+    });
+});

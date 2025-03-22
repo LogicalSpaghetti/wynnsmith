@@ -26,6 +26,7 @@ function loadBuildFromLink() {
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
         const itemType = input.dataset["slot"];
+        if (searchParams.get(itemType) === null) continue;
         const inputParam = searchParams.get(itemType).split('>')[0];
         if (inputParam === undefined || inputParam === null) continue;
 

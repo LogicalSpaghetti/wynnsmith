@@ -5,7 +5,10 @@ https://websemantics.uk/tools/image-to-data-uri-converter/
 Handle Ability Tree display when no weapon has yet been provided
 Fix tree clearing between reloads
     Don't generate it all with JS
+(Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
 Features:
 Offhand weapons
 Consumables
 Custom Identification modifications
+Indicate partially filled powder slots
+    Indicate if it has half a powder inputted, or an invalid powder

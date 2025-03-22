@@ -168,14 +168,12 @@ class TablePiece {
 
 // called any time the build changes but the class doesn't
 function addNodesToBuild(build) {
-    const nodes = [];
     const treeNodes = document.querySelectorAll('.ability_node');
     treeNodes.forEach(node => {
         if (node.classList.contains("highlight_node")) {
-            nodes.push(node.dataset.id);
+            build.nodes.push(node.dataset.id);
         }
     });
 
-    build.nodes = nodes;
-    console.log('build.nodes: ' + JSON.stringify(nodes));
+    console.log('build.nodes: ' + JSON.stringify(build.nodes));
 }

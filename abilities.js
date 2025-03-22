@@ -50,6 +50,10 @@ const abilities = {
         }
     },
     "totem": {
+        "spell": {
+            "category": "Totem",
+            "mana": 40
+        },
         "attack": {
             "category": "Totem",
             "name": "Tick",

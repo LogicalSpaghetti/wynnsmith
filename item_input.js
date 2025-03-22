@@ -1,10 +1,11 @@
 function refreshItemData(build) {
-
     addBasePlayerStats(build);
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
         const item = getItemByInput(input);
+        setPowderSlots(input, item);
         if (item === undefined) continue;
+        addPowders(build, input);
         addMajorIds(build, item);
         addAllIdsToBuildSection(build, item, "base");
         addAllIdsToBuildSection(build, item, "identifications");
@@ -23,22 +24,20 @@ function addAttackSpeed(build, item) {
 }
 
 function addAllIdsToBuildSection(build, source, section) {
-
     const adds = source[section];
     const idNames = Object.keys(adds);
     for (let i = 0; i < idNames.length; i++) {
         const id = getAsMinMax(adds[idNames[i]]);
         addIdToBuildSection(build, id, idNames[i], section);
     }
-
 }
 
 function addIdToBuildSection(build, id, idName, section) {
     if (build[section][idName] === undefined) {
         // this took so long to debug
         build[section][idName] = {
-            "min": 0,
-            "max": 0
+            min: 0,
+            max: 0,
         };
     }
     addMinAndMaxTo(build[section][idName], id);
@@ -54,14 +53,18 @@ function formatCombined(groupedStats, simple) {
     const keys = Object.keys(groupedStats);
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        combinedString += key + ": " + JSON.stringify(simple ? groupedStats[key].max : groupedStats[key].min + ' to ' + groupedStats[key].max) + "\n";
+        combinedString +=
+            key +
+            ": " +
+            JSON.stringify(simple ? groupedStats[key].max : groupedStats[key].min + " to " + groupedStats[key].max) +
+            "\n";
     }
     return combinedString;
 }
 
 function getItemByInput(input) {
     const itemCategory = itemGroups[input.dataset["slot"].replace("0", "").replace("1", "")];
-    
+
     if (itemCategory === undefined) return;
     return itemCategory[input.value];
 }
@@ -77,13 +80,16 @@ function refreshOwnData(input) {
     }
 
     const miniBuild = {
-        'base': {},
-        'identifications': {}
-    }
-    addAllIdsToBuildSection(miniBuild, item, 'base')
-    addAllIdsToBuildSection(miniBuild, item, 'identifications')
+        base: {},
+        identifications: {},
+    };
+    addAllIdsToBuildSection(miniBuild, item, "base");
+    addAllIdsToBuildSection(miniBuild, item, "identifications");
 
-    display.textContent = formatAttackSpeed(item) + formatCombined(miniBuild.base, false) + formatCombined(miniBuild.identifications, false);
+    display.textContent =
+        formatAttackSpeed(item) +
+        formatCombined(miniBuild.base, false) +
+        formatCombined(miniBuild.identifications, false);
 }
 
 String.prototype.replaceAt = function (index, replacement) {
@@ -102,10 +108,46 @@ function formatAttackSpeed(item) {
     return "Attack Speed: " + attackSpeed + "\n";
 }
 
-function addToggles(build) { 
-    document.querySelectorAll(".effect").forEach(toggle => {
-        if (toggle.classList.contains('toggleOn')) {
+function addToggles(build) {
+    document.querySelectorAll(".effect").forEach((toggle) => {
+        if (toggle.classList.contains("toggleOn")) {
             build.toggles.push(toggle.dataset.modifier);
         }
-    })
+    });
+}
+
+// Powders:
+
+function setPowderSlots(input, item) {
+    const powderInput = document.querySelector("[slot='" + input.dataset.slot + "']");
+    if (powderInput === null || item === undefined) return;
+    if (item.powderSlots === undefined) {
+        powderInput.placeholder = "No Slots";
+        powderInput.maxLength = 0;
+        powderInput.value = '';
+        return;
+    }
+    powderInput.placeholder = item.powderSlots + " slots";
+    powderInput.maxLength = item.powderSlots * 2;
+    console.log(powderInput.value.length)
+    console.log(powderInput.maxLength)
+    if (powderInput.value.length > powderInput.maxLength) {
+        powderInput.value = powderInput.value.substring(0, powderInput.maxLength);
+    }
+}
+
+function addPowders(build, input) {
+    const powderInput = document.querySelector("[slot='" + input.dataset.slot + "']");
+    if (powderInput === null) return;
+    const powdersString =
+        powderInput.value.length % 2 === 0
+            ? powderInput.value
+            : powderInput.value.substring(0, powderInput.value.length - 1);
+    const destination = input.dataset.slot === "weapon" ? build.powders.weapon : build.powders.armor;
+    for (let i = 0; i < powdersString.length / 2; i++) {
+        const powderName = powdersString.substring(i * 2, i * 2 + 2);
+        const powder = powders[powderName];
+        if (powder === undefined) continue;
+        destination.push(powderName);
+    }
 }
