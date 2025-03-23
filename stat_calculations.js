@@ -1,7 +1,7 @@
 `use strict`;
 
 function computeOutputs(build) {
-    listAllAttacks(build);
+    splitMergedStats(build);
     // Radiance
     ohLookAtMeIAmRadianceAndIAmDifferentAndSpecialAndNeedAnEntireFunctionJustForMe(build);
     // Consumables
@@ -84,8 +84,8 @@ function computeOtherOutputs(build) {
     }
 }
 
-function listAllAttacks(build) {
-    
+function splitMergedStats(build) {
+    // TODO
 }
 
 function getAsMinMax(possibleInt) {

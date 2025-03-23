@@ -9,6 +9,14 @@ Fix tree clearing between reloads
 Features:
 Offhand weapons
 Consumables
+Tomes
+Charms :>
 Custom Identification modifications
 Indicate partially filled powder slots
     Indicate if it has half a powder inputted, or an invalid powder
+
+Work through the plain calculations, and just add to the JSON as-needed
+Store all conversions as objects
+    object name is the attack,
+    names of objects within are the ability that enables them
+    objects within are equal to a netwfa array.
