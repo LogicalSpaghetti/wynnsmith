@@ -7,59 +7,61 @@ function refreshItemData(build) {
         if (item === undefined) continue;
         addPowders(build, input);
         addMajorIds(build, item);
-        addAllIdsToBuildSection(build, item, "base");
-        addAllIdsToBuildSection(build, item, "identifications");
+        addBasesToBuild(build, item);
+        addIds(build, item);
         if (item.attackSpeed === undefined) continue;
         addAttackSpeed(build, item);
     }
 }
 
 function addBasePlayerStats(build) {
-    build.base["baseHealth"] = getAsMinMax(535);
+    build.base["baseHealth"] = 535;
 }
 
 function addAttackSpeed(build, item) {
     build.attackSpeed = item.attackSpeed;
-    console.log(Object.is(build.attackSpeed, item.attackSpeed));
 }
 
-function addAllIdsToBuildSection(build, source, section) {
-    const adds = source[section];
+function addIds(build, source) {
+    const adds = source.identifications;
     const idNames = Object.keys(adds);
     for (let i = 0; i < idNames.length; i++) {
-        const id = getAsMinMax(adds[idNames[i]]);
-        addIdToBuildSection(build, id, idNames[i], section);
+        const id = getAsMax(adds[idNames[i]]);
+        addId(build, id, idNames[i]);
     }
 }
 
-function addIdToBuildSection(build, id, idName, section) {
-    if (build[section][idName] === undefined) {
-        // this took so long to debug
-        build[section][idName] = {
-            min: 0,
-            max: 0,
-        };
+function addBasesToBuild(build, item) {
+    const base = item.base;
+    const idNames = Object.keys(base);
+    for (let i = 0; i < idNames.length; i++) {
+        const id = base[idNames[i]];
+        addBase(build, id, idNames[i]);
+        console.log(base[idNames[i]]);
     }
-    addMinAndMaxTo(build[section][idName], id);
+}
+
+function addBase(build, id, idName) {
+    if (Number.isInteger(id)) {
+        build.base[idName] = build.base[idName] === undefined ? id : build.base[idName] + id;
+    } else {
+        if (build.base[idName] === undefined) {
+            build.base[idName] = { min: 0, max: 0 };
+        }
+        addMinAndMaxTo(build.base[idName], id);
+    }
+}
+
+function addId(build, id, idName) {
+    if (build.identifications[idName] === undefined) {
+        build.identifications[idName] = 0;
+    }
+    build.identifications[idName] += id;
 }
 
 function addMajorIds(build, item) {
     if (item.majorIds === undefined) return;
     build.majorIds.push(Object.keys(item.majorIds)[0]);
-}
-
-function formatCombined(groupedStats, simple) {
-    var combinedString = "";
-    const keys = Object.keys(groupedStats);
-    for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        combinedString +=
-            key +
-            ": " +
-            JSON.stringify(simple ? groupedStats[key].max : groupedStats[key].min + " to " + groupedStats[key].max) +
-            "\n";
-    }
-    return combinedString;
 }
 
 function getItemByInput(input) {
@@ -83,13 +85,51 @@ function refreshOwnData(input) {
         base: {},
         identifications: {},
     };
-    addAllIdsToBuildSection(miniBuild, item, "base");
-    addAllIdsToBuildSection(miniBuild, item, "identifications");
+    addBasesToBuild(miniBuild, item);
+    addUnmaxedIds(miniBuild, item);
 
-    display.textContent =
-        formatAttackSpeed(item) +
-        formatCombined(miniBuild.base, false) +
-        formatCombined(miniBuild.identifications, false);
+    display.innerHTML = "Item Statistics: \n" +
+        formatAttackSpeed(item) + formatCombined(miniBuild.base) + formatCombined(miniBuild.identifications);
+}
+
+function formatCombined(ids) {
+    var combinedString = "";
+    const keys = Object.keys(ids);
+    for (let i = 0; i < keys.length; i++) {
+        const id = ids[keys[i]];
+        if (Number.isInteger(id)) {
+            combinedString += id >= 0 ? "<span class=\"positive\">+" : "<span class=\"negative\">";
+            combinedString += id + "</span>";
+        } else {
+            combinedString += id.min >= 0 ? "<span class=\"positive\">+" : "<span class=\"negative\">";
+            combinedString += id.min + "</span> to ";
+            combinedString += id.min >= 0 ? "<span class=\"positive\">+" : "<span class=\"negative\">";
+            combinedString += id.max + "</span>"
+        }
+        combinedString += " " + keys[i] + "\n";
+    }
+    return combinedString;
+}
+
+function addUnmaxedIds(build, item) {
+    const ids = item.identifications;
+    const idNames = Object.keys(ids);
+    for (let i = 0; i < idNames.length; i++) {
+        const id = ids[idNames[i]];
+        addUnmaxedId(build, id, idNames[i]);
+        console.log(ids[idNames[i]]);
+    }
+}
+
+function addUnmaxedId(build, id, idName) {
+    if (Number.isInteger(id)) {
+        build.base[idName] = build.identifications[idName] === undefined ? id : build.identifications[idName] + id;
+    } else {
+        if (build.identifications[idName] === undefined) {
+            build.identifications[idName] = { min: 0, max: 0 };
+        }
+        addMinAndMaxTo(build.identifications[idName], id);
+    }
 }
 
 String.prototype.replaceAt = function (index, replacement) {
@@ -124,13 +164,11 @@ function setPowderSlots(input, item) {
     if (item.powderSlots === undefined) {
         powderInput.placeholder = "No Slots";
         powderInput.maxLength = 0;
-        powderInput.value = '';
+        powderInput.value = "";
         return;
     }
     powderInput.placeholder = item.powderSlots + " slots";
     powderInput.maxLength = item.powderSlots * 2;
-    console.log(powderInput.value.length)
-    console.log(powderInput.maxLength)
     if (powderInput.value.length > powderInput.maxLength) {
         powderInput.value = powderInput.value.substring(0, powderInput.maxLength);
     }

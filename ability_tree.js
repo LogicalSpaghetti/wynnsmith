@@ -8,6 +8,11 @@ function treeClicked(event) {
     toggleNode(node);
 }
 
+function refreshAbilities(build) {
+    refreshAbilityTree(build);
+    addNodesToBuild(build);
+}
+
 function refreshAbilityTree(build) {
     const previousClass = currentClass;
     const weapon = getItemByInput(document.querySelector(`.input--weapon`));
@@ -147,6 +152,9 @@ class TablePiece {
             ' class="ability_node" data-type="' +
             this.node.type +
             '"' +
+            ' title="' +
+            this.node.meta.id +
+            '"' +
             ' data-page="' +
             this.node.meta.page +
             '"' +
@@ -168,12 +176,12 @@ class TablePiece {
 
 // called any time the build changes but the class doesn't
 function addNodesToBuild(build) {
-    const treeNodes = document.querySelectorAll('.ability_node');
-    treeNodes.forEach(node => {
+    const treeNodes = document.querySelectorAll(".ability_node");
+    treeNodes.forEach((node) => {
         if (node.classList.contains("highlight_node")) {
             build.nodes.push(node.dataset.id);
         }
     });
 
-    console.log('build.nodes: ' + JSON.stringify(build.nodes));
+    console.log("build.nodes: " + JSON.stringify(build.nodes));
 }

@@ -3,7 +3,7 @@
 function computeOutputs(build) {
     splitMergedStats(build);
     // Radiance
-    ohLookAtMeIAmRadianceAndIAmDifferentAndSpecialAndNeedAnEntireFunctionJustForMe(build);
+    radiance(build);
     // Consumables
     // Damage
     computeDamageOutputs(build);
@@ -11,11 +11,15 @@ function computeOutputs(build) {
     computeOtherOutputs(build);
 }
 
-function ohLookAtMeIAmRadianceAndIAmDifferentAndSpecialAndNeedAnEntireFunctionJustForMe(build) {
-    if (!build.toggles.includes('radiance')) return;
+function radiance(build) {
+    if (!build.toggles.includes("radiance")) return;
     const idNames = Object.keys(build.identifications);
     for (let i = 0; i < idNames.length; i++) {
-        multiplyMinAndMaxBy(build.identifications[idNames[i]], abilities.protectiveBash.radiance)
+        if (nodes.radiance.excludedIds.includes(idNames[i])) continue;
+        if (build.identifications[idNames[i]] <= 0) continue;
+        build.identifications[idNames[i]] = Math.floor(
+            build.identifications[idNames[i]] * (nodes.radiance.multiplier + Number.EPSILON)
+        );
     }
 }
 
@@ -43,29 +47,29 @@ function computeDamageOutputs(build) {
 
 function applyPowders(build) {
     // Convert up to 100% Neutral:
-    if (build.base.baseDamage !== undefined) {
+    if (build.base.baseDamage !== undefined && build.powders.weapon.length > 0) {
         var percentUsed = 0;
         for (let i = 0; i < build.powders.weapon.length; i++) {
             const powder = powders[build.powders.weapon[i]];
             const remainingPercent = 100 - percentUsed;
             const conversionPercent = 0 + remainingPercent < powder.conversion ? remainingPercent : powder.conversion;
-            percentUsed += conversionPercent
+            percentUsed += conversionPercent;
             const id = {
-                "min": build.base.baseDamage.min * conversionPercent / 100,
-                "max": build.base.baseDamage.max * conversionPercent / 100
-            }
-            addIdToBuildSection(build, id, 'base' + powder.element + 'Damage', 'base')
-    
+                min: (build.base.baseDamage.min * conversionPercent) / 100,
+                max: (build.base.baseDamage.max * conversionPercent) / 100,
+            };
+            addBase(build, id, "base" + powder.element + "Damage");
+
             if (percentUsed >= 100) break;
         }
-        multiplyMinAndMaxBy(build.base.baseDamage, 1 - (percentUsed / 100))
+        multiplyMinAndMaxBy(build.base.baseDamage, 1 - percentUsed / 100);
         // if (build.base.baseDamage.min + build.base.baseDamage.max === 0) delete build.base.baseDamage;
     }
 
     // Add powder base damage:
     for (let i = 0; i < build.powders.weapon.length; i++) {
         const powder = powders[build.powders.weapon[i]];
-        addIdToBuildSection(build, powder.dmg, 'base' + powder.element + 'Damage', 'base')
+        addBase(build, powder.dmg, "base" + powder.element + "Damage");
     }
 }
 
@@ -79,13 +83,113 @@ function computeOtherOutputs(build) {
         const powderDefs = powder.def;
         for (let j = 0; j < capitalizedElements.length; j++) {
             if (powderDefs[j] === 0) continue;
-            addIdToBuildSection(build, getAsMinMax(powderDefs[j]), 'base' + capitalizedElements[j] + 'Defence', 'base');
+            addBase(build, getAsMinMax(powderDefs[j]), "base" + capitalizedElements[j] + "Defence");
         }
     }
 }
 
+const realPercents = [
+    "neutralMainAttackDamage",
+    "earthMainAttackDamage",
+    "thunderMainAttackDamage",
+    "waterMainAttackDamage",
+    "fireMainAttackDamage",
+    "airMainAttackDamage",
+    "neutralSpellDamage",
+    "earthSpellDamage",
+    "thunderSpellDamage",
+    "waterSpellDamage",
+    "fireSpellDamage",
+    "airSpellDamage",
+];
+const elementalPercents = [
+    "earthMainAttackDamage",
+    "thunderMainAttackDamage",
+    "waterMainAttackDamage",
+    "fireMainAttackDamage",
+    "airMainAttackDamage",
+    "earthSpellDamage",
+    "thunderSpellDamage",
+    "waterSpellDamage",
+    "fireSpellDamage",
+    "airSpellDamage",
+];
+const lowerCaseAttackTypes = ["neutral", "earth", "thunder", "water", "fire", "air"];
+
 function splitMergedStats(build) {
-    // TODO
+    for (let i = 0; i < realPercents.length; i++) {
+        if (build.identifications[realPercents[i]] === undefined)
+        build.identifications[realPercents[i]] = 0;
+    }
+
+    // damage
+    if (build.identifications.damage !== undefined) {
+        for (let i = 0; i < realPercents.length; i++) {
+            build.identifications[realPercents[i]] += build.identifications.damage;
+        }
+    }
+    // mainAttackDamage
+    if (build.identifications.mainAttackDamage !== undefined) {
+        for (let i = 0; i < 6; i++) {
+            build.identifications[realPercents[i]] += build.identifications.mainAttackDamage;
+        }
+    }
+    // spellDamage
+    if (build.identifications.spellDamage !== undefined) {
+        for (let i = 6; i < 12; i++) {
+            build.identifications[realPercents[i]] += build.identifications.spellDamage;
+        }
+    }
+    // typed damage
+    for (let i = 0; i < lowerCaseAttackTypes.length; i++) {
+        if (build.identifications[lowerCaseAttackTypes[i] + "Damage"] !== undefined) {
+            build.identifications[lowerCaseAttackTypes[i] + "MainAttackDamage"] +=
+                build.identifications[lowerCaseAttackTypes[i] + "Damage"];
+            build.identifications[lowerCaseAttackTypes[i] + "SpellDamage"] +=
+                build.identifications[lowerCaseAttackTypes[i] + "Damage"];
+        }
+    }
+    // elemental damages
+    if (build.identifications["elementalDamage"] !== undefined) {
+        for (let i = 0; i < elementalPercents.length; i++) {
+            build.identifications[elementalPercents[i]] += build.identifications["elementalDamage"];
+        }
+    }
+    if (build.identifications["elementalMainAttackDamage"] !== undefined) {
+        for (let j = 0; j < 6; i++) {
+            build.identifications[elementalPercents[j]] += build.identifications["elementalMainAttackDamage"];
+        }
+    }
+    if (build.identifications["elementalSpellDamage"] !== undefined) {
+        for (let j = 6; j < 12; i++) {
+            build.identifications[elementalPercents[j]] += build.identifications["elementalSpellDamage"];
+        }
+    }
+
+    delete build.identifications.damage;
+    delete build.identifications.neutralDamage;
+    delete build.identifications.earthDamage;
+    delete build.identifications.thunderDamage;
+    delete build.identifications.waterDamage;
+    delete build.identifications.fireDamage;
+    delete build.identifications.airDamage;
+    delete build.identifications.mainAttackDamage;
+    delete build.identifications.spellDamage;
+    delete build.identifications.elementalDamage;
+    delete build.identifications.elementalMainAttackDamage;
+    delete build.identifications.elementalSpellDamage;
+
+    console.log("Air Spell Damage: " + build.identifications["airSpellDamage"])
+}
+
+// undefined to zero
+function udfZ(value) {
+    return value === undefined ? 0 : value;
+}
+
+function getAsMax(possibleInt) {
+    if (Number.isInteger(possibleInt)) return possibleInt;
+    return possibleInt.max;
 }
 
 function getAsMinMax(possibleInt) {
@@ -104,7 +208,8 @@ function addMinAndMaxTo(target, source) {
     target.min += source.min;
     target.max += source.max;
 }
+
 function multiplyMinAndMaxBy(target, multiplier) {
-    target.min *= multiplier;
-    target.max *= multiplier;
+    target.min *= multiplier + Number.EPSILON;
+    target.max *= multiplier + Number.EPSILON;
 }

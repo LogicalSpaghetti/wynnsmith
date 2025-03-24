@@ -21,10 +21,11 @@ span {
 }
 
 .inputs {
-    width: 250px;
+    width: 300px;
 }
 
-input, .effect {
+input,
+.effect {
     color: #ddd;
     background-color: #333;
     border: 1px solid #121212;
@@ -36,12 +37,26 @@ input {
     translate: 20px;
 }
 .input {
-    width: 150px;
+    width: 160px;
+}
+
+/* .input--ring,
+.input--bracelet,
+.input--necklace {
+    width: 226px;
+} */
+.miku {
+    position: absolute;
+    transform-origin: 0 0;
+    scale: 17%;
+    translate: 20px;
+    z-index: -1;
 }
 
 .powder {
     resize: horizontal;
-    width: 50px;
+    width: 60px;
+    position: absolute;
 }
 
 .toggle {
@@ -61,16 +76,20 @@ input {
 }
 
 .display {
-    transition: all 0.5s ease;
+    transition: all 0.4s ease;
     border: 1px solid #777;
     white-space: pre-line;
     overflow: hidden;
     padding: 0px;
+    text-align: center;
+    width: 250px;
+    z-index: 1;
+    background-color: #121212;
 }
 
 .collapse {
     height: 0px !important;
-    border: 0px;
+    border: 0px solid #000;
     padding: 0px;
 }
 
@@ -96,6 +115,7 @@ input:focus {
 
 .outputs {
     width: 400px;
+    word-wrap: break-word;
 }
 
 /* -- Ability Tree: -- */
@@ -114,10 +134,10 @@ td {
     image-rendering: pixelated;
 }
 
-.abilityTreeContainer {
+/* .abilityTreeContainer {
     transform-origin: 0 0;
-    scale: 150%;
-}
+    scale: 100%;
+} */
 
 .abilityTreeInside {
     border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;
@@ -185,4 +205,12 @@ img.highlight_node[data-type="ability"] {
     width: 200px;
     height: 200px;
     overflow: hidden;
+}
+
+/* Colors */
+.positive {
+    color: #5e5;
+}
+.negative {
+    color: #e55;
 }

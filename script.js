@@ -30,17 +30,11 @@ function refreshBuild() {
         },
         attacks: {}
     };
-    refreshAbilityTree(build);
-    refreshInputtedData(build);
     refreshAbilities(build);
+    refreshItemData(build);
     addToggles(build);
     computeOutputs(build);
     output.textContent = JSON.stringify(build);
-}
-
-function refreshInputtedData(build) {
-    addNodesToBuild(build);
-    refreshItemData(build);
 }
 
 function resetLinkText() {

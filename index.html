@@ -3,10 +3,11 @@
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="style.css" />
-        <title>Wynnbuilder: LogicalSpaghetti</title>
+        <title>Fielbuilder</title>
     </head>
     <body>
         <div class="flexCol">
+            <!-- Column 1 -->
             <section class="inputs">
                 <section class="item_inputs">
                     <div class="input_section">
@@ -36,6 +37,7 @@
                     <div class="input_section">
                         <span class="toggle" data-state="false" data-slot="ring0"></span>
                         <input class="input input--ring input--ring0" type="text" placeholder="Ring 1" data-slot="ring0" />
+                        <img class="miku" src="img/miku.gif">
                     </div>
                     <div class="display display--ring0 collapse"></div>
                     <div class="input_section">
@@ -70,9 +72,11 @@
                     <button class="effect radiance" data-modifier="radiance">Radiance</button>
                 </section>
             </section>
+            <!-- Cloumn 2 -->
             <section class="outputs">
                 <div class="output output--A"></div>
             </section>
+            <!-- Cloumn 3 -->
             <section class="abilityTreeSection">
                 <div class="abilityTreeContainer">
                     <span class="abilityTreeInside">
@@ -80,6 +84,7 @@
                     </span>
                 </div>
             </section>
+            <!-- Cloumn 4 -->
             <section class="attacksSection">
             </section>
         </div>
@@ -91,7 +96,6 @@
         <script src="item_input.js"></script>
         <script src="stat_calculations.js"></script>
         <script src="abilities.js"></script>
-        <script src="attacks.js"></script>
         <script src="script.js"></script>
         <script src="ability_tree.js"></script>
         <script src="event_listeners.js"></script>
