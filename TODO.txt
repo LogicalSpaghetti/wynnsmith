@@ -5,7 +5,7 @@ https://websemantics.uk/tools/image-to-data-uri-converter/
 Handle Ability Tree display when no weapon has yet been provided
 Fix tree clearing between reloads
     Don't generate it all with JS
-(Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
+Relik damage melee calculation being weird
 Features:
 Offhand weapons
 Consumables
@@ -14,9 +14,3 @@ Charms :>
 Custom Identification modifications
 Indicate partially filled powder slots
     Indicate if it has half a powder inputted, or an invalid powder
-
-Work through the plain calculations, and just add to the JSON as-needed
-Store all conversions as objects
-    object name is the attack,
-    names of objects within are the ability that enables them
-    objects within are equal to a netwfa array.

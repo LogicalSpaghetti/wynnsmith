@@ -1,4 +1,4 @@
-  "identifications": [
+"identifications": [
 '1stSpellCost'
 '2ndSpellCost'
 '3rdSpellCost'

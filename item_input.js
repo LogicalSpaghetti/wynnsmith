@@ -37,7 +37,6 @@ function addBasesToBuild(build, item) {
     for (let i = 0; i < idNames.length; i++) {
         const id = base[idNames[i]];
         addBase(build, id, idNames[i]);
-        console.log(base[idNames[i]]);
     }
 }
 
@@ -117,7 +116,6 @@ function addUnmaxedIds(build, item) {
     for (let i = 0; i < idNames.length; i++) {
         const id = ids[idNames[i]];
         addUnmaxedId(build, id, idNames[i]);
-        console.log(ids[idNames[i]]);
     }
 }
 

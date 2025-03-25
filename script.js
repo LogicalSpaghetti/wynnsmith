@@ -18,8 +18,8 @@ function refreshBuild() {
     console.log("begin new refresh:");
     resetLinkText();
     const build = {
-        base: {},
-        identifications: {},
+        base: JSON.parse(emptyBaseString),
+        identifications: JSON.parse(emptyIdsString),
         majorIds: [],
         nodes: [],
         adds: {},

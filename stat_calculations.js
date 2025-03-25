@@ -9,6 +9,7 @@ function computeOutputs(build) {
     computeDamageOutputs(build);
     // Support/General
     computeOtherOutputs(build);
+    removeAllZeros(build);
 }
 
 function radiance(build) {
@@ -118,8 +119,7 @@ const lowerCaseAttackTypes = ["neutral", "earth", "thunder", "water", "fire", "a
 
 function splitMergedStats(build) {
     for (let i = 0; i < realPercents.length; i++) {
-        if (build.identifications[realPercents[i]] === undefined)
-        build.identifications[realPercents[i]] = 0;
+        if (build.identifications[realPercents[i]] === undefined) build.identifications[realPercents[i]] = 0;
     }
 
     // damage
@@ -156,30 +156,55 @@ function splitMergedStats(build) {
         }
     }
     if (build.identifications["elementalMainAttackDamage"] !== undefined) {
-        for (let j = 0; j < 6; i++) {
-            build.identifications[elementalPercents[j]] += build.identifications["elementalMainAttackDamage"];
+        for (let i = 0; i < 6; i++) {
+            build.identifications[elementalPercents[i]] += build.identifications["elementalMainAttackDamage"];
         }
     }
     if (build.identifications["elementalSpellDamage"] !== undefined) {
-        for (let j = 6; j < 12; i++) {
-            build.identifications[elementalPercents[j]] += build.identifications["elementalSpellDamage"];
+        for (let i = 6; i < 12; i++) {
+            build.identifications[elementalPercents[i]] += build.identifications["elementalSpellDamage"];
         }
     }
 
-    delete build.identifications.damage;
-    delete build.identifications.neutralDamage;
-    delete build.identifications.earthDamage;
-    delete build.identifications.thunderDamage;
-    delete build.identifications.waterDamage;
-    delete build.identifications.fireDamage;
-    delete build.identifications.airDamage;
-    delete build.identifications.mainAttackDamage;
-    delete build.identifications.spellDamage;
-    delete build.identifications.elementalDamage;
-    delete build.identifications.elementalMainAttackDamage;
-    delete build.identifications.elementalSpellDamage;
+    build.identifications.damage = 0;
+    build.identifications.neutralDamage = 0;
+    build.identifications.earthDamage = 0;
+    build.identifications.thunderDamage = 0;
+    build.identifications.waterDamage = 0;
+    build.identifications.fireDamage = 0;
+    build.identifications.airDamage = 0;
+    build.identifications.mainAttackDamage = 0;
+    build.identifications.spellDamage = 0;
+    build.identifications.elementalDamage = 0;
+    build.identifications.elementalMainAttackDamage = 0;
+    build.identifications.elementalSpellDamage = 0;
 
-    console.log("Air Spell Damage: " + build.identifications["airSpellDamage"])
+    if (build.identifications.elementalDefence !== undefined) {
+        for (let i = 1; i < lowerCaseAttackTypes.length; i++) {
+            build.identifications[lowerCaseAttackTypes + "Defence"] += build.identifications.elementalDefence;
+        }
+    }
+
+    build.identifications.elementalDefence = 0;
+}
+
+function removeAllZeros(build) {
+    removeZeroIds(build);
+}
+
+function removeZeroIds(build) {
+    const idNames = Object.keys(build.identifications);
+    for (let i = 0; i < idNames.length; i++) {
+        if (build.identifications[idNames[i]] === 0) {
+            delete build.identifications[idNames[i]];
+        }
+    }
+    const baseNames = Object.keys(build.base);
+    for (let i = 0; i < baseNames.length; i++) {
+        if (build.base[baseNames[i]] === 0) {
+            delete build.base[baseNames[i]];
+        }
+    }
 }
 
 // undefined to zero
