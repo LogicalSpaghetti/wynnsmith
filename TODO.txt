@@ -6,6 +6,7 @@ Handle Ability Tree display when no weapon has yet been provided
 Fix tree clearing between reloads
     Don't generate it all with JS
 Relik damage melee calculation being weird
+Images flicker when first loaded
 Features:
 Offhand weapons
 Consumables

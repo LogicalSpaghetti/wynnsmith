@@ -19,7 +19,7 @@ function refreshBuild() {
     resetLinkText();
     const build = {
         base: JSON.parse(emptyBaseString),
-        identifications: JSON.parse(emptyIdsString),
+        ids: JSON.parse(emptyIdsString),
         majorIds: [],
         nodes: [],
         adds: {},
@@ -28,8 +28,9 @@ function refreshBuild() {
             armor: [],
             weapon: [],
         },
-        attacks: {}
+        attacks: {},
     };
+    console.log(build.ids);
     refreshAbilities(build);
     refreshItemData(build);
     addToggles(build);
@@ -49,5 +50,7 @@ function getMultiplierForSkillPoints(sp) {
 }
 
 function roundForDisplay(number) {
-    return Math.round((number + Number.EPSILON) * 100) / 100;
+    const ret = Math.round((number + Number.EPSILON) * 100) / 100;
+    if (ret.toString().split(".").length === 1 || ret.toString().split(".")[1].length >= 2) return ret;
+    return ret + "0";
 }

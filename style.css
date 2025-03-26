@@ -1,6 +1,17 @@
+:root {
+    --ls-background:#121212;
+    --ls-background2: #333;
+    --ls-background-hover: #383838;
+    --ls-trim-hover: #464646;
+    --ls-trim: #353535;
+    --ls-light-trim: #777;
+    --ls-aqua: #009578;
+    --ls-orange: #cc7700;
+}
+
 body {
     color: #fff;
-    background-color: #121212;
+    background-color: var(--ls-background);
     font-family: consolas, monospace, "Lucida Console", "Courier New";
     font-size: 12px;
 }
@@ -17,18 +28,18 @@ span {
 
 .input_section {
     padding: 0%;
-    width: 300px;
+    width: 250px;
 }
 
 .inputs {
-    width: 300px;
+    width: 250px;
 }
 
 input,
 .effect {
-    color: #ddd;
-    background-color: #333;
-    border: 1px solid #121212;
+    color: inherit;
+    background-color: var(--ls-background2);
+    border: 1px solid var(--ls-background);
 }
 
 input {
@@ -55,20 +66,21 @@ input {
 
 .powder {
     resize: horizontal;
-    width: 60px;
+    width: 58px;
     position: absolute;
 }
 
 .toggle {
     position: absolute;
     background-image: url("img/buttons/exper_closed.png");
-    background-color: #333;
+    background-color: var(--ls-background2);
     border-collapse: separate;
     width: 18px;
     height: 18px;
-    border: 1px solid #121212;
+    border: 1px solid var(--ls-background);
     background-size: 100%;
     padding: 0%;
+    cursor: pointer;
 }
 
 .rotate {
@@ -77,32 +89,33 @@ input {
 
 .display {
     transition: all 0.4s ease;
-    border: 1px solid #777;
+    border: 1px solid var(--ls-light-trim);
     white-space: pre-line;
     overflow: hidden;
     padding: 0px;
     text-align: center;
     width: 250px;
     z-index: 1;
-    background-color: #121212;
+    background-color: var(--ls-background);
 }
 
 .collapse {
+    border-color: var(--ls-background);
     height: 0px !important;
-    border: 0px solid #000;
+    border-width: 0px;
     padding: 0px;
 }
 
 .toggle:hover,
 .effect:hover,
 input:hover {
-    border: 1px solid #444;
-    background-color: #383838;
+    border: 1px solid var(--ls-trim-hover);
+    background: var(--ls-background-hover);
 }
 
 input:focus {
     outline: none;
-    border: 1px solid #cc7700 !important;
+    border: 1px solid var(--ls-orange) !important;
 }
 
 /* Effect Selectors */
@@ -118,6 +131,18 @@ input:focus {
     word-wrap: break-word;
 }
 
+/* Link Buttons */
+button {
+    cursor: pointer;
+    color: inherit;
+    background-color: var(--ls-background2);
+    border: 1px solid var(--ls-background);
+}
+button:hover {
+    border-color: var(--ls-trim-hover);
+
+}
+
 /* -- Ability Tree: -- */
 
 table {
@@ -130,14 +155,9 @@ td {
 }
 
 .abilityTreeSection {
-    width: 350px;
+    width: 210px;
     image-rendering: pixelated;
 }
-
-/* .abilityTreeContainer {
-    transform-origin: 0 0;
-    scale: 100%;
-} */
 
 .abilityTreeInside {
     border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;

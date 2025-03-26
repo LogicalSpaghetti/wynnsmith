@@ -8,7 +8,15 @@
     </head>
     <body>
         <div class="flexCol">
-            <!-- Column 1 -->
+            <!-- Cloumn 1 -->
+            <section class="abilityTreeSection">
+                <div class="abilityTreeContainer" hidden>
+                    <span class="abilityTreeInside">
+                        <table class="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void"></table>
+                    </span>
+                </div>
+            </section>
+            <!-- Column 2 -->
             <section class="inputs">
                 <section class="item_inputs">
                     <div class="input_section">
@@ -61,6 +69,7 @@
                         <input class="powder" placeholder="0 Slots" slot="weapon" maxlength="0">
                     </div>
                     <div class="display display--weapon collapse"></div>
+                    <button class="collapse_all" style="display:none;">Collapse All</button>
                 </section>
                 <section class="copy_buttons">
                     <p>
@@ -72,17 +81,9 @@
                     <button class="effect radiance" data-modifier="radiance">Radiance</button>
                 </section>
             </section>
-            <!-- Cloumn 2 -->
+            <!-- Cloumn 3 -->
             <section class="outputs">
                 <div class="output output--A"></div>
-            </section>
-            <!-- Cloumn 3 -->
-            <section class="abilityTreeSection">
-                <div class="abilityTreeContainer">
-                    <span class="abilityTreeInside">
-                        <table class="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void"></table>
-                    </span>
-                </div>
             </section>
             <!-- Cloumn 4 -->
             <section class="attacksSection">
@@ -93,7 +94,7 @@
         <script src="data_grouped_items.js"></script>
         <script src="data_class_trees.js"></script>
         <script src="data_base_and_ids.js"></script>
-        <script src="powders.js"></script>
+        <script src="data_powders.js"></script>
         <script src="build_linking.js"></script>
         <script src="item_input.js"></script>
         <script src="stat_calculations.js"></script>

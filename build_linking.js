@@ -2,6 +2,8 @@
 
 const searchParams = new URLSearchParams(window.location.search);
 
+console.log(window.location.search)
+
 function copyBuildLink(button, long) {
     navigator.clipboard.writeText(getBuildLink(long));
     button.textContent = "Build copied!";

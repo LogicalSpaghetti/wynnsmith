@@ -106,6 +106,7 @@ const emptyIdsString = JSON.stringify({
     walkSpeed: 0,
     waterDamage: 0,
     waterDefence: 0,
+    waterMainAttackDamage: 0,
     waterSpellDamage: 0,
     weakenEnemy: 0,
     xpBonus: 0,

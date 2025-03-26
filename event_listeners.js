@@ -15,22 +15,38 @@ function addEventListeners() {
     addTreeEventListener();
     addToggleListeners();
     addEffectListeners();
+    addCopyLinkListeners();
 }
 
 //
 function addToggleListeners() {
     document.querySelectorAll(".toggle").forEach((toggle) => {
         toggle.addEventListener("click", function () {
-            const display = document.querySelector(".display--" + toggle.dataset.slot);
-            const fontHeight = parseInt(window.getComputedStyle(display, null).getPropertyValue("font-size"));
-            const itemData = display.textContent;
-            const height = (itemData.split("\n").length - 1 + 3) * fontHeight;
-            display.style = "height: " + height + "px;";
-
-            toggle.classList.toggle("rotate");
-            document.querySelector(".display--" + toggle.dataset.slot).classList.toggle("collapse");
+            toggleToggle(toggle);
         });
     });
+    document.querySelector(".collapse_all").addEventListener("click", function () {
+        document.querySelectorAll(".rotate").forEach((rotate) => {
+            toggleToggle(rotate);
+        });
+    });
+}
+
+function toggleToggle(toggle) {
+    const display = document.querySelector(".display--" + toggle.dataset.slot);
+    const fontHeight = parseInt(window.getComputedStyle(display, null).getPropertyValue("font-size"));
+    const itemData = display.textContent;
+    const height = (itemData.split("\n").length - 1 + 3) * fontHeight;
+    display.style = "height: " + height + "px;";
+
+    toggle.classList.toggle("rotate");
+    document.querySelector(".display--" + toggle.dataset.slot).classList.toggle("collapse");
+
+    if (document.querySelectorAll(".collapse").length < 8) {
+        document.querySelector(".collapse_all").style.display = "block";
+    } else {
+        document.querySelector(".collapse_all").style.display = "none";
+    }
 }
 
 // Item Inputs

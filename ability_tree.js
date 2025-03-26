@@ -18,6 +18,7 @@ function refreshAbilityTree(build) {
     const weapon = getItemByInput(document.querySelector(`.input--weapon`));
     if (weapon !== undefined) currentClass = weapon.requirements.classRequirement;
     if (previousClass === currentClass) return;
+    document.querySelector(".abilityTreeContainer").removeAttribute("hidden");
 
     const treeMap = classAbilities[currentClass]["map"]; // array
     const abilityTree = document.querySelector(".abilityTree");

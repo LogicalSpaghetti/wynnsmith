@@ -1,0 +1,39 @@
+assign each an id based on category
+	slots and aspects
+	tree is just a series of booleans
+	convert to 12 digits of base2 (2 digits x9)
+		00 is an empty slot
+tree has up to 96 possible node locations
+	(16 digits)
+aspects
+	5 aspect slots
+	<32 possibilities per slot
+	(1 digit x5)
+tomes
+	14 slots
+	<32 possible tomes per slot
+ 	(1 digit x14)
+powders
+	fill in empty slots with 0s
+	5*6+1=31 (32) options per slot
+	5 bits
+	support up to 32 powder slots per build
+	at the end so trailing zeros may be culled
+
+2*9+2+5+14+10
+
+?v00.00
+	&sWWHHCCLLBBRRRRBBNN
+	&pPP*PP**PPP
+	&tTTTTTTTTTTTTTTTT
+	&aAAAAA
+	&o
+
+
+11 possible powders, 16, 1111, 2/3rds of a 64
+5 possible powders, 8, 111, half of a 64(111111)
+
+https://wynnbuilder.github.io/builder?v=16#9_10N10K0y50QW0uP0K00Jn0vM0QI1h01011p1D1g000000z0z0+0+0+0+0-1T
+https://wynnbuilder.github.io/builder?v=16#9_10N10K0y50QW0uP0K00Jn0vM0QI1h01011p1D1g1000CO1000CO01007iO00z0z0+0+0+0+0-1T
+
+https://wynnbuilder.github.io/builder?v=16#9_2SG2SH2SI2SJ2SK2SL2SM2SN0QI0000001p001g000000z0z0+0+0+0+0-1T
