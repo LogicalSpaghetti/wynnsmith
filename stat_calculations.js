@@ -12,6 +12,49 @@ function computeOutputs(build) {
     removeAllZeros(build);
 }
 
+function splitMergedIds(build) {
+    const ids = build.ids;
+    // damage
+    ids.spellDamage += ids.damage;
+    ids.mainAttackDamage += ids.damage;
+    ids.damage = 0;
+
+    // mainAttackDamage and spellDamage
+    prefixes.forEach((prefix) => {
+        ids[prefix + "MainAttackDamage"] += ids.mainAttackDamage;
+        ids[prefix + "SpellDamage"] += ids.spellDamage;
+    });
+    ids.mainAttackDamage = 0;
+    ids.spellDamage = 0;
+
+    // typed damage
+    prefixes.forEach((type) => {
+        const typedDamage = ids[type + "Damage"] + (type === "neutral" ? 0 : ids.elementalDamage);
+
+        ids[type + "MainAttackDamage"] += typedDamage + (type === "neutral" ? 0 : ids["elementalMainAttackDamage"]);
+        ids[type + "SpellDamage"] += typedDamage + (type === "neutral" ? 0 : ids["elementalSpellDamage"]);
+    });
+
+    ids.neutralDamage = 0;
+    ids.earthDamage = 0;
+    ids.thunderDamage = 0;
+    ids.waterDamage = 0;
+    ids.fireDamage = 0;
+    ids.airDamage = 0;
+    ids.elementalDamage = 0;
+    ids.elementalMainAttackDamage = 0;
+    ids.elementalSpellDamage = 0;
+
+    // eledefs
+    prefixes
+        .filter((prefix) => prefix !== "neutral")
+        .forEach((prefix) => {
+            ids[prefix + "Defence"] += ids.elementalDefence;
+        });
+
+    ids.elementalDefence = 0;
+}
+
 function radiance(build) {
     if (!build.toggles.includes("radiance")) return;
     const idNames = Object.keys(build.ids);
@@ -21,8 +64,6 @@ function radiance(build) {
         build.ids[idNames[i]] = Math.floor(build.ids[idNames[i]] * (nodes.radiance.multiplier + Number.EPSILON));
     }
 }
-
-const capitalizedElements = ["Earth", "Thunder", "Water", "Fire", "Air"];
 
 function computeDamageOutputs(build) {
     applyPowders(build);
@@ -72,6 +113,9 @@ function applyPowders(build) {
     }
 }
 
+const prefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
+const capitalizedElements = ["Earth", "Thunder", "Water", "Fire", "Air"];
+
 function computeOtherOutputs(build) {
     // Apply all adders and multipliers
     // Sum like stats to build.output
@@ -86,65 +130,41 @@ function computeOtherOutputs(build) {
         }
     }
 
-    mergeInPercents(build);
+    finalMerge(build);
     roundAllForDisplay(build);
 }
 
-function mergeInPercents(build) {
+function finalMerge(build) {
     const ids = build.ids;
-    ids.healthRegenRaw = ids.healthRegenRaw * (1 + ids.healthRegen / 100);
+    const base = build.base;
+    ids.healthRegenRaw *= 1 + ids.healthRegen / 100;
+    ids.healthRegen = 0;
+
+    base.baseHealth += ids.rawHealth;
+    ids.rawHealth = 0;
+
+    mergeElementalDefences(build)
+}
+
+function mergeElementalDefences(build) {
+    for (let i = 0; i < 6; i++) {
+        const base = build.base["base" + capitalizedElements[i] + "Defence"]
+        const percent = build.ids[prefixes[i + 1] + "Defence"]
+    }
 }
 
 function roundAllForDisplay(build) {
+    const base = build.base;
+    const baseNames = Object.keys(base);
+    baseNames.forEach((baseName) => {
+        if (!Number.isInteger(base[baseName])) return;
+        base[baseName] = roundForDisplay(base[baseName]);
+    });
     const ids = build.ids;
     const idNames = Object.keys(ids);
     idNames.forEach((idName) => {
         ids[idName] = roundForDisplay(ids[idName]);
     });
-}
-
-const prefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
-
-function splitMergedIds(build) {
-    const ids = build.ids;
-    // damage
-    ids.spellDamage += ids.damage;
-    ids.mainAttackDamage += ids.damage;
-    ids.damage = 0;
-
-    // mainAttackDamage and spellDamage
-    prefixes.forEach((prefix) => {
-        ids[prefix + "MainAttackDamage"] += ids.mainAttackDamage;
-        ids[prefix + "SpellDamage"] += ids.spellDamage;
-    });
-    ids.mainAttackDamage = 0;
-    ids.spellDamage = 0;
-
-    // typed damage
-    prefixes.forEach((type) => {
-        const typedDamage = ids[type + "Damage"] + (type === "neutral" ? 0 : ids.elementalDamage);
-
-        ids[type + "MainAttackDamage"] += typedDamage + (type === "neutral" ? 0 : ids["elementalMainAttackDamage"]);
-        ids[type + "SpellDamage"] += typedDamage + (type === "neutral" ? 0 : ids["elementalSpellDamage"]);
-    });
-
-    ids.neutralDamage = 0;
-    ids.earthDamage = 0;
-    ids.thunderDamage = 0;
-    ids.waterDamage = 0;
-    ids.fireDamage = 0;
-    ids.airDamage = 0;
-    ids.elementalDamage = 0;
-    ids.elementalMainAttackDamage = 0;
-    ids.elementalSpellDamage = 0;
-
-    prefixes
-        .filter((prefix) => prefix !== "neutral")
-        .forEach((prefix) => {
-            ids[prefix + "Defence"] += ids.elementalDefence;
-        });
-
-    ids.elementalDefence = 0;
 }
 
 function removeAllZeros(build) {

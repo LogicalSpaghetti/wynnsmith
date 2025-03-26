@@ -3,6 +3,7 @@
 // called when the page finishes loading
 window.addEventListener("load", function () {
     loadBuildFromLink();
+    loadFullBuildFromLink();
 
     refreshBuild();
 

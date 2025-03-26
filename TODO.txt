@@ -7,6 +7,8 @@ Fix tree clearing between reloads
     Don't generate it all with JS
 Relik damage melee calculation being weird
 Images flicker when first loaded
+Images for other trees aren't loaded until the weapon switched, 
+    if the user went offline, they aren't able to render
 Features:
 Offhand weapons
 Consumables

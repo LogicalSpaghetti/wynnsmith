@@ -60,7 +60,7 @@ function addId(build, id, idName) {
 
 function addMajorIds(build, item) {
     if (item.majorIds === undefined) return;
-    build.majorIds.push(Object.keys(item.majorIds)[0]);
+    build.mIds.push(Object.keys(item.majorIds)[0]);
 }
 
 function getItemByInput(input) {

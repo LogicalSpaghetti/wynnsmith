@@ -6,12 +6,12 @@ const emptyBaseString = JSON.stringify({
     baseFireDefence: 0,
     baseAirDefence: 0,
 
-    baseDamage: 0,
-    baseEarthDamage: 0,
-    baseThunderDamage: 0,
-    baseWaterDamage: 0,
-    baseFireDamage: 0,
-    baseAirDamage: 0,
+    // baseDamage: {min:0,max:0},
+    // baseEarthDamage: {min:0,max:0},
+    // baseThunderDamage: {min:0,max:0},
+    // baseWaterDamage: {min:0,max:0},
+    // baseFireDamage: {min:0,max:0},
+    // baseAirDamage: {min:0,max:0},
 
     leveledLootBonus: 0,
     damageFromMobs: 0,
