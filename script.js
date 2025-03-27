@@ -18,10 +18,12 @@ function refreshBuild() {
     console.log("begin new refresh:");
     resetLinkText();
     const build = {
+        class: "",
         base: JSON.parse(emptyBaseString),
         ids: JSON.parse(emptyIdsString),
         mIds: [],
         nodes: [],
+        aspects: [],
         adds: {},
         toggles: [],
         powders: {
@@ -30,12 +32,12 @@ function refreshBuild() {
         },
         attacks: {},
     };
-    console.log(build.ids);
-    refreshAbilities(build);
+    refreshClass(build);
     refreshItemData(build);
+    refreshAbilities(build);
     addToggles(build);
     computeOutputs(build);
-    output.textContent = JSON.stringify(build).replaceAll(",", ",\n").replaceAll("{", "{\n").replaceAll("}", "\n}");
+    displayFinalValues(build);
 }
 
 function resetLinkText() {
@@ -55,11 +57,6 @@ function roundForDisplay(number) {
     return ret + "0";
 }
 
-base64ToDecimal(intToBase64(10))
-base64ToDecimal(intToBase64(64))
-base64ToDecimal(intToBase64(4095))
-base64ToDecimal(intToBase64(4096))
-
 function intToBase64(decimal) {
     var sfStr = "";
     do {
@@ -67,8 +64,6 @@ function intToBase64(decimal) {
         decimal -= decimal % 64;
         decimal /= 64;
     } while (decimal > 0);
-
-    console.log(sfStr);
     return sfStr;
 }
 
@@ -80,7 +75,37 @@ function base64ToDecimal(sixtyFour) {
         while (subBinary.length % 6 !== 0) subBinary = "0" + subBinary;
         binary += subBinary;
     }
-
-    console.log(parseInt(binary, 2))
     return parseInt(binary, 2);
+}
+
+function binaryToDecimal(binary) {
+    return parseInt(binary, 2);
+}
+
+function decimalToBinary(decimal) {
+    return decimal.toString(2);
+}
+
+function romanize(num) {
+    if (!+num) return false;
+    var digits = String(+num).split("");
+    var key = ['','C','CC','CCC','CD','D','DC','DCC','DCCC','CM',
+        '','X','XX','XXX','XL','L','LX','LXX','LXXX','XC',
+        '','I','II','III','IV','V','VI','VII','VIII','IX'];
+    var roman = "",
+        i = 3;
+    while (i--) roman = (key[+digits.pop() + i * 10] || "") + roman;
+    return Array(+digits.join("") + 1).join("M") + roman;
+}
+
+function deromanize(str) {
+    var str = str.toUpperCase();
+    var validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/;
+    var token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g;
+    var key = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
+    var num = 0,
+        m;
+    if (!(str && validator.test(str))) return false;
+    while ((m = token.exec(str))) num += key[m[0]];
+    return num;
 }

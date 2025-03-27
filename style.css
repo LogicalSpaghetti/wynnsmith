@@ -1,5 +1,5 @@
 :root {
-    --ls-background:#121212;
+    --ls-background: #121212;
     --ls-background2: #333;
     --ls-background-hover: #383838;
     --ls-trim-hover: #464646;
@@ -7,6 +7,9 @@
     --ls-light-trim: #777;
     --ls-aqua: #009578;
     --ls-orange: #cc7700;
+    --wy-mythic: #a0a;
+    --wy-fabled: #f55;
+    --wy-legendary: #5ff;
 }
 
 body {
@@ -31,13 +34,23 @@ span {
 
 /* -- Inputs: -- */
 
+.slot_icon {
+    height: 16px;
+    width: 16px;
+    overflow: hidden;
+}
+
 .inputs {
-    width: 250px;
+    width: 300px;
+    /* width:600px; */
+    padding: 0px;
 }
 
 .input_section {
-    padding: 0%;
-    width: 250px;
+    display: flex;
+    line-height: 0;
+    padding: 0px;
+    /* width: 250px; */
 }
 
 input,
@@ -48,19 +61,14 @@ input,
 }
 
 input {
-    display: inline-block;
+    /* display: inline-block;
     position: relative;
-    translate: 20px;
+    translate: 20px; */
 }
 .input {
     width: 160px;
 }
 
-/* .input--ring,
-.input--bracelet,
-.input--necklace {
-    width: 226px;
-} */
 .miku {
     position: absolute;
     transform-origin: 0 0;
@@ -70,21 +78,18 @@ input {
 }
 
 .powder {
-    resize: horizontal;
     width: 58px;
-    position: absolute;
 }
 
 .toggle {
-    position: absolute;
+    /* display: block; */
     background-image: url("img/buttons/exper_closed.png");
     background-color: var(--ls-background2);
     border-collapse: separate;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border: 1px solid var(--ls-background);
     background-size: 100%;
-    padding: 0%;
     cursor: pointer;
 }
 
@@ -111,11 +116,10 @@ input {
     padding: 0px;
 }
 
-.toggle:hover,
 .effect:hover,
 input:hover {
     border: 1px solid var(--ls-trim-hover);
-    background: var(--ls-background-hover);
+    background-color: var(--ls-background-hover);
 }
 
 input:focus {
@@ -133,7 +137,7 @@ input:focus {
 
 .outputs {
     width: 200px;
-    word-wrap:normal;
+    word-wrap: normal;
     white-space: pre-line;
 }
 
@@ -146,7 +150,7 @@ button {
 }
 button:hover {
     border-color: var(--ls-trim-hover);
-
+    background-color: var(--ls-background-hover);
 }
 
 /* -- Ability Tree: -- */
@@ -213,24 +217,99 @@ img.highlight_node[data-type="ability"] {
 
 /* -- Attacks: -- */
 
-/* .attacksSection {
-    width: 500px;
-    height: 500px;
-    border: 1px solid red;
-} */
+/* Aspects */
 
-.test_img {
-    transform-origin: 0 0;
-    width: 200%;
-    object-fit: cover;
-    image-rendering: pixelated;
-    translate: 0% -50%;
+.aspects_label {
+    text-align: center;
+    width: 206px;
 }
 
-.test_img_div {
-    width: 200px;
-    height: 200px;
-    overflow: hidden;
+.aspects_border {
+    border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;
+    padding: 22px;
+    width: 162px;
+    line-height: 0;
+}
+
+#active_aspects,
+#inactive_aspects {
+    line-height: 0;
+    min-height: 27px;
+    background-image: url(img/background/tree_scroll.png);
+}
+
+.aspect_up {
+    width: 5.4px;
+    height: 13.5px;
+    font-size: 10px;
+    line-height: 10px;
+    background-image: url(img/buttons/page_up.png);
+    position: absolute;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: 100%;
+}
+.aspect_down {
+    width: 5.4px;
+    height: 13.5px;
+    font-size: 10px;
+    line-height: 10px;
+    background-image: url(img/buttons/page_down.png);
+    position: absolute;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: 100%;
+}
+
+#active_aspects > div {
+    margin-left: 5.4px;
+    /* margin-right: 2.7px; */
+    display: inline-block;
+}
+
+.aspect,
+.aspect_image {
+    height: 27px;
+    width: 27px;
+    background-size: 100%;
+}
+
+.aspect {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.aspect_tier {
+    translate: -20px 10px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.tier_I {
+    color: #666;
+}
+.tier_II {
+    color: #9f7a34;
+}
+.tier_III {
+    color: #c0c0c0;
+}
+.tier_IV {
+    color: #d4af37;
+}
+
+.mythic {
+    background: var(--wy-mythic);
+    background: radial-gradient(circle, var(--wy-mythic) 0%, rgba(0, 0, 0, 0) 75%);
+}
+
+.fabled {
+    background: var(--wy-fabled);
+    background: radial-gradient(circle, var(--wy-fabled) 0%, rgba(0, 0, 0, 0) 75%);
+}
+
+.legendary {
+    background: var(--wy-legendary);
+    background: radial-gradient(circle, var(--wy-legendary) 0%, rgba(0, 0, 0, 0) 75%);
 }
 
 /* Colors */

@@ -1,6 +1,4 @@
 Spell:
-baseDamage => Powders => baseAttackSpeedSpellModifier => spellConversion => %mults => (+ raw * spellConversion) * Str * Dex
-
 Attack damage calculation:
 =>
 Radiance multiplies all ids by 1.2x

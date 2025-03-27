@@ -1,3 +1,17 @@
+`use strict`;
+
+var previousClass = "";
+var currentClass = "";
+
+function refreshClass(build) {
+    previousClass = currentClass;
+    const item = getItemByInput(inputs[8]);
+    if (item !== undefined && item.requirements.classRequirement !== undefined) {
+        currentClass = item.requirements.classRequirement;
+    }
+    build.class = currentClass;
+}
+
 function refreshItemData(build) {
     addBasePlayerStats(build);
     for (let i = 0; i < inputs.length; i++) {
@@ -87,8 +101,11 @@ function refreshOwnData(input) {
     addBasesToBuild(miniBuild, item);
     addUnmaxedIds(miniBuild, item);
 
-    display.innerHTML = "Item Statistics: \n" +
-        formatAttackSpeed(item) + formatCombined(miniBuild.base) + formatCombined(miniBuild.ids);
+    display.innerHTML =
+        "Item Statistics: \n" +
+        formatAttackSpeed(item) +
+        formatCombined(miniBuild.base) +
+        formatCombined(miniBuild.ids);
 }
 
 function formatCombined(ids) {
@@ -97,13 +114,13 @@ function formatCombined(ids) {
     for (let i = 0; i < keys.length; i++) {
         const id = ids[keys[i]];
         if (Number.isInteger(id)) {
-            combinedString += id >= 0 ? "<span class=\"positive\">+" : "<span class=\"negative\">";
+            combinedString += id >= 0 ? '<span class="positive">+' : '<span class="negative">';
             combinedString += id + "</span>";
         } else {
-            combinedString += id.min >= 0 ? "<span class=\"positive\">+" : "<span class=\"negative\">";
+            combinedString += id.min >= 0 ? '<span class="positive">+' : '<span class="negative">';
             combinedString += id.min + "</span> to ";
-            combinedString += id.min >= 0 ? "<span class=\"positive\">+" : "<span class=\"negative\">";
-            combinedString += id.max + "</span>"
+            combinedString += id.min >= 0 ? '<span class="positive">+' : '<span class="negative">';
+            combinedString += id.max + "</span>";
         }
         combinedString += " " + keys[i] + "\n";
     }

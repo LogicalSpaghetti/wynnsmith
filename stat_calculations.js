@@ -1,15 +1,73 @@
 `use strict`;
 
 function computeOutputs(build) {
-    splitMergedIds(build);
-    // Radiance
+    // Pre-computations
+    
+    // Radiance multiplies all ids by 1.2x
     radiance(build);
+    // +Consus, raid buffs, lr boons
+    applyExternalBuffs(build);
+    includeTomes(build);
+    addArmorSpecials(build);
+    applyPowderBase(build);
+    splitMergedIds(build);
+    createConversions(build);
+    // =>
+    // For spells, the damage values are then multiplied by a value based on the weapon's **base** attack speed
+    // =>
+    // All damage values are multiplied by the neutral conversion % and retain their type.
+    // the sum of all damage values (before the neutral scaling) is multiplied by any elemental conversions, and becomes that type.
+    // =>
+    // Powders convert a % of the neutral damage into their element, up to 100% of it.
+    // =>
+    // Masteries Node base values are added to any non-zero damage values.
+    // Mastery multipliers are applied.
+    // Proficiencies are applied, damage is multiplicitive
+    // =>
+    applyPowderPercent(build);
+    // Armor Powder Specials add to ids as standard %s
+    // All elemental damages are multiplied by their coresponding % multiplier
+    // =>
+    // Raw damage values undergo attack conversions, and are then added on.
+    // For plain melee: (Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
+    // =>
+    // Apply Skill Points, Strength, Dexterity, and any other final multipliers.
+    
+    // Radiance
+    
     // Consumables
-    // Damage
-    computeDamageOutputs(build);
+    
     // Support/General
     computeOtherOutputs(build);
     removeAllZeros(build);
+
+    
+}
+
+function radiance(build) {
+    if (!build.toggles.includes("radiance")) return;
+    const idNames = Object.keys(build.ids);
+    for (let i = 0; i < idNames.length; i++) {
+        if (nodes.radiance.excludedIds.includes(idNames[i])) continue;
+        if (build.ids[idNames[i]] <= 0) continue;
+        build.ids[idNames[i]] = Math.floor(build.ids[idNames[i]] * (nodes.radiance.multiplier + Number.EPSILON));
+    }
+}
+
+function applyExternalBuffs(build) {
+    // TODO
+    // Consumables
+    // LR boons
+    // Raid Buffs
+    // etc.
+}
+
+function includeTomes(build) {
+    // TODO
+}
+
+function addArmorSpecials(build) {
+    // TODO
 }
 
 function splitMergedIds(build) {
@@ -55,37 +113,20 @@ function splitMergedIds(build) {
     ids.elementalDefence = 0;
 }
 
-function radiance(build) {
-    if (!build.toggles.includes("radiance")) return;
-    const idNames = Object.keys(build.ids);
-    for (let i = 0; i < idNames.length; i++) {
-        if (nodes.radiance.excludedIds.includes(idNames[i])) continue;
-        if (build.ids[idNames[i]] <= 0) continue;
-        build.ids[idNames[i]] = Math.floor(build.ids[idNames[i]] * (nodes.radiance.multiplier + Number.EPSILON));
+function createConversions(build) {
+
+}
+
+function applyPowderBase(build) {
+    // Add powder base damage:
+    for (let i = 0; i < build.powders.weapon.length; i++) {
+        const powder = powders[build.powders.weapon[i]];
+        addBase(build, powder.dmg, "base" + powder.element + "Damage");
     }
+    // TODO: Powder elemental defence
 }
 
-function computeDamageOutputs(build) {
-    applyPowders(build);
-    // =>
-    // For spells, the damage values are then multiplied by a value based on the weapon's **base** attack speed
-    // =>
-    // All damage values are multiplied by the neutral conversion % and retain their type.
-    // the sum of all damage values (before the neutral scaling) is multiplied by any elemental conversions, and becomes that type.
-    // =>
-    // Masteries Node base values are added to any non-zero damage values.
-    // Mastery multipliers are applied.
-    // Proficiencies are applied, damage is multiplicitive
-    // =>
-    // All elemental damages are multiplied by their coresponding % multiplier
-    // =>
-    // Raw damage values undergo attack conversions, and are then added on.
-    // For plain melee: (Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
-    // =>
-    // Apply Skill Points, Strength, Dexterity, and any other final multipliers.
-}
-
-function applyPowders(build) {
+function applyPowderPercent(build) {
     // Convert up to 100% Neutral:
     if (build.base.baseDamage !== undefined && build.powders.weapon.length > 0) {
         var percentUsed = 0;
@@ -104,12 +145,6 @@ function applyPowders(build) {
         }
         multiplyMinAndMaxBy(build.base.baseDamage, 1 - percentUsed / 100);
         // if (build.base.baseDamage.min + build.base.baseDamage.max === 0) delete build.base.baseDamage;
-    }
-
-    // Add powder base damage:
-    for (let i = 0; i < build.powders.weapon.length; i++) {
-        const powder = powders[build.powders.weapon[i]];
-        addBase(build, powder.dmg, "base" + powder.element + "Damage");
     }
 }
 
@@ -143,13 +178,13 @@ function finalMerge(build) {
     base.baseHealth += ids.rawHealth;
     ids.rawHealth = 0;
 
-    mergeElementalDefences(build)
+    mergeElementalDefences(build);
 }
 
 function mergeElementalDefences(build) {
     for (let i = 0; i < 6; i++) {
-        const base = build.base["base" + capitalizedElements[i] + "Defence"]
-        const percent = build.ids[prefixes[i + 1] + "Defence"]
+        const base = build.base["base" + capitalizedElements[i] + "Defence"];
+        const percent = build.ids[prefixes[i + 1] + "Defence"];
     }
 }
 

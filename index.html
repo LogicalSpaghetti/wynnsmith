@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <link rel="stylesheet" href="style.css" />
         <title>Fielbuilder</title>
-        <link rel="icon" href="img/icons/yay.png">
+        <link rel="icon" href="img/icons/yay.png" />
     </head>
     <body>
         <div class="flexCol">
@@ -18,75 +18,164 @@
             </section>
             <!-- Column 2 -->
             <section class="inputs column">
-                <section class="item_inputs">
+                <div class="item_inputs">
                     <div class="input_section">
-                        <span class="toggle toggle--helmet" data-slot="helmet"></span>
-                        <input class="input input--helmet" type="text" placeholder="Helmet" data-slot="helmet" />
-                        <input class="powder" placeholder="0 Slots" slot="helmet">
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 112px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="helmet"></button
+                        ><input class="input input--helmet" type="text" placeholder="Helmet" data-slot="helmet" /><input
+                            class="powder"
+                            placeholder="0 Slots"
+                            slot="helmet"
+                        />
                     </div>
                     <div class="display display--helmet collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="chestplate"></span>
-                        <input class="input input--chestplate" type="text" placeholder="Chestplate" data-slot="chestplate" />
-                        <input class="powder" placeholder="0 Slots" slot="chestplate">
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 96px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="chestplate"></button
+                        ><input
+                            class="input input--chestplate"
+                            type="text"
+                            placeholder="Chestplate"
+                            data-slot="chestplate"
+                        /><input class="powder" placeholder="0 Slots" slot="chestplate" />
                     </div>
                     <div class="display display--chestplate collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="leggings"></span>
-                        <input class="input input--leggings" type="text" placeholder="Leggings" data-slot="leggings" />
-                        <input class="powder" placeholder="0 Slots" slot="leggings">
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 80px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="leggings"></button
+                        ><input
+                            class="input input--leggings"
+                            type="text"
+                            placeholder="Leggings"
+                            data-slot="leggings"
+                        /><input class="powder" placeholder="0 Slots" slot="leggings" />
                     </div>
                     <div class="display display--leggings collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="boots"></span>
-                        <input class="input input--boots" type="text" placeholder="Boots" data-slot="boots" />
-                        <input class="powder" placeholder="0 Slots" slot="boots" maxlength="0">
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 64px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="boots"></button
+                        ><input class="input input--boots" type="text" placeholder="Boots" data-slot="boots" /><input
+                            class="powder"
+                            placeholder="0 Slots"
+                            slot="boots"
+                            maxlength="0"
+                        />
                     </div>
                     <div class="display display--boots collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="ring0"></span>
-                        <input class="input input--ring input--ring0" type="text" placeholder="Ring 1" data-slot="ring0" />
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 48px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="ring0"></button>
+                        <input
+                            class="input input--ring input--ring0"
+                            type="text"
+                            placeholder="Ring 1"
+                            data-slot="ring0"
+                        />
                     </div>
                     <div class="display display--ring0 collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="ring1"></span>
-                        <input class="input input--ring input--ring1" type="text" placeholder="Ring 2" data-slot="ring1" />
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 48px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="ring1"></button>
+                        <input
+                            class="input input--ring input--ring1"
+                            type="text"
+                            placeholder="Ring 2"
+                            data-slot="ring1"
+                        />
                     </div>
                     <div class="display display--ring1 collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="bracelet"></span>
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 32px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="bracelet"></button>
                         <input class="input input--bracelet" type="text" placeholder="Bracelet" data-slot="bracelet" />
                     </div>
                     <div class="display display--bracelet collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="necklace"></span>
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: 16px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="necklace"></button>
                         <input class="input input--necklace" type="text" placeholder="Neckalce" data-slot="necklace" />
                     </div>
                     <div class="display display--necklace collapse"></div>
                     <div class="input_section">
-                        <span class="toggle" data-state="false" data-slot="weapon"></span>
+                        <span
+                            class="slot_icon"
+                            style="background-image: url(img/items/all.png); background-position: -64px 0px"
+                        ></span
+                        ><button class="toggle" data-state="false" data-slot="weapon"></button>
                         <input class="input input--weapon" type="text" placeholder="Weapon" data-slot="weapon" />
-                        <input class="powder" placeholder="0 Slots" slot="weapon" maxlength="0">
+                        <input class="powder" placeholder="0 Slots" slot="weapon" maxlength="0" />
                     </div>
                     <div class="display display--weapon collapse"></div>
-                    <button class="collapse_all" style="display:none;">Collapse All</button>
-                </section>
-                <section class="copy_buttons">
+                    <button class="collapse_all" style="display: none">Collapse All</button>
+                </div>
+                <div class="copy_buttons">
                     <p>
                         <button class="copy_link copy_link--short" data-default="Copy Short">Copy Short</button>
                         <button class="copy_link copy_link--long" data-default="Copy Long">Copy Long</button>
                     </p>
-                </section>
-                <section class="effect_toggles">
-                    <button class="effect radiance" data-modifier="radiance">Radiance</button>
-                </section>
+                </div>
+                <div>
+                    <div><b>Build Errors:</b></div>
+                    TODO: Conflicting gear, SP reqs...
+                </div>
+                <div class="effect_toggles">
+                    <div id="effect_toggles_label"><b>Active Effects:</b></div>
+                    <button class="effect radiance" data-modifier="radiance">Radiance</button>...
+                </div>
+                <div>
+                    <div><b>External Buffs:</b></div>
+                    TODO: Raids, lootruns, consus, edited ids...
+                </div>
+                <div>
+                    <div class="aspects_label">Active Aspects:</div>
+                    <div class="aspects_border">
+                        <div id="active_aspects"></div>
+                    </div>
+                    <div class="aspects_border">
+                        <div id="inactive_aspects"></div>
+                    </div>
+                </div>
+                <div></div>
             </section>
             <!-- Cloumn 3 -->
             <section class="outputs column">
                 <div class="output output--A"></div>
             </section>
             <!-- Cloumn 4 -->
-            <section class="attacksSection column">
+            <section id="attacks" class="attacksSection column">
+                <div>filler</div>
+                <template id="attackTemplate">
+                    <div>
+                        <img /><span>
+                            <div></div>
+                            <div></div>
+                        </span>
+                    </div>
+                </template>
             </section>
         </div>
 
@@ -99,6 +188,7 @@
         <script src="build_linking.js"></script>
         <script src="item_input.js"></script>
         <script src="stat_calculations.js"></script>
+        <script src="display.js"></script>
         <script src="abilities.js"></script>
         <script src="ability_tree.js"></script>
         <script src="event_listeners.js"></script>

@@ -1,7 +1,5 @@
 `use strict`;
 
-var currentClass = "";
-
 function treeClicked(event) {
     const node = event.target;
     if (node.dataset.type !== "ability") return;
@@ -9,23 +7,23 @@ function treeClicked(event) {
 }
 
 function refreshAbilities(build) {
-    refreshAbilityTree(build);
-    addNodesToBuild(build);
+    if (previousClass === build.class) {
+        addNodesToBuild(build);
+        addAspectsToBuild(build);
+    } else {
+        changeAbilityTree(build);
+        changeAspects(build);
+    }
 }
 
-function refreshAbilityTree(build) {
-    const previousClass = currentClass;
-    const weapon = getItemByInput(document.querySelector(`.input--weapon`));
-    if (weapon !== undefined) currentClass = weapon.requirements.classRequirement;
-    if (previousClass === currentClass) return;
+function changeAbilityTree(build) {
     document.querySelector(".abilityTreeContainer").removeAttribute("hidden");
 
-    const treeMap = classAbilities[currentClass]["map"]; // array
+    const treeMap = classes[build.class].map; // array
     const abilityTree = document.querySelector(".abilityTree");
     abilityTree.innerHTML = mapHTML(treeMap);
 
-    const treeNodes = classAbilities[currentClass]["tree"];
-    const treeAspects = classAbilities[currentClass]["aspects"];
+    const treeNodes = classes[build.class].tree;
 
     // prevent images from being dragged
     document.querySelectorAll(".node_img").forEach((img) => {
@@ -33,6 +31,44 @@ function refreshAbilityTree(build) {
             return false;
         };
     });
+}
+
+function changeAspects(build) {
+    const aspects = classes[build.class].aspects;
+    const aspectNames = Object.keys(aspects);
+
+    const activeHolder = document.querySelector("#active_aspects");
+    const inactiveHolder = document.querySelector("#inactive_aspects");
+
+    activeHolder.innerHTML = "";
+    for (let i = 0; i < 5; i++) {
+        const offset = i*32.4 - 2.7;
+        activeHolder.innerHTML += "<button class=\"aspect_up\" style=\"translate: " + offset + "px 0px\"></button>"
+        activeHolder.innerHTML += "<button class=\"aspect_down\" style=\"translate: " + offset + "px 13.5px\"></button>"
+    }
+    inactiveHolder.innerHTML = "";
+
+    for (let i = 0; i < aspectNames.length; i++) {
+        const aspect = aspects[aspectNames[i]];
+
+        const aspectDiv = document.createElement("div");
+        aspectDiv.classList.add("aspect");
+        aspectDiv.classList.add(aspect.rarity);
+        aspectDiv.dataset.aspect = aspectNames[i];
+
+        const aspectImage = document.createElement("span");
+        aspectImage.classList.add("aspect_image");
+        aspectImage.style = "background-image:url(img/aspect/" + build.class + ".png);";
+
+        const tierOverlay = document.createElement("span");
+        tierOverlay.classList.add("aspect_tier");
+        tierOverlay.style.position = "absolute";
+        tierOverlay.textContent = "III";
+
+        aspectDiv.appendChild(aspectImage);
+        aspectDiv.appendChild(tierOverlay);
+        inactiveHolder.appendChild(aspectDiv);
+    }
 }
 
 function toggleNode(node) {
@@ -183,6 +219,11 @@ function addNodesToBuild(build) {
             build.nodes.push(node.dataset.id);
         }
     });
+}
 
-    console.log("build.nodes: " + JSON.stringify(build.nodes));
+function addAspectsToBuild(build) {
+    const aspects = document.querySelector("#active_aspects").querySelectorAll(".aspect");
+    aspects.forEach((aspect) => {
+        build.aspects.push(aspect.dataset.aspect);
+    });
 }

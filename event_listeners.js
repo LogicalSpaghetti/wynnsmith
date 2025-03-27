@@ -17,6 +17,7 @@ function addEventListeners() {
     addToggleListeners();
     addEffectListeners();
     addCopyLinkListeners();
+    addAspectListeners();
 }
 
 //
@@ -93,3 +94,53 @@ document.querySelectorAll(".powder").forEach((input) => {
         refreshBuild();
     });
 });
+
+function addAspectListeners() {
+    const active = document.querySelector("#active_aspects");
+    const inactive = document.querySelector("#inactive_aspects");
+
+    active.addEventListener("click", (event) => {
+        const aspectImg = event.target;
+        if (!aspectImg.classList.contains("aspect_image")) return;
+        const aspect = aspectImg.parentElement;
+
+        inactive.appendChild(aspect.cloneNode(true));
+
+        if (aspect.classList.contains("mythic")) {
+            inactive.childNodes.forEach((node) => {
+                if (node.classList.contains("mythic")) {
+                    node.style.display = "inline-block";
+                }
+            });
+        }
+
+        // active.appendChild("<div class=\"padding\"></div>");
+        aspect.remove();
+
+        if (active.childElementCount < 15) inactive.style.display = "inline-block";
+
+        refreshBuild();
+    });
+
+    inactive.addEventListener("click", (event) => {
+        const clickTarget = event.target;
+        if (!clickTarget.classList.contains("aspect_image") && !clickTarget.classList.contains("aspect_tier")) return;
+        const aspect = clickTarget.parentElement;
+
+        active.appendChild(aspect.cloneNode(true));
+        if (aspect.classList.contains("mythic")) {
+            inactive.childNodes.forEach((node) => {
+                if (node.classList.contains("mythic")) {
+                    node.style.display = "none";
+                }
+            });
+        }
+
+        // active.querySelector(".padding").remove();
+        aspect.remove();
+
+        if (active.childElementCount >= 15) inactive.style.display = "none";
+
+        refreshBuild();
+    });
+}
