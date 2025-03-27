@@ -144,3 +144,7 @@ function addAspectListeners() {
         refreshBuild();
     });
 }
+
+document.querySelector("#ansi_tree").addEventListener("click", function () {
+    copyTreeAsText();
+})

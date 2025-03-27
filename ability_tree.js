@@ -63,10 +63,10 @@ function changeAspects(build) {
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
         tierOverlay.style.position = "absolute";
-        tierOverlay.textContent = "III";
+        tierOverlay.textContent = "IV";
 
-        aspectDiv.appendChild(aspectImage);
         aspectDiv.appendChild(tierOverlay);
+        aspectDiv.appendChild(aspectImage);
         inactiveHolder.appendChild(aspectDiv);
     }
 }
@@ -152,7 +152,7 @@ class TablePiece {
     getConnector() {
         const nodeName = this.node.meta.icon.replaceAll("abilityTree.", "");
         return (
-            '<div class="connector" style="background-image: url(img/abilities/' +
+            '<div class="connector" data-name="' + nodeName + '" style="background-image: url(img/abilities/' +
             this.node.type +
             "/" +
             nodeName +
