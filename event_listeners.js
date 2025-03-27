@@ -108,6 +108,8 @@ function addAspectListeners() {
             if (neumeral.dataset.tier > (clickTarget.parentElement.classList.contains("mythic") ? 3 : 4)) {
                 neumeral.dataset.tier -= 1;
             } else {
+                neumeral.classList.remove("Tier_" + romanize(neumeral.dataset.tier - 1));
+                neumeral.classList.add("Tier_" + romanize(neumeral.dataset.tier));
                 refreshBuild();
             }
             neumeral.textContent = romanize(neumeral.dataset.tier);
@@ -116,7 +118,9 @@ function addAspectListeners() {
         if (clickTarget.classList.contains("aspect_down")) {
             const neumeral = clickTarget.parentElement.childNodes[2];
             if (neumeral.dataset.tier > 1) {
+                neumeral.classList.remove("Tier_" + romanize(neumeral.dataset.tier));
                 neumeral.dataset.tier = parseInt(neumeral.dataset.tier) - 1;
+                neumeral.classList.add("Tier_" + romanize(neumeral.dataset.tier));
                 refreshBuild();
             }
             neumeral.textContent = romanize(neumeral.dataset.tier);

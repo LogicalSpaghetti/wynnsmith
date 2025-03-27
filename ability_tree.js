@@ -59,6 +59,7 @@ function changeAspects(build) {
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
         tierOverlay.style.position = "absolute";
+        tierOverlay.classList.add("Tier_" + (aspect.rarity === "mythic" ? romanize(3) : romanize(4)));
         tierOverlay.textContent = aspect.rarity === "mythic" ? romanize(3) : romanize(4);
         tierOverlay.dataset.tier = aspect.rarity === "mythic" ? 3 : 4;
         tierOverlay.style.display = "none";
@@ -160,7 +161,9 @@ class TablePiece {
     getConnector() {
         const nodeName = this.node.meta.icon.replaceAll("abilityTree.", "");
         return (
-            '<div class="connector" data-name="' + nodeName + '" style="background-image: url(img/abilities/' +
+            '<div class="connector" data-name="' +
+            nodeName +
+            '" style="background-image: url(img/abilities/' +
             this.node.type +
             "/" +
             nodeName +
@@ -231,7 +234,7 @@ function addNodesToBuild(build) {
 
 function addAspectsToBuild(build) {
     const aspects = document.querySelector("#active_aspects").querySelectorAll(".aspect");
-    console.log(aspects)
+    console.log(aspects);
     aspects.forEach((aspect) => {
         build.aspects[aspect.dataset.aspect] = aspect.childNodes[2].dataset.tier;
     });

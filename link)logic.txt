@@ -22,16 +22,17 @@ powders
 
 2*9+2+5+14+10
 
-?v00.00
-	&sWWHHCCLLBBRRRRBBNN
-	&pPP*PP**PPP
-	&tTTTTTTTTTTTTTTTT
-	&aAAAAA
-	&o
+?
+	v00.00
+	-sWWHHCCLLBBRRRRBBNN
+	-pff*ff**f3fe
+	-tTTTTTTTTTTTTTTTT
+	-aAAAAA
+	-oOOOOOOOOOOOOOO
 
+https://fiel.us/gabriel/wynnbuilder?v00.00-sWWHHCCLLBBRRRRBBNN-pff*ff**f3fe-tTTTTTTTTTTTTTTTT-aAAAAA-oOOOOOOOOOOOOOO
 
-11 possible powders, 16, 1111, 2/3rds of a 64
-5 possible powders, 8, 111, half of a 64(111111)
+https://hppeng-wynn.github.io/builder?v=10#9_0Au09-0jn0nB0vI0K00KI0UB0Qi14150e032C1g1000FU01000FU1000FU103tlU0z0z0+0+0+0+0-1Tz+JVxXx50
 
 https://wynnbuilder.github.io/builder?v=16#9_10N10K0y50QW0uP0K00Jn0vM0QI1h01011p1D1g000000z0z0+0+0+0+0-1T
 https://wynnbuilder.github.io/builder?v=16#9_10N10K0y50QW0uP0K00Jn0vM0QI1h01011p1D1g1000CO1000CO01007iO00z0z0+0+0+0+0-1T

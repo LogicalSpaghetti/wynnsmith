@@ -285,16 +285,16 @@ img.highlight_node[data-type="ability"] {
     translate: -5.4px 13.5px;
 }
 
-.tier_I {
+.Tier_I {
     color: #666;
 }
-.tier_II {
-    color: #9f7a34;
+.Tier_II {
+    color: #6d4d10;
 }
-.tier_III {
+.Tier_III {
     color: #c0c0c0;
 }
-.tier_IV {
+.Tier_IV {
     color: #d4af37;
 }
 
