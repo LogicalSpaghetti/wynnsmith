@@ -41,11 +41,6 @@ function changeAspects(build) {
     const inactiveHolder = document.querySelector("#inactive_aspects");
 
     activeHolder.innerHTML = "";
-    for (let i = 0; i < 5; i++) {
-        const offset = i*32.4 - 2.7;
-        activeHolder.innerHTML += "<button class=\"aspect_up\" style=\"translate: " + offset + "px 0px\"></button>"
-        activeHolder.innerHTML += "<button class=\"aspect_down\" style=\"translate: " + offset + "px 13.5px\"></button>"
-    }
     inactiveHolder.innerHTML = "";
 
     for (let i = 0; i < aspectNames.length; i++) {
@@ -55,6 +50,7 @@ function changeAspects(build) {
         aspectDiv.classList.add("aspect");
         aspectDiv.classList.add(aspect.rarity);
         aspectDiv.dataset.aspect = aspectNames[i];
+        // aspectDiv.dataset.tiers = Object.keys(aspect.tiers).length;
 
         const aspectImage = document.createElement("span");
         aspectImage.classList.add("aspect_image");
@@ -63,7 +59,19 @@ function changeAspects(build) {
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
         tierOverlay.style.position = "absolute";
-        tierOverlay.textContent = "IV";
+        tierOverlay.textContent = aspect.rarity === "mythic" ? romanize(3) : romanize(4);
+        tierOverlay.dataset.tier = aspect.rarity === "mythic" ? 3 : 4;
+        tierOverlay.style.display = "none";
+
+        const upButton = document.createElement("button");
+        upButton.classList.add("aspect_up");
+        upButton.style.display = "none";
+        const downButton = document.createElement("button");
+        downButton.classList.add("aspect_down");
+        downButton.style.display = "none";
+
+        aspectDiv.appendChild(upButton);
+        aspectDiv.appendChild(downButton);
 
         aspectDiv.appendChild(tierOverlay);
         aspectDiv.appendChild(aspectImage);
@@ -223,7 +231,8 @@ function addNodesToBuild(build) {
 
 function addAspectsToBuild(build) {
     const aspects = document.querySelector("#active_aspects").querySelectorAll(".aspect");
+    console.log(aspects)
     aspects.forEach((aspect) => {
-        build.aspects.push(aspect.dataset.aspect);
+        build.aspects[aspect.dataset.aspect] = aspect.childNodes[2].dataset.tier;
     });
 }

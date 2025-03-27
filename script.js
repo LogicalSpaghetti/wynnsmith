@@ -23,7 +23,7 @@ function refreshBuild() {
         ids: JSON.parse(emptyIdsString),
         mIds: [],
         nodes: [],
-        aspects: [],
+        aspects: {},
         adds: {},
         toggles: [],
         powders: {

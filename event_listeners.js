@@ -100,11 +100,37 @@ function addAspectListeners() {
     const inactive = document.querySelector("#inactive_aspects");
 
     active.addEventListener("click", (event) => {
-        const aspectImg = event.target;
-        if (!aspectImg.classList.contains("aspect_image")) return;
-        const aspect = aspectImg.parentElement;
+        const clickTarget = event.target;
 
-        inactive.appendChild(aspect.cloneNode(true));
+        if (clickTarget.classList.contains("aspect_up")) {
+            const neumeral = clickTarget.parentElement.childNodes[2];
+            neumeral.dataset.tier = parseInt(neumeral.dataset.tier) + 1;
+            if (neumeral.dataset.tier > (clickTarget.parentElement.classList.contains("mythic") ? 3 : 4)) {
+                neumeral.dataset.tier -= 1;
+            } else {
+                refreshBuild();
+            }
+            neumeral.textContent = romanize(neumeral.dataset.tier);
+            return;
+        }
+        if (clickTarget.classList.contains("aspect_down")) {
+            const neumeral = clickTarget.parentElement.childNodes[2];
+            if (neumeral.dataset.tier > 1) {
+                neumeral.dataset.tier = parseInt(neumeral.dataset.tier) - 1;
+                refreshBuild();
+            }
+            neumeral.textContent = romanize(neumeral.dataset.tier);
+            return;
+        }
+
+        if (!clickTarget.classList.contains("aspect_image")) return;
+        const aspect = clickTarget.parentElement;
+
+        const newNode = aspect.cloneNode(true);
+        newNode.childNodes[0].style.display = "none";
+        newNode.childNodes[1].style.display = "none";
+        newNode.childNodes[2].style.display = "none";
+        inactive.appendChild(newNode);
 
         if (aspect.classList.contains("mythic")) {
             inactive.childNodes.forEach((node) => {
@@ -117,7 +143,7 @@ function addAspectListeners() {
         // active.appendChild("<div class=\"padding\"></div>");
         aspect.remove();
 
-        if (active.childElementCount < 15) inactive.style.display = "inline-block";
+        if (active.childElementCount < 5) inactive.parentElement.style.display = "inline-block";
 
         refreshBuild();
     });
@@ -127,7 +153,12 @@ function addAspectListeners() {
         if (!clickTarget.classList.contains("aspect_image") && !clickTarget.classList.contains("aspect_tier")) return;
         const aspect = clickTarget.parentElement;
 
-        active.appendChild(aspect.cloneNode(true));
+        const newNode = aspect.cloneNode(true);
+        newNode.childNodes[0].style.display = "inline-block";
+        newNode.childNodes[1].style.display = "inline-block";
+        newNode.childNodes[2].style.display = "inline-block";
+        active.appendChild(newNode);
+
         if (aspect.classList.contains("mythic")) {
             inactive.childNodes.forEach((node) => {
                 if (node.classList.contains("mythic")) {
@@ -136,10 +167,9 @@ function addAspectListeners() {
             });
         }
 
-        // active.querySelector(".padding").remove();
         aspect.remove();
 
-        if (active.childElementCount >= 15) inactive.style.display = "none";
+        if (active.childElementCount >= 5) inactive.parentElement.style.display = "none";
 
         refreshBuild();
     });
@@ -147,4 +177,4 @@ function addAspectListeners() {
 
 document.querySelector("#ansi_tree").addEventListener("click", function () {
     copyTreeAsText();
-})
+});
