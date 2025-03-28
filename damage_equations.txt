@@ -1,7 +1,7 @@
 Spell:
 Attack damage calculation:
 =>
-Radiance multiplies all ids by 1.2x
+Radiance multiplies most ids by 1.2x
 =>
 +Consus and other external buffs
 +Tomes
@@ -23,6 +23,7 @@ Armor Powder Specials add to ids as standard %s
 All elemental damages are multiplied by their coresponding % multiplier
 =>
 Raw damage values undergo attack conversions, and are then added on.
-For plain melee: (Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
+    If the base damage post-conversion is zero for an element, raw doesn't apply for that element
+        This applies to pre-power conversion ratios
 =>
 Apply Skill Points, Strength, Dexterity, and any other final multipliers.

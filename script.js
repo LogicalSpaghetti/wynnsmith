@@ -19,8 +19,7 @@ function refreshBuild() {
     resetLinkText();
     const build = {
         class: "",
-        base: JSON.parse(emptyBaseString),
-        ids: JSON.parse(emptyIdsString),
+        final: {},
         mIds: [],
         nodes: [],
         aspects: {},
@@ -30,7 +29,12 @@ function refreshBuild() {
             armor: [],
             weapon: [],
         },
+        convs: {},
+        baseConv: {},
+        rawConv: {},
         attacks: {},
+        base: JSON.parse(emptyBaseString),
+        ids: JSON.parse(emptyIdsString),
     };
     refreshClass(build);
     refreshItemData(build);
@@ -108,4 +112,9 @@ function deromanize(str) {
     if (!(str && validator.test(str))) return false;
     while ((m = token.exec(str))) num += key[m[0]];
     return num;
+}
+
+function computeUnflippableMultiplier(base, percent) {
+    const effectivePercent = percent * Math.sign(base);
+    return (effectivePercent < -1) ? 0 : (base * (1 + effectivePercent));
 }

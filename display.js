@@ -3,9 +3,12 @@ function displayFinalValues(build) {
 }
 
 function displayStats(build) {
-    output.textContent = JSON.stringify(build).replaceAll(",", ",\n").replaceAll("{", "{\n").replaceAll("}", "\n}");
+    output.textContent = JSON.stringify(build)
+        .replaceAll(",", ",\n")
+        .replaceAll("{", "{\n")
+        .replaceAll("}", "\n}")
+        .replaceAll("[", "[\n")
+        .replaceAll("]", "\n]");
 }
 
-function displayDamageValues(build) {
-    
-}
+function displayDamageValues(build) {}
