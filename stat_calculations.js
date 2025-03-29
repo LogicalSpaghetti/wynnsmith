@@ -306,7 +306,12 @@ function convertRaw(build) {
 function applyAttackSpeedToSpells(build) {
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
     Object.keys(build.baseConv).forEach((convName) => {
-        // TODO
+        if (meleeAttacks.includes(convName)) return;
+        const conv = build.baseConv[convName];
+        for (let i = 0; i < 6; i++) {
+            conv.min[i] *= attackSpeedMultiplier;
+            conv.max[i] *= attackSpeedMultiplier;
+        }
     });
 }
 
@@ -342,9 +347,9 @@ function computeOtherOutputs(build) {
     for (let i = 0; i < build.powders.armor.length; i++) {
         const powder = powders[build.powders.armor[i]];
         const powderDefs = powder.def;
-        for (let j = 1; j < damageTypes.length; j++) {
+        for (let j = 0; j < powderDefs.length; j++) {
             if (powderDefs[j] === 0) continue;
-            addBase(build, getAsMinMax(powderDefs[j]), "base" + damageTypes[j] + "Defence");
+            addBase(build, getAsMinMax(powderDefs[j]), "base" + damageTypes[j + 1] + "Defence");
         }
     }
 }
