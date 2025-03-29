@@ -305,7 +305,7 @@ function convertRaw(build) {
 
 function applyAttackSpeedToSpells(build) {
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
-    Object.keys(build.baseConvs).forEach((convName) => {
+    Object.keys(build.baseConv).forEach((convName) => {
         // TODO
     });
 }
