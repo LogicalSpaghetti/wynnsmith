@@ -19,7 +19,7 @@ function refreshBuild() {
     resetLinkText();
     const build = {
         class: "",
-        final: {},
+        attackSpeed: "",
         mIds: [],
         nodes: [],
         aspects: {},
@@ -29,6 +29,7 @@ function refreshBuild() {
             armor: [],
             weapon: [],
         },
+        final: {},
         convs: {},
         baseConv: {},
         rawConv: {},

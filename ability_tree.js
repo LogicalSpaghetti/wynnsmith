@@ -59,9 +59,9 @@ function changeAspects(build) {
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
         tierOverlay.style.position = "absolute";
-        tierOverlay.classList.add("Tier_" + (aspect.rarity === "mythic" ? romanize(3) : romanize(4)));
-        tierOverlay.textContent = aspect.rarity === "mythic" ? romanize(3) : romanize(4);
-        tierOverlay.dataset.tier = aspect.rarity === "mythic" ? 3 : 4;
+        tierOverlay.classList.add("Tier_" + (aspect.rarity === "legendary" ? romanize(4) : romanize(3)));
+        tierOverlay.textContent = aspect.rarity === "legendary" ? romanize(4) : romanize(3);
+        tierOverlay.dataset.tier = aspect.rarity === "legendary" ? 4 : 3;
         tierOverlay.style.display = "none";
 
         const upButton = document.createElement("button");

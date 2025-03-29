@@ -10,11 +10,10 @@ function computeOutputs(build) {
     includeTomes(build);
     addArmorSpecials(build);
     addPowderBase(build);
-    baseDamageToArrays(build);
     splitMergedIds(build);
+    damagesToArrays(build);
     conversions(build);
-    // =>
-    // For spells, the damage values are then multiplied by a value based on the weapon's **base** attack speed
+    applyAttackSpeedToSpells(build);
     // =>
     // All damage values are multiplied by the neutral conversion % and retain their type.
     // the sum of all damage values (before the neutral scaling) is multiplied by any elemental conversions, and becomes that type.
@@ -30,7 +29,9 @@ function computeOutputs(build) {
     // Armor Powder Specials add to ids as standard %s
     // All elemental damages are multiplied by their coresponding % multiplier
     // =>
-    // Raw damage values undergo attack conversions, and are then added on.
+
+    // For spells/melee, the damage values are then multiplied by a value based on the weapon's **base** attack speed
+
     // For plain melee: (Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
     // =>
     // Apply Skill Points, Strength, Dexterity, and any other final multipliers.
@@ -41,6 +42,8 @@ function computeOutputs(build) {
 
     // Support/General
     computeOtherOutputs(build);
+    finalMerge(build);
+    roundAllForDisplay(build);
     removeAllZeros(build);
 }
 
@@ -81,7 +84,8 @@ function addPowderBase(build) {
 }
 
 // splits base damage into a min and max array
-function baseDamageToArrays(build) {
+function damagesToArrays(build) {
+    // base
     build.final.min = [
         build.base.baseDamage.min,
         build.base.baseEarthDamage.min,
@@ -99,21 +103,87 @@ function baseDamageToArrays(build) {
         build.base.baseAirDamage.max,
     ];
 
-    build.base.totalDamage = {};
-    build.base.totalDamage.min =
+    build.final.totalDamage = {};
+    build.final.totalDamage.min =
         build.final.min[0] +
         build.final.min[1] +
         build.final.min[2] +
         build.final.min[3] +
         build.final.min[4] +
         build.final.min[5];
-    build.base.totalDamage.max =
+    build.final.totalDamage.max =
         build.final.max[0] +
         build.final.max[1] +
         build.final.max[2] +
         build.final.max[3] +
         build.final.max[4] +
         build.final.max[5];
+
+    // raw
+    build.final.rawMainAttackDamage = [
+        build.final.rawNeutralMainAttackDamage,
+        build.final.rawEarthMainAttackDamage,
+        build.final.rawThunderMainAttackDamage,
+        build.final.rawWaterMainAttackDamage,
+        build.final.rawFireMainAttackDamage,
+        build.final.rawAirMainAttackDamage,
+    ];
+
+    delete build.final.rawNeutralMainAttackDamage;
+    delete build.final.rawEarthMainAttackDamage;
+    delete build.final.rawThunderMainAttackDamage;
+    delete build.final.rawWaterMainAttackDamage;
+    delete build.final.rawFireMainAttackDamage;
+    delete build.final.rawAirMainAttackDamage;
+
+    build.final.rawSpellDamage = [
+        build.final.rawNeutralSpellDamage,
+        build.final.rawEarthSpellDamage,
+        build.final.rawThunderSpellDamage,
+        build.final.rawWaterSpellDamage,
+        build.final.rawFireSpellDamage,
+        build.final.rawAirSpellDamage,
+    ];
+
+    delete build.final.rawNeutralSpellDamage;
+    delete build.final.rawEarthSpellDamage;
+    delete build.final.rawThunderSpellDamage;
+    delete build.final.rawWaterSpellDamage;
+    delete build.final.rawFireSpellDamage;
+    delete build.final.rawAirSpellDamage;
+
+    // percent
+    build.final.mainAttackDamage = [
+        build.final.neutralMainAttackDamage,
+        build.final.earthMainAttackDamage,
+        build.final.thunderMainAttackDamage,
+        build.final.waterMainAttackDamage,
+        build.final.fireMainAttackDamage,
+        build.final.airMainAttackDamage,
+    ];
+
+    delete build.final.neutralMainAttackDamage;
+    delete build.final.earthMainAttackDamage;
+    delete build.final.thunderMainAttackDamage;
+    delete build.final.waterMainAttackDamage;
+    delete build.final.fireMainAttackDamage;
+    delete build.final.airMainAttackDamage;
+
+    build.final.spellDamage = [
+        build.final.neutralSpellDamage,
+        build.final.earthSpellDamage,
+        build.final.thunderSpellDamage,
+        build.final.waterSpellDamage,
+        build.final.fireSpellDamage,
+        build.final.airSpellDamage,
+    ];
+
+    delete build.final.neutralSpellDamage;
+    delete build.final.earthSpellDamage;
+    delete build.final.thunderSpellDamage;
+    delete build.final.waterSpellDamage;
+    delete build.final.fireSpellDamage;
+    delete build.final.airSpellDamage;
 }
 
 const prefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
@@ -132,8 +202,11 @@ function splitMergedIds(build) {
             ids.mainAttackDamage +
             typedDamage +
             (type === "neutral" ? 0 : ids["elementalMainAttackDamage"]);
-        final[type + "SpellDamage"] = ids[type + "SpellDamage"];
-        ids.spellDamage + typedDamage + (type === "neutral" ? 0 : ids["elementalSpellDamage"]);
+        final[type + "SpellDamage"] =
+            ids[type + "SpellDamage"] +
+            ids.spellDamage +
+            typedDamage +
+            (type === "neutral" ? 0 : ids["elementalSpellDamage"]);
     });
 
     // raw Damages
@@ -141,10 +214,16 @@ function splitMergedIds(build) {
         const typedDamage =
             ids.rawDamage + ids["raw" + type + "Damage"] + (type === "Neutral" ? 0 : ids.rawElementalDamage);
 
-        final["raw" + type + "MainAttackDamage"] = ids["raw" + type + "MainAttackDamage"];
-        ids.rawMainAttackDamage + typedDamage + (type === "Neutral" ? 0 : ids.rawElementalMainAttackDamage);
-        final["raw" + type + "SpellDamage"] = ids["raw" + type + "SpellDamage"];
-        ids.rawSpellDamage + typedDamage + (type === "Neutral" ? 0 : ids.rawElementalSpellDamage);
+        final["raw" + type + "MainAttackDamage"] =
+            ids["raw" + type + "MainAttackDamage"] +
+            ids.rawMainAttackDamage +
+            typedDamage +
+            (type === "Neutral" ? 0 : ids.rawElementalMainAttackDamage);
+        final["raw" + type + "SpellDamage"] =
+            ids["raw" + type + "SpellDamage"] +
+            ids.rawSpellDamage +
+            typedDamage +
+            (type === "Neutral" ? 0 : ids.rawElementalSpellDamage);
     });
 
     // eleDef => typeDef
@@ -192,8 +271,8 @@ function convertBase(build) {
 
         // elemental conversions
         for (let i = 1; i < 6; i++) {
-            conv.min[i] = (build.convs[convName][i] / 100) * build.base.totalDamage.min;
-            conv.max[i] = (build.convs[convName][i] / 100) * build.base.totalDamage.max;
+            conv.min[i] = (build.convs[convName][i] / 100) * build.final.totalDamage.min;
+            conv.max[i] = (build.convs[convName][i] / 100) * build.final.totalDamage.max;
         }
         // neutral conversion
         const neutralConversion = build.convs[convName][0] / 100;
@@ -204,7 +283,32 @@ function convertBase(build) {
     });
 }
 
-function convertRaw(build) {}
+function convertRaw(build) {
+    Object.keys(build.convs).forEach((convName) => {
+        const conv = build.convs[convName];
+        const convMult = conv[0] + conv[1] + conv[2] + conv[3] + conv[4] + conv[5];
+        const baseConvMax = build.baseConv[convName].max;
+
+        build.rawConv[convName] = [0, 0, 0, 0, 0, 0];
+
+        for (let i = 0; i < 6; i++) {
+            if (baseConvMax[i] !== 0) {
+                build.rawConv[convName][i] =
+                    (convMult / 100) *
+                    ((convName === "Melee") | meleeAttacks.includes(convName)
+                        ? build.final.rawMainAttackDamage[i]
+                        : build.final.rawSpellDamage[i]);
+            }
+        }
+    });
+}
+
+function applyAttackSpeedToSpells(build) {
+    const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
+    Object.keys(build.baseConvs).forEach((convName) => {
+        // TODO
+    });
+}
 
 // TODO: deactivated since the way min and max base damages are stored was change, fix later
 function applyPowderPercent(build) {
@@ -228,13 +332,11 @@ function applyPowderPercent(build) {
             }
         }
         multiplyMinAndMaxBy(build.base.baseDamage, 1 - percentUsed / 100);
-        if (build.base.baseDamage.min + build.base.baseDamage.max === 0) delete build.base.baseDamage;
     }
 }
 
 function computeOtherOutputs(build) {
     // Apply all adders and multipliers
-    // Sum like stats to build.output
 
     // Powder defs:
     for (let i = 0; i < build.powders.armor.length; i++) {
@@ -245,9 +347,6 @@ function computeOtherOutputs(build) {
             addBase(build, getAsMinMax(powderDefs[j]), "base" + damageTypes[j] + "Defence");
         }
     }
-
-    finalMerge(build);
-    roundAllForDisplay(build);
 }
 
 function finalMerge(build) {

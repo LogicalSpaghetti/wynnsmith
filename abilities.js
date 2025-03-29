@@ -104,3 +104,7 @@ const warrior = {
     },
 };
 const majorIds = {};
+
+const meleeAttacks = [
+    "Twain's Arc", "concentration"
+];

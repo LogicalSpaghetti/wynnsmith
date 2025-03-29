@@ -105,7 +105,7 @@ function addAspectListeners() {
         if (clickTarget.classList.contains("aspect_up")) {
             const neumeral = clickTarget.parentElement.childNodes[2];
             neumeral.dataset.tier = parseInt(neumeral.dataset.tier) + 1;
-            if (neumeral.dataset.tier > (clickTarget.parentElement.classList.contains("mythic") ? 3 : 4)) {
+            if (neumeral.dataset.tier > (clickTarget.parentElement.classList.contains("legendary") ? 4 : 3)) {
                 neumeral.dataset.tier -= 1;
             } else {
                 neumeral.classList.remove("Tier_" + romanize(neumeral.dataset.tier - 1));

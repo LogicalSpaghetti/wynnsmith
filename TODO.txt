@@ -10,6 +10,8 @@ Images flicker when first loaded
 Images for other trees aren't loaded until the weapon switched, 
     if the user went offline, they aren't able to render
 Features:
+Wynnability
+Wynnmana
 Offhand weapons
 Consumables
 Tomes
@@ -17,5 +19,9 @@ Charms :>
 Custom Identification modifications
 Indicate partially filled powder slots
     Indicate if it has half a powder inputted, or an invalid powder
-Remove all the ids.id = 0, since they should be ignored anyway
-    Removed currently because it bloats the displayed output, but keeping them would be nice for verifying calculations.
+add back Str/Dex auto-balance button
+a check for if the hpr is negative but can cancel and displaying that
+Raid buffs
+Lootrun Boons
+Custom items
+Crafted items
