@@ -139,22 +139,22 @@
                     </p>
                 </div>
                 <button id="ansi_tree">Copy ANSI Tree</button>
-                <br><br>
+                <br /><br />
                 <div>
                     <div><b>Build Errors:</b></div>
                     TODO: Conflicting gear, SP reqs...
                 </div>
-                <br>
+                <br />
                 <div class="effect_toggles">
                     <div id="effect_toggles_label"><b>Active Effects:</b></div>
                     <button class="effect radiance" data-modifier="radiance">Radiance</button>...
                 </div>
-                <br>
+                <br />
                 <div>
                     <div><b>External Buffs:</b></div>
                     TODO: Raids, lootruns, consus, edited ids...
                 </div>
-                <br>
+                <br />
                 <div>
                     <div class="aspects_label">Active Aspects:</div>
                     <div class="aspects_border">
@@ -164,13 +164,15 @@
                         <div id="inactive_aspects"></div>
                     </div>
                 </div>
+
+                <div class="output output--A"></div>
             </section>
             <!-- Cloumn 3 -->
             <section class="outputs column">
-                <div class="output output--A"></div>
+                <div id="support_display">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
             </section>
             <!-- Cloumn 4 -->
-            <section id="attacks" class="attacksSection column">
+            <section id="attacks" class="column">
                 <div>filler</div>
                 <template id="attackTemplate">
                     <div>
@@ -193,10 +195,12 @@
         <script src="item_input.js"></script>
         <script src="stat_calculations.js"></script>
         <script src="conversions.js"></script>
-        <script src="display.js"></script>
         <script src="abilities.js"></script>
         <script src="ability_tree.js"></script>
         <script src="event_listeners.js"></script>
+
+        <script src="display.js"></script>
+        <script src="damage_display.js"></script>
     </body>
 </html>
 

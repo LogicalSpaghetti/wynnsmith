@@ -31,8 +31,6 @@ function refreshBuild() {
         },
         final: {},
         convs: {},
-        baseConv: {},
-        rawConv: {},
         attacks: {},
         base: JSON.parse(emptyBaseString),
         ids: JSON.parse(emptyIdsString),
@@ -42,6 +40,9 @@ function refreshBuild() {
     refreshAbilities(build);
     addToggles(build);
     computeOutputs(build);
+
+    addDamageDisplays(build);
+
     displayFinalValues(build);
 }
 
@@ -57,9 +58,12 @@ function getMultiplierForSkillPoints(sp) {
 }
 
 function roundForDisplay(number) {
+    if (typeof(number) !== "number") return number;
     const ret = Math.round((number + Number.EPSILON) * 100) / 100;
-    if (ret.toString().split(".").length === 1 || ret.toString().split(".")[1].length >= 2) return ret;
-    return ret + "0";
+    return ret;
+    // adds a trailing zero:
+    // if (ret.toString().split(".").length === 1 || ret.toString().split(".")[1].length >= 2) return ret;
+    // return ret + "0";
 }
 
 function intToBase64(decimal) {
@@ -113,9 +117,4 @@ function deromanize(str) {
     if (!(str && validator.test(str))) return false;
     while ((m = token.exec(str))) num += key[m[0]];
     return num;
-}
-
-function computeUnflippableMultiplier(base, percent) {
-    const effectivePercent = percent * Math.sign(base);
-    return (effectivePercent < -1) ? 0 : (base * (1 + effectivePercent));
 }

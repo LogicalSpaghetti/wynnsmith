@@ -132,8 +132,16 @@ input:focus {
 
 .outputs {
     width: 200px;
+}
+
+.output--A {
     word-wrap: normal;
     white-space: pre-line;
+}
+
+.support_display {
+    width: 250px;
+    height: 20px;
 }
 
 /* Link Buttons */

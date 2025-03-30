@@ -16,6 +16,7 @@ Offhand weapons
 Consumables
 Tomes
 Charms :>
+Trinkets
 Custom Identification modifications
 Indicate partially filled powder slots
     Indicate if it has half a powder inputted, or an invalid powder

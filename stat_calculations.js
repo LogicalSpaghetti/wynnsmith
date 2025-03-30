@@ -1,48 +1,29 @@
 `use strict`;
 
 function computeOutputs(build) {
-    // Pre-computations
-
-    // Radiance multiplies all ids by 1.2x
     radiance(build);
-    // +Consus, raid buffs, lr boons
     applyExternalBuffs(build);
-    includeTomes(build);
-    addArmorSpecials(build);
-    addPowderBase(build);
+    includeOtherGear(build);
+    // Powders:
+    addInitialPowderEffects(build);
+    // data reformatting
     splitMergedIds(build);
     damagesToArrays(build);
+    // spell and powder conversions:
     conversions(build);
-    applyAttackSpeedToSpells(build);
-    // =>
-    // All damage values are multiplied by the neutral conversion % and retain their type.
-    // the sum of all damage values (before the neutral scaling) is multiplied by any elemental conversions, and becomes that type.
-    // =>
-    // Powders convert a % of the neutral damage into their element, up to 100% of it.
-    // =>
+    applySpellAttackSpeed(build);
     // Masteries Node base values are added to any non-zero damage values.
     // Mastery multipliers are applied.
     // Proficiencies are applied, damage is multiplicitive
     // =>
-    // TODO update applyPowderPercent() to new system:
-    // applyPowderPercent(build);
-    // Armor Powder Specials add to ids as standard %s
-    // All elemental damages are multiplied by their coresponding % multiplier
-    // =>
+    applyAttackPercents(build);
 
-    // For spells/melee, the damage values are then multiplied by a value based on the weapon's **base** attack speed
+    mergeAttackDamage(build);
 
-    // For plain melee: (Btw the application of all raw element damage is dependent on both pre and post powder conversion) ((FIGURE OUT))
-    // =>
-    // Apply Skill Points, Strength, Dexterity, and any other final multipliers.
+    applyAttackMultipliers(build);
 
-    // Radiance
+    mergeSupportStats(build);
 
-    // Consumables
-
-    // Support/General
-    computeOtherOutputs(build);
-    finalMerge(build);
     roundAllForDisplay(build);
     removeAllZeros(build);
 }
@@ -66,12 +47,23 @@ function applyExternalBuffs(build) {
     // etc.
 }
 
+function includeOtherGear(build) {
+    includeTomes(build);
+    includeCharms(build);
+}
+
 function includeTomes(build) {
     // TODO
 }
 
-function addArmorSpecials(build) {
+function includeCharms(build) {
     // TODO
+}
+
+function addInitialPowderEffects(build) {
+    addPowderBase(build);
+    addPowderDefences(build);
+    addArmorSpecials(build);
 }
 
 function addPowderBase(build) {
@@ -83,10 +75,29 @@ function addPowderBase(build) {
     // TODO: Powder elemental defence
 }
 
+function addPowderDefences(build) {
+    for (let i = 0; i < build.powders.armor.length; i++) {
+        const powder = powders[build.powders.armor[i]];
+        const powderDefs = powder.def;
+        for (let j = 0; j < powderDefs.length; j++) {
+            if (powderDefs[j] === 0) continue;
+            addBase(build, getAsMinMax(powderDefs[j]), "base" + damageTypes[j + 1] + "Defence");
+        }
+    }
+}
+
+function addArmorSpecials(build) {
+    // TODO
+}
+
+function addWeaponSpecial(build) {
+    // TODO
+}
+
 // splits base damage into a min and max array
 function damagesToArrays(build) {
     // base
-    build.final.min = [
+    build.base.min = [
         build.base.baseDamage.min,
         build.base.baseEarthDamage.min,
         build.base.baseThunderDamage.min,
@@ -94,7 +105,7 @@ function damagesToArrays(build) {
         build.base.baseFireDamage.min,
         build.base.baseAirDamage.min,
     ];
-    build.final.max = [
+    build.base.max = [
         build.base.baseDamage.max,
         build.base.baseEarthDamage.max,
         build.base.baseThunderDamage.max,
@@ -105,19 +116,19 @@ function damagesToArrays(build) {
 
     build.final.totalDamage = {};
     build.final.totalDamage.min =
-        build.final.min[0] +
-        build.final.min[1] +
-        build.final.min[2] +
-        build.final.min[3] +
-        build.final.min[4] +
-        build.final.min[5];
+        build.base.min[0] +
+        build.base.min[1] +
+        build.base.min[2] +
+        build.base.min[3] +
+        build.base.min[4] +
+        build.base.min[5];
     build.final.totalDamage.max =
-        build.final.max[0] +
-        build.final.max[1] +
-        build.final.max[2] +
-        build.final.max[3] +
-        build.final.max[4] +
-        build.final.max[5];
+        build.base.max[0] +
+        build.base.max[1] +
+        build.base.max[2] +
+        build.base.max[3] +
+        build.base.max[4] +
+        build.base.max[5];
 
     // raw
     build.final.rawMainAttackDamage = [
@@ -238,6 +249,7 @@ function conversions(build) {
     createConversions(build);
     convertBase(build);
     convertRaw(build);
+    powderConversions(build);
 }
 
 function createConversions(build) {
@@ -261,11 +273,11 @@ function createConversions(build) {
 }
 
 function convertBase(build) {
+    build.base.attacks = {};
     Object.keys(build.convs).forEach((convName) => {
         // [a, b, c, d, e, f]
-
-        build.baseConv[convName] = {};
-        const conv = build.baseConv[convName];
+        build.base.attacks[convName] = {};
+        const conv = build.base.attacks[convName];
         conv.min = [0, 0, 0, 0, 0, 0];
         conv.max = [0, 0, 0, 0, 0, 0];
 
@@ -277,23 +289,24 @@ function convertBase(build) {
         // neutral conversion
         const neutralConversion = build.convs[convName][0] / 100;
         for (let i = 0; i < 6; i++) {
-            conv.min[i] += build.final.min[i] * neutralConversion;
-            conv.max[i] += build.final.max[i] * neutralConversion;
+            conv.min[i] += build.base.min[i] * neutralConversion;
+            conv.max[i] += build.base.max[i] * neutralConversion;
         }
     });
 }
 
 function convertRaw(build) {
+    build.rawAttacks = {};
     Object.keys(build.convs).forEach((convName) => {
         const conv = build.convs[convName];
         const convMult = conv[0] + conv[1] + conv[2] + conv[3] + conv[4] + conv[5];
-        const baseConvMax = build.baseConv[convName].max;
+        const baseConvMax = build.base.attacks[convName].max;
 
-        build.rawConv[convName] = [0, 0, 0, 0, 0, 0];
+        build.rawAttacks[convName] = [0, 0, 0, 0, 0, 0];
 
         for (let i = 0; i < 6; i++) {
             if (baseConvMax[i] !== 0) {
-                build.rawConv[convName][i] =
+                build.rawAttacks[convName][i] =
                     (convMult / 100) *
                     ((convName === "Melee") | meleeAttacks.includes(convName)
                         ? build.final.rawMainAttackDamage[i]
@@ -303,11 +316,16 @@ function convertRaw(build) {
     });
 }
 
-function applyAttackSpeedToSpells(build) {
+function powderConversions(build) {
+    // TODO
+}
+
+// Attack Speed multiplies the damage of spells relative to the weapon's base attack speed multiplier
+function applySpellAttackSpeed(build) {
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
-    Object.keys(build.baseConv).forEach((convName) => {
+    Object.keys(build.base.attacks).forEach((convName) => {
         if (meleeAttacks.includes(convName)) return;
-        const conv = build.baseConv[convName];
+        const conv = build.base.attacks[convName];
         for (let i = 0; i < 6; i++) {
             conv.min[i] *= attackSpeedMultiplier;
             conv.max[i] *= attackSpeedMultiplier;
@@ -315,76 +333,82 @@ function applyAttackSpeedToSpells(build) {
     });
 }
 
-// TODO: deactivated since the way min and max base damages are stored was change, fix later
-function applyPowderPercent(build) {
-    // Convert up to 100% Neutral:
-    if (build.base.baseDamage !== undefined && build.powders.weapon.length > 0) {
-        var percentUsed = 0;
-        for (let i = 0; i < build.powders.weapon.length; i++) {
-            const powder = powders[build.powders.weapon[i]];
-            const remainingPercent = 100 - percentUsed;
-            const conversionPercent = 0 + remainingPercent < powder.conversion ? remainingPercent : powder.conversion;
-            percentUsed += conversionPercent;
-            const id = {
-                min: (build.base.baseDamage.min * conversionPercent) / 100,
-                max: (build.base.baseDamage.max * conversionPercent) / 100,
-            };
-            addBase(build, id, "base" + powder.element + "Damage");
-
-            if (percentUsed >= 100) {
-                percentUsed = 0;
-                break;
-            }
+function applyAttackPercents(build) {
+    const baseAttacks = build.base.attacks;
+    Object.keys(baseAttacks).forEach((attackName) => {
+        const attack = baseAttacks[attackName];
+        const mults = build.final[meleeAttacks.includes(attackName) ? "mainAttackDamage" : "spellDamage"];
+        for (let i = 0; i < 6; i++) {
+            attack.min[i] *= mults[i] / 100 + 1;
+            attack.max[i] *= mults[i] / 100 + 1;
         }
-        multiplyMinAndMaxBy(build.base.baseDamage, 1 - percentUsed / 100);
-    }
+    });
 }
 
-function computeOtherOutputs(build) {
-    // Apply all adders and multipliers
+function mergeAttackDamage(build) {
+    // TODO
+    Object.keys(build.convs).forEach((attackName) => {
+        const baseAttack = build.base.attacks[attackName];
+        const rawAttack = build.rawAttacks[attackName];
 
-    // Powder defs:
-    for (let i = 0; i < build.powders.armor.length; i++) {
-        const powder = powders[build.powders.armor[i]];
-        const powderDefs = powder.def;
-        for (let j = 0; j < powderDefs.length; j++) {
-            if (powderDefs[j] === 0) continue;
-            addBase(build, getAsMinMax(powderDefs[j]), "base" + damageTypes[j + 1] + "Defence");
+        build.attacks[attackName] = { min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0] };
+
+        for (let i = 0; i < 6; i++) {
+            build.attacks[attackName].min[i] = baseAttack.min[i] + rawAttack[i];
+            build.attacks[attackName].max[i] = baseAttack.max[i] + rawAttack[i];
         }
-    }
+    });
 }
 
-function finalMerge(build) {
+function applyAttackMultipliers(build) {
+    applyGlobalMultipliers(build);
+    applyPerAttackMultipliers(build);
+}
+
+function applyGlobalMultipliers(build) {
+    // TODO
+}
+
+function applyPerAttackMultipliers(build) {
+    // TODO
+}
+
+function mergeSupportStats(build) {
     const ids = build.ids;
     const base = build.base;
     const final = build.final;
 
     final.health = base.baseHealth + ids.rawHealth;
-    final.healthRegen = computeUnflippableMultiplier(ids.healthRegenRaw, ids.healthRegen / 100);
+    final.healthRegen = computeHpr(ids.healthRegenRaw, ids.healthRegen / 100);
 
     mergeElementalDefences(build);
 }
 
+function computeHpr(base, percent) {
+    const effectivePercent = percent * Math.sign(base);
+    return base < 0 && effectivePercent < -1 ? 0 : base * (1 + effectivePercent);
+}
+
 function mergeElementalDefences(build) {
     for (let i = 1; i < 6; i++) {
-        build.final["base" + damageTypes[i] + "Defence"] = computeUnflippableMultiplier(
-            build.base["base" + damageTypes[i] + "Defence"],
-            build.ids[prefixes[i] + "Defence"] / 100
-        );
+        build.final["final" + damageTypes[i] + "Defence"] =
+            build.base["base" + damageTypes[i] + "Defence"] * (build.ids[prefixes[i] + "Defence"] / 100 + 1);
     }
 }
 
 function roundAllForDisplay(build) {
     const base = build.base;
-    const baseNames = Object.keys(base);
-    baseNames.forEach((baseName) => {
+    Object.keys(base).forEach((baseName) => {
         if (!Number.isInteger(base[baseName])) return;
         base[baseName] = roundForDisplay(base[baseName]);
     });
     const ids = build.ids;
-    const idNames = Object.keys(ids);
-    idNames.forEach((idName) => {
+    Object.keys(ids).forEach((idName) => {
         ids[idName] = roundForDisplay(ids[idName]);
+    });
+    const final = build.final;
+    Object.keys(final).forEach((idName) => {
+        final[idName] = roundForDisplay(final[idName]);
     });
 }
 

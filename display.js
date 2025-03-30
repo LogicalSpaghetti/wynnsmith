@@ -1,3 +1,5 @@
+const support = document.querySelector("#support_display")
+
 function displayFinalValues(build) {
     displayStats(build);
 }
