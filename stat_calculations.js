@@ -324,7 +324,7 @@ function powderConversions(build) {
 function applySpellAttackSpeed(build) {
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
     Object.keys(build.base.attacks).forEach((convName) => {
-        if (meleeAttacks.includes(convName)) return;
+        if (meleeAttacks.includes(convName) || convName === "Melee") return;
         const conv = build.base.attacks[convName];
         for (let i = 0; i < 6; i++) {
             conv.min[i] *= attackSpeedMultiplier;
