@@ -1,6 +1,7 @@
 `use strict`;
 
 function computeOutputs(build) {
+    // build.ids.rawMainAttackDamage += -2000;
     radiance(build);
     applyExternalBuffs(build);
     includeOtherGear(build);
@@ -30,7 +31,7 @@ function computeOutputs(build) {
 
 function radiance(build) {
     if (!build.toggles.includes("radiance")) return;
-    const radiance = warrior.other.radiance;
+    const radiance = oddities.warrior.radiance;
     const idNames = Object.keys(build.ids);
     for (let i = 0; i < idNames.length; i++) {
         if (radiance.excludedIds.includes(idNames[i])) continue;
@@ -131,7 +132,7 @@ function damagesToArrays(build) {
         build.base.max[5];
 
     // raw
-    build.final.rawMainAttackDamage = [
+    build.final.splitRawMainAttackDamage = [
         build.final.rawNeutralMainAttackDamage,
         build.final.rawEarthMainAttackDamage,
         build.final.rawThunderMainAttackDamage,
@@ -147,7 +148,7 @@ function damagesToArrays(build) {
     delete build.final.rawFireMainAttackDamage;
     delete build.final.rawAirMainAttackDamage;
 
-    build.final.rawSpellDamage = [
+    build.final.splitRawSpellDamage = [
         build.final.rawNeutralSpellDamage,
         build.final.rawEarthSpellDamage,
         build.final.rawThunderSpellDamage,
@@ -222,19 +223,10 @@ function splitMergedIds(build) {
 
     // raw Damages
     damageTypes.forEach((type) => {
-        const typedDamage =
-            ids.rawDamage + ids["raw" + type + "Damage"] + (type === "Neutral" ? 0 : ids.rawElementalDamage);
+        const typedDamage = ids["raw" + type + "Damage"];
 
-        final["raw" + type + "MainAttackDamage"] =
-            ids["raw" + type + "MainAttackDamage"] +
-            ids.rawMainAttackDamage +
-            typedDamage +
-            (type === "Neutral" ? 0 : ids.rawElementalMainAttackDamage);
-        final["raw" + type + "SpellDamage"] =
-            ids["raw" + type + "SpellDamage"] +
-            ids.rawSpellDamage +
-            typedDamage +
-            (type === "Neutral" ? 0 : ids.rawElementalSpellDamage);
+        final["raw" + type + "MainAttackDamage"] = ids["raw" + type + "MainAttackDamage"] + typedDamage;
+        final["raw" + type + "SpellDamage"] = ids["raw" + type + "SpellDamage"] + typedDamage;
     });
 
     // eleDef => typeDef
@@ -286,6 +278,7 @@ function convertBase(build) {
             conv.min[i] = (build.convs[convName][i] / 100) * build.final.totalDamage.min;
             conv.max[i] = (build.convs[convName][i] / 100) * build.final.totalDamage.max;
         }
+
         // neutral conversion
         const neutralConversion = build.convs[convName][0] / 100;
         for (let i = 0; i < 6; i++) {
@@ -299,18 +292,59 @@ function convertRaw(build) {
     build.rawAttacks = {};
     Object.keys(build.convs).forEach((convName) => {
         const conv = build.convs[convName];
-        const convMult = conv[0] + conv[1] + conv[2] + conv[3] + conv[4] + conv[5];
+        const convMult = conv.reduce((partialSum, a) => partialSum + a, 0);
+
+        const baseConvMin = build.base.attacks[convName].min;
         const baseConvMax = build.base.attacks[convName].max;
 
-        build.rawAttacks[convName] = [0, 0, 0, 0, 0, 0];
+        const baseMin = build.base.attacks[convName].min;
+        const baseMax = build.base.attacks[convName].max;
+
+        const baseMinTotal = baseMin.reduce((partialSum, a) => partialSum + a, 0);
+        const baseMaxTotal = baseMax.reduce((partialSum, a) => partialSum + a, 0);
+
+        const baseElemMinTotal = baseMin.reduce((partialSum, a) => partialSum + a, 0) - baseMin[0];
+        const baseElemMaxTotal = baseMax.reduce((partialSum, a) => partialSum + a, 0) - baseMax[0];
+
+        build.rawAttacks[convName] = {};
+        build.rawAttacks[convName].min = [0, 0, 0, 0, 0, 0];
+        build.rawAttacks[convName].max = [0, 0, 0, 0, 0, 0];
+
+        const isMelee = meleeAttacks.includes(convName);
+        const type = isMelee ? "MainAttack" : "Spell";
 
         for (let i = 0; i < 6; i++) {
+            if (baseConvMin[i] !== 0) {
+                // NETWFA
+                build.rawAttacks[convName].min[i] = build.final["splitRaw" + type + "Damage"][i];
+                // damage
+                build.rawAttacks[convName].min[i] += (baseMin[i] / baseMinTotal) * build.ids.rawDamage;
+                // elemental damage
+                if (i > 0) {
+                    build.rawAttacks[convName].min[i] +=
+                        (baseMin[i] / baseElemMinTotal) *
+                        (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
+                }
+                // main/spell
+                build.rawAttacks[convName].min[i] += (baseMin[i] / baseMinTotal) * build.ids["raw" + type + "Damage"];
+                
+                build.rawAttacks[convName].min[i] *= (convMult / 100);
+            }
             if (baseConvMax[i] !== 0) {
-                build.rawAttacks[convName][i] =
-                    (convMult / 100) *
-                    ((convName === "Melee") | meleeAttacks.includes(convName)
-                        ? build.final.rawMainAttackDamage[i]
-                        : build.final.rawSpellDamage[i]);
+                // NETWFA
+                build.rawAttacks[convName].max[i] = build.final["splitRaw" + type + "Damage"][i];
+                // damage
+                build.rawAttacks[convName].max[i] += (baseMax[i] / baseMaxTotal) * build.ids.rawDamage;
+                // elemental damage
+                if (i > 0) {
+                    build.rawAttacks[convName].max[i] +=
+                        (baseMax[i] / baseElemMaxTotal) *
+                        (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
+                }
+                // main/spell
+                build.rawAttacks[convName].max[i] += (baseMax[i] / baseMaxTotal) * build.ids["raw" + type + "Damage"];
+
+                build.rawAttacks[convName].max[i] *= (convMult / 100);
             }
         }
     });
@@ -324,7 +358,7 @@ function powderConversions(build) {
 function applySpellAttackSpeed(build) {
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
     Object.keys(build.base.attacks).forEach((convName) => {
-        if (meleeAttacks.includes(convName) || convName === "Melee") return;
+        if (meleeAttacks.includes(convName)) return;
         const conv = build.base.attacks[convName];
         for (let i = 0; i < 6; i++) {
             conv.min[i] *= attackSpeedMultiplier;
@@ -354,8 +388,8 @@ function mergeAttackDamage(build) {
         build.attacks[attackName] = { min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0] };
 
         for (let i = 0; i < 6; i++) {
-            build.attacks[attackName].min[i] = baseAttack.min[i] + rawAttack[i];
-            build.attacks[attackName].max[i] = baseAttack.max[i] + rawAttack[i];
+            build.attacks[attackName].min[i] = baseAttack.min[i] + rawAttack.min[i];
+            build.attacks[attackName].max[i] = baseAttack.max[i] + rawAttack.max[i];
         }
     });
 }

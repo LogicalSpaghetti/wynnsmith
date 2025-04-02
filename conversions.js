@@ -1,41 +1,42 @@
 function createShamanConversions(build) {
-    createMeleeConversion(build);
-    console.log(build.nodes);
-    addConv(build, build.nodes.includes("totem"), "Totem", shaman.spells.totem.conv);
-    addConv(build, build.nodes.includes("aura"), "Aura", shaman.spells.aura.conv);
-    addConv(build, build.nodes.includes("uproot"), "Uproot", shaman.spells.uproot.conv);
+    // TODO: should be 33.4, left as 33 to match Wynnbuilder
+    build.convs["Melee"] = [33, 0, 0, 0, 0, 0];
+    addConv(build, build.nodes.includes("totem"));
+    addConv(build, "totem", [6, 0, 0, 0, 0, 6], "Totem");
+    addConv(build, "aura", [150, 0, 0, 30, 0, 0], "Aura");
+    addConv(build, "uproot", [80, 30, 20, 0, 0, 0], "Uproot");
 }
 
 function createArcherConversions(build) {
-    createMeleeConversion(build);
+    addMeleeConversion(build);
+    addConv(build, "", [140, 0, 0, 0, 20, 0])
 }
 
 function createMageConversions(build) {
-    createMeleeConversion(build);
+    addMeleeConversion(build);
 }
 
 function createAssassinConversions(build) {
-    createMeleeConversion(build);
+    addMeleeConversion(build);
 }
 
 function createWarriorConversions(build) {
-    createMeleeConversion(build);
+    addMeleeConversion(build);
 }
 
-function createMeleeConversion(build) {
+function addMeleeConversion(build) {
     build.convs["Melee"] = [100, 0, 0, 0, 0, 0];
 }
 
-function addConv(build, requirement, name, conversion) {
-    // TODO: doesn't actually work, should check for true instead of undefined
-    // TODO: bug left in for testing purposes
-    if (requirement === undefined) return;
+function addConv(build, nodeReq, conv, name) {
+    if (!build.nodes.includes(nodeReq)) return;
+
     if (build.convs[name] === undefined) {
-        build.convs[name] = conversion;
+        build.convs[name] = conv.slice(0);
         return;
     }
 
     for (let i = 0; i < build.convs[name].length; i++) {
-        build.convs[name][i] += conversion[i];
+        build.convs[name][i] += conv[i];
     }
 }

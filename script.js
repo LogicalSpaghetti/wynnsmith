@@ -58,12 +58,15 @@ function getMultiplierForSkillPoints(sp) {
 }
 
 function roundForDisplay(number) {
-    if (typeof(number) !== "number") return number;
+    if (typeof number !== "number") return number;
     const ret = Math.round((number + Number.EPSILON) * 100) / 100;
-    return ret;
-    // adds a trailing zero:
-    // if (ret.toString().split(".").length === 1 || ret.toString().split(".")[1].length >= 2) return ret;
-    // return ret + "0";
+    // return ret;
+    // add trailing zeros
+    return ret.toString().split(".").length === 1
+        ? ret + ".00"
+        : ret.toString().split(".")[1].length < 2
+        ? ret + "0"
+        : ret;
 }
 
 function intToBase64(decimal) {
@@ -98,9 +101,38 @@ function decimalToBinary(decimal) {
 function romanize(num) {
     if (!+num) return false;
     var digits = String(+num).split("");
-    var key = ['','C','CC','CCC','CD','D','DC','DCC','DCCC','CM',
-        '','X','XX','XXX','XL','L','LX','LXX','LXXX','XC',
-        '','I','II','III','IV','V','VI','VII','VIII','IX'];
+    var key = [
+        "",
+        "C",
+        "CC",
+        "CCC",
+        "CD",
+        "D",
+        "DC",
+        "DCC",
+        "DCCC",
+        "CM",
+        "",
+        "X",
+        "XX",
+        "XXX",
+        "XL",
+        "L",
+        "LX",
+        "LXX",
+        "LXXX",
+        "XC",
+        "",
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII",
+        "VIII",
+        "IX",
+    ];
     var roman = "",
         i = 3;
     while (i--) roman = (key[+digits.pop() + i * 10] || "") + roman;

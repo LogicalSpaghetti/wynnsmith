@@ -234,7 +234,6 @@ function addNodesToBuild(build) {
 
 function addAspectsToBuild(build) {
     const aspects = document.querySelector("#active_aspects").querySelectorAll(".aspect");
-    console.log(aspects);
     aspects.forEach((aspect) => {
         build.aspects[aspect.dataset.aspect] = aspect.childNodes[2].dataset.tier;
     });

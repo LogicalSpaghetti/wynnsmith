@@ -26,3 +26,5 @@ Raid buffs
 Lootrun Boons
 Custom items
 Crafted items
+sessionStorage for things that aren't shared between builds
+localStorage for user preferences

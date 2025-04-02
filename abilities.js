@@ -1,5 +1,85 @@
-const shaman = {
-    spellCostMods: {
+const attacks = {
+    melee: {
+        name: "Melee",
+        conv: [100, 0, 0, 0, 0, 0],
+    },
+    relikMelee: {
+        cata: "Melee",
+        name: "Single Beam",
+        conv: [33.4, 0, 0, 0, 0, 0],
+        alts: [
+            {
+                name: "Per Attack",
+                mult: 3,
+                display: true,
+            },
+            {
+                name: "Average DPS",
+                scaling: "",
+            },
+        ],
+    },
+    shaman: {
+        totem: {
+            cata: "Totem",
+            name: "Totem Tick",
+            mana: 30,
+            conv: [6, 0, 0, 0, 0, 6],
+            alts: [
+                {
+                    name: "Totem Tick DPS",
+                    mult: 2.5,
+                },
+            ],
+        },
+        aura: {
+            name: "Aura",
+            mana: 40,
+            conv: [150, 0, 0, 30, 0, 0],
+        },
+        uproot: {
+            name: "Uproot",
+            mana: 30,
+            conv: [80, 30, 20, 0, 0, 0],
+        },
+        totemicSmash: {
+            name: "Totemic Smash",
+            conv: [120, 0, 0, 0, 30, 0],
+        },
+        totemShove: {
+            name: "Totem Shove",
+            parent: "Totem",
+            conv: [90, 0, 0, 0, 0, 30],
+        },
+        natureJolt: {
+            name: "Nature's Jolt",
+            parent: "Haul",
+            conv: [90, 30, 0, 0, 0, 0],
+        },
+        rainDance: {
+            name: "Rain Dance",
+            conv: [30, 0, 0, 30, 0, 0],
+            duration: 6,
+            frequency: 0.4,
+        },
+        puppetMaster: {
+            name: "Puppet Master",
+            conv: [16, 2, 0, 0, 0, 2],
+            frequency: 0.5,
+        },
+        shockingAura: {
+            name: "Aura",
+            conv: [0, 0, 20, 0, 0, 0],
+        },
+        flamingTongue: {
+            name: "Uproot",
+            conv: [-15, -30, -15, 0, 10, 0],
+        },
+    },
+};
+
+const spellCostMods = {
+    shaman: {
         cheaperTotem1: -10,
         cheaperTotem2: -5,
         cheaperHaul1: -5,
@@ -9,54 +89,17 @@ const shaman = {
         cheaperUproot1: -5,
         cheaperUproot2: -5,
     },
-    spells: {
-        totem: {
-            mana: 30,
-            conv: [6, 0, 0, 0, 0, 6],
-            duration: 30,
-            frequency: 0.4,
-        },
-        aura: {
-            mana: 40,
-            conv: [150, 0, 0, 30, 0, 0],
-        },
-        uproot: {
-            mana: 30,
-            conv: [80, 30, 20, 0, 0, 0],
-        },
-        totemicSmash: {
-            conv: [120, 0, 0, 0, 30, 0],
-        },
-        totemShove: {
-            conv: [90, 0, 0, 0, 0, 30],
-        },
-        natureJolt: {
-            conv: [90, 30, 0, 0, 0, 0],
-        },
-        rainDance: {
-            conv: [30, 0, 0, 30, 0, 0],
-            duration: 6,
-            frequency: 0.4,
-        },
-        puppetMaster: {
-            conv: [16, 2, 0, 0, 0, 2],
-            frequency: 0.5,
-        },
-    },
-    spellmodifers: {
-        shockingAura: {
-            conv: [0, 0, 20, 0, 0, 0],
-        },
-        flamingTongue: {
-            conv: [-15, -30, -15, 0, 10, 0],
-        },
-    },
-    proficiencies: {
+};
+const proficiencies = {
+    shaman: {
         relikProficiency: {
             mult: 1.05,
         },
     },
-    masteries: {
+};
+
+const masteries = {
+    shaman: {
         earthMastery: {
             base: {
                 min: 2,
@@ -93,18 +136,21 @@ const shaman = {
             mult: 1.15,
         },
     },
-    other: {},
 };
-const warrior = {
-    other: {
+
+const oddities = {
+    warrior: {
         radiance: {
             multiplier: 1.2,
             excludedIds: ["xpBonus", "lootBonus", "lootQuality", "gatherXpBonus", "gatherSpeed"],
         },
     },
 };
+
+const warrior = {
+    other: {},
+};
+
 const majorIds = {};
 
-const meleeAttacks = [
-    "Twain's Arc", "concentration"
-];
+const meleeAttacks = ["concentration", "Melee"];

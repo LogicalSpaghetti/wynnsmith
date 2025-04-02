@@ -9,15 +9,13 @@ function addDamageDisplays(build) {
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
-                "   " +
-                damageTypes[i] +
-                ": " +
+                elementalHeaders[damageTypes[i]] +
                 roundForDisplay(attack.min[i]) +
                 " - " +
                 roundForDisplay(attack.max[i]) +
-                "\n";
+                "</span><br>";
         }
     });
 
-    attackSection.textContent = attackStrings;
+    attackSection.innerHTML = attackStrings;
 }
