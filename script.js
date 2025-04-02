@@ -12,7 +12,7 @@ const inputs = [
     document.querySelector(`.input--weapon`),
 ];
 
-const output = document.querySelector(`.output--A`);
+const outputAll = document.querySelector(`.output--A`);
 
 function refreshBuild() {
     console.log("begin new refresh:");
@@ -57,16 +57,21 @@ function getMultiplierForSkillPoints(sp) {
     return ((1 - Math.pow(0.9908, sp + 1)) / 0.0092 - 1) / 100;
 }
 
-function roundForDisplay(number) {
+function roundForDisplay(number, addPeriod) {
     if (typeof number !== "number") return number;
     const ret = Math.round((number + Number.EPSILON) * 100) / 100;
     // return ret;
     // add trailing zeros
-    return ret.toString().split(".").length === 1
-        ? ret + ".00"
-        : ret.toString().split(".")[1].length < 2
-        ? ret + "0"
-        : ret;
+
+    if (ret.toString().split(".").length === 1) {
+        if (addPeriod) {
+            return ret + ".00";
+        } else {
+            return ret;
+        }
+    } else {
+        return ret.toString().split(".")[1].length < 2 ? ret + "0" : ret;
+    }
 }
 
 function intToBase64(decimal) {

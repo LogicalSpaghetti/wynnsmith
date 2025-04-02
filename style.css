@@ -122,6 +122,14 @@ input:focus {
     border: 1px solid var(--ls-orange) !important;
 }
 
+#sp_section {
+    display: flex;
+}
+
+.sp {
+    width: 50px;
+}
+
 /* Effect Selectors */
 
 .toggleOn {
@@ -131,7 +139,7 @@ input:focus {
 /* -- Output: -- */
 
 .outputs {
-    width: 200px;
+    width: 220px;
 }
 
 .output--A {
@@ -342,16 +350,26 @@ img.highlight_node[data-type="ability"] {
 }
 
 .fire {
-    color: #FF5555;
+    color: #ff5555;
 }
 
 .water {
-    color: #55FFFF;
+    color: #55ffff;
 }
 
 .air {
     color: #fff;
 }
+
+.health {
+    color: #dd0000;
+}
+
+.mana {
+    color: #1ed4b6;
+}
+
+/* Fonts: */
 
 @font-face {
     font-family: "minecraft";

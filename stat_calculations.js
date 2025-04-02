@@ -425,8 +425,8 @@ function computeHpr(base, percent) {
 
 function mergeElementalDefences(build) {
     for (let i = 1; i < 6; i++) {
-        build.final["final" + damageTypes[i] + "Defence"] =
-            build.base["base" + damageTypes[i] + "Defence"] * (build.ids[prefixes[i] + "Defence"] / 100 + 1);
+        build.final["total" + damageTypes[i] + "Defence"] =
+            build.base["base" + damageTypes[i] + "Defence"] * (( Math.sign(build.base["base" + damageTypes[i] + "Defence"]) * (build.ids[prefixes[i] + "Defence"] / 100)) + 1);
     }
 }
 
