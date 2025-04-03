@@ -12,6 +12,8 @@ const inputs = [
     document.querySelector(`.input--weapon`),
 ];
 
+const spInputs = document.querySelectorAll(".sp");
+
 const outputAll = document.querySelector(`.output--A`);
 
 function refreshBuild() {
@@ -107,36 +109,12 @@ function romanize(num) {
     if (!+num) return false;
     var digits = String(+num).split("");
     var key = [
-        "",
-        "C",
-        "CC",
-        "CCC",
-        "CD",
-        "D",
-        "DC",
-        "DCC",
-        "DCCC",
-        "CM",
-        "",
-        "X",
-        "XX",
-        "XXX",
-        "XL",
-        "L",
-        "LX",
-        "LXX",
-        "LXXX",
-        "XC",
-        "",
-        "I",
-        "II",
-        "III",
-        "IV",
-        "V",
-        "VI",
-        "VII",
-        "VIII",
-        "IX",
+        "", "C", "CC", "CCC", "CD",
+        "D", "DC", "DCC", "DCCC", "CM",
+        "", "X", "XX", "XXX", "XL",
+        "L", "LX", "LXX", "LXXX", "XC",
+        "", "I", "II", "III", "IV",
+        "V", "VI", "VII", "VIII", "IX",
     ];
     var roman = "",
         i = 3;

@@ -10,9 +10,9 @@ function addDamageDisplays(build) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
                 elementalHeaders[damageTypes[i]] +
-                roundForDisplay(attack.min[i]) +
+                roundForDisplay(attack.min[i], true) +
                 " - " +
-                roundForDisplay(attack.max[i]) +
+                roundForDisplay(attack.max[i], true) +
                 "</span><br>";
         }
     });

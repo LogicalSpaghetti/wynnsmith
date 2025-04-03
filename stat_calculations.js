@@ -10,6 +10,7 @@ function computeOutputs(build) {
     // data reformatting
     splitMergedIds(build);
     damagesToArrays(build);
+    addSPMults(build);
     // spell and powder conversions:
     conversions(build);
     applySpellAttackSpeed(build);
@@ -59,6 +60,19 @@ function includeTomes(build) {
 
 function includeCharms(build) {
     // TODO
+}
+
+function addSPMults(build) {
+    const spMults = []
+    for (let i = 0; i < 5; i++) {
+        const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value);
+        var mult = textInt === undefined ? 0 : spMultipliers[textInt];
+        if (i === 3) mult *= .867
+        if (i === 4) mult *= .951
+
+        build.final.mainAttackDamage[i + 1] += mult * 100;
+        build.final.spellDamage[i + 1] += mult * 100;
+    }
 }
 
 function addInitialPowderEffects(build) {
@@ -314,7 +328,7 @@ function convertRaw(build) {
         const type = isMelee ? "MainAttack" : "Spell";
 
         for (let i = 0; i < 6; i++) {
-            if (baseConvMin[i] !== 0) {
+            if (baseConvMax[i] !== 0) {
                 // NETWFA
                 build.rawAttacks[convName].min[i] = build.final["splitRaw" + type + "Damage"][i];
                 // damage
@@ -327,8 +341,8 @@ function convertRaw(build) {
                 }
                 // main/spell
                 build.rawAttacks[convName].min[i] += (baseMin[i] / baseMinTotal) * build.ids["raw" + type + "Damage"];
-                
-                build.rawAttacks[convName].min[i] *= (convMult / 100);
+
+                build.rawAttacks[convName].min[i] *= convMult / 100;
             }
             if (baseConvMax[i] !== 0) {
                 // NETWFA
@@ -344,7 +358,7 @@ function convertRaw(build) {
                 // main/spell
                 build.rawAttacks[convName].max[i] += (baseMax[i] / baseMaxTotal) * build.ids["raw" + type + "Damage"];
 
-                build.rawAttacks[convName].max[i] *= (convMult / 100);
+                build.rawAttacks[convName].max[i] *= convMult / 100;
             }
         }
     });
@@ -397,6 +411,7 @@ function mergeAttackDamage(build) {
 function applyAttackMultipliers(build) {
     applyGlobalMultipliers(build);
     applyPerAttackMultipliers(build);
+    applySP(build);
 }
 
 function applyGlobalMultipliers(build) {
@@ -405,6 +420,35 @@ function applyGlobalMultipliers(build) {
 
 function applyPerAttackMultipliers(build) {
     // TODO
+}
+
+function applySP(build) {
+    const strInt = parseInt(spInputs[0].value);
+    const strMult = strInt === undefined ? 1 : 1 + (strInt > 150 ? spMultipliers[150] : spMultipliers[strInt]);
+    const dexMult = 1 + build.ids.criticalDamageBonus / 100;
+
+    Object.keys(build.attacks).forEach((attackName) => {
+        const attack = build.attacks[attackName];
+
+        build.attacks[attackName + "Crit"] = { min: attack.min.slice(0), max: attack.max.slice(0) };
+        const attackCrit = build.attacks[attackName + "Crit"];
+
+        for (let i = 1; i < 6; i++) {
+            // const textInt = parseInt(spInputs[i - 1].value > 150 ? 150 : spInputs[i - 1].value);
+            // const mult = textInt === undefined ? 0 : spMultipliers[textInt];
+            // attack.min[i] *= 1 + mult;
+            // attack.min[i] *= 1 + mult;
+
+            // Crit
+            attackCrit.min[i] *= dexMult + strMult;
+            attackCrit.max[i] *= dexMult + strMult;
+
+            // Strength
+            attack.min[i] *= strMult;
+            attack.max[i] *= strMult;
+        }
+        console.log(attackCrit);
+    });
 }
 
 function mergeSupportStats(build) {
@@ -426,7 +470,9 @@ function computeHpr(base, percent) {
 function mergeElementalDefences(build) {
     for (let i = 1; i < 6; i++) {
         build.final["total" + damageTypes[i] + "Defence"] =
-            build.base["base" + damageTypes[i] + "Defence"] * (( Math.sign(build.base["base" + damageTypes[i] + "Defence"]) * (build.ids[prefixes[i] + "Defence"] / 100)) + 1);
+            build.base["base" + damageTypes[i] + "Defence"] *
+            (Math.sign(build.base["base" + damageTypes[i] + "Defence"]) * (build.ids[prefixes[i] + "Defence"] / 100) +
+                1);
     }
 }
 

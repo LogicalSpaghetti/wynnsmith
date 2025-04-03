@@ -1,14 +1,26 @@
-Things I don't want to forget:
+Prioritized:
+Skill Points
+Full Id editor
+Conflicts
+    separate SP into calculated and custom
+Weapon slot icon
+Slider multipliers
+Finish powders
+All nodes
+Aspects
+
+Eventual:
 Fixes:
-abstract the input stuff so it doesn't repeat as much information
-https://websemantics.uk/tools/image-to-data-uri-converter/
-Handle Ability Tree display when no weapon has yet been provided
-Fix tree clearing between reloads
-    Don't generate it all with JS
-Relik damage melee calculation being weird
-Images flicker when first loaded
+improve build linking
+Optimize the  https://websemantics.uk/tools/image-to-data-uri-converter/
 Images for other trees aren't loaded until the weapon switched, 
     if the user went offline, they aren't able to render
+Shaman -1 melee damage per attack.
+sessionStorage for things that aren't shared between builds
+    Tree
+    Aspects
+    Custom SP
+localStorage for user preferences
 Features:
 Wynnability
 Wynnmana
@@ -26,5 +38,7 @@ Raid buffs
 Lootrun Boons
 Custom items
 Crafted items
-sessionStorage for things that aren't shared between builds
-localStorage for user preferences
+The equivalent mana gained from hpr, ls, and rally.
+Complex export button, choose what optional categories to import
+Import section button
+Save builds locally and to/from a file.
