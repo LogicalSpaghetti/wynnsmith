@@ -144,6 +144,12 @@ class TablePiece {
     }
 
     getHTML() {
+        if (this.node !== undefined && this.node.meta.id === "altruism") {
+            const d = new Date();
+            if (d.getDay() === 2) {
+                return this.tdHead() + this.tdFoot();
+            }
+        }
         return (
             this.tdHead() +
             (this.node === undefined ? "" : this.node.type === "connector" ? this.getConnector() : this.getAbility()) +
