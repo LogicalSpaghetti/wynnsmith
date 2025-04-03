@@ -18,6 +18,7 @@ function addEventListeners() {
     addEffectListeners();
     addCopyLinkListeners();
     addAspectListeners();
+    addTomeListener();
 }
 
 //
@@ -177,6 +178,14 @@ function addAspectListeners() {
 
         refreshBuild();
     });
+}
+
+function addTomeListener() {
+    for (let i = 0; i < tomeInputs.length; i++) {
+        tomeInputs[i].addEventListener("input", function () {
+            refreshBuild();
+        });
+    }
 }
 
 document.querySelector("#ansi_tree").addEventListener("click", function () {

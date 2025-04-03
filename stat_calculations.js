@@ -56,6 +56,9 @@ function includeOtherGear(build) {
 
 function includeTomes(build) {
     // TODO
+    for (let i = 0; i < build.tomes.length; i++) {
+        addIds(build, itemGroups.tome[build.tomes[i]])
+    }
 }
 
 function includeCharms(build) {
@@ -63,12 +66,12 @@ function includeCharms(build) {
 }
 
 function addSPMults(build) {
-    const spMults = []
     for (let i = 0; i < 5; i++) {
         const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value);
         var mult = textInt === undefined ? 0 : spMultipliers[textInt];
-        if (i === 3) mult *= .867
-        if (i === 4) mult *= .951
+
+        if (i === 3) mult *= 0.867;
+        if (i === 4) mult *= 0.951;
 
         build.final.mainAttackDamage[i + 1] += mult * 100;
         build.final.spellDamage[i + 1] += mult * 100;
@@ -78,7 +81,7 @@ function addSPMults(build) {
 function addInitialPowderEffects(build) {
     addPowderBase(build);
     addPowderDefences(build);
-    addArmorSpecials(build);
+    addArmourSpecials(build);
 }
 
 function addPowderBase(build) {
@@ -87,21 +90,20 @@ function addPowderBase(build) {
         const powder = powders[build.powders.weapon[i]];
         addBase(build, powder.dmg, "base" + powder.element + "Damage");
     }
-    // TODO: Powder elemental defence
 }
 
 function addPowderDefences(build) {
-    for (let i = 0; i < build.powders.armor.length; i++) {
-        const powder = powders[build.powders.armor[i]];
+    for (let i = 0; i < build.powders.armour.length; i++) {
+        const powder = powders[build.powders.armour[i]];
         const powderDefs = powder.def;
         for (let j = 0; j < powderDefs.length; j++) {
             if (powderDefs[j] === 0) continue;
-            addBase(build, getAsMinMax(powderDefs[j]), "base" + damageTypes[j + 1] + "Defence");
+            addBase(build, powderDefs[j], "base" + damageTypes[j + 1] + "Defence");
         }
     }
 }
 
-function addArmorSpecials(build) {
+function addArmourSpecials(build) {
     // TODO
 }
 
@@ -447,7 +449,6 @@ function applySP(build) {
             attack.min[i] *= strMult;
             attack.max[i] *= strMult;
         }
-        console.log(attackCrit);
     });
 }
 

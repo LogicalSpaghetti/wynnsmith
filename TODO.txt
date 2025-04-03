@@ -42,3 +42,4 @@ The equivalent mana gained from hpr, ls, and rally.
 Complex export button, choose what optional categories to import
 Import section button
 Save builds locally and to/from a file.
+ez tome selector when clicking the tome icon.

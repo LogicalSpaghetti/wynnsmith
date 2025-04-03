@@ -79,7 +79,7 @@ function addMajorIds(build, item) {
 
 function getItemByInput(input) {
     const itemCategory = itemGroups[input.dataset["slot"].replace("0", "").replace("1", "")];
-
+    
     if (itemCategory === undefined) return;
     return itemCategory[input.value];
 }
@@ -196,11 +196,19 @@ function addPowders(build, input) {
         powderInput.value.length % 2 === 0
             ? powderInput.value
             : powderInput.value.substring(0, powderInput.value.length - 1);
-    const destination = input.dataset.slot === "weapon" ? build.powders.weapon : build.powders.armor;
+    const destination = input.dataset.slot === "weapon" ? build.powders.weapon : build.powders.armour;
     for (let i = 0; i < powdersString.length / 2; i++) {
         const powderName = powdersString.substring(i * 2, i * 2 + 2);
         const powder = powders[powderName];
         if (powder === undefined) continue;
         destination.push(powderName);
+    }
+}
+
+function refreshTomes(build) {
+    for (let i = 0; i < tomeInputs.length; i++) {
+        if (getItemByInput(tomeInputs[i]) === undefined) continue;
+
+        build.tomes.push(tomeInputs[i].value);
     }
 }

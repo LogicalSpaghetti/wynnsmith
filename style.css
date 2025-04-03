@@ -1,6 +1,7 @@
 :root {
     --ls-background: #121212;
     --ls-background2: #333;
+    --ls-background3: #666;
     --ls-background-hover: #383838;
     --ls-trim-hover: #464646;
     --ls-trim: #353535;
@@ -10,6 +11,10 @@
     --wy-mythic: #a0a;
     --wy-fabled: #f55;
     --wy-legendary: #5ff;
+    --wy-border: #5e4837;
+    --wy-backbround: #82654c;
+    --wy-slot: #cda870;
+    --wy-tome_back: #d4bf8f;
 }
 
 body {
@@ -134,6 +139,66 @@ input:focus {
 
 .sp {
     width: 50px;
+}
+
+/* Tomes */
+
+#tomes_section {
+    width: fit-content;
+    /* background-color: #444; */
+    padding: 1px;
+    border: 1px solid var(--ls-light-trim);
+    image-rendering: pixelated;
+}
+
+.tome {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-size: 16px;
+    background-repeat: no-repeat;
+    background-position: 1px, 1px;
+    border-left: 0px;
+    display: inline-block;
+    margin: 0px;
+    outline: none;
+    vertical-align: top;
+}
+
+.tome_input {
+    width: 120px;
+}
+
+.tome_selector {
+    position: absolute;
+}
+
+.tome[data-slot="guild_tome"] {
+    background-image: url(img/books/tome/guild.png);
+}
+
+.tome[data-slot="lootrun_tome"] {
+    background-image: url(img/books/tome/lootrun.png);
+}
+
+.tome[data-slot="armour_tome"] {
+    background-image: url(img/books/tome/armour.png);
+}
+
+.tome[data-slot="mysticism_tome"] {
+    background-image: url(img/books/tome/mysticism.png);
+}
+
+.tome[data-slot="weapon_tome"] {
+    background-image: url(img/books/tome/weapon.png);
+}
+
+.tome[data-slot="expertise_tome"] {
+    background-image: url(img/books/tome/expertise.png);
+}
+
+.tome[data-slot="marathon_tome"] {
+    background-image: url(img/books/tome/marathon.png);
 }
 
 /* Effect Selectors */

@@ -12,6 +12,8 @@ const inputs = [
     document.querySelector(`.input--weapon`),
 ];
 
+const tomeInputs = document.querySelectorAll('.tome_input')
+
 const spInputs = document.querySelectorAll(".sp");
 
 const outputAll = document.querySelector(`.output--A`);
@@ -25,10 +27,11 @@ function refreshBuild() {
         mIds: [],
         nodes: [],
         aspects: {},
+        tomes: [],
         adds: {},
         toggles: [],
         powders: {
-            armor: [],
+            armour: [],
             weapon: [],
         },
         final: {},
@@ -39,6 +42,7 @@ function refreshBuild() {
     };
     refreshClass(build);
     refreshItemData(build);
+    refreshTomes(build);
     refreshAbilities(build);
     addToggles(build);
     computeOutputs(build);

@@ -19,7 +19,7 @@ Masteries Node base values are added to any non-zero damage values.
 Mastery multipliers are applied.
 Proficiencies are applied, damage is multiplicitive
 =>
-Armor Powder Specials add to ids as standard %s
+Armour Powder Specials add to ids as standard %s
 All elemental damages are multiplied by their coresponding % multiplier
 =>
 Raw damage values undergo attack conversions, and are then added on.
