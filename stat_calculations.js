@@ -3,6 +3,7 @@
 function computeOutputs(build) {
     // build.ids.rawMainAttackDamage += -2000;
     radiance(build);
+    applyCostNodes(build);
     applyExternalBuffs(build);
     includeOtherGear(build);
     includeProficiencies(build);
@@ -39,6 +40,10 @@ function radiance(build) {
         if (build.ids[idNames[i]] <= 0) continue;
         build.ids[idNames[i]] = Math.floor(build.ids[idNames[i]] * (radiance.multiplier + Number.EPSILON));
     }
+}
+
+function applyCostNodes(build) {
+    // TODO
 }
 
 function applyExternalBuffs(build) {
