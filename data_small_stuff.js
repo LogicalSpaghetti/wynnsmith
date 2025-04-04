@@ -454,4 +454,3 @@ const elementalHeaders = {
     "Fire": '<span class="fire"><b class="font-minecraft">✹</b> ',
     "Air": '<span class="air"><b class="font-minecraft">❋</b> ',
 }
-

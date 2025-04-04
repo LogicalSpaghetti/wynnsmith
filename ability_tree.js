@@ -50,7 +50,7 @@ function changeAspects(build) {
         aspectDiv.classList.add("aspect");
         aspectDiv.classList.add(aspect.rarity);
         aspectDiv.dataset.aspect = aspectNames[i];
-        // aspectDiv.dataset.tiers = Object.keys(aspect.tiers).length;
+        aspectDiv.title = aspectNames[i];
 
         const aspectImage = document.createElement("span");
         aspectImage.classList.add("aspect_image");

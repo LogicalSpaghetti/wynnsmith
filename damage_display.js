@@ -17,6 +17,7 @@ function addDamageDisplays(build) {
         }
     });
 
+    // TODO
     if (build.nodes.includes("altruism")) {
         
         if (build.ids.lifeSteal !== undefined) {

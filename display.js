@@ -24,7 +24,7 @@ function displayStats(build) {
         getStatDisplay("air", "<b class=\"font-minecraft\">❋</b> Air Defence", build.final.totalAirDefence) +
         "<hr></hr>" +
         getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Regen", build.ids.manaRegen, "/5s") +
-        getStatDisplay("water", "➜ True Mana Regen",(25 + (build.ids.manaRegen === undefined ? 0 : build.ids.manaRegen)), "/5s", false, true) +
+        getStatDisplay("water", "→ True Mana Regen",(25 + (build.ids.manaRegen === undefined ? 0 : build.ids.manaRegen)), "/5s", false, true) +
         getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Steal", build.ids.manaSteal, "/3s") +
         getStatDisplay("water", "Total Max Mana", roundForDisplay(100 + getSPMult(spInputs[2].value) * 100 + ((build.ids.rawMaxMana === undefined) ? 0 : build.ids.rawMaxMana))) +
         getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Life Steal", build.ids.lifeSteal, "/3s") +
@@ -33,7 +33,7 @@ function displayStats(build) {
         getStatDisplay("thunder", "Reflection", build.ids.reflection, "%") +
         getStatDisplay("fire", "Exploding Chance", build.ids.exploding, "%") +
         getStatDisplay("air", "Walk Speed", build.ids.walkSpeed, "%") +
-        getStatDisplay("air", "➜ Sprint Speed", (build.ids.walkSpeed === undefined) ? undefined : roundForDisplay(5.612 * ((build.ids.walkSpeed / 100) + 1)), "m/s", true, true) +
+        getStatDisplay("air", "→ Sprint Speed", (build.ids.walkSpeed === undefined) ? undefined : roundForDisplay(5.612 * ((build.ids.walkSpeed / 100) + 1)), "m/s", true, true) +
         getStatDisplay("air", "Sprint Duration", build.ids.sprint, "%") +
         getStatDisplay("air", "Sprint Regen", build.ids.sprintRegen, "%") +
         getStatDisplay("air", "Jump Height", build.ids.jumpHeight) +

@@ -357,6 +357,7 @@ img.highlight_node[data-type="ability"] {
 #active_aspects > div {
     margin-left: 5.4px;
     /* margin-right: 2.7px; */
+    font-size: 0.8rem;
     display: inline-block;
 }
 

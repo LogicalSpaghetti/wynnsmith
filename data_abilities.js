@@ -80,14 +80,18 @@ const attacks = {
 
 const spellCostMods = {
     shaman: {
-        cheaperTotem1: -10,
-        cheaperTotem2: -5,
-        cheaperHaul1: -5,
-        cheaperHaul2: -5,
-        cheaperAura1: -5,
-        cheaperAura2: -5,
-        cheaperUproot1: -5,
-        cheaperUproot2: -5,
+        totem: ["1st", 30],
+        haul: ["2nd", 15],
+        aura: ["3rd", 40],
+        uproot: ["4th", 30],
+        totemCost1: ["1st", -10],
+        totemCost2: ["1st", -5],
+        haulCost1: ["2nd", -5],
+        haulCost2: ["2nd", -5],
+        auraCost1: ["3rd", -5],
+        auraCost2: ["3rd", -5],
+        uprootCost1: ["4th", -5],
+        uprootCost2: ["4th", -5],
     },
 };
 const proficiencies = {

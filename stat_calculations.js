@@ -44,6 +44,13 @@ function radiance(build) {
 
 function applyCostNodes(build) {
     // TODO
+    console.log(spellCostMods[build.class]);
+    Object.keys(spellCostMods[build.class]).forEach((nodeName) => {
+        if (build.nodes.includes(nodeName)) {
+            const mod = spellCostMods[build.class][nodeName];
+            build.ids["raw" + mod[0] + "SpellCost"] += mod[1];
+        }
+    });
 }
 
 function applyExternalBuffs(build) {

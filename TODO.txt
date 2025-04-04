@@ -1,12 +1,17 @@
 Prioritized:
-All nodes
+All Shaman Nodes
 Weapon slot icon
 Full Id editor
+All Shaman Aspects
 Conflicts
     separate SP into calculated and custom
 Slider multipliers
 Finish powders
+    Specials
+    Neutral Conversions
+All nodes
 Aspects
+
 
 Eventual:
 Fixes:
@@ -22,7 +27,11 @@ sessionStorage for things that aren't shared between builds
 localStorage for user preferences
 Features:
 Wynnability
+    Update trees to match game
+    Update format
+    Add aspect creator
 Wynnmana
+    Wynncycler
 Offhand weapons
 Consumables
 Charms :>
@@ -44,3 +53,16 @@ ez tome selector when clicking the tome icon.
 Tome shorthands
     mr, mana regen...
 https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/
+    Outdated, but remaining mana and remaining hp likely both have an effect.
+UI Themes
+    Neon
+    Wynn (dusty grey, tan, popping colors)
+    L*ght
+Improve
+    Tome selector
+    Aspect selector
+    Aspect name display
+    Aspect Tier selector
+Slot search functions
+Rarity tinting
+Tree relation logic
