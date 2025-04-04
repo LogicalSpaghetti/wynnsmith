@@ -137,3 +137,7 @@ function deromanize(str) {
     while ((m = token.exec(str))) num += key[m[0]];
     return num;
 }
+
+function getSPMult(sp) {
+    return spMultipliers[sp < 0 ? 0 : sp > 150 ? 150 : sp];
+}

@@ -79,7 +79,7 @@ function addMajorIds(build, item) {
 
 function getItemByInput(input) {
     const itemCategory = itemGroups[input.dataset["slot"].replace("0", "").replace("1", "")];
-    
+
     if (itemCategory === undefined) return;
     return itemCategory[input.value];
 }
@@ -122,7 +122,8 @@ function formatCombined(ids) {
             combinedString += id.min >= 0 ? '<span class="positive">+' : '<span class="negative">';
             combinedString += id.max + "</span>";
         }
-        combinedString += " " + keys[i] + "\n";
+        combinedString += " " + keys[i];
+        if (i <= keys.length) combinedString += "\n";
     }
     return combinedString;
 }

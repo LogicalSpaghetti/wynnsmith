@@ -15,23 +15,42 @@ function displayStats(build) {
         .replaceAll("[\n\n]", "[]");
     
     support.innerHTML = 
-        getStatDisplay("<span class=\"health\"><b class=\"font-minecraft\">⚔</b> Health:</span> ", build.final.health) +
-        getStatDisplay("<span class=\"health\"><b class=\"font-minecraft\">⚔</b> Health Regen:</span>", build.final.healthRegen, "/4s") +
-        getStatDisplay("<span class=\"earth\"><b class=\"font-minecraft\">✤</b> Earth Defence:</span>", build.final.totalEarthDefence) +
-        getStatDisplay("<span class=\"thunder\"><b class=\"font-minecraft\">✦</b> Thunder Defence:</span>", build.final.totalThunderDefence) +
-        getStatDisplay("<span class=\"water\"><b class=\"font-minecraft\">❉</b> Water Defence:</span>", build.final.totalWaterDefence) +
-        getStatDisplay("<span class=\"fire\"><b class=\"font-minecraft\">✹</b> Fire Defence:</span>", build.final.totalFireDefence) +
-        getStatDisplay("<span class=\"air\"><b class=\"font-minecraft\">❋</b> Air Defence:</span>", build.final.totalAirDefence) +
+        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health", build.final.health) +
+        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health Regen", build.final.healthRegen, "/4s") +
+        getStatDisplay("earth", "<b class=\"font-minecraft\">✤</b> Earth Defence", build.final.totalEarthDefence) +
+        getStatDisplay("thunder", "<b class=\"font-minecraft\">✦</b> Thunder Defence", build.final.totalThunderDefence) +
+        getStatDisplay("water", "<b class=\"font-minecraft\">❉</b> Water Defence", build.final.totalWaterDefence) +
+        getStatDisplay("fire", "<b class=\"font-minecraft\">✹</b> Fire Defence", build.final.totalFireDefence) +
+        getStatDisplay("air", "<b class=\"font-minecraft\">❋</b> Air Defence", build.final.totalAirDefence) +
         "<hr></hr>" +
-        getStatDisplay("<span class=\"water\"><b class=\"font-minecraft\">✺</b> Mana Regen:</span> ", build.ids.manaRegen, "/5s") +
-        getStatDisplay("<span class=\"water\">\t➜ True Mana Regen:</span>",(25 + (build.ids.manaRegen === undefined ? 0 : build.ids.manaRegen)), "/5s", false, true) +
-        getStatDisplay("<span class=\"health\"><b class=\"font-minecraft\">⚔</b> Life Steal:</span>", build.ids.lifeSteal, "/3s") +
-        getStatDisplay("<span class=\"earth\">Thorns:</span>", build.ids.thorns, "%") +
-        getStatDisplay("<span class=\"thunder\">Reflection:</span>", build.ids.reflection, "%") +
-        getStatDisplay("<span class=\"fire\">Exploding Chance:</span>", build.ids.exploding, "%") +
-        getStatDisplay("<span class=\"air\">Walk Speed %:</span> ", build.ids.walkSpeed, "%") 
+        getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Regen", build.ids.manaRegen, "/5s") +
+        getStatDisplay("water", "➜ True Mana Regen",(25 + (build.ids.manaRegen === undefined ? 0 : build.ids.manaRegen)), "/5s", false, true) +
+        getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Steal", build.ids.manaSteal, "/3s") +
+        getStatDisplay("water", "Total Max Mana", roundForDisplay(100 + getSPMult(spInputs[2].value) * 100 + ((build.ids.rawMaxMana === undefined) ? 0 : build.ids.rawMaxMana))) +
+        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Life Steal", build.ids.lifeSteal, "/3s") +
+        getStatDisplay("earth", "Poison", build.ids.poison, "%") +
+        getStatDisplay("earth", "Thorns", build.ids.thorns, "%") +
+        getStatDisplay("thunder", "Reflection", build.ids.reflection, "%") +
+        getStatDisplay("fire", "Exploding Chance", build.ids.exploding, "%") +
+        getStatDisplay("air", "Walk Speed", build.ids.walkSpeed, "%") +
+        getStatDisplay("air", "➜ Sprint Speed", (build.ids.walkSpeed === undefined) ? undefined : roundForDisplay(5.612 * ((build.ids.walkSpeed / 100) + 1)), "m/s", true, true) +
+        getStatDisplay("air", "Sprint Duration", build.ids.sprint, "%") +
+        getStatDisplay("air", "Sprint Regen", build.ids.sprintRegen, "%") +
+        getStatDisplay("air", "Jump Height", build.ids.jumpHeight) +
+        getStatDisplay("water", "Knockback", build.ids.knockback) +
+        getStatDisplay("air", "Main Attack Range", build.ids.mainAttackRange, "%") +
+        getStatDisplay("earth", "Slow Enemy", build.ids.slowEnemy, "%") +
+        getStatDisplay("earth", "Weaken Enemy", build.ids.weakenEnemy, "%") +
+        getStatDisplay("air", "Gather Speed", build.ids.gatherSpeed, "%") +
+        getStatDisplay("air", "Gather XP Bonus", build.ids.gatherXpBonus, "%") +
+        getStatDisplay("air", "Loot Bonus", build.ids.lootBonus, "%") +
+        getStatDisplay("air", "Loot Quality", build.ids.lootQuality, "%") +
+        getStatDisplay("air", "Stealing", build.ids.stealing, "%") +
+        getStatDisplay("air", "XP Bonus", build.ids.xpBonus, "%") +
+
+        ""
 }
 
-function getStatDisplay(label, stat, post, noColor, isSub) {
-    return (stat === undefined || stat === NaN) ? "" : ("<div class=\"stat_row\"><div class=\"left" + (isSub ? " sub" : "") + "\">" + label + "</div><div class=\"right " + (noColor ? "" : (Math.sign(stat) === 1 ? "positive" : "negative")) + "\">" + stat + (post === undefined ? "" : post) + "</div></div>");
+function getStatDisplay(colorClass, label, stat, post, noColor, isSub) {
+    return (stat === undefined || stat === NaN) ? "" : ("<div class=\"stat_row\"><div class=\"left" + (isSub ? " sub" : "") + "\">" + "<span class=\"" + colorClass + "\">" + label + ":</span>" + "</div><div class=\"right " + (noColor ? "" : (Math.sign(stat) === 1 ? "positive" : "negative")) + "\">" + stat + (post === undefined ? "" : post) + "</div></div>");
 }

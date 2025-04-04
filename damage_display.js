@@ -17,5 +17,13 @@ function addDamageDisplays(build) {
         }
     });
 
+    if (build.nodes.includes("altruism")) {
+        
+        if (build.ids.lifeSteal !== undefined) {
+
+        }
+        attackStrings += "\nSpaghetti" + build.ids.lifeSteal
+    }
+
     attackSection.innerHTML = attackStrings;
 }

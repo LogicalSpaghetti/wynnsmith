@@ -1,18 +1,17 @@
 Prioritized:
-Skill Points
+All nodes
+Weapon slot icon
 Full Id editor
 Conflicts
     separate SP into calculated and custom
-Weapon slot icon
 Slider multipliers
 Finish powders
-All nodes
 Aspects
 
 Eventual:
 Fixes:
 improve build linking
-Optimize the  https://websemantics.uk/tools/image-to-data-uri-converter/
+Optimize the images https://websemantics.uk/tools/image-to-data-uri-converter/
 Images for other trees aren't loaded until the weapon switched, 
     if the user went offline, they aren't able to render
 Shaman -1 melee damage per attack.
@@ -26,7 +25,6 @@ Wynnability
 Wynnmana
 Offhand weapons
 Consumables
-Tomes
 Charms :>
 Trinkets
 Custom Identification modifications
@@ -43,3 +41,6 @@ Complex export button, choose what optional categories to import
 Import section button
 Save builds locally and to/from a file.
 ez tome selector when clicking the tome icon.
+Tome shorthands
+    mr, mana regen...
+https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/
