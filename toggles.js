@@ -11,6 +11,18 @@ function setUpToggles(build) {
     setUpMultiToggle(build, "bleed", "Bleed", ["sanguineStrike", "lashingLance"], ["nodes", "nodes"]);
 }
 
+function addToggles(build) {
+    document.querySelectorAll(".effect").forEach((toggle) => {
+        if (toggle.classList.contains("toggleOn")) {
+            build.toggles.push(toggle.dataset.modifier);
+        }
+    });
+    document.querySelectorAll(".slider").forEach((slider) => {
+        build.toggles.push(slider.dataset.modifier);
+        build.sliders[slider.dataset.modifier] = slider.value;
+    });
+}
+
 // adds/removes the toggle button depending on if it's prereq is present.
 function setUpSingleToggle(build, section, name, displayName) {
     const toggle = addedTogglesHolder.querySelector("." + name);
@@ -149,6 +161,7 @@ function setUpMultiSlider(build, id, displayName, divText, abilityNames, ability
 
         input.addEventListener("input", (event) => {
             setSliderDiv(input);
+            refreshBuild();
         });
 
         slider = input;

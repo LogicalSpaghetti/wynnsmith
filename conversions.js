@@ -90,6 +90,7 @@ function addConv(build, nodeReq, conv, name) {
 }
 
 function applyNodeMultipliers(build) {
+    applyGlobalMultipliers(build);
     switch (build.class) {
         case "shaman":
             applyShamanMultipliers(build);
@@ -109,8 +110,13 @@ function applyNodeMultipliers(build) {
     }
 }
 
-function applyShamanMultipliers(build) {
+function applyGlobalMultipliers(build) {
     applySectMult(build, 1.2, "all", "toggles", "vengefulspirit");
+    // TODO
+}
+
+function applyShamanMultipliers(build) {
+    applySectMult(build, 1.35, "all", "toggles", "maskOfTheLunatic");
     // TODO
 }
 

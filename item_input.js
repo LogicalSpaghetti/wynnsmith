@@ -166,16 +166,7 @@ function formatAttackSpeed(item) {
     return "Attack Speed: " + attackSpeed + "\n";
 }
 
-function addToggles(build) {
-    document.querySelectorAll(".effect").forEach((toggle) => {
-        if (toggle.classList.contains("toggleOn")) {
-            build.toggles.push(toggle.dataset.modifier);
-        }
-    });
-}
-
 // Powders:
-
 function setPowderSlots(input, item) {
     const powderInput = document.querySelector("[slot='" + input.dataset.slot + "']");
     if (powderInput === null || item === undefined) return;
@@ -193,11 +184,12 @@ function setPowderSlots(input, item) {
 }
 
 function colorSlot(input, item) {
-    input.dataset.rarity = item.rarity
+    input.dataset.rarity = item.rarity;
 }
 
 function setLink(input, item) {
-    document.querySelector('.' + input.dataset.slot + "_link").href = "https://wynnbuilder.github.io/item/#" + item.internalName;
+    document.querySelector("." + input.dataset.slot + "_link").href =
+        "https://wynnbuilder.github.io/item/#" + item.internalName;
 }
 
 function addPowders(build, input) {

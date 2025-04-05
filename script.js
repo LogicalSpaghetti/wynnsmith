@@ -30,6 +30,7 @@ function refreshBuild() {
         tomes: [],
         adds: {},
         toggles: [],
+        sliders: {},
         powders: {
             armour: [],
             weapon: [],
@@ -49,8 +50,8 @@ function refreshBuild() {
     refreshAbilities(build);
 
     setUpOptionals(build);
-
     addToggles(build);
+
     computeOutputs(build);
 
     addDamageDisplays(build);
