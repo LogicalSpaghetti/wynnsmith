@@ -19,6 +19,8 @@ function refreshItemData(build) {
         const item = getItemByInput(input);
         setPowderSlots(input, item);
         if (item === undefined) continue;
+        colorSlot(input, item);
+        setLink(input, item);
         addPowders(build, input);
         addMajorIds(build, item);
         addBasesToBuild(build, item);
@@ -190,6 +192,14 @@ function setPowderSlots(input, item) {
     }
 }
 
+function colorSlot(input, item) {
+    input.dataset.rarity = item.rarity
+}
+
+function setLink(input, item) {
+    document.querySelector('.' + input.dataset.slot + "_link").href = "https://wynnbuilder.github.io/item/#" + item.internalName;
+}
+
 function addPowders(build, input) {
     const powderInput = document.querySelector("[slot='" + input.dataset.slot + "']");
     if (powderInput === null) return;
@@ -211,5 +221,12 @@ function refreshTomes(build) {
         if (getItemByInput(tomeInputs[i]) === undefined) continue;
 
         build.tomes.push(tomeInputs[i].value);
+    }
+}
+
+function fixSPInputs() {
+    for (let i = 0; i < 5; i++) {
+        if (!isNaN(parseInt(spInputs[i].value))) continue;
+        spInputs[i].value = 0;
     }
 }

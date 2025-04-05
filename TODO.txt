@@ -25,6 +25,9 @@ sessionStorage for things that aren't shared between builds
     Aspects
     Custom SP
 localStorage for user preferences
+Attack speed modifiers don't have an effect.
+Slot images being 16x16 instead of 18x18
+
 Features:
 Wynnability
     Update trees to match game
@@ -66,3 +69,5 @@ Improve
 Slot search functions
 Rarity tinting
 Tree relation logic
+Rich embeds if it's possible to generate them based on the provided build
+    oEmbed?

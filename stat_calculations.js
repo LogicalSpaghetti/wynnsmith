@@ -43,8 +43,10 @@ function radiance(build) {
 }
 
 function applyCostNodes(build) {
-    // TODO
-    console.log(spellCostMods[build.class]);
+    if (spellCostMods[build.class] === undefined) {
+        console.log("cost mods not added for " + build.class);
+        return;
+    }
     Object.keys(spellCostMods[build.class]).forEach((nodeName) => {
         if (build.nodes.includes(nodeName)) {
             const mod = spellCostMods[build.class][nodeName];
@@ -259,7 +261,6 @@ function addSPMults(build) {
         const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
 
         var mult = textInt === undefined ? 0 : spMultipliers[textInt];
-
         if (i === 3) mult *= 0.867;
         if (i === 4) mult *= 0.951;
 
@@ -273,26 +274,6 @@ function conversions(build) {
     convertBase(build);
     convertRaw(build);
     powderConversions(build);
-}
-
-function createConversions(build) {
-    switch (build.class) {
-        case "shaman":
-            createShamanConversions(build);
-            break;
-        case "archer":
-            createArcherConversions(build);
-            break;
-        case "mage":
-            createMageConversions(build);
-            break;
-        case "assassin":
-            createAssassinConversions(build);
-            break;
-        case "warrior":
-            createWarriorConversions(build);
-            break;
-    }
 }
 
 function convertBase(build) {
@@ -404,7 +385,6 @@ function applyMasteries(build) {
         const attack = build.base.attacks[attackName];
         const min = attack.min;
         const max = attack.max;
-        console.log(attack.min);
         for (let i = 1; i < prefixes.length; i++) {
             // skip any zeros
             if (attack.max[i] === 0) continue;
@@ -424,7 +404,6 @@ function applyMasteries(build) {
             min[i] *= mastery.mult;
             max[i] *= mastery.mult;
         }
-        console.log(attack.min);
     });
 }
 
@@ -456,17 +435,8 @@ function mergeAttackDamage(build) {
 }
 
 function applyAttackMultipliers(build) {
-    applyGlobalMultipliers(build);
-    applyPerAttackMultipliers(build);
+    applyNodeMultipliers(build);
     applySP(build);
-}
-
-function applyGlobalMultipliers(build) {
-    // TODO
-}
-
-function applyPerAttackMultipliers(build) {
-    // TODO
 }
 
 function applySP(build) {
@@ -477,18 +447,19 @@ function applySP(build) {
     Object.keys(build.attacks).forEach((attackName) => {
         const attack = build.attacks[attackName];
 
-        build.attacks[attackName + "Crit"] = { min: attack.min.slice(0), max: attack.max.slice(0) };
-        const attackCrit = build.attacks[attackName + "Crit"];
+        attack.minc = attack.min.slice(0);
+        attack.maxc = attack.max.slice(0);
 
         for (let i = 1; i < 6; i++) {
+            // what is this for?
             // const textInt = parseInt(spInputs[i - 1].value > 150 ? 150 : spInputs[i - 1].value);
             // const mult = textInt === undefined ? 0 : spMultipliers[textInt];
             // attack.min[i] *= 1 + mult;
-            // attack.min[i] *= 1 + mult;
+            // attack.max[i] *= 1 + mult;
 
             // Crit
-            attackCrit.min[i] *= dexMult + strMult;
-            attackCrit.max[i] *= dexMult + strMult;
+            attack.minc[i] *= dexMult + strMult;
+            attack.maxc[i] *= dexMult + strMult;
 
             // Strength
             attack.min[i] *= strMult;

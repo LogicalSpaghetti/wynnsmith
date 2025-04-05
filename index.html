@@ -12,19 +12,24 @@
             <section class="abilityTreeSection column">
                 <div class="abilityTreeContainer" hidden>
                     <span class="abilityTreeInside">
-                        <table class="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void"></table>
+                        <table class="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void">
+                            <!-- Filled by js -->
+                        </table>
                     </span>
                 </div>
+                <button id="ansi_tree">Copy ANSI Tree</button>
             </section>
             <!-- Column 2 -->
             <section class="inputs column">
                 <div class="item_inputs">
                     <div class="input_section">
+                        <a class="helmet_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="helmet"
                             style="background-image: url(img/items/all.png); background-position: 112px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="helmet"></span
+                        ></a><span class="toggle" data-state="false" data-slot="helmet"></span
                         ><input class="input input--helmet" type="text" placeholder="Helmet" data-slot="helmet" /><input
                             class="powder"
                             placeholder="0 Slots"
@@ -33,25 +38,25 @@
                     </div>
                     <pre class="display display--helmet collapse"></pre>
                     <div class="input_section">
+                        <a class="chestplate_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="chestplate"
                             style="background-image: url(img/items/all.png); background-position: 96px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="chestplate"></span
-                        ><input
-                            class="input input--chestplate"
-                            type="text"
-                            placeholder="Chestplate"
-                            data-slot="chestplate"
+                        ></a><span class="toggle" data-state="false" data-slot="chestplate"></span
+                        ><input class="input input--chestplate" type="text" placeholder="Chestplate" data-slot="chestplate"
                         /><input class="powder" placeholder="0 Slots" slot="chestplate" />
                     </div>
                     <pre class="display display--chestplate collapse"></pre>
                     <div class="input_section">
+                        <a class="leggings_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="leggings"
                             style="background-image: url(img/items/all.png); background-position: 80px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="leggings"></span
+                        ></a><span class="toggle" data-state="false" data-slot="leggings"></span
                         ><input
                             class="input input--leggings"
                             type="text"
@@ -61,11 +66,13 @@
                     </div>
                     <pre class="display display--leggings collapse"></pre>
                     <div class="input_section">
+                        <a class="boots_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="boots"
                             style="background-image: url(img/items/all.png); background-position: 64px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="boots"></span
+                        ></a><span class="toggle" data-state="false" data-slot="boots"></span
                         ><input class="input input--boots" type="text" placeholder="Boots" data-slot="boots" /><input
                             class="powder"
                             placeholder="0 Slots"
@@ -75,11 +82,13 @@
                     </div>
                     <pre class="display display--boots collapse"></pre>
                     <div class="input_section">
+                        <a class="ring0_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="ring0"
                             style="background-image: url(img/items/all.png); background-position: 48px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="ring0"></span>
+                        ></a><span class="toggle" data-state="false" data-slot="ring0"></span>
                         <input
                             class="input input--ring input--ring0"
                             type="text"
@@ -89,11 +98,13 @@
                     </div>
                     <pre class="display display--ring0 collapse"></pre>
                     <div class="input_section">
+                        <a class="ring1_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="ring1"
                             style="background-image: url(img/items/all.png); background-position: 48px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="ring1"></span>
+                        ></a><span class="toggle" data-state="false" data-slot="ring1"></span>
                         <input
                             class="input input--ring input--ring1"
                             type="text"
@@ -103,29 +114,35 @@
                     </div>
                     <pre class="display display--ring1 collapse"></pre>
                     <div class="input_section">
+                        <a class="bracelet_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="bracelet"
                             style="background-image: url(img/items/all.png); background-position: 32px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="bracelet"></span>
+                        ></a><span class="toggle" data-state="false" data-slot="bracelet"></span>
                         <input class="input input--bracelet" type="text" placeholder="Bracelet" data-slot="bracelet" />
                     </div>
                     <pre class="display display--bracelet collapse"></pre>
                     <div class="input_section">
+                        <a class="necklace_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="necklace"
                             style="background-image: url(img/items/all.png); background-position: 16px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="necklace"></span>
+                        ></a><span class="toggle" data-state="false" data-slot="necklace"></span>
                         <input class="input input--necklace" type="text" placeholder="Neckalce" data-slot="necklace" />
                     </div>
                     <pre class="display display--necklace collapse"></pre>
                     <div class="input_section">
+                        <a class="weapon_link" target="_blank">
                         <span
                             class="slot_icon"
+                            data-slot="weapon"
                             style="background-image: url(img/items/all.png); background-position: -64px 0px"
                         ></span
-                        ><span class="toggle" data-state="false" data-slot="weapon"></span>
+                        ></a><span class="toggle" data-state="false" data-slot="weapon"></span>
                         <input class="input input--weapon" type="text" placeholder="Weapon" data-slot="weapon" />
                         <input class="powder" placeholder="0 Slots" slot="weapon" maxlength="0" />
                     </div>
@@ -145,6 +162,19 @@
                     <input id="intelligence" class="sp" placeholder="Intelligence"/>
                     <input id="defence" class="sp" placeholder="Defence"/>
                     <input id="agility" class="sp" placeholder="Agility"/>
+                </div>
+                <br />
+                <div id="effect_toggles">
+                    <div id="effect_toggles_label"><b>Toggle Effects:</b></div>
+                    <button class="effect radiance" data-modifier="radiance">Radiance</button>
+                    <button class="effect vs" data-modifier="vengefulspirit">Vengeful Spirit (+20%)</button>
+                </div>
+                <div id="added_toggles">
+                    <!-- Filled by js -->
+                </div>
+                <br />
+                <div id="added_sliders">
+                    <!-- Filled by js -->
                 </div>
                 <br />
                 <table id="tomes_section">
@@ -191,17 +221,10 @@
                         <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome"></td>
                     </tr>
                 </table>
-                <br />
-                <button id="ansi_tree">Copy ANSI Tree</button>
                 <br /><br />
                 <div>
                     <div><b>Build Errors:</b></div>
                     TODO: Conflicting gear, SP reqs...
-                </div>
-                <br />
-                <div class="effect_toggles">
-                    <div id="effect_toggles_label"><b>Active Effects:</b></div>
-                    <button class="effect radiance" data-modifier="radiance">Radiance</button>...
                 </div>
                 <br />
                 <div>
@@ -210,19 +233,23 @@
                     <label><b>Identification Editor:</b></label>
                     <div id="id_editor"></div>
                 </div>
-                <div class="output output--A"></div>
             </section>
             <!-- Cloumn 3 -->
             <section class="outputs column">
-                <pre id="support_display"></pre>
+                <pre id="support_display">
+                    <!-- Filled by js -->
+                </pre>
                 <br />
                 <div>
-                    <!-- <div class="aspects_label">Active Aspects:</div> -->
                     <div class="aspects_border">
-                        <div id="active_aspects"></div>
+                        <div id="active_aspects">
+                            <!-- Filled by js -->
+                        </div>
                     </div>
                     <div class="aspects_border">
-                        <div id="inactive_aspects"></div>
+                        <div id="inactive_aspects">
+                            <!-- Filled by js -->
+                        </div>
                     </div>
                 </div>
             </section>
@@ -238,19 +265,24 @@
                     </div>
                 </template>
             </section>
+            <!-- Column 5 -->
+            <section>
+                <div class="output output--A"></div>
+            </section>
         </div>
 
         <script src="data_grouped_items.js"></script>
         <script src="data_class_trees.js"></script>
         <script src="data_base_and_ids.js"></script>
         <script src="data_small_stuff.js"></script>
-        <script src="data_abilities.js"></script>
 
         <script src="script.js"></script>
         <script src="build_linking.js"></script>
         <script src="item_input.js"></script>
         <script src="stat_calculations.js"></script>
         <script src="conversions.js"></script>
+        <script src="data_abilities.js"></script>
+        <script src="toggles.js"></script>
         <script src="ability_tree.js"></script>
         <script src="event_listeners.js"></script>
 

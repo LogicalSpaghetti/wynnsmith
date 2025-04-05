@@ -40,15 +40,20 @@ function refreshBuild() {
         base: JSON.parse(emptyBaseString),
         ids: JSON.parse(emptyIdsString),
     };
+
+    fixSPInputs();
+
     refreshClass(build);
     refreshItemData(build);
     refreshTomes(build);
     refreshAbilities(build);
+
+    setUpOptionals(build);
+
     addToggles(build);
     computeOutputs(build);
 
     addDamageDisplays(build);
-
     displayFinalValues(build);
 }
 

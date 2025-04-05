@@ -19,12 +19,18 @@ function addEventListeners() {
     addCopyLinkListeners();
     addAspectListeners();
     addTomeListener();
+    addSPListener();
 }
 
 //
 function addToggleListeners() {
-    document.querySelectorAll(".toggle").forEach((toggle) => {
-        toggle.addEventListener("click", function () {
+    document.querySelectorAll(".slot_icon").forEach((toggle) => {
+        toggle.addEventListener("mouseover", function () {
+            document.querySelector(".display--" + toggle.dataset.slot).classList.remove("collapse");
+            toggleToggle(toggle);
+        });
+        toggle.addEventListener("mouseout", function () {
+            document.querySelector(".display--" + toggle.dataset.slot).classList.add("collapse");
             toggleToggle(toggle);
         });
     });
@@ -41,9 +47,6 @@ function toggleToggle(toggle) {
     const itemData = display.textContent;
     const height = (itemData.split("\n").length - 1 + 3) * fontHeight;
     display.style = "height: " + height + "px;";
-
-    toggle.classList.toggle("rotate");
-    document.querySelector(".display--" + toggle.dataset.slot).classList.toggle("collapse");
 
     if (document.querySelectorAll(".collapse").length < 8) {
         document.querySelector(".collapse_all").style.display = "block";
@@ -81,8 +84,15 @@ function addTreeEventListener() {
 }
 
 function addEffectListeners() {
-    const toggleBox = document.querySelector(".effect_toggles");
+    const toggleBox = document.querySelector("#effect_toggles");
     toggleBox.addEventListener("click", (event) => {
+        const effect = event.target;
+        if (!effect.classList.contains("effect")) return;
+        effect.classList.toggle("toggleOn");
+        refreshBuild();
+    });    
+    const addedToggleBox = document.querySelector("#added_toggles");
+    addedToggleBox.addEventListener("click", (event) => {
         const effect = event.target;
         if (!effect.classList.contains("effect")) return;
         effect.classList.toggle("toggleOn");
@@ -184,6 +194,14 @@ function addTomeListener() {
     for (let i = 0; i < tomeInputs.length; i++) {
         tomeInputs[i].addEventListener("input", function () {
             refreshBuild();
+        });
+    }
+}
+
+function addSPListener() {
+    for (let i = 0; i < spInputs.length; i++) {
+        spInputs[i].addEventListener("input", function () {
+            if (spInputs[i].value != "") refreshBuild();
         });
     }
 }

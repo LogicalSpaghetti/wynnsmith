@@ -1,3 +1,23 @@
+function createConversions(build) {
+    switch (build.class) {
+        case "shaman":
+            createShamanConversions(build);
+            break;
+        case "archer":
+            createArcherConversions(build);
+            break;
+        case "mage":
+            createMageConversions(build);
+            break;
+        case "assassin":
+            createAssassinConversions(build);
+            break;
+        case "warrior":
+            createWarriorConversions(build);
+            break;
+    }
+}
+
 function createShamanConversions(build) {
     // TODO: should be 33.4, left as 33 to match Wynnbuilder
 
@@ -28,26 +48,28 @@ function createShamanConversions(build) {
     addConv(build, "bloodLament", [100, 0, 0, 20, 0, 0], "Blood Sorrow");
 
     if (build.nodes.includes("lashingLance") || build.nodes.includes("sanguineStrike")) {
-        build.convs["Bleed"] = [30, 0, 0, 0, 0, 0]
+        build.convs["Bleed"] = [30, 0, 0, 0, 0, 0];
     }
 }
 
 function createArcherConversions(build) {
     addMeleeConversion(build);
-    addConv(build, "", [140, 0, 0, 0, 20, 0], "");
-    
+    // TODO
 }
 
 function createMageConversions(build) {
     addMeleeConversion(build);
+    // TODO
 }
 
 function createAssassinConversions(build) {
     addMeleeConversion(build);
+    // TODO
 }
 
 function createWarriorConversions(build) {
     addMeleeConversion(build);
+    // TODO
 }
 
 function addMeleeConversion(build) {
@@ -66,3 +88,63 @@ function addConv(build, nodeReq, conv, name) {
         build.convs[name][i] += conv[i];
     }
 }
+
+function applyNodeMultipliers(build) {
+    switch (build.class) {
+        case "shaman":
+            applyShamanMultipliers(build);
+            break;
+        case "archer":
+            createArcherConversions(build);
+            break;
+        case "mage":
+            createMageConversions(build);
+            break;
+        case "assassin":
+            createAssassinConversions(build);
+            break;
+        case "warrior":
+            createWarriorConversions(build);
+            break;
+    }
+}
+
+function applyShamanMultipliers(build) {
+    applySectMult(build, 1.2, "all", "toggles", "vengefulspirit");
+    // TODO
+}
+
+function applyArcherMultipliers(build) {
+    // TODO
+}
+
+function applyMageMultipliers(build) {
+    // TODO
+}
+
+function applyWarriorMultipliers(build) {
+    // TODO
+}
+
+function applyAssassinMultipliers(build) {
+    // TODO
+}
+
+function applySectMult(build, mult, attackName, section, checkName) {
+    if (build[section].includes(checkName)) {
+        applyMult(build, mult, attackName);
+    } 
+}
+function applyMult(build, mult, attackName) {
+    if (attackName === "all") {
+        Object.keys(build.attacks).forEach((aName) => {
+            applyMult(build, mult, aName);
+        });
+        return;
+    }
+    for (let i = 0; i < 6; i++) {
+        build.attacks[attackName].min[i] *= mult;
+        build.attacks[attackName].max[i] *= mult;
+    }
+}
+

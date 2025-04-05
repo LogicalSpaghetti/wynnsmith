@@ -151,10 +151,90 @@ const oddities = {
     },
 };
 
-const warrior = {
-    other: {},
-};
-
 const majorIds = {};
 
 const meleeAttacks = ["concentration", "Melee"];
+
+const aspects = {
+    shaman: {
+        "Aspect of the Beckoned Legion": [
+            {
+                slider: 1,
+                conv: [0, -1, 0, 0, 0, 0],
+            },
+            {
+                slider: 2,
+                conv: [0, -1, 0, 0, 0, -1],
+            },
+            {
+                slider: 3,
+                conv: [-1, -1, 0, 0, 0, -1],
+            },
+        ],
+        "Aspect of the Amphibian": [2, 3, 4],
+        "Aspect of Stances": [
+            {
+                lunatic: 5,
+                fanatic: 5,
+                heratic: 10,
+            },
+            {
+                lunatic: 8,
+                fanatic: 8,
+                heratic: 18,
+            },
+            {
+                lunatic: 10,
+                fanatic: 10,
+                heratic: 20,
+            },
+        ],
+        "Aspect of Lashing Fire": [
+            {
+                hits: 1,
+                conv: [-11, 0, -1, 0, -2, 0],
+            },
+            {
+                hits: 2,
+                conv: [-17, 0, -2, 0, -4, 0],
+            },
+            {
+                hits: 3,
+                conv: [-20, 0, -3, 0, -6, 0],
+            },
+            {
+                hits: 4,
+                conv: [-22, 0, -4, 0, -8, 0],
+            },
+        ],
+        "Aspect of Motivation": [5, 9, 12, 15],
+        "Acolyte's Embodiment of Unwavering Adherence": [
+            {
+                duration: 2,
+                tentacles: 0,
+                mult: 1
+            },
+            {
+                duration: 2,
+                tentacles: 1,
+                mult: 1.334
+            },
+            {
+                duration: 3,
+                tentacles: 1,
+                mult: 1.334
+            },
+        ],
+        "Summoner's Embodiment of the Omnipotent Overseer": [
+            {
+                hummingbirds: 0
+            },
+            {
+                hummingbirds: 1
+            },
+            {
+                hummingbirds: 1
+            },
+        ]
+    },
+};

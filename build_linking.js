@@ -72,7 +72,7 @@ function evaluateSection(section) {
 }
 
 function evaluateVersion(version) {
-    console.log("Fielbuilder version = " + version);
+    console.log("PedBuilder version = " + version);
 }
 
 function evaluateSet(set) {

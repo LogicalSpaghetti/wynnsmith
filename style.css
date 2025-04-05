@@ -11,6 +11,9 @@
     --wy-mythic: #a0a;
     --wy-fabled: #f55;
     --wy-legendary: #5ff;
+    --wy-rare: #f5f;
+    --wy-set: #5f5;
+    --wy-unique: #ff5;
     --wy-border: #5e4837;
     --wy-backbround: #82654c;
     --wy-slot: #cda870;
@@ -20,8 +23,7 @@
 body {
     color: #fff;
     background-color: var(--ls-background);
-    font-family: /*consolas, monospace,*/ "Lucida Console", "Courier New";
-    /* font-family: 'Nunito', sans-serif; */
+    font-family: "consolas", monospace, "Courier New";
     font-size: 12px;
 }
 
@@ -52,6 +54,8 @@ label {
 }
 
 .inputs {
+    caret-color: #ccc;
+    font-weight: 900;
     width: 300px;
     /* width:600px; */
     padding: 0px;
@@ -114,6 +118,7 @@ input,
     width: 250px;
     z-index: 1;
     background-color: var(--ls-background);
+    position: absolute;
 }
 
 .collapse {
@@ -202,10 +207,63 @@ input:focus {
     background-image: url(img/books/tome/marathon.png);
 }
 
+[data-rarity="common"] {
+    color: #fff;
+}
+
+[data-rarity="unique"] {
+    color: var(--wy-unique);
+}
+
+[data-rarity="set"] {
+    color: var(--wy-set);
+}
+
+[data-rarity="rare"] {
+    color: var(--wy-rare);
+}
+
+[data-rarity="legendary"] {
+    color: var(--wy-legendary);
+    /* border-right: 1px solid var(--wy-legendary); */
+}
+
+[data-rarity="fabled"] {
+    color: var(--wy-fabled);
+    /* border-right: 1px solid var(--wy-fabled); */
+}
+
+[data-rarity="mythic"] {
+    color: var(--wy-mythic);
+    /* border-right: 1px solid var(--wy-mythic); */
+}
+
 /* Effect Selectors */
 
 .toggleOn {
     background-color: rgb(20, 80, 80) !important;
+}
+
+/* Slider */
+
+.slider {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 6px; /* Specified height */
+    /* border-radius: 30px; */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+    transition: opacity 0.2s;
+}
+
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+.slider_div {
+    text-align: center;
 }
 
 /* -- Output: -- */
@@ -215,8 +273,10 @@ input:focus {
 }
 
 .output--A {
+    margin-left: 20px;
     word-wrap: normal;
     white-space: pre-line;
+    font-size: 8px;
 }
 
 #support_display {
@@ -261,7 +321,8 @@ button {
     border: 1px solid var(--ls-background);
 }
 button:hover {
-    border-color: var(--ls-trim-hover);
+    border: 1px solid var(--ls-trim-hover);
+    outline: none;
     background-color: var(--ls-background-hover);
 }
 
