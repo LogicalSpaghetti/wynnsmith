@@ -82,29 +82,13 @@ input,
 .miku {
     position: absolute;
     transform-origin: 0 0;
-    scale: 17%;
-    translate: 20px;
-    z-index: -1;
+    scale: 28%;
+    translate: 183px 1px;
+    opacity: 10%;
 }
 
 .powder {
     width: 58px;
-}
-
-.toggle {
-    /* display: block; */
-    background-image: url("img/buttons/exper_closed.png");
-    background-color: var(--ls-background2);
-    border-collapse: separate;
-    width: 20px;
-    height: 20px;
-    border: 1px solid var(--ls-background);
-    background-size: 100%;
-    cursor: pointer;
-}
-
-.rotate {
-    transform: rotate(90deg);
 }
 
 .display {
