@@ -20,6 +20,7 @@ function addEventListeners() {
     addAspectListeners();
     addTomeListener();
     addSPListener();
+    addGifListener();
 }
 
 //
@@ -90,7 +91,7 @@ function addEffectListeners() {
         if (!effect.classList.contains("effect")) return;
         effect.classList.toggle("toggleOn");
         refreshBuild();
-    });    
+    });
     const addedToggleBox = document.querySelector("#added_toggles");
     addedToggleBox.addEventListener("click", (event) => {
         const effect = event.target;
@@ -209,3 +210,22 @@ function addSPListener() {
 document.querySelector("#ansi_tree").addEventListener("click", function () {
     copyTreeAsText();
 });
+
+function addGifListener() {
+    document.querySelector("#gif_input").addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        // do something with the file
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const imageUrl = event.target.result;
+            // display the image on the page
+            document.querySelector("#miku").src = imageUrl
+        };
+    });
+
+    document.querySelector("#miku").style.opacity = document.querySelector("#opacity_slider").value + "%";
+    document.querySelector("#opacity_slider").addEventListener("input", (event) => {
+        document.querySelector("#miku").style.opacity = event.target.value + "%";
+    })
+}

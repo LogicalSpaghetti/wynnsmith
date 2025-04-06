@@ -17,7 +17,13 @@
                         </table>
                     </span>
                 </div>
+                <br />
+                <h4>Novelties:</h4>
                 <button id="ansi_tree">Copy ANSI Tree</button>
+                <br />
+                Set gif:
+                <input id="gif_input" type="file" accept="image/gif"/>
+                <input id="opacity_slider" class="slider" type="range" value="10">
             </section>
             <!-- Column 2 -->
             <section class="inputs column">
@@ -79,7 +85,9 @@
                             ></span
                         ></a>
                         <input class="input input--ring input--ring0" placeholder="Ring 1" data-slot="ring0" />
-                        <img class="miku" src="img/hatsune-miku.gif" />
+                        <div id="gif_holder">
+                            <img id="miku" src="img/hatsune-miku.gif" />
+                        </div>
                     </div>
                     <pre class="display display--ring0 collapse"></pre>
                     <div class="input_section">

@@ -8,6 +8,7 @@ function setUpOptionals(build) {
 
 function setUpToggles(build) {
     setUpSingleToggle(build, "nodes", "maskOfTheLunatic", "Mask of the Lunatic");
+    setUpSingleToggle(build, "nodes", "bloodPool", "Boosted Aura");
     setUpMultiToggle(build, "bleed", "Bleed", ["sanguineStrike", "lashingLance"], ["nodes", "nodes"]);
 }
 

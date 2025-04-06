@@ -23,7 +23,7 @@ function refreshBuild() {
     resetLinkText();
     const build = {
         class: "",
-        attackSpeed: "",
+        attackSpeed: undefined,
         mIds: [],
         nodes: [],
         aspects: {},

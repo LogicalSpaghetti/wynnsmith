@@ -23,7 +23,11 @@ function computeOutputs(build) {
 
     mergeAttackDamage(build);
 
-    applyAttackMultipliers(build);
+    applyNodeMultipliers(build);
+
+    addAttackVariants(build);
+
+    applyStrDex(build);
 
     mergeSupportStats(build);
 
@@ -434,12 +438,7 @@ function mergeAttackDamage(build) {
     });
 }
 
-function applyAttackMultipliers(build) {
-    applyNodeMultipliers(build);
-    applySP(build);
-}
-
-function applySP(build) {
+function applyStrDex(build) {
     const strInt = parseInt(spInputs[0].value);
     const strMult = strInt === undefined ? 1 : 1 + (strInt > 150 ? spMultipliers[150] : spMultipliers[strInt]);
     const dexMult = 1 + build.ids.criticalDamageBonus / 100;

@@ -35,7 +35,16 @@ function addBasePlayerStats(build) {
 }
 
 function addAttackSpeed(build, item) {
-    build.attackSpeed = item.attackSpeed;
+    const attackSpeed = item.attackSpeed;
+    build.attackSpeed = attackSpeed;
+    const speeds = Object.keys(attackSpeedMultipliers);
+    build.neumericalAttackSpeed = undefined;
+    for (let i = 0; i < speeds.length; i++) {
+        if (attackSpeed === speeds[i]) {
+            build.neumericalAttackSpeed = i;
+            break;
+        }
+    }
 }
 
 function addIds(build, source) {

@@ -27,6 +27,7 @@ sessionStorage for things that aren't shared between builds
 localStorage for user preferences
 Attack speed modifiers don't have an effect.
 Slot images being 16x16 instead of 18x18
+Make ability effects tied to the source instead of being all checked for each refresh
 
 Features:
 Wynnability

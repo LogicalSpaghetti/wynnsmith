@@ -79,12 +79,16 @@ input,
     width: 160px;
 }
 
-.miku {
+#gif_holder {
     position: absolute;
-    transform-origin: 0 0;
-    scale: 28%;
     translate: 183px 1px;
-    opacity: 10%;
+    height: 76px;
+}
+
+#miku {
+    height: 100%;
+    object-fit: cover;
+    /* opacity: 10%; */
 }
 
 .powder {
