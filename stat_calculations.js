@@ -1,19 +1,20 @@
 `use strict`;
 
 function computeOutputs(build) {
-    // build.ids.rawMainAttackDamage += -2000;
+    logFluidHealing(build);
     radiance(build);
     applyCostNodes(build);
     applyExternalBuffs(build);
     includeOtherGear(build);
+    // Damage
     includeProficiencies(build);
-    // Powders:
+
     addInitialPowderEffects(build);
-    // data reformatting
+
     splitMergedIds(build);
     damagesToArrays(build);
     addSPMults(build);
-    // spell and powder conversions:
+
     conversions(build);
 
     applyMasteries(build);
@@ -29,10 +30,15 @@ function computeOutputs(build) {
 
     applyStrDex(build);
 
+    createHealing(build);
     mergeSupportStats(build);
 
     roundAllForDisplay(build);
     removeAllZeros(build);
+}
+
+function logFluidHealing(build) {
+    build.fluidHealing = build.ids.waterDamage;
 }
 
 function radiance(build) {
@@ -465,6 +471,18 @@ function applyStrDex(build) {
             attack.max[i] *= strMult;
         }
     });
+}
+
+function createHealing(build) {
+    const sharp = build.nodes.includes("sharpHealing") ? build.fluidHealing * 0.3 : 0
+    const fluid = build.nodes.includes("fluidHealing") ? build.fluidHealing * 0.3 : 0
+    addHeal(build, "bloodPool", "nodes", "First Wave Heal", 25 + sharp)
+}
+
+function addHeal(build, checkName, sect, healName, healAmount) {
+    if (build[sect].includes(checkName)) {
+        build.heals[healName] = healAmount
+    }
 }
 
 function mergeSupportStats(build) {

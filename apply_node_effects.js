@@ -162,7 +162,7 @@ function addAttackVariants(build) {
         addMeleeDPS(build, "Melee");
     }
     addAttackVariant(build, "Aura", "hymnOfHate", "nodes", "Hymn of Hate", 0.5);
-    addSliderVariant(build, "Puppet Knife", "puppetMaster", "nodes", "Total Puppet DPS", "puppetMaster", 2)
+    addSliderVariant(build, "Puppet Knife", "puppetMaster", "nodes", "Total Puppet DPS", "puppetMaster", 2);
 }
 
 function addShamanMelees(build) {
@@ -176,7 +176,6 @@ function addMeleeDPS(build, meleeName) {
     var attackSpeed = build.neumericalAttackSpeed + -1 * build.ids.rawAttackSpeed;
     attackSpeed = Math.max(0, attackSpeed);
     attackSpeed = Math.min(6, attackSpeed);
-    console.log(attackSpeed);
     build.attackSpeedMult = attackSpeedMultipliers[Object.keys(attackSpeedMultipliers)[attackSpeed]];
     addAttackVariant(build, meleeName, "", true, "Melee DPS", build.attackSpeedMult);
 }
@@ -184,7 +183,7 @@ function addMeleeDPS(build, meleeName) {
 function addAttackVariant(build, rootName, variantId, variantSource, variantName, variantMult) {
     const root = build.attacks[rootName];
     if (root === undefined) return;
-    if (!variantSource && !build[variantSource].includes(variantId)) return;
+    if (variantSource !== true && !build[variantSource].includes(variantId)) return;
     build.attacks[variantName] = { min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0] };
     const variant = build.attacks[variantName];
     for (let i = 0; i < 6; i++) {
@@ -195,5 +194,12 @@ function addAttackVariant(build, rootName, variantId, variantSource, variantName
 
 function addSliderVariant(build, rootName, variantId, variantName, variantSource, slider, additionalMult) {
     if (build.sliders[slider] === undefined) return;
-    addAttackVariant(build, rootName, variantId, variantName, variantSource, build.sliders[slider] * (additionalMult === undefined ? 1 : additionalMult))
+    addAttackVariant(
+        build,
+        rootName,
+        variantId,
+        variantName,
+        variantSource,
+        build.sliders[slider] * (additionalMult === undefined ? 1 : additionalMult)
+    );
 }

@@ -17,7 +17,7 @@ function addDamageDisplays(build) {
                 roundForDisplay(attack.max[i], true) +
                 "</span><br>";
         }
-        attackStrings += "Crit:\n";
+        attackStrings += "Crit:<br>";
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
@@ -27,6 +27,19 @@ function addDamageDisplays(build) {
                 roundForDisplay(attack.maxc[i], true) +
                 "</span><br>";
         }
+    });
+
+    Object.keys(build.heals).forEach((healName) => {
+        const heal = build.heals[healName];
+
+        if (heal <= 0) return;
+
+        const healAmount = roundForDisplay(
+            build.final.health * (heal / 100) * (1 + build.ids.healingEfficiency / 100),
+            true
+        );
+
+        attackStrings += "" + healName + ':<br><div class="positive">' + healAmount + "</div><br>";
     });
 
     // TODO

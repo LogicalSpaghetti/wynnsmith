@@ -454,3 +454,12 @@ const elementalHeaders = {
     "Fire": '<span class="fire"><b class="font-minecraft">✹</b> ',
     "Air": '<span class="air"><b class="font-minecraft">❋</b> ',
 }
+
+const spellManaNames = {
+    shaman: {
+        "1": "Totem",
+        "2": "Haul",
+        "3": "Aura",
+        "4": "Uproot",
+    }
+}

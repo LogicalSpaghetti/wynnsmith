@@ -111,7 +111,10 @@ function copyTreeAsText() {
     var output = "```ansi";
     var counter = 0;
     console.log(trs);
+    var rowCounter = 0;
     trs.forEach((tr) => {
+        rowCounter++;
+        if (rowCounter % 6 == 1 && rowCounter !== 1) return;
         output += "\n";
         tr.childNodes.forEach((td) => {
             if (td.firstChild === null) {
@@ -154,7 +157,7 @@ function copyTreeAsText() {
                     default:
                         output += "ERROR";
                 }
-                output += "ﬗ" + foot;
+                output += "♦" + foot;
             } else if (td.firstChild.classList.contains("connector")) {
                 switch (nodeType.replace("connector_", "")) {
                     case "down_left":
@@ -188,7 +191,7 @@ function copyTreeAsText() {
                         output += "┼";
                         break;
                     case "up_right_left":
-                        output += "┴"
+                        output += "┴";
                         break;
                     default:
                         output += ".";

@@ -38,6 +38,7 @@ function refreshBuild() {
         final: {},
         convs: {},
         attacks: {},
+        heals: {},
         base: JSON.parse(emptyBaseString),
         ids: JSON.parse(emptyIdsString),
     };

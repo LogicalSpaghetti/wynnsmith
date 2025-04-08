@@ -19,7 +19,7 @@ function addToggles(build) {
         }
     });
     document.querySelectorAll(".slider").forEach((slider) => {
-        build.toggles.push(slider.dataset.modifier);
+        if (slider.dataset.modifier === undefined) return;
         build.sliders[slider.dataset.modifier] = slider.value;
     });
 }
