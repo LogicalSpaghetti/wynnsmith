@@ -118,6 +118,14 @@ function applyGlobalMultipliers(build) {
 function applyShamanMultipliers(build) {
     applySectMult(build, 1.35, "all", "toggles", "maskOfTheLunatic");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");
+    applySectMult(build, 0.6, "Totem", "nodes", "doubleTotem");
+    applySectMult(build, 0.6, "Aura", "nodes", "doubleTotem");
+    applySectMult(build, 0.8, "Crimson Effigy", "nodes", "doubleTotem");
+    applySectMult(build, 0.5, "Totem", "nodes", "tripleTotem");
+    applySectMult(build, 0.5, "Aura", "nodes", "tripleTotem");
+    applySectMult(build, 0.8, "Crimson Effigy", "nodes", "tripleTotem");
+    applyAspectSectMult(build, 0.45, "Totem", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
+    applyAspectSectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
     // TODO
 }
 
@@ -137,6 +145,11 @@ function applyAssassinMultipliers(build) {
     // TODO
 }
 
+function applyAspectSectMult(build, mult, attackName, section, checkName) {
+    if (build[section][checkName] === undefined) return;
+    applyMult(build, mult, attackName);
+}
+
 function applySectMult(build, mult, attackName, section, checkName) {
     if (build[section].includes(checkName)) {
         applyMult(build, mult, attackName);
@@ -149,6 +162,7 @@ function applyMult(build, mult, attackName) {
         });
         return;
     }
+    if (build.attacks[attackName] === undefined) return;
     for (let i = 0; i < 6; i++) {
         build.attacks[attackName].min[i] *= mult;
         build.attacks[attackName].max[i] *= mult;
@@ -162,6 +176,19 @@ function addAttackVariants(build) {
         addMeleeDPS(build, "Melee");
     }
     addAttackVariant(build, "Aura", "hymnOfHate", "nodes", "Hymn of Hate", 0.5);
+    addAttackVariant(build, "Totem", "totem", "nodes", "Per Totem Tick DPS", 2.5);
+    addAttackVariant(
+        build,
+        "Per Totem Tick DPS",
+        "doubleTotem",
+        "nodes",
+        "Total Totem Tick DPS",
+        1 +
+            (build.nodes.includes("doubleTotem") ? 1 : 0) +
+            (build.nodes.includes("tripleTotem")
+                ? 1 + (build.aspects["Summoner's Embodiment of the Omnipotent Overseer"] === undefined ? 0 : 1)
+                : 0)
+    );
     addSliderVariant(build, "Puppet Knife", "puppetMaster", "nodes", "Total Puppet DPS", "puppetMaster", 2);
 }
 
@@ -184,7 +211,8 @@ function addAttackVariant(build, rootName, variantId, variantSource, variantName
     const root = build.attacks[rootName];
     if (root === undefined) return;
     if (variantSource !== true && !build[variantSource].includes(variantId)) return;
-    build.attacks[variantName] = { min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0] };
+    if (build.attacks[variantName] === undefined)
+        build.attacks[variantName] = { min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0] };
     const variant = build.attacks[variantName];
     for (let i = 0; i < 6; i++) {
         variant.min[i] = root.min[i] * variantMult;
