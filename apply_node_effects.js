@@ -118,14 +118,20 @@ function applyGlobalMultipliers(build) {
 function applyShamanMultipliers(build) {
     applySectMult(build, 1.35, "all", "toggles", "maskOfTheLunatic");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");
-    applySectMult(build, 0.6, "Totem", "nodes", "doubleTotem");
-    applySectMult(build, 0.6, "Aura", "nodes", "doubleTotem");
+    applySectMult(build, 0.6, "Aura", "nodes", "rebound");
+    const totemMult = build.nodes.includes("doubleTotem")
+        ? build.nodes.includes("tripleTotem")
+            ? build.aspects["Summoner's Embodiment of the Omnipotent Overseer"] !== undefined
+                ? 0.45
+                : 0.5
+            : 0.6
+        : 1;
+    applySectMult(build, totemMult, "Totem", "nodes", "totem");
+    applySectMult(build, totemMult, "Aura", "nodes", "totem");
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "doubleTotem");
-    applySectMult(build, 0.5, "Totem", "nodes", "tripleTotem");
-    applySectMult(build, 0.5, "Aura", "nodes", "tripleTotem");
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "tripleTotem");
-    applyAspectSectMult(build, 0.45, "Totem", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
     applyAspectSectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
+    if (build.nodes.includes("rebound")) build.heals["First Wave Heal"] *= 0.6;
     // TODO
 }
 
@@ -176,20 +182,28 @@ function addAttackVariants(build) {
         addMeleeDPS(build, "Melee");
     }
     addAttackVariant(build, "Aura", "hymnOfHate", "nodes", "Hymn of Hate", 0.5);
-    addAttackVariant(build, "Totem", "totem", "nodes", "Per Totem Tick DPS", 2.5);
-    addAttackVariant(
-        build,
-        "Per Totem Tick DPS",
-        "doubleTotem",
-        "nodes",
-        "Total Totem Tick DPS",
-        1 +
-            (build.nodes.includes("doubleTotem") ? 1 : 0) +
-            (build.nodes.includes("tripleTotem")
-                ? 1 + (build.aspects["Summoner's Embodiment of the Omnipotent Overseer"] === undefined ? 0 : 1)
-                : 0)
-    );
     addSliderVariant(build, "Puppet Knife", "puppetMaster", "nodes", "Total Puppet DPS", "puppetMaster", 2);
+    const hasTotem = build.nodes.includes("totem");
+    const hasDouble = build.nodes.includes("doubleTotem");
+    const hasTriple = build.nodes.includes("tripleTotem");
+    const hasQuad = build.aspects["Summoner's Embodiment of the Omnipotent Overseer"] !== undefined;
+    const totemCount = hasTotem ? 1 + (hasDouble ? 1 + (hasTriple ? 1 + (hasQuad ? 1 : 0) : 0) : 0) : 0;
+    addAttackVariant(build, "Totem", "totem", "nodes", "Per Totem Tick DPS", 2.5);
+    addAttackVariant(build, "Per Totem Tick DPS", "doubleTotem", "nodes", "Total Totem Tick DPS", totemCount);
+
+    const shamanHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
+    if (build.heals["Regeneration Tick"] !== undefined) {
+        console.log(build.heals["Regeneration Tick"] * 2.5 * totemCount);
+        build.heals["Regeneration Tick"] *= shamanHealMult;
+        build.heals["Total Regeneration Per Second"] = build.heals["Regeneration Tick"] * 2.5 * totemCount;
+    }
+    if (build.heals["First Wave Heal"] !== undefined) {
+        build.heals["First Wave Heal"] *= shamanHealMult * totemCount;
+        if (totemCount > 1) build.heals["Per Totem First Wave Heal"] = build.heals["First Wave Heal"] / totemCount;
+        if (build.nodes.includes("rebound"))
+            build.heals["Total Rebound Heal"] =
+                2 * (totemCount > 1 ? build.heals["Per Totem First Wave Heal"] : build.heals["First Wave Heal"]);
+    }
 }
 
 function addShamanMelees(build) {

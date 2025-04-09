@@ -24,13 +24,13 @@ function computeOutputs(build) {
 
     mergeAttackDamage(build);
 
-    applyNodeMultipliers(build);
+    createHealing(build);
 
+    applyNodeMultipliers(build);
     addAttackVariants(build);
 
     applyStrDex(build);
 
-    createHealing(build);
     mergeSupportStats(build);
 
     roundAllForDisplay(build);
@@ -477,6 +477,7 @@ function createHealing(build) {
     const sharp = build.nodes.includes("sharpHealing") ? build.fluidHealing * 0.3 : 0
     const fluid = build.nodes.includes("fluidHealing") ? build.fluidHealing * 0.3 : 0
     addHeal(build, "bloodPool", "nodes", "First Wave Heal", 25 + sharp)
+    addHeal(build, "regeneration", "nodes", "Regeneration Tick", 1)
 }
 
 function addHeal(build, checkName, sect, healName, healAmount) {

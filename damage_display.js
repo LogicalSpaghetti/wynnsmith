@@ -6,7 +6,7 @@ function addDamageDisplays(build) {
     Object.keys(build.attacks).forEach((attackName) => {
         const attack = build.attacks[attackName];
 
-        attackStrings += "-- " + attackName + ": --\n";
+        attackStrings += "---- " + attackName + ": ----\n";
         attackStrings += "Non-Crit:\n";
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
