@@ -7,7 +7,7 @@ function treeClicked(event) {
 }
 
 function refreshAbilities(build) {
-    if (previousClass === build.class) {
+    if (previousClass === build.wynnClass) {
         addNodesToBuild(build);
         addAspectsToBuild(build);
     } else {
@@ -19,11 +19,11 @@ function refreshAbilities(build) {
 function changeAbilityTree(build) {
     document.querySelector(".abilityTreeContainer").removeAttribute("hidden");
 
-    const treeMap = classes[build.class].map; // array
+    const treeMap = classes[build.wynnClass].map; // array
     const abilityTree = document.querySelector(".abilityTree");
     abilityTree.innerHTML = mapHTML(treeMap);
 
-    const treeNodes = classes[build.class].tree;
+    const treeNodes = classes[build.wynnClass].tree;
 
     // prevent images from being dragged
     document.querySelectorAll(".node_img").forEach((img) => {
@@ -34,7 +34,7 @@ function changeAbilityTree(build) {
 }
 
 function changeAspects(build) {
-    const aspects = classes[build.class].aspects;
+    const aspects = classes[build.wynnClass].aspects;
     const aspectNames = Object.keys(aspects);
 
     const activeHolder = document.querySelector("#active_aspects");
@@ -54,7 +54,7 @@ function changeAspects(build) {
 
         const aspectImage = document.createElement("span");
         aspectImage.classList.add("aspect_image");
-        aspectImage.style = "background-image:url(img/aspect/" + build.class + ".png);";
+        aspectImage.style = "background-image:url(img/aspect/" + build.wynnClass + ".png);";
 
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
@@ -241,6 +241,6 @@ function addNodesToBuild(build) {
 function addAspectsToBuild(build) {
     const aspects = document.querySelector("#active_aspects").querySelectorAll(".aspect");
     aspects.forEach((aspect) => {
-        build.aspects[aspect.dataset.aspect] = aspect.childNodes[2].dataset.tier;
+        build.aspects[aspect.dataset.aspect] = Number(aspect.childNodes[2].dataset.tier);
     });
 }

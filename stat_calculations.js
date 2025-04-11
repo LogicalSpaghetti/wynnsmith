@@ -1,5 +1,11 @@
 `use strict`;
 
+function removeOverridenEffects(build) {
+    if (build.nodes.includes("maskOfTheLunatic") | build.nodes.includes("maskOfTheFanatic") | build.nodes.includes("maskOfTheCoward")) {
+        build.nodes[build.nodes.indexOf("uproot")] = "";
+    }
+}
+
 function computeOutputs(build) {
     logFluidHealing(build);
     radiance(build);
@@ -53,13 +59,13 @@ function radiance(build) {
 }
 
 function applyCostNodes(build) {
-    if (spellCostMods[build.class] === undefined) {
-        console.log("cost mods not added for " + build.class);
+    if (spellCostMods[build.wynnClass] === undefined) {
+        console.log("cost mods not added for " + build.wynnClass);
         return;
     }
-    Object.keys(spellCostMods[build.class]).forEach((nodeName) => {
+    Object.keys(spellCostMods[build.wynnClass]).forEach((nodeName) => {
         if (build.nodes.includes(nodeName)) {
-            const mod = spellCostMods[build.class][nodeName];
+            const mod = spellCostMods[build.wynnClass][nodeName];
             build.ids["raw" + mod[0] + "SpellCost"] += mod[1];
         }
     });
@@ -266,6 +272,19 @@ function damagesToArrays(build) {
     delete build.final.airSpellDamage;
 }
 
+function computeSPMults(build) {
+    for (let i = 0; i < 5; i++) {
+        const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
+
+        var mult = textInt === undefined ? 0 : spMultipliers[textInt];
+        if (i === 3) mult *= 0.867;
+        if (i === 4) mult *= 0.951;
+
+        build.sp.mults.push(mult);
+    }
+    build.sp.maxMana = 75 / spInputs[2].value;
+}
+
 function addSPMults(build) {
     for (let i = 0; i < 5; i++) {
         const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
@@ -400,10 +419,10 @@ function applyMasteries(build) {
             if (attack.max[i] === 0) continue;
 
             // ensure the node has been taken
-            if (!build.nodes.includes(build.class + damageTypes[i] + "Path")) continue;
+            if (!build.nodes.includes(build.wynnClass + damageTypes[i] + "Path")) continue;
 
             const prefix = prefixes[i];
-            const mastery = masteries[build.class][prefix + "Mastery"];
+            const mastery = masteries[build.wynnClass][prefix + "Mastery"];
 
             // Masteries Node base values are added to any non-zero damage values.
             // add mastery.min/max
@@ -474,15 +493,15 @@ function applyStrDex(build) {
 }
 
 function createHealing(build) {
-    const sharp = build.nodes.includes("sharpHealing") ? build.fluidHealing * 0.3 : 0
-    const fluid = build.nodes.includes("fluidHealing") ? build.fluidHealing * 0.3 : 0
-    addHeal(build, "bloodPool", "nodes", "First Wave Heal", 25 + sharp)
-    addHeal(build, "regeneration", "nodes", "Regeneration Tick", 1)
+    const sharp = build.nodes.includes("sharpHealing") ? build.fluidHealing * 0.3 : 0;
+    const fluid = build.nodes.includes("fluidHealing") ? build.fluidHealing * 0.3 : 0;
+    addHeal(build, "bloodPool", "nodes", "First Wave Heal", 25 + sharp);
+    addHeal(build, "regeneration", "nodes", "Regeneration Tick", 1);
 }
 
 function addHeal(build, checkName, sect, healName, healAmount) {
     if (build[sect].includes(checkName)) {
-        build.heals[healName] = healAmount
+        build.heals[healName] = healAmount;
     }
 }
 

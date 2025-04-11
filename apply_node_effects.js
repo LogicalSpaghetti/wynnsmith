@@ -1,5 +1,5 @@
 function createConversions(build) {
-    switch (build.class) {
+    switch (build.wynnClass) {
         case "shaman":
             createShamanConversions(build);
             break;
@@ -47,6 +47,13 @@ function createShamanConversions(build) {
     addConv(build, "hymnOfFreedom", [150, 0, 0, 50, 0, 0], "Frog Dance");
     addConv(build, "bloodLament", [100, 0, 0, 20, 0, 0], "Blood Sorrow");
 
+    addAspectConv(build, "Aspect of Lashing Fire", "flamingTongue", "Uproot", [
+        [-11, 0, -1, 0, -2, 0],
+        [-17, 0, -2, 0, -4, 0],
+        [-20, 0, -3, 0, -6, 0],
+        [-22, 0, -4, 0, -8, 0],
+    ]);
+
     if (build.nodes.includes("lashingLance") || build.nodes.includes("sanguineStrike")) {
         build.convs["Bleed"] = [30, 0, 0, 0, 0, 0];
     }
@@ -89,9 +96,15 @@ function addConv(build, nodeReq, conv, name) {
     }
 }
 
+function addAspectConv(build, aspectName, nodeReq, convName, convs) {
+    const aspectTier = build.aspects[aspectName];
+    if (aspectTier === undefined) return;
+    addConv(build, nodeReq, convs[aspectTier - 1], convName);
+}
+
 function applyNodeMultipliers(build) {
     applyGlobalMultipliers(build);
-    switch (build.class) {
+    switch (build.wynnClass) {
         case "shaman":
             applyShamanMultipliers(build);
             break;
@@ -176,7 +189,7 @@ function applyMult(build, mult, attackName) {
 }
 
 function addAttackVariants(build) {
-    if (build.class === "shaman") {
+    if (build.wynnClass === "shaman") {
         addShamanMelees(build);
     } else {
         addMeleeDPS(build, "Melee");
@@ -190,6 +203,16 @@ function addAttackVariants(build) {
     const totemCount = hasTotem ? 1 + (hasDouble ? 1 + (hasTriple ? 1 + (hasQuad ? 1 : 0) : 0) : 0) : 0;
     addAttackVariant(build, "Totem", "totem", "nodes", "Per Totem Tick DPS", 2.5);
     addAttackVariant(build, "Per Totem Tick DPS", "doubleTotem", "nodes", "Total Totem Tick DPS", totemCount);
+    addAttackVariant(
+        build,
+        "Uproot",
+        "flamingTongue",
+        "nodes",
+        "Uproot Total",
+        3 +
+            (build.nodes.includes("lashingLance") ? 1 : 0) +
+            (build.aspects["Aspect of Lashing Fire"] === undefined ? 0 : build.aspects["Aspect of Lashing Fire"])
+    );
 
     const shamanHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
     if (build.heals["Regeneration Tick"] !== undefined) {

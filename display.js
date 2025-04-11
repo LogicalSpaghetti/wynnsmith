@@ -14,6 +14,9 @@ function displayStats(build) {
         .replaceAll("{\n\n}", "{}")
         .replaceAll("[\n\n]", "[]");
     
+    const maxMana = 
+        roundForDisplay(100 + getSPMult(spInputs[2].value) * 100 + ((build.ids.rawMaxMana === undefined) ? 0 : build.ids.rawMaxMana));
+
     support.innerHTML = 
         getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health", build.final.health) +
         getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health Regen", build.final.healthRegen, "/4s") +
@@ -26,7 +29,7 @@ function displayStats(build) {
         getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Regen", build.ids.manaRegen, "/5s") +
         getStatDisplay("water", "→ True Mana Regen",(25 + (build.ids.manaRegen === undefined ? 0 : build.ids.manaRegen)), "/5s", false, true) +
         getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Steal", build.ids.manaSteal, "/3s") +
-        getStatDisplay("water", "Total Max Mana", roundForDisplay(100 + getSPMult(spInputs[2].value) * 100 + ((build.ids.rawMaxMana === undefined) ? 0 : build.ids.rawMaxMana))) +
+        (maxMana === 100 ? "" : getStatDisplay("water", "Total Max Mana", maxMana)) +
         getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Life Steal", build.ids.lifeSteal, "/3s") +
         getStatDisplay("earth", "Poison", build.ids.poison, "%") +
         getStatDisplay("earth", "Thorns", build.ids.thorns, "%") +

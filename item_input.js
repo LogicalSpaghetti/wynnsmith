@@ -9,7 +9,7 @@ function refreshClass(build) {
     if (item !== undefined && item.requirements.classRequirement !== undefined) {
         currentClass = item.requirements.classRequirement;
     }
-    build.class = currentClass;
+    build.wynnClass = currentClass;
 }
 
 function refreshItemData(build) {
@@ -27,6 +27,7 @@ function refreshItemData(build) {
         addIds(build, item);
         if (item.attackSpeed === undefined) continue;
         addAttackSpeed(build, item);
+        document.title = "WynnSmith: " + item.internalName
     }
 }
 

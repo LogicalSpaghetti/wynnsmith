@@ -21,27 +21,7 @@ const outputAll = document.querySelector(`.output--A`);
 function refreshBuild() {
     console.log("begin new refresh:");
     resetLinkText();
-    const build = {
-        class: "",
-        attackSpeed: undefined,
-        mIds: [],
-        nodes: [],
-        aspects: {},
-        tomes: [],
-        adds: {},
-        toggles: [],
-        sliders: {},
-        powders: {
-            armour: [],
-            weapon: [],
-        },
-        final: {},
-        convs: {},
-        attacks: {},
-        heals: {},
-        base: JSON.parse(emptyBaseString),
-        ids: JSON.parse(emptyIdsString),
-    };
+    const build = new Build();
 
     fixSPInputs();
 
@@ -53,6 +33,11 @@ function refreshBuild() {
     setUpOptionals(build);
     addToggles(build);
 
+    // console.log(parse(build, ))
+    // console.log(eval("build.ids"))
+    console.log(build.evaluate("build.aspects['Aspect of Lashing Fire']"))
+
+    removeOverridenEffects(build);
     computeOutputs(build);
 
     addDamageDisplays(build);

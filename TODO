@@ -56,7 +56,8 @@ Save builds locally and to/from a file.
 ez tome selector when clicking the tome icon.
 Tome shorthands
     mr, mana regen...
-https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/
+Fallen effective mr from hpr/ls/rally
+    https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/
     Outdated, but remaining mana and remaining hp likely both have an effect.
 UI Themes
     Neon
@@ -74,3 +75,10 @@ Rich embeds if it's possible to generate them based on the provided build
     oEmbed?
 
 build.heals.map((heal) => {});
+
+https://api.wynncraft.com/v3/ability/map/shaman
+https://api.wynncraft.com/v3/ability/tree/shaman
+https://api.wynncraft.com/v3/aspects/shaman
+https://api.wynncraft.com/v3/item/database?fullResult
+
+https://github.com/RawFish69/Nori/blob/main/src/web/js_global/item_rerolling.js

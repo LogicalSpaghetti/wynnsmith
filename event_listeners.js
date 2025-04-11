@@ -220,12 +220,12 @@ function addGifListener() {
         reader.onload = (event) => {
             const imageUrl = event.target.result;
             // display the image on the page
-            document.querySelector("#miku").src = imageUrl
+            document.querySelector("#miku").src = imageUrl;
         };
     });
 
     document.querySelector("#miku").style.opacity = document.querySelector("#opacity_slider").value + "%";
     document.querySelector("#opacity_slider").addEventListener("input", (event) => {
         document.querySelector("#miku").style.opacity = event.target.value + "%";
-    })
+    });
 }

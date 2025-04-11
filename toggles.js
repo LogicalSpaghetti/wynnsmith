@@ -127,7 +127,7 @@ function setUpMultiSlider(build, id, displayName, divText, abilityNames, ability
 
         if (abilitySource === "aspects") {
             if (build.aspects[abilityName] === undefined) continue;
-            max += aspects[build.class][abilityName][build.aspects[abilityName] - 1].slider;
+            max += aspects[build.wynnClass][abilityName][build.aspects[abilityName] - 1].slider;
         } else {
             if (!build[abilitySource].includes(abilityName)) continue;
             max += maxes[i];
