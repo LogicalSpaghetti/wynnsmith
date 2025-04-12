@@ -37,7 +37,7 @@ function computeOutputs(build) {
 
     applyStrDex(build);
 
-    mergeSupportStats(build);
+    finalStatReformatting(build);
 
     roundAllForDisplay(build);
     removeAllZeros(build);
@@ -505,7 +505,7 @@ function addHeal(build, checkName, sect, healName, healAmount) {
     }
 }
 
-function mergeSupportStats(build) {
+function finalStatReformatting(build) {
     const ids = build.ids;
     const base = build.base;
     const final = build.final;
@@ -514,6 +514,8 @@ function mergeSupportStats(build) {
     final.healthRegen = computeHpr(ids.healthRegenRaw, ids.healthRegen / 100);
 
     mergeElementalDefences(build);
+
+    if (ids.manaRegen !== undefined) final.trueManaRegen = ids.manaRegen + 25;
 }
 
 function computeHpr(base, percent) {

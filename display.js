@@ -27,7 +27,7 @@ function displayStats(build) {
         getStatDisplay("air", "<b class=\"font-minecraft\">❋</b> Air Defence", build.final.totalAirDefence) +
         "<hr></hr>" +
         getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Regen", build.ids.manaRegen, "/5s") +
-        getStatDisplay("water", "→ True Mana Regen",(25 + (build.ids.manaRegen === undefined ? 0 : build.ids.manaRegen)), "/5s", false, true) +
+        (build.ids.manaRegen === undefined ? "" : (getStatDisplay("water", "→ True Mana Regen",(25 + build.ids.manaRegen), "/5s", false, true))) +
         getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Steal", build.ids.manaSteal, "/3s") +
         (maxMana === 100 ? "" : getStatDisplay("water", "Total Max Mana", maxMana)) +
         getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Life Steal", build.ids.lifeSteal, "/3s") +

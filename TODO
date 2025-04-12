@@ -28,6 +28,7 @@ localStorage for user preferences
 Attack speed modifiers don't have an effect.
 Slot images being 16x16 instead of 18x18
 Make ability effects tied to the source instead of being all checked for each refresh
+Some buffs overriding or adding instead of all applying multiplicatively
 
 Features:
 Wynnability
@@ -82,3 +83,34 @@ https://api.wynncraft.com/v3/aspects/shaman
 https://api.wynncraft.com/v3/item/database?fullResult
 
 https://github.com/RawFish69/Nori/blob/main/src/web/js_global/item_rerolling.js
+
+Use build.evaluate() for complex abstractions
+    try to make it allow user input without being a security flaw for equation sharing.
+        LaTeX surely
+
+Blood Sorrow total
+    Aspect
+EC Total/Absolute Total
+    Aspect
+Awakened (make it disable any other masks, and vise-versa)
+All mask effects
+    Aspect
+Shatter Healing
+All Chant Effects
+    Aspect
+Haunting Memory
+Bullwhip + Aspect
+Invig
+Shepherd
+Hummingbirds + Aspect
+Powder Specials
+MId Powder Specials
+Attack Display
+    Spell Mana stuff
+        Currently just wrong, it doesn't immediately sum
+Bleed mults
+Puppet Explosion effective dps
+    Schadenfreude
+Frog Dance Total
+Sacrifical Shrine -hps
+Pain Cycle

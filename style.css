@@ -397,6 +397,7 @@ img.highlight_node[data-type="ability"] {
 
 #active_aspects,
 #inactive_aspects {
+    image-rendering: pixelated;
     line-height: 0;
     min-height: 27px;
     background-image: url(img/background/tree_scroll.png);

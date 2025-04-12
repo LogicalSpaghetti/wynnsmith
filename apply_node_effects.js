@@ -190,10 +190,14 @@ function applyMult(build, mult, attackName) {
 
 function addAttackVariants(build) {
     if (build.wynnClass === "shaman") {
-        addShamanMelees(build);
+        addShamanAttackVariants(build);
     } else {
         addMeleeDPS(build, "Melee");
     }
+}
+
+function addShamanAttackVariants(build) {
+    addShamanMelees(build);
     addAttackVariant(build, "Aura", "hymnOfHate", "nodes", "Hymn of Hate", 0.5);
     addSliderVariant(build, "Puppet Knife", "puppetMaster", "nodes", "Total Puppet DPS", "puppetMaster", 2);
     const hasTotem = build.nodes.includes("totem");
@@ -203,15 +207,24 @@ function addAttackVariants(build) {
     const totemCount = hasTotem ? 1 + (hasDouble ? 1 + (hasTriple ? 1 + (hasQuad ? 1 : 0) : 0) : 0) : 0;
     addAttackVariant(build, "Totem", "totem", "nodes", "Per Totem Tick DPS", 2.5);
     addAttackVariant(build, "Per Totem Tick DPS", "doubleTotem", "nodes", "Total Totem Tick DPS", totemCount);
+
+    const lanceMult =
+        3 +
+        (build.nodes.includes("lashingLance") ? 1 : 0) +
+        (build.aspects["Aspect of Lashing Fire"] === undefined ? 0 : build.aspects["Aspect of Lashing Fire"]);
+    addAttackVariant(build, "Uproot", "flamingTongue", "nodes", "Uproot Total", lanceMult);
+
+    const acoTier = build.aspects["Acolyte's Embodiment of Unwavering Adherence"];
+    const sorrowMult = 5 * (4 + (acoTier === undefined ? 0 : acoTier > 2 ? 3 : 2));
+    addAttackVariant(build, "Blood Sorrow", "bloodLament", "nodes", "Blood Sorrow Total DPS", sorrowMult);
+    const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
     addAttackVariant(
         build,
-        "Uproot",
-        "flamingTongue",
+        "Frog Dance",
+        "hymnOfFreedom",
         "nodes",
-        "Uproot Total",
-        3 +
-            (build.nodes.includes("lashingLance") ? 1 : 0) +
-            (build.aspects["Aspect of Lashing Fire"] === undefined ? 0 : build.aspects["Aspect of Lashing Fire"])
+        "Frog Dance Total Damage",
+        3 + (frogDanceAspect === undefined ? 0 : 1 + frogDanceAspect)
     );
 
     const shamanHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;

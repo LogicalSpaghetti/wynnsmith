@@ -33,10 +33,6 @@ function refreshBuild() {
     setUpOptionals(build);
     addToggles(build);
 
-    // console.log(parse(build, ))
-    // console.log(eval("build.ids"))
-    console.log(build.evaluate("build.aspects['Aspect of Lashing Fire']"))
-
     removeOverridenEffects(build);
     computeOutputs(build);
 
