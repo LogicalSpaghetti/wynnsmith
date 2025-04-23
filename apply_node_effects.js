@@ -19,11 +19,10 @@ function createConversions(build) {
 }
 
 function createShamanConversions(build) {
-    // TODO: should be 33.4, left as 33 to match Wynnbuilder
-
     if (build.attackSpeed !== undefined) build.convs["Melee"] = [33.4, 0, 0, 0, 0, 0];
     addConv(build, "totem", [6, 0, 0, 0, 0, 6], "Totem");
-    addConv(build, "relikProficiency", [1.67, 0, 0, 0, 0, 0], "Melee");
+    // TODO: does this work?
+    // addConv(build, "relikProficiency", [1.67, 0, 0, 0, 0, 0], "Melee");
     addConv(build, "totemicsmash", [120, 0, 0, 0, 30, 0], "Totemic Smash");
     addConv(build, "uproot", [80, 30, 20, 0, 0, 0], "Uproot");
     addConv(build, "aura", [150, 0, 0, 30, 0, 0], "Aura");
@@ -102,23 +101,23 @@ function addAspectConv(build, aspectName, nodeReq, convName, convs) {
     addConv(build, nodeReq, convs[aspectTier - 1], convName);
 }
 
-function applyNodeMultipliers(build) {
+function applyMultipliers(build) {
     applyGlobalMultipliers(build);
     switch (build.wynnClass) {
         case "shaman":
             applyShamanMultipliers(build);
             break;
         case "archer":
-            createArcherConversions(build);
+            applyArcherMultipliers(build);
             break;
         case "mage":
-            createMageConversions(build);
+            applyMageMultipliers(build);
             break;
         case "assassin":
-            createAssassinConversions(build);
+            applyAssassinMultipliers(build);
             break;
         case "warrior":
-            createWarriorConversions(build);
+            applyWarriorMultipliers(build);
             break;
     }
 }
@@ -129,7 +128,9 @@ function applyGlobalMultipliers(build) {
 }
 
 function applyShamanMultipliers(build) {
+    applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
     applySectMult(build, 1.35, "all", "toggles", "maskOfTheLunatic");
+    applySectMult(build, 1.35, "all", "toggles", "maskOfTheAwakened");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");
     applySectMult(build, 0.6, "Aura", "nodes", "rebound");
     const totemMult = build.nodes.includes("doubleTotem")
@@ -149,18 +150,22 @@ function applyShamanMultipliers(build) {
 }
 
 function applyArcherMultipliers(build) {
+    applySectMult(build, 1.05, "Melee", "nodes", "bowProficiency");
     // TODO
 }
 
 function applyMageMultipliers(build) {
+    applySectMult(build, 1.05, "Melee", "nodes", "wandProficiency");
     // TODO
 }
 
 function applyWarriorMultipliers(build) {
+    applySectMult(build, 1.05, "Melee", "nodes", "spearProficiency");
     // TODO
 }
 
 function applyAssassinMultipliers(build) {
+    applySectMult(build, 1.05, "Melee", "nodes", "daggerProficiency");
     // TODO
 }
 
@@ -208,6 +213,9 @@ function addShamanAttackVariants(build) {
     addAttackVariant(build, "Totem", "totem", "nodes", "Per Totem Tick DPS", 2.5);
     addAttackVariant(build, "Per Totem Tick DPS", "doubleTotem", "nodes", "Total Totem Tick DPS", totemCount);
 
+    addAttackVariant(build, "Eldritch Call", "eldritchCall", "nodes", "Eldritch Call Single Target Total", 4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0));
+    addAttackVariant(build, "Eldritch Call Single Target Total", "eldritchCall", "nodes", "Eldritch Call Group Total", 4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0));
+
     const lanceMult =
         3 +
         (build.nodes.includes("lashingLance") ? 1 : 0) +
@@ -218,14 +226,7 @@ function addShamanAttackVariants(build) {
     const sorrowMult = 5 * (4 + (acoTier === undefined ? 0 : acoTier > 2 ? 3 : 2));
     addAttackVariant(build, "Blood Sorrow", "bloodLament", "nodes", "Blood Sorrow Total DPS", sorrowMult);
     const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
-    addAttackVariant(
-        build,
-        "Frog Dance",
-        "hymnOfFreedom",
-        "nodes",
-        "Frog Dance Total Damage",
-        3 + (frogDanceAspect === undefined ? 0 : 1 + frogDanceAspect)
-    );
+    addAttackVariant(build, "Frog Dance", "hymnOfFreedom", "nodes", "Frog Dance Total Damage", 3 + (frogDanceAspect === undefined ? 0 : 1 + frogDanceAspect));
 
     const shamanHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
     if (build.heals["Regeneration Tick"] !== undefined) {

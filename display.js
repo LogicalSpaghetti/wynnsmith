@@ -5,6 +5,9 @@ function displayFinalValues(build) {
 }
 
 function displayStats(build) {
+    const ids = build.ids;
+    const final = build.final;
+
     outputAll.textContent = JSON.stringify(build)
         .replaceAll(',"', ',\n"')
         .replaceAll("{", "{\n")
@@ -14,42 +17,39 @@ function displayStats(build) {
         .replaceAll("{\n\n}", "{}")
         .replaceAll("[\n\n]", "[]");
     
-    const maxMana = 
-        roundForDisplay(100 + getSPMult(spInputs[2].value) * 100 + ((build.ids.rawMaxMana === undefined) ? 0 : build.ids.rawMaxMana));
-
     support.innerHTML = 
-        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health", build.final.health) +
-        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health Regen", build.final.healthRegen, "/4s") +
-        getStatDisplay("earth", "<b class=\"font-minecraft\">✤</b> Earth Defence", build.final.totalEarthDefence) +
-        getStatDisplay("thunder", "<b class=\"font-minecraft\">✦</b> Thunder Defence", build.final.totalThunderDefence) +
-        getStatDisplay("water", "<b class=\"font-minecraft\">❉</b> Water Defence", build.final.totalWaterDefence) +
-        getStatDisplay("fire", "<b class=\"font-minecraft\">✹</b> Fire Defence", build.final.totalFireDefence) +
-        getStatDisplay("air", "<b class=\"font-minecraft\">❋</b> Air Defence", build.final.totalAirDefence) +
+        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health", final.health) +
+        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Health Regen", final.healthRegen, "/4s") +
+        getStatDisplay("earth", "<b class=\"font-minecraft\">✤</b> Earth Defence", final.totalEarthDefence) +
+        getStatDisplay("thunder", "<b class=\"font-minecraft\">✦</b> Thunder Defence", final.totalThunderDefence) +
+        getStatDisplay("water", "<b class=\"font-minecraft\">❉</b> Water Defence", final.totalWaterDefence) +
+        getStatDisplay("fire", "<b class=\"font-minecraft\">✹</b> Fire Defence", final.totalFireDefence) +
+        getStatDisplay("air", "<b class=\"font-minecraft\">❋</b> Air Defence", final.totalAirDefence) +
         "<hr></hr>" +
-        getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Regen", build.ids.manaRegen, "/5s") +
-        (build.ids.manaRegen === undefined ? "" : (getStatDisplay("water", "→ True Mana Regen",(25 + build.ids.manaRegen), "/5s", false, true))) +
-        getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Steal", build.ids.manaSteal, "/3s") +
-        (maxMana === 100 ? "" : getStatDisplay("water", "Total Max Mana", maxMana)) +
-        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Life Steal", build.ids.lifeSteal, "/3s") +
-        getStatDisplay("earth", "Poison", build.ids.poison, "%") +
-        getStatDisplay("earth", "Thorns", build.ids.thorns, "%") +
-        getStatDisplay("thunder", "Reflection", build.ids.reflection, "%") +
-        getStatDisplay("fire", "Exploding Chance", build.ids.exploding, "%") +
-        getStatDisplay("air", "Walk Speed", build.ids.walkSpeed, "%") +
-        getStatDisplay("air", "→ Sprint Speed", (build.ids.walkSpeed === undefined) ? undefined : roundForDisplay(5.612 * ((build.ids.walkSpeed / 100) + 1)), "m/s", true, true) +
-        getStatDisplay("air", "Sprint Duration", build.ids.sprint, "%") +
-        getStatDisplay("air", "Sprint Regen", build.ids.sprintRegen, "%") +
-        getStatDisplay("air", "Jump Height", build.ids.jumpHeight) +
-        getStatDisplay("water", "Knockback", build.ids.knockback) +
-        getStatDisplay("air", "Main Attack Range", build.ids.mainAttackRange, "%") +
-        getStatDisplay("earth", "Slow Enemy", build.ids.slowEnemy, "%") +
-        getStatDisplay("earth", "Weaken Enemy", build.ids.weakenEnemy, "%") +
-        getStatDisplay("air", "Gather Speed", build.ids.gatherSpeed, "%") +
-        getStatDisplay("air", "Gather XP Bonus", build.ids.gatherXpBonus, "%") +
-        getStatDisplay("air", "Loot Bonus", build.ids.lootBonus, "%") +
-        getStatDisplay("air", "Loot Quality", build.ids.lootQuality, "%") +
-        getStatDisplay("air", "Stealing", build.ids.stealing, "%") +
-        getStatDisplay("air", "XP Bonus", build.ids.xpBonus, "%") +
+        getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Regen", ids.manaRegen, "/5s") +
+        getStatDisplay("water", "→ True Mana Regen", final.trueManaRegen, "/5s", false, true) +
+        getStatDisplay("water", "<b class=\"font-minecraft\">✺</b>Mana Steal", ids.manaSteal, "/3s") +
+        getStatDisplay("water", "Total Max Mana", final.maxMana) +
+        getStatDisplay("health", "<b class=\"font-minecraft\">⚔</b> Life Steal", ids.lifeSteal, "/3s") +
+        getStatDisplay("earth", "Poison", ids.poison, "/3s") +
+        getStatDisplay("earth", "Thorns", ids.thorns, "%") +
+        getStatDisplay("thunder", "Reflection", ids.reflection, "%") +
+        getStatDisplay("fire", "Exploding Chance", ids.exploding, "%") +
+        getStatDisplay("air", "Walk Speed", ids.walkSpeed, "%") +
+        getStatDisplay("air", "→ Sprint Speed", final.effectiveWS, "m/s", true, true) +
+        getStatDisplay("air", "Sprint Duration", ids.sprint, "%") +
+        getStatDisplay("air", "Sprint Regen", ids.sprintRegen, "%") +
+        getStatDisplay("air", "Jump Height", ids.jumpHeight) +
+        getStatDisplay("water", "Knockback", ids.knockback) +
+        getStatDisplay("air", "Main Attack Range", ids.mainAttackRange, "%") +
+        getStatDisplay("earth", "Slow Enemy", ids.slowEnemy, "%") +
+        getStatDisplay("earth", "Weaken Enemy", ids.weakenEnemy, "%") +
+        getStatDisplay("air", "Gather Speed", ids.gatherSpeed, "%") +
+        getStatDisplay("air", "Gather XP Bonus", ids.gatherXpBonus, "%") +
+        getStatDisplay("air", "Loot Bonus", ids.lootBonus, "%") +
+        getStatDisplay("air", "Loot Quality", ids.lootQuality, "%") +
+        getStatDisplay("air", "Stealing", ids.stealing, "%") +
+        getStatDisplay("air", "XP Bonus", ids.xpBonus, "%") +
 
         ""
 }

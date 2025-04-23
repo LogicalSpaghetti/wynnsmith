@@ -27,7 +27,7 @@ function refreshItemData(build) {
         addIds(build, item);
         if (item.attackSpeed === undefined) continue;
         addAttackSpeed(build, item);
-        document.title = "WynnSmith: " + item.internalName
+        document.title = "" + item.internalName + ": WynnSmith"
     }
 }
 

@@ -12,9 +12,9 @@ function addDamageDisplays(build) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
                 elementalHeaders[damageTypes[i]] +
-                roundForDisplay(attack.min[i], true) +
+                selvify(attack.min[i], true) +
                 " - " +
-                roundForDisplay(attack.max[i], true) +
+                selvify(attack.max[i], true) +
                 "</span><br>";
         }
         attackStrings += "Crit:<br>";
@@ -22,9 +22,9 @@ function addDamageDisplays(build) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
                 elementalHeaders[damageTypes[i]] +
-                roundForDisplay(attack.minc[i], true) +
+                selvify(attack.minc[i], true) +
                 " - " +
-                roundForDisplay(attack.maxc[i], true) +
+                selvify(attack.maxc[i], true) +
                 "</span><br>";
         }
         attackStrings += "<hr>";
@@ -51,4 +51,8 @@ function addDamageDisplays(build) {
     }
 
     attackSection.innerHTML = attackStrings;
+}
+
+function selvify(num, addPeriod) {
+    return selvs ? roundForDisplay(num / 80000, addPeriod) + " selv" : roundForDisplay(num, addPeriod);
 }

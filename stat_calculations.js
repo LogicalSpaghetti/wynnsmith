@@ -1,27 +1,36 @@
 `use strict`;
 
 function removeOverridenEffects(build) {
-    if (build.nodes.includes("maskOfTheLunatic") | build.nodes.includes("maskOfTheFanatic") | build.nodes.includes("maskOfTheCoward")) {
+    if (
+        build.nodes.includes("maskOfTheLunatic") |
+        build.nodes.includes("maskOfTheFanatic") |
+        build.nodes.includes("maskOfTheCoward")
+    ) {
         build.nodes[build.nodes.indexOf("uproot")] = "";
     }
 }
 
 function computeOutputs(build) {
+    // Setup
     logFluidHealing(build);
     radiance(build);
-    applyCostNodes(build);
     applyExternalBuffs(build);
     includeOtherGear(build);
-    // Damage
-    includeProficiencies(build);
 
-    addInitialPowderEffects(build);
+    // Powders
+    addPowderBaseDamage(build);
+    addPowderDefences(build);
+    addArmourSpecials(build);
 
     splitMergedIds(build);
     damagesToArrays(build);
+
+    computeSPMults(build);
     addSPMults(build);
 
     conversions(build);
+
+    powderConversions(build);
 
     applyMasteries(build);
     applySpellAttackSpeed(build);
@@ -32,7 +41,7 @@ function computeOutputs(build) {
 
     createHealing(build);
 
-    applyNodeMultipliers(build);
+    applyMultipliers(build);
     addAttackVariants(build);
 
     applyStrDex(build);
@@ -56,19 +65,6 @@ function radiance(build) {
         if (build.ids[idNames[i]] <= 0) continue;
         build.ids[idNames[i]] = Math.floor(build.ids[idNames[i]] * (radiance.multiplier + Number.EPSILON));
     }
-}
-
-function applyCostNodes(build) {
-    if (spellCostMods[build.wynnClass] === undefined) {
-        console.log("cost mods not added for " + build.wynnClass);
-        return;
-    }
-    Object.keys(spellCostMods[build.wynnClass]).forEach((nodeName) => {
-        if (build.nodes.includes(nodeName)) {
-            const mod = spellCostMods[build.wynnClass][nodeName];
-            build.ids["raw" + mod[0] + "SpellCost"] += mod[1];
-        }
-    });
 }
 
 function applyExternalBuffs(build) {
@@ -95,15 +91,7 @@ function includeCharms(build) {
     // TODO
 }
 
-function includeProficiencies(build) {}
-
-function addInitialPowderEffects(build) {
-    addPowderBase(build);
-    addPowderDefences(build);
-    addArmourSpecials(build);
-}
-
-function addPowderBase(build) {
+function addPowderBaseDamage(build) {
     // Add powder base damage:
     for (let i = 0; i < build.powders.weapon.length; i++) {
         const powder = powders[build.powders.weapon[i]];
@@ -282,19 +270,15 @@ function computeSPMults(build) {
 
         build.sp.mults.push(mult);
     }
-    build.sp.maxMana = 75 / spInputs[2].value;
+    build.sp.costMod = 75 / spInputs[2].value;
 }
 
 function addSPMults(build) {
     for (let i = 0; i < 5; i++) {
-        const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
+        var mult = build.sp.mults[i] * 100;
 
-        var mult = textInt === undefined ? 0 : spMultipliers[textInt];
-        if (i === 3) mult *= 0.867;
-        if (i === 4) mult *= 0.951;
-
-        build.final.mainAttackDamage[i + 1] += mult * 100;
-        build.final.spellDamage[i + 1] += mult * 100;
+        build.final.mainAttackDamage[i + 1] += mult;
+        build.final.spellDamage[i + 1] += mult;
     }
 }
 
@@ -302,7 +286,6 @@ function conversions(build) {
     createConversions(build);
     convertBase(build);
     convertRaw(build);
-    powderConversions(build);
 }
 
 function convertBase(build) {
@@ -515,7 +498,13 @@ function finalStatReformatting(build) {
 
     mergeElementalDefences(build);
 
+    const maxManaMod = getSPMult(build.sp.mults[2]) * 100 + (ids.rawMaxMana === undefined ? 0 : ids.rawMaxMana);
+    if (maxManaMod !== 0) final.maxMana = 100 + maxManaMod;
+
     if (ids.manaRegen !== undefined) final.trueManaRegen = ids.manaRegen + 25;
+
+    const baseWS = 5.612;
+    if (ids.walkSpeed !== undefined) final.effectiveWS = baseWS * (ids.walkSpeed / 100 + 1);
 }
 
 function computeHpr(base, percent) {
@@ -549,10 +538,6 @@ function roundAllForDisplay(build) {
 }
 
 function removeAllZeros(build) {
-    removeZeroIds(build);
-}
-
-function removeZeroIds(build) {
     deleteAllZerosFromObject(build.ids);
     deleteAllZerosFromObject(build.base);
     deleteAllZerosFromObject(build.final);

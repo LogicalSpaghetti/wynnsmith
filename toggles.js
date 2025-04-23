@@ -8,6 +8,7 @@ function setUpOptionals(build) {
 
 function setUpToggles(build) {
     setUpSingleToggle(build, "nodes", "maskOfTheLunatic", "Mask of the Lunatic");
+    setUpSingleToggle(build, "nodes", "maskOfTheAwakened", "Awakened");
     setUpSingleToggle(build, "nodes", "bloodPool", "Boosted Aura");
     setUpMultiToggle(build, "bleed", "Bleed", ["sanguineStrike", "lashingLance"], ["nodes", "nodes"]);
 }
@@ -75,10 +76,11 @@ function setUpSliders(build) {
         "puppetMaster",
         "Puppet Master",
         "Active Puppets",
-        ["puppetMaster", "morePuppets", "morePuppets2", "Aspect of the Beckoned Legion"],
-        ["nodes", "nodes", "nodes", "aspects"],
-        [3, 1, 2, 0],
-        1
+        ["puppetMaster", "morePuppets", "morePuppets2", "Aspect of the Beckoned Legion", "shepherd"],
+        ["nodes", "nodes", "nodes", "aspects", "nodes"],
+        [3, 1, 2, 0, 8],
+        1,
+        [3, 1, 2, 0, 0]
     );
 }
 
@@ -88,8 +90,6 @@ function setUpSingleSlider(build, section, name, displayName, divText, max, min)
     if (build[section].includes(name) ^ (slider === null)) return;
 
     if (build[section].includes(name)) {
-        // <input type="range" class="slider">
-        // <button class="effect radiance" data-modifier="radiance">Radiance</button>
         const input = document.createElement("input");
 
         input.type = "range";
@@ -117,20 +117,26 @@ function setUpSingleSlider(build, section, name, displayName, divText, max, min)
     }
 }
 
-function setUpMultiSlider(build, id, displayName, divText, abilityNames, abilitySources, maxes, min) {
+function setUpMultiSlider(build, id, displayName, divText, abilityNames, abilitySources, maxes, min, starts) {
     var slider = addedSlidersHolder.querySelector("." + id);
 
+    if (starts === undefined) starts = maxes;
+
     var max = 0;
+    var start = 0;
     for (let i = 0; i < abilityNames.length; i++) {
         const abilityName = abilityNames[i];
         const abilitySource = abilitySources[i];
 
         if (abilitySource === "aspects") {
             if (build.aspects[abilityName] === undefined) continue;
-            max += aspects[build.wynnClass][abilityName][build.aspects[abilityName] - 1].slider;
+            const aspectSliderValue = aspects[build.wynnClass][abilityName][build.aspects[abilityName] - 1].slider;
+            max += aspectSliderValue;
+            start += aspectSliderValue;
         } else {
             if (!build[abilitySource].includes(abilityName)) continue;
             max += maxes[i];
+            start += starts[i];
         }
     }
 
@@ -149,6 +155,7 @@ function setUpMultiSlider(build, id, displayName, divText, abilityNames, ability
         input.type = "range";
         input.min = min === undefined ? 0 : min;
         input.max = max;
+        input.value = start;
         input.classList.add("slider");
         input.classList.add(id);
         input.dataset.modifier = id;
@@ -170,7 +177,7 @@ function setUpMultiSlider(build, id, displayName, divText, abilityNames, ability
         addedSlidersHolder.appendChild(div);
     } else if (slider.max != max) {
         slider.max = max;
-        slider.value = max;
+        slider.value = start;
     }
 
     setSliderDiv(slider);
