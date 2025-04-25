@@ -29,14 +29,12 @@ function computeOutputs(build) {
     addSPMults(build);
 
     conversions(build);
-
     powderConversions(build);
 
     applyMasteries(build);
     applySpellAttackSpeed(build);
 
-    applyAttackPercents(build);
-
+    applyPercents(build);
     mergeAttackDamage(build);
 
     createHealing(build);
@@ -419,7 +417,7 @@ function applyMasteries(build) {
     });
 }
 
-function applyAttackPercents(build) {
+function applyPercents(build) {
     const baseAttacks = build.base.attacks;
     Object.keys(baseAttacks).forEach((attackName) => {
         const attack = baseAttacks[attackName];
@@ -500,6 +498,7 @@ function finalStatReformatting(build) {
 
     const maxManaMod = getSPMult(build.sp.mults[2]) * 100 + (ids.rawMaxMana === undefined ? 0 : ids.rawMaxMana);
     if (maxManaMod !== 0) final.maxMana = 100 + maxManaMod;
+    if (final.maxMana > 400) final.maxMana = 400;
 
     if (ids.manaRegen !== undefined) final.trueManaRegen = ids.manaRegen + 25;
 
