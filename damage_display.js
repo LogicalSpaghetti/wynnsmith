@@ -54,5 +54,5 @@ function addDamageDisplays(build) {
 }
 
 function selvify(num, addPeriod) {
-    return selvs ? roundForDisplay(num / 80000, addPeriod) + " selv" : roundForDisplay(num, addPeriod);
+    return selvs() ? roundForDisplay(num / 80000, addPeriod) + " selv" : roundForDisplay(num, addPeriod);
 }

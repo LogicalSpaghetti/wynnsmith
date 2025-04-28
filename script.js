@@ -18,8 +18,6 @@ const spInputs = document.querySelectorAll(".sp");
 
 const outputAll = document.querySelector(`.output--A`);
 
-var selvs = false;
-
 function refreshBuild() {
     console.log("begin new refresh:");
     resetLinkText();

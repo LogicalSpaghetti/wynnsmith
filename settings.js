@@ -22,6 +22,10 @@ function hideSettings() {
 }
 
 document.querySelector("#selv").addEventListener("click", function () {
-    selvs = !selvs;
+    localStorage.setItem("selvs", localStorage.getItem("selvs") !== "true");
     refreshBuild();
 });
+
+function selvs() {
+    return localStorage.getItem("selvs") === "true";
+}
