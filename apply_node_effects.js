@@ -130,6 +130,7 @@ function applyGlobalMultipliers(build) {
 function applyShamanMultipliers(build) {
     applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
     applySectMult(build, 1.35, "all", "toggles", "maskOfTheLunatic");
+    applySectMult(build, 1.20, "all", "toggles", "eldritchCall");
     applySectMult(build, 1.35, "all", "toggles", "maskOfTheAwakened");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");
     applySectMult(build, 0.6, "Aura", "nodes", "rebound");
@@ -223,8 +224,9 @@ function addShamanAttackVariants(build) {
     addAttackVariant(build, "Uproot", "flamingTongue", "nodes", "Uproot Total", lanceMult);
 
     const acoTier = build.aspects["Acolyte's Embodiment of Unwavering Adherence"];
-    const sorrowMult = 5 * (4 + (acoTier === undefined ? 0 : acoTier > 2 ? 3 : 2));
-    addAttackVariant(build, "Blood Sorrow", "bloodLament", "nodes", "Blood Sorrow Total DPS", sorrowMult);
+    const sorrowMult = 4 + (acoTier === undefined ? 0 : acoTier > 2 ? 3 : 2);
+    addAttackVariant(build, "Blood Sorrow", "bloodLament", "nodes", "Blood Sorrow DPS", 5);
+    addAttackVariant(build, "Blood Sorrow DPS", "bloodLament", "nodes", "Blood Sorrow Total Damage", sorrowMult);
     const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
     addAttackVariant(build, "Frog Dance", "hymnOfFreedom", "nodes", "Frog Dance Total Damage", 3 + (frogDanceAspect === undefined ? 0 : 1 + frogDanceAspect));
 

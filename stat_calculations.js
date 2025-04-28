@@ -44,7 +44,7 @@ function computeOutputs(build) {
 
     applyStrDex(build);
 
-    finalStatReformatting(build);
+    finalStatCalculations(build);
 
     roundAllForDisplay(build);
     removeAllZeros(build);
@@ -486,7 +486,7 @@ function addHeal(build, checkName, sect, healName, healAmount) {
     }
 }
 
-function finalStatReformatting(build) {
+function finalStatCalculations(build) {
     const ids = build.ids;
     const base = build.base;
     const final = build.final;

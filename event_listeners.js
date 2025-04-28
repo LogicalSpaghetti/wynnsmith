@@ -229,8 +229,3 @@ function addGifListener() {
         document.querySelector("#miku").style.opacity = event.target.value + "%";
     });
 }
-
-document.querySelector("#selv").addEventListener("click", function() {
-    selvs = !selvs;
-    refreshBuild();
-})

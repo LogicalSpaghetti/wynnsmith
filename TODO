@@ -49,6 +49,7 @@ Offhand weapons
 Consumables
 Charms :>
 Trinkets
+Show the time factor of attacks that hit over a duration (ie. Blood Sorrow Total Damage (/4s))
 Custom Identification modifications
 Indicate partially filled powder slots
     Indicate if it has half a powder inputted, or an invalid powder
@@ -64,14 +65,14 @@ Import section button
 Save builds locally and to/from a file.
 ez tome selector when clicking the tome icon.
 Tome shorthands
-    mr, mana regen...
 Fallen effective mr from hpr/ls/rally
     https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/
-    Outdated, but remaining mana and remaining hp likely both have an effect.
+    Outdated values, but remaining mana and remaining hp likely both have an effect.
 UI Themes
     Neon
     Wynn (dusty grey, tan, popping colors)
     L*ght
+    Custom
 Improve
     Tome selector
     Aspect selector
@@ -94,8 +95,7 @@ https://github.com/RawFish69/Nori/blob/main/src/web/js_global/item_rerolling.js
 
 Use build.evaluate() for complex abstractions
     try to make it allow user input without being a security flaw for equation sharing.
-        LaTeX surely
-
+Shaman missing:
 All mask effects
     Aspect
 Awakened (make it disable any other masks, and vise-versa)

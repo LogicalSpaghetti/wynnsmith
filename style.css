@@ -25,6 +25,18 @@ body {
     background-color: var(--ls-background);
     font-family: "consolas", monospace, "Courier New";
     font-size: 12px;
+    padding: 0px;
+    margin: 0;
+}
+
+/* #content {} */
+#settings {
+    background-color: var(--ls-background2);
+    padding: 20px;
+}
+
+.hide_section {
+    display: none;
 }
 
 .column {

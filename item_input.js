@@ -27,7 +27,7 @@ function refreshItemData(build) {
         addIds(build, item);
         if (item.attackSpeed === undefined) continue;
         addAttackSpeed(build, item);
-        document.title = "" + item.internalName + ": WynnSmith"
+        document.title = "" + input.value + ": WynnSmith"
     }
 }
 
@@ -93,7 +93,9 @@ function getItemByInput(input) {
     const itemCategory = itemGroups[input.dataset["slot"].replace("0", "").replace("1", "")];
 
     if (itemCategory === undefined) return;
-    return itemCategory[input.value];
+    const itemData = itemCategory.find(it => it.name == input.value)
+    if (itemData === undefined) return undefined;
+    return itemData.item
 }
 
 function refreshOwnData(input) {
