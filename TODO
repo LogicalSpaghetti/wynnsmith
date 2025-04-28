@@ -32,6 +32,9 @@ Some buffs overriding or adding instead of all applying multiplicatively
 Proficiencies
     Test if their damage is additive with %s
     Test if their other effects add or multiply
+Let items be removed from the item database
+Verify how all damage and defense miltipliers interact with each other
+Add a christmas theme (selvs -> santas)
 
 Settings:
 Re-arrange GUI
