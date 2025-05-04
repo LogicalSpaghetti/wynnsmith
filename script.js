@@ -16,7 +16,7 @@ const tomeInputs = document.querySelectorAll('.tome_input')
 
 const spInputs = document.querySelectorAll(".sp");
 
-const outputAll = document.getElementById(`.output_A`);
+const outputAll = document.getElementById(`dev_output`);
 
 function refreshBuild() {
     console.log("begin new refresh:");
