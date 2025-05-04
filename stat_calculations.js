@@ -12,8 +12,7 @@ function removeOverridenEffects(build) {
 
 function computeOutputs(build) {
     // Setup
-    logFluidHealing(build);
-    radiance(build);
+    precomputations(build);
     applyExternalBuffs(build);
     includeOtherGear(build);
 
@@ -45,13 +44,16 @@ function computeOutputs(build) {
     applyStrDex(build);
 
     finalStatCalculations(build);
+    ehpCalculations(build);
+}
 
-    roundAllForDisplay(build);
-    removeAllZeros(build);
+function precomputations(build) {
+    logFluidHealing(build);
+    radiance(build);
 }
 
 function logFluidHealing(build) {
-    build.fluidHealing = build.ids.waterDamage;
+    build.mults.fluidHealing = Math.min(75, build.ids.waterDamage * 0.3) / 100 + 1;
 }
 
 function radiance(build) {
@@ -474,13 +476,11 @@ function applyStrDex(build) {
 }
 
 function createHealing(build) {
-    const sharp = build.nodes.includes("sharpHealing") ? build.fluidHealing * 0.3 : 0;
-    const fluid = build.nodes.includes("fluidHealing") ? build.fluidHealing * 0.3 : 0;
-    addHeal(build, "bloodPool", "nodes", "First Wave Heal", 25 + sharp);
-    addHeal(build, "regeneration", "nodes", "Regeneration Tick", 1);
+    addHeal(build, "nodes", "bloodPool", "First Wave Heal", 25);
+    addHeal(build, "nodes", "regeneration", "Regeneration Tick", 1);
 }
 
-function addHeal(build, checkName, sect, healName, healAmount) {
+function addHeal(build, sect, checkName, healName, healAmount) {
     if (build[sect].includes(checkName)) {
         build.heals[healName] = healAmount;
     }
@@ -491,7 +491,7 @@ function finalStatCalculations(build) {
     const base = build.base;
     const final = build.final;
 
-    final.health = base.baseHealth + ids.rawHealth;
+    final.health = Math.max(5, base.baseHealth + ids.rawHealth);
     final.healthRegen = computeHpr(ids.healthRegenRaw, ids.healthRegen / 100);
 
     mergeElementalDefences(build);
@@ -520,26 +520,8 @@ function mergeElementalDefences(build) {
     }
 }
 
-function roundAllForDisplay(build) {
-    const base = build.base;
-    Object.keys(base).forEach((baseName) => {
-        if (!Number.isInteger(base[baseName])) return;
-        base[baseName] = roundForDisplay(base[baseName]);
-    });
-    const ids = build.ids;
-    Object.keys(ids).forEach((idName) => {
-        ids[idName] = roundForDisplay(ids[idName]);
-    });
-    const final = build.final;
-    Object.keys(final).forEach((idName) => {
-        final[idName] = roundForDisplay(final[idName]);
-    });
-}
-
-function removeAllZeros(build) {
-    deleteAllZerosFromObject(build.ids);
-    deleteAllZerosFromObject(build.base);
-    deleteAllZerosFromObject(build.final);
+function ehpCalculations(build) {
+    // TODO
 }
 
 function deleteAllZerosFromObject(source) {

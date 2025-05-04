@@ -11,17 +11,17 @@ document.addEventListener("keyup", (e) => {
 });
 
 function toggleSettingsHide() {
-    document.querySelector("#content").classList.toggle("hide_section");
-    document.querySelector("#settings").classList.toggle("hide_section");
+    document.getElementById("content").classList.toggle("hide_section");
+    document.getElementById("settings").classList.toggle("hide_section");
 }
 
 function hideSettings() {
-    if (!document.querySelector("#settings").classList.contains("hide_section")) {
+    if (!document.getElementById("settings").classList.contains("hide_section")) {
         toggleSettingsHide();
     }
 }
 
-document.querySelector("#selv").addEventListener("click", function () {
+document.getElementById("selv").addEventListener("click", function () {
     localStorage.setItem("selvs", localStorage.getItem("selvs") !== "true");
     refreshBuild();
 });

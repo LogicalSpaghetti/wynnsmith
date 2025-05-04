@@ -34,20 +34,23 @@ Proficiencies
     Test if their other effects add or multiply
 Let items be removed from the item database
 Verify how all damage and defense miltipliers interact with each other
-Add a christmas theme (selvs -> santas)
+-SP
 
 Settings:
 Re-arrange GUI
 Change color theme
 customize how each stat displays
+Add a christmas theme (selvs -> santas)
 
 Features:
 Wynnability
     Update trees to match game
     Update format
     Add aspect creator
+    Add ability equation interaction creator
 Wynnmana
     Wynncycler
+https://discord.com/channels/143852930036924417/296377212939010050/1366799330534756423
 Offhand weapons
 Consumables
 Charms :>
@@ -68,6 +71,7 @@ Import section button
 Save builds locally and to/from a file.
 ez tome selector when clicking the tome icon.
 Tome shorthands
+Jump Height in blocks, (assuming it's not linear, otherwise note it on the wiki)
 Fallen effective mr from hpr/ls/rally
     https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/
     Outdated values, but remaining mana and remaining hp likely both have an effect.

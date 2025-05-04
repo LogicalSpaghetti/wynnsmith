@@ -11,137 +11,133 @@
             <div class="flexCol">
                 <!-- Cloumn 1 -->
                 <section class="abilityTreeSection column">
-                    <div class="abilityTreeContainer" hidden>
-                        <span class="abilityTreeInside">
-                            <table class="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void">
-                                <!-- Filled by js -->
-                            </table>
-                        </span>
+                    <div id="aTree">
+                        <div id="abilityTreeContainer" hidden>
+                            <span id="abilityTreeInside">
+                                <table id="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void">
+                                    <!-- Filled by js -->
+                                </table>
+                            </span>
+                        </div>
                     </div>
-                    <br />
-                    <h4>Novelties:</h4>
-                    <button id="ansi_tree">Copy ANSI Tree</button>
-                    <br />
-                    <label for="gif_input">Set gif:</label>
-                    <input id="gif_input" type="file" accept="image/gif" />
-                    <input id="opacity_slider" class="slider" type="range" value="15" />
+                    <div id="output_A" class="output"></div>               
                 </section>
                 <!-- Column 2 -->
                 <section class="inputs column">
                     <div class="item_inputs">
                         <div class="input_section">
-                            <a class="helmet_link" target="_blank">
+                            <a id="helmet_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="helmet"
                                     style="background-image: url(img/items/all.png); background-position: 112px 0px"
                                 ></span>
                             </a>
-                            <input class="input input--helmet" placeholder="Helmet" data-slot="helmet" />
-                            <input class="powder" placeholder="0 Slots" slot="helmet" />
+                            <input id="input_helmet" class="input" placeholder="Helmet" data-slot="helmet" />
+                            <input id="powder_helmet" class="powder" placeholder="0 Slots" />
                         </div>
-                        <pre class="display display--helmet collapse"></pre>
+                        <pre id="display-helmet" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="chestplate_link" target="_blank">
+                            <a id="chestplate_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="chestplate"
                                     style="background-image: url(img/items/all.png); background-position: 96px 0px"
                                 ></span>
                             </a>
-                            <input class="input input--chestplate" placeholder="Chestplate" data-slot="chestplate" />
-                            <input class="powder" placeholder="0 Slots" slot="chestplate" />
+                            <input id="input_chestplate" class="input" placeholder="Chestplate" data-slot="chestplate" />
+                            <input id="powder_chestplate" class="powder" placeholder="0 Slots" />
                         </div>
-                        <pre class="display display--chestplate collapse"></pre>
+                        <pre id="display-chestplate" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="leggings_link" target="_blank">
+                            <a id="leggings_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="leggings"
                                     style="background-image: url(img/items/all.png); background-position: 80px 0px"
                                 ></span>
                             </a>
-                            <input class="input input--leggings" placeholder="Leggings" data-slot="leggings" />
-                            <input class="powder" placeholder="0 Slots" slot="leggings" />
+                            <input id="input_leggings" class="input" placeholder="Leggings" data-slot="leggings" />
+                            <input id="powder_leggings" class="powder" placeholder="0 Slots" />
                         </div>
-                        <pre class="display display--leggings collapse"></pre>
+                        <pre id="display-leggings" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="boots_link" target="_blank">
+                            <a id="boots_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="boots"
                                     style="background-image: url(img/items/all.png); background-position: 64px 0px"
                                 ></span>
                             </a>
-                            <input class="input input--boots" placeholder="Boots" data-slot="boots" />
-                            <input class="powder" placeholder="0 Slots" slot="boots" maxlength="0" />
+                            <input id="input_boots" class="input" placeholder="Boots" data-slot="boots" />
+                            <input id="powder_boots" class="powder" placeholder="0 Slots" maxlength="0" />
                         </div>
-                        <pre class="display display--boots collapse"></pre>
+                        <pre id="display-boots" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="ring0_link" target="_blank">
+                            <a id="ring0_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="ring0"
                                     style="background-image: url(img/items/all.png); background-position: 48px 0px"
                                 ></span
                             ></a>
-                            <input class="input input--ring input--ring0" placeholder="Ring 1" data-slot="ring0" />
+                            <input id="input_ring0" class="input input--ring" placeholder="Ring 1" data-slot="ring0" />
                             <div id="gif_holder">
                                 <img id="miku" src="img/hatsune-miku.gif" />
                             </div>
                         </div>
-                        <pre class="display display--ring0 collapse"></pre>
+                        <pre id="display-ring0" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="ring1_link" target="_blank">
+                            <a id="ring1_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="ring1"
                                     style="background-image: url(img/items/all.png); background-position: 48px 0px"
                                 ></span
                             ></a>
-                            <input class="input input--ring input--ring1" placeholder="Ring 2" data-slot="ring1" />
+                            <input id="input_ring1" class="input input--ring" placeholder="Ring 2" data-slot="ring1" />
                         </div>
-                        <pre class="display display--ring1 collapse"></pre>
+                        <pre id="display-ring1" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="bracelet_link" target="_blank">
+                            <a id="bracelet_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="bracelet"
                                     style="background-image: url(img/items/all.png); background-position: 32px 0px"
                                 ></span>
                             </a>
-                            <input class="input input--bracelet" placeholder="Bracelet" data-slot="bracelet" />
+                            <input id="input_bracelet" class="input" placeholder="Bracelet" data-slot="bracelet" />
                         </div>
-                        <pre class="display display--bracelet collapse"></pre>
+                        <pre id="display-bracelet" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="necklace_link" target="_blank">
+                            <a id="necklace_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="necklace"
                                     style="background-image: url(img/items/all.png); background-position: 16px 0px"
                                 ></span>
                             </a>
-                            <input class="input input--necklace" placeholder="Neckalce" data-slot="necklace" />
+                            <input id="input_necklace" class="input" placeholder="Neckalce" data-slot="necklace" />
                         </div>
-                        <pre class="display display--necklace collapse"></pre>
+                        <pre id="display-necklace" class="display collapse"></pre>
                         <div class="input_section">
-                            <a class="weapon_link" target="_blank">
+                            <a id="weapon_link" target="_blank">
                                 <span
                                     class="slot_icon"
                                     data-slot="weapon"
                                     style="background-image: url(img/items/all.png); background-position: -64px 0px"
                                 ></span>
                             </a>
-                            <input class="input input--weapon" placeholder="Weapon" data-slot="weapon" />
-                            <input class="powder" placeholder="0 Slots" slot="weapon" maxlength="0" />
+                            <input id="input_weapon" class="input" placeholder="Weapon" data-slot="weapon" />
+                            <input id="powder_weapon" class="powder" placeholder="0 Slots" maxlength="0" />
                         </div>
-                        <pre class="display display--weapon collapse"></pre>
-                        <span class="collapse_all" style="display: none">Collapse All</span>
+                        <pre id="display-weapon" class="display collapse"></pre>
                     </div>
                     <div class="copy_buttons">
                         <p>
-                            <button class="copy_link copy_link--short" data-default="Copy Short">Copy Short</button>
-                            <button class="copy_link copy_link--long" data-default="Copy Long">Copy Long</button>
+                            <button id="copy_long" class="copy_link" data-default="Copy Short">Copy Short</button>
+                            <button id="copy_short" class="copy_link" data-default="Copy Long">Copy Long</button>
+                            <button id="ansi_tree">Copy ANSI Tree</button>
                         </p>
                     </div>
                     Skill Points:
@@ -299,12 +295,20 @@
                 </section>
                 <!-- Column 5 -->
                 <section>
-                    <div class="output output--A"></div>
+                    
                 </section>
             </div>
         </div>
         <div id="settings" class="hide_section">
             <button id="selv">Toggle Selvs</button>
+            <br><br>
+            <label for="gif_input">Set GIF:</label><br>
+            <input id="gif_input" type="file" accept="image/gif" />
+            <br>
+            <label for="opacity_slider">GIF Opacity:</label>
+            <div style="width: 210px; margin: 10px;">
+                <input id="opacity_slider" class="slider" type="range" value="15" />            
+            </div>
             <br><br>
             <button id="settings_close" class="settings_toggle">Close Settings</button>
         </div>

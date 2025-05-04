@@ -146,7 +146,9 @@ function applyShamanMultipliers(build) {
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "doubleTotem");
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "tripleTotem");
     applyAspectSectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
-    if (build.nodes.includes("rebound")) build.heals["First Wave Heal"] *= 0.6;
+
+    applyHealMult(build, "nodes", "rebound", "First Wave Heal", 0.6)
+    applyHealMult(build, "nodes", "sharpHealing", "First Wave Heal", build.mults.fluidHealing)
     // TODO
 }
 
@@ -192,6 +194,10 @@ function applyMult(build, mult, attackName) {
         build.attacks[attackName].min[i] *= mult;
         build.attacks[attackName].max[i] *= mult;
     }
+}
+
+function applyHealMult(build, section, checkName, healName, mult) {
+    if (build[section].includes(checkName)) build.heals[healName] *= mult;
 }
 
 function addAttackVariants(build) {

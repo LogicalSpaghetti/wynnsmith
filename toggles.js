@@ -1,5 +1,5 @@
-const addedTogglesHolder = document.querySelector("#added_toggles");
-const addedSlidersHolder = document.querySelector("#added_sliders");
+const addedTogglesHolder = document.getElementById("added_toggles");
+const addedSlidersHolder = document.getElementById("added_sliders");
 
 function setUpOptionals(build) {
     setUpToggles(build);

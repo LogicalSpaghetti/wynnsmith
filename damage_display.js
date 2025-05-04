@@ -1,4 +1,4 @@
-const attackSection = document.querySelector("#attack_display");
+const attackSection = document.getElementById("attack_display");
 
 function addDamageDisplays(build) {
     var attackStrings = "";

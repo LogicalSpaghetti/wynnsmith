@@ -1,22 +1,22 @@
 `use strict`;
 
 const inputs = [
-    document.querySelector(`.input--helmet`),
-    document.querySelector(`.input--chestplate`),
-    document.querySelector(`.input--leggings`),
-    document.querySelector(`.input--boots`),
-    document.querySelector(`.input--ring0`),
-    document.querySelector(`.input--ring1`),
-    document.querySelector(`.input--bracelet`),
-    document.querySelector(`.input--necklace`),
-    document.querySelector(`.input--weapon`),
+    document.getElementById(`input_helmet`),
+    document.getElementById(`input_chestplate`),
+    document.getElementById(`input_leggings`),
+    document.getElementById(`input_boots`),
+    document.getElementById(`input_ring0`),
+    document.getElementById(`input_ring1`),
+    document.getElementById(`input_bracelet`),
+    document.getElementById(`input_necklace`),
+    document.getElementById(`input_weapon`),
 ];
 
 const tomeInputs = document.querySelectorAll('.tome_input')
 
 const spInputs = document.querySelectorAll(".sp");
 
-const outputAll = document.querySelector(`.output--A`);
+const outputAll = document.getElementById(`.output_A`);
 
 function refreshBuild() {
     console.log("begin new refresh:");
@@ -38,6 +38,29 @@ function refreshBuild() {
 
     addDamageDisplays(build);
     displayFinalValues(build);
+
+    displayForDevelopment(build);
+}
+
+function displayForDevelopment(build) {
+    roundAllForDisplay(build);
+    outputAll.textContent = JSON.stringify(build, undefined, 1)
+}
+
+function roundAllForDisplay(build) {
+    const base = build.base;
+    Object.keys(base).forEach((baseName) => {
+        if (!Number.isInteger(base[baseName])) return;
+        base[baseName] = roundForDisplay(base[baseName]);
+    });
+    const ids = build.ids;
+    Object.keys(ids).forEach((idName) => {
+        ids[idName] = roundForDisplay(ids[idName]);
+    });
+    const final = build.final;
+    Object.keys(final).forEach((idName) => {
+        final[idName] = roundForDisplay(final[idName]);
+    });
 }
 
 function resetLinkText() {

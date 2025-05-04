@@ -27,33 +27,22 @@ function addEventListeners() {
 function addToggleListeners() {
     document.querySelectorAll(".slot_icon").forEach((toggle) => {
         toggle.addEventListener("mouseover", function () {
-            document.querySelector(".display--" + toggle.dataset.slot).classList.remove("collapse");
+            document.getElementById("display-" + toggle.dataset.slot).classList.remove("collapse");
             toggleToggle(toggle);
         });
         toggle.addEventListener("mouseout", function () {
-            document.querySelector(".display--" + toggle.dataset.slot).classList.add("collapse");
+            document.getElementById("display-" + toggle.dataset.slot).classList.add("collapse");
             toggleToggle(toggle);
-        });
-    });
-    document.querySelector(".collapse_all").addEventListener("click", function () {
-        document.querySelectorAll(".rotate").forEach((rotate) => {
-            toggleToggle(rotate);
         });
     });
 }
 
 function toggleToggle(toggle) {
-    const display = document.querySelector(".display--" + toggle.dataset.slot);
+    const display = document.getElementById("display-" + toggle.dataset.slot);
     const fontHeight = parseInt(window.getComputedStyle(display, null).getPropertyValue("font-size"));
     const itemData = display.textContent;
     const height = (itemData.split("\n").length - 1 + 3) * fontHeight;
     display.style = "height: " + height + "px;";
-
-    if (document.querySelectorAll(".collapse").length < 8) {
-        document.querySelector(".collapse_all").style.display = "block";
-    } else {
-        document.querySelector(".collapse_all").style.display = "none";
-    }
 }
 
 // Item Inputs
@@ -69,30 +58,30 @@ function addInputEventListeners() {
 
 // Copy Link Buttons
 function addCopyLinkListeners() {
-    document.querySelector(`.copy_link--short`).addEventListener("click", function () {
+    document.getElementById(`copy_short`).addEventListener("click", function () {
         copyBuildLink(this, false);
     });
-    document.querySelector(`.copy_link--long`).addEventListener("click", function () {
+    document.getElementById(`copy_long`).addEventListener("click", function () {
         copyBuildLink(this, true);
     });
 }
 
 function addTreeEventListener() {
-    const abilityTree = document.querySelector(".abilityTree");
+    const abilityTree = document.getElementById("abilityTree");
     abilityTree.addEventListener("click", (event) => {
         treeClicked(event);
     });
 }
 
 function addEffectListeners() {
-    const toggleBox = document.querySelector("#effect_toggles");
+    const toggleBox = document.getElementById("effect_toggles");
     toggleBox.addEventListener("click", (event) => {
         const effect = event.target;
         if (!effect.classList.contains("effect")) return;
         effect.classList.toggle("toggleOn");
         refreshBuild();
     });
-    const addedToggleBox = document.querySelector("#added_toggles");
+    const addedToggleBox = document.getElementById("added_toggles");
     addedToggleBox.addEventListener("click", (event) => {
         const effect = event.target;
         if (!effect.classList.contains("effect")) return;
@@ -108,8 +97,8 @@ document.querySelectorAll(".powder").forEach((input) => {
 });
 
 function addAspectListeners() {
-    const active = document.querySelector("#active_aspects");
-    const inactive = document.querySelector("#inactive_aspects");
+    const active = document.getElementById("active_aspects");
+    const inactive = document.getElementById("inactive_aspects");
 
     active.addEventListener("click", (event) => {
         const clickTarget = event.target;
@@ -207,12 +196,12 @@ function addSPListener() {
     }
 }
 
-document.querySelector("#ansi_tree").addEventListener("click", function () {
+document.getElementById("ansi_tree").addEventListener("click", function () {
     copyTreeAsText();
 });
 
 function addGifListener() {
-    document.querySelector("#gif_input").addEventListener("change", (event) => {
+    document.getElementById("gif_input").addEventListener("change", (event) => {
         const file = event.target.files[0];
         // do something with the file
         const reader = new FileReader();
@@ -220,12 +209,12 @@ function addGifListener() {
         reader.onload = (event) => {
             const imageUrl = event.target.result;
             // display the image on the page
-            document.querySelector("#miku").src = imageUrl;
+            document.getElementById("miku").src = imageUrl;
         };
     });
 
-    document.querySelector("#miku").style.opacity = document.querySelector("#opacity_slider").value + "%";
-    document.querySelector("#opacity_slider").addEventListener("input", (event) => {
-        document.querySelector("#miku").style.opacity = event.target.value + "%";
+    document.getElementById("miku").style.opacity = document.getElementById("opacity_slider").value + "%";
+    document.getElementById("opacity_slider").addEventListener("input", (event) => {
+        document.getElementById("miku").style.opacity = event.target.value + "%";
     });
 }

@@ -22,6 +22,7 @@ class Build {
         };
         this.base = JSON.parse(emptyBaseString);
         this.ids = JSON.parse(emptyIdsString);
+        this.mults = {};
     }
 
     evaluate(str) {

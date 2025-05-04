@@ -1,23 +1,21 @@
-const support = document.querySelector("#support_display")
+const support = document.getElementById("support_display");
 
 function displayFinalValues(build) {
+    removeAllZeros(build);
     displayStats(build);
+}
+
+function removeAllZeros(build) {
+    deleteAllZerosFromObject(build.ids);
+    deleteAllZerosFromObject(build.base);
+    deleteAllZerosFromObject(build.final);
 }
 
 function displayStats(build) {
     const ids = build.ids;
     const final = build.final;
 
-    outputAll.textContent = JSON.stringify(build)
-        .replaceAll(',"', ',\n"')
-        .replaceAll("{", "{\n")
-        .replaceAll("}", "\n}")
-        .replaceAll("[", "[\n")
-        .replaceAll("]", "\n]")
-        .replaceAll("{\n\n}", "{}")
-        .replaceAll("[\n\n]", "[]");
-    
-    support.innerHTML = 
+    support.innerHTML =
         getStatDisplay("health", "⚔", "Health", final.health) +
         getStatDisplay("health", "⚔", "Health Regen", final.healthRegen, "/4s") +
         getStatDisplay("earth", "✤", "Earth Defence", final.totalEarthDefence) +
@@ -26,9 +24,9 @@ function displayStats(build) {
         getStatDisplay("fire", "✹", "Fire Defence", final.totalFireDefence) +
         getStatDisplay("air", "❋", "Air Defence", final.totalAirDefence) +
         "<hr></hr>" +
-        getStatDisplay("water", "✺", "<b class=\"font-minecraft\"></b>Mana Regen", ids.manaRegen, "/5s") +
+        getStatDisplay("water", "✺", '<b class="font-minecraft"></b>Mana Regen', ids.manaRegen, "/5s") +
         getStatDisplay("water", false, "→ True Mana Regen", final.trueManaRegen, "/5s", false, true) +
-        getStatDisplay("water", "✺", "<b class=\"font-minecraft\">✺</b>Mana Steal", ids.manaSteal, "/3s") +
+        getStatDisplay("water", "✺", '<b class="font-minecraft">✺</b>Mana Steal', ids.manaSteal, "/3s") +
         getStatDisplay("water", "✺", "Total Max Mana", final.maxMana) +
         getStatDisplay("health", "⚔", "Life Steal", ids.lifeSteal, "/3s") +
         getStatDisplay("earth", false, "Poison", ids.poison, "/3s") +
@@ -40,7 +38,7 @@ function displayStats(build) {
         getStatDisplay("air", false, "Sprint Duration", ids.sprint, "%") +
         getStatDisplay("air", false, "Sprint Regen", ids.sprintRegen, "%") +
         getStatDisplay("air", false, "Jump Height", ids.jumpHeight) +
-        getStatDisplay("water", false, "Knockback", ids.knockback) +
+        getStatDisplay("water", false, "Knockback", ids.knockback, "%") +
         getStatDisplay("thunder", false, "Main Attack Range", ids.mainAttackRange, "%") +
         getStatDisplay("earth", false, "Slow Enemy", ids.slowEnemy, "%") +
         getStatDisplay("earth", false, "Weaken Enemy", ids.weakenEnemy, "%") +
@@ -49,23 +47,21 @@ function displayStats(build) {
         getStatDisplay("air", false, "Loot Bonus", ids.lootBonus, "%") +
         getStatDisplay("air", false, "Loot Quality", ids.lootQuality, "%") +
         getStatDisplay("air", false, "Stealing", ids.stealing, "%") +
-        getStatDisplay("air", false, "XP Bonus", ids.xpBonus, "%") +
-
-        ""
+        getStatDisplay("air", false, "XP Bonus", ids.xpBonus, "%");
 }
 
 function getStatDisplay(colorClass, symbol, label, stat, post, noColor, isSub) {
     if (stat === undefined || stat === NaN) return "";
-    return (stat === undefined || stat === NaN) ? "" : 
-    ('<div class="stat_row">' + 
-        "<div class=\"left" + (isSub ? " sub" : "") + "\">" + 
-            "<span class=\"" + colorClass + "\">" + 
-                (symbol ? "<b class=\"font-minecraft\">" + symbol + "</b>" : "") + 
-                " " + label + 
-            ":</span>" + 
-        "</div>" + 
-        "<div class=\"right " + (noColor ? "" : (Math.sign(stat) === 1 ? "positive" : "negative")) + "\">" + stat + (post === undefined ? "" : post) + 
-        "</div>" + 
-    "</div>"
-);
+    return (
+        '<div class="stat_row">' +
+            '<div class="left' + (isSub ? " sub" : "") + '">' +
+                '<span class="' + colorClass + '">' +
+                    (symbol ? '<b class="font-minecraft">' + symbol + "</b>" : "") + " " + label +
+                ":</span>" +
+            "</div>" +
+            '<div class="right ' + (noColor ? "" : Math.sign(stat) === 1 ? "positive" : "negative") + '">' +
+                roundForDisplay(stat) + (post ? post : "") +
+            "</div>" +
+        "</div>"
+    );
 }

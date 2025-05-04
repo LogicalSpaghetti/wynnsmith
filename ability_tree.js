@@ -17,10 +17,10 @@ function refreshAbilities(build) {
 }
 
 function changeAbilityTree(build) {
-    document.querySelector(".abilityTreeContainer").removeAttribute("hidden");
+    document.getElementById("abilityTreeContainer").removeAttribute("hidden");
 
     const treeMap = classes[build.wynnClass].map; // array
-    const abilityTree = document.querySelector(".abilityTree");
+    const abilityTree = document.getElementById("abilityTree");
     abilityTree.innerHTML = mapHTML(treeMap);
 
     const treeNodes = classes[build.wynnClass].tree;
@@ -37,8 +37,8 @@ function changeAspects(build) {
     const aspects = classes[build.wynnClass].aspects;
     const aspectNames = Object.keys(aspects);
 
-    const activeHolder = document.querySelector("#active_aspects");
-    const inactiveHolder = document.querySelector("#inactive_aspects");
+    const activeHolder = document.getElementById("active_aspects");
+    const inactiveHolder = document.getElementById("inactive_aspects");
 
     activeHolder.innerHTML = "";
     inactiveHolder.innerHTML = "";
@@ -87,9 +87,6 @@ function toggleNode(node) {
 }
 
 function mapHTML(treeMap) {
-    var x = 0;
-    var y = 1;
-
     // sort treeMap
     const nodeIndexes = [];
     for (let i = 0; i < treeMap.length; i++) {
@@ -239,7 +236,7 @@ function addNodesToBuild(build) {
 }
 
 function addAspectsToBuild(build) {
-    const aspects = document.querySelector("#active_aspects").querySelectorAll(".aspect");
+    const aspects = document.getElementById("active_aspects").querySelectorAll(".aspect");
     aspects.forEach((aspect) => {
         build.aspects[aspect.dataset.aspect] = Number(aspect.childNodes[2].dataset.tier);
     });

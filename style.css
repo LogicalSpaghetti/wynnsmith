@@ -341,12 +341,13 @@ td {
     image-rendering: pixelated;
 }
 
-.abilityTreeInside {
+#abilityTreeInside {
     border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;
     padding: 22px;
 }
 
-.abilityTree {
+/* TODO: Doesn't tile perfectly iirc */
+#abilityTree {
     background-image: url(img/background/tree_scroll.png);
 }
 

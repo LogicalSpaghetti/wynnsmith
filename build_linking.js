@@ -105,7 +105,7 @@ function copyTreeAsText() {
 
     const foot = `[0m`;
 
-    const tree = document.querySelector(".abilityTree");
+    const tree = document.getElementById("abilityTree");
     const trs = tree.firstChild.childNodes;
 
     var output = "```ansi";

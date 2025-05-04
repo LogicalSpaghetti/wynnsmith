@@ -20,7 +20,7 @@ function refreshItemData(build) {
         setPowderSlots(input, item);
         if (item === undefined) continue;
         colorSlot(input, item);
-        setLink(input, item);
+        setLink(input);
         addPowders(build, input);
         addMajorIds(build, item);
         addBasesToBuild(build, item);
@@ -99,7 +99,7 @@ function getItemByInput(input) {
 }
 
 function refreshOwnData(input) {
-    const display = document.querySelector(".display--" + input.dataset.slot);
+    const display = document.getElementById("display-" + input.dataset.slot);
 
     const item = getItemByInput(input);
     if (item === undefined) {
@@ -180,7 +180,7 @@ function formatAttackSpeed(item) {
 
 // Powders:
 function setPowderSlots(input, item) {
-    const powderInput = document.querySelector("[slot='" + input.dataset.slot + "']");
+    const powderInput = document.getElementById("powder_" + input.dataset.slot);
     if (powderInput === null || item === undefined) return;
     if (item.powderSlots === undefined) {
         powderInput.placeholder = "No Slots";
@@ -199,13 +199,13 @@ function colorSlot(input, item) {
     input.dataset.rarity = item.rarity;
 }
 
-function setLink(input, item) {
-    document.querySelector("." + input.dataset.slot + "_link").href =
-        "https://wynnbuilder.github.io/item/#" + item.internalName;
+function setLink(input) {
+    document.getElementById(input.dataset.slot + "_link").href =
+        "https://wynnbuilder.github.io/item/#" + input.value;
 }
 
 function addPowders(build, input) {
-    const powderInput = document.querySelector("[slot='" + input.dataset.slot + "']");
+    const powderInput = document.getElementById("powder_" + input.dataset.slot);
     if (powderInput === null) return;
     const powdersString =
         powderInput.value.length % 2 === 0
