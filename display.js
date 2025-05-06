@@ -24,9 +24,9 @@ function displayStats(build) {
         getStatDisplay("fire", "✹", "Fire Defence", final.totalFireDefence) +
         getStatDisplay("air", "❋", "Air Defence", final.totalAirDefence) +
         "<hr></hr>" +
-        getStatDisplay("water", "✺", '<b class="font-minecraft"></b>Mana Regen', ids.manaRegen, "/5s") +
+        getStatDisplay("water", "✺", 'Mana Regen', ids.manaRegen, "/5s") +
         getStatDisplay("water", false, "→ True Mana Regen", final.trueManaRegen, "/5s", false, true) +
-        getStatDisplay("water", "✺", '<b class="font-minecraft">✺</b>Mana Steal', ids.manaSteal, "/3s") +
+        getStatDisplay("water", "✺", 'Mana Steal', ids.manaSteal, "/3s") +
         getStatDisplay("water", "✺", "Total Max Mana", final.maxMana) +
         getStatDisplay("health", "⚔", "Life Steal", ids.lifeSteal, "/3s") +
         getStatDisplay("earth", false, "Poison", ids.poison, "/3s") +
@@ -56,7 +56,7 @@ function getStatDisplay(colorClass, symbol, label, stat, post, noColor, isSub) {
         '<div class="stat_row">' +
             '<div class="left' + (isSub ? " sub" : "") + '">' +
                 '<span class="' + colorClass + '">' +
-                    (symbol ? '<b class="font-minecraft">' + symbol + "</b>" : "") + " " + label +
+                    (symbol ? '<b class="font-minecraft" style="display: inline-block; width: 0.8rem;">' + symbol + "</b>" : "") + " " + label +
                 ":</span>" +
             "</div>" +
             '<div class="right ' + (noColor ? "" : Math.sign(stat) === 1 ? "positive" : "negative") + '">' +

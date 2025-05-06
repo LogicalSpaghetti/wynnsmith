@@ -446,15 +446,6 @@ const base64Values = [
     "U", "V", "W", "X", "Y", "Z", "_", "~",
 ];
 
-const elementalHeaders = {
-    "Neutral": '<span class="neutral"><b class="font-minecraft">✣</b> ',
-    "Earth": '<span class="earth"><b class="font-minecraft">✤</b> ',
-    "Thunder": '<span class="thunder"><b class="font-minecraft">✦</b> ',
-    "Water": '<span class="water"><b class="font-minecraft">❉</b> ',
-    "Fire": '<span class="fire"><b class="font-minecraft">✹</b> ',
-    "Air": '<span class="air"><b class="font-minecraft">❋</b> ',
-}
-
 const spellManaNames = {
     shaman: {
         "1": "Totem",

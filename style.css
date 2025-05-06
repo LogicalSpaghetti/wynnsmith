@@ -24,7 +24,6 @@ body {
     color: #fff;
     background-color: var(--ls-background);
     font-family: "consolas", monospace, "Courier New";
-    font-size: 12px;
     padding: 0px;
     margin: 0;
 }
@@ -32,7 +31,7 @@ body {
 /* #content {} */
 #settings {
     background-color: var(--ls-background2);
-    padding: 20px;
+    height: 100vh;
 }
 
 .hide_section {
@@ -67,9 +66,7 @@ label {
 
 .inputs {
     caret-color: #ccc;
-    font-weight: 900;
     width: 300px;
-    /* width:600px; */
     padding: 0px;
 }
 
@@ -149,10 +146,6 @@ input:focus {
 /* Tomes */
 
 #tomes_section {
-    width: fit-content;
-    /* background-color: #444; */
-    padding: 1px;
-    border: 1px solid var(--ls-trim);
     image-rendering: pixelated;
 }
 
@@ -271,7 +264,7 @@ input:focus {
     width: 220px;
 }
 
-.output--A {
+#dev_output {
     margin-left: 20px;
     word-wrap: normal;
     white-space: pre-line;
@@ -286,7 +279,6 @@ input:focus {
 .stat_row {
     white-space: nowrap !important;
     display: flex;
-    font-size: 0.8rem;
 }
 
 .left,
@@ -419,7 +411,6 @@ img.highlight_node[data-type="ability"] {
 #active_aspects > div {
     margin-left: 5.4px;
     /* margin-right: 2.7px; */
-    font-size: 0.8rem;
     display: inline-block;
 }
 
@@ -438,7 +429,7 @@ img.highlight_node[data-type="ability"] {
 .aspect_tier {
     translate: 7px -7px;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    font-size: 10px;
+    font-size: 0.5rem;
 
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
@@ -451,7 +442,7 @@ img.highlight_node[data-type="ability"] {
 .aspect_down {
     width: 5.4px;
     height: 13.5px;
-    font-size: 10px;
+    font-size: 0.5rem;
     line-height: 10px;
     position: absolute;
     background-size: 100%;

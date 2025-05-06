@@ -11,7 +11,7 @@ function addDamageDisplays(build) {
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
-                elementalHeaders[damageTypes[i]] +
+                elementalHeaders[prefixes[i]] +
                 selvify(attack.min[i], true) +
                 " - " +
                 selvify(attack.max[i], true) +
@@ -21,7 +21,7 @@ function addDamageDisplays(build) {
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
-                elementalHeaders[damageTypes[i]] +
+                elementalHeaders[prefixes[i]] +
                 selvify(attack.minc[i], true) +
                 " - " +
                 selvify(attack.maxc[i], true) +

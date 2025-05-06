@@ -1,79 +1,101 @@
-const attacks = {
-    melee: {
-        name: "Melee",
-        conv: [100, 0, 0, 0, 0, 0],
-    },
-    relikMelee: {
-        cata: "Melee",
-        name: "Single Beam",
-        conv: [33.4, 0, 0, 0, 0, 0],
-        alts: [
-            {
-                name: "Per Attack",
-                mult: 3,
-                display: true,
-            },
-            {
-                name: "Average DPS",
-                scaling: "",
-            },
-        ],
-    },
+const amazinglynamedalternateclasses = {
     shaman: {
-        totem: {
-            cata: "Totem",
-            name: "Totem Tick",
-            mana: 30,
-            conv: [6, 0, 0, 0, 0, 6],
-            alts: [
-                {
-                    name: "Totem Tick DPS",
+        defaultAttack: {
+            primary: {
+                id: "meleeTotal",
+                name: "Beam Total",
+                conv: [100.2, 0, 0, 0, 0, 0],
+            },
+            secondary: {
+                id: "meleeSingle",
+                name: "Single Beam",
+                conv: [33.4, 0, 0, 0, 0, 0],
+            },
+        },
+        spells: {
+            totem: {
+                name: "Totem",
+                attack: "totem",
+                mana: 30,
+                spell: "1st",
+            },
+            haul: {
+                name: "Haul",
+                mana: 15,
+                spell: "2nd",
+            },
+            aura: {
+                name: "Aura",
+                attack: "aura",
+                mana: 40,
+                spell: "3rd",
+            },
+            uproot: {
+                name: "Uproot",
+                attack: "uproot",
+                mana: 30,
+                spell: "4th",
+            },
+        },
+        attacks: {
+            totem: {
+                name: "Tick",
+                conv: [6, 0, 0, 0, 0, 6],
+                dps: {
+                    override: true,
                     mult: 2.5,
-                },
-            ],
+                }
+            },
+            aura: {
+                name: "Aura",
+                conv: [150, 0, 0, 30, 0, 0],
+            },
+            uproot: {
+                name: "Uproot",
+                conv: [80, 30, 20, 0, 0, 0],
+            },
+            totemicSmash: {
+                name: "Totemic Smash",
+                conv: [120, 0, 0, 0, 30, 0],
+            },
+            totemShove: {
+                name: "Totem Shove",
+                parent: "Totem",
+                conv: [90, 0, 0, 0, 0, 30],
+            },
+            natureJolt: {
+                name: "Nature's Jolt",
+                parent: "Haul",
+                conv: [90, 30, 0, 0, 0, 0],
+            },
+            rainDance: {
+                name: "Rain Dance",
+                conv: [30, 0, 0, 30, 0, 0],
+                duration: 6,
+                frequency: 0.4,
+            },
+            puppetMaster: {
+                name: "Puppet Master",
+                conv: [16, 2, 0, 0, 0, 2],
+                frequency: 0.5,
+            },
+            shockingAura: {
+                name: "Aura",
+                conv: [0, 0, 20, 0, 0, 0],
+            },
+            flamingTongue: {
+                name: "Uproot",
+                conv: [-15, -30, -15, 0, 10, 0],
+            },
         },
-        aura: {
-            name: "Aura",
-            mana: 40,
-            conv: [150, 0, 0, 30, 0, 0],
-        },
-        uproot: {
-            name: "Uproot",
-            mana: 30,
-            conv: [80, 30, 20, 0, 0, 0],
-        },
-        totemicSmash: {
-            name: "Totemic Smash",
-            conv: [120, 0, 0, 0, 30, 0],
-        },
-        totemShove: {
-            name: "Totem Shove",
-            parent: "Totem",
-            conv: [90, 0, 0, 0, 0, 30],
-        },
-        natureJolt: {
-            name: "Nature's Jolt",
-            parent: "Haul",
-            conv: [90, 30, 0, 0, 0, 0],
-        },
-        rainDance: {
-            name: "Rain Dance",
-            conv: [30, 0, 0, 30, 0, 0],
-            duration: 6,
-            frequency: 0.4,
-        },
-        puppetMaster: {
-            name: "Puppet Master",
-            conv: [16, 2, 0, 0, 0, 2],
-            frequency: 0.5,
-        },
-        shockingAura: {
-            name: "Aura",
-            conv: [0, 0, 20, 0, 0, 0],
-        },
-        flamingTongue: {
-            name: "Uproot",
-            conv: [-15, -30, -15, 0, 10, 0],
+    },
+    archer: {
+        defaultAttack: {
+            primary: {
+                id: "melee",
+                name: "Melee",
+                conv: [100, 0, 0, 0, 0, 0],
+            },
         },
     },
 };
@@ -212,29 +234,29 @@ const aspects = {
             {
                 duration: 2,
                 tentacles: 0,
-                mult: 1
+                mult: 1,
             },
             {
                 duration: 2,
                 tentacles: 1,
-                mult: 1.334
+                mult: 1.334,
             },
             {
                 duration: 3,
                 tentacles: 1,
-                mult: 1.334
+                mult: 1.334,
             },
         ],
         "Summoner's Embodiment of the Omnipotent Overseer": [
             {
-                hummingbirds: 0
+                hummingbirds: 0,
             },
             {
-                hummingbirds: 1
+                hummingbirds: 1,
             },
             {
-                hummingbirds: 1
+                hummingbirds: 1,
             },
-        ]
+        ],
     },
 };

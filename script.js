@@ -152,3 +152,16 @@ function deromanize(str) {
 function getSPMult(sp) {
     return spMultipliers[sp < 0 ? 0 : sp > 150 ? 150 : sp];
 }
+
+const elementalHeaders = {
+    "neutral": getHeaderForElement("neutral", "✣"),
+    "earth": getHeaderForElement("earth", "✤"),
+    "thunder": getHeaderForElement("thunder", "✦"),
+    "water": getHeaderForElement("water", "❉"),
+    "fire": getHeaderForElement("fire", "✹"),
+    "air": getHeaderForElement("air", "❋"),
+}
+
+function getHeaderForElement(element, elementEmoji) {
+    return '<span class="'+ element + '"><b class="font-minecraft" style="display: inline-block; width: 0.8rem">' + elementEmoji + '</b> ';
+}
