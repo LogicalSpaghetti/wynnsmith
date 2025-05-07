@@ -145,10 +145,9 @@ function addAspectListeners() {
             });
         }
 
-        // active.appendChild("<div class=\"padding\"></div>");
         aspect.remove();
 
-        if (active.childElementCount < 5) inactive.parentElement.style.display = "inline-block";
+        if (active.childElementCount < 5) inactive.style.display = "inline-block";
 
         refreshBuild();
     });

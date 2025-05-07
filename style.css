@@ -18,12 +18,12 @@
     --wy-backbround: #82654c;
     --wy-slot: #cda870;
     --wy-tome_back: #d4bf8f;
+    font-family: monospace, "consolas", "Courier New";
 }
 
 body {
     color: #fff;
     background-color: var(--ls-background);
-    font-family: "consolas", monospace, "Courier New";
     padding: 0px;
     margin: 0;
 }
@@ -260,18 +260,15 @@ input:focus {
 
 /* -- Output: -- */
 
-.outputs {
-    width: 220px;
-}
-
 #dev_output {
     margin-left: 20px;
     word-wrap: normal;
     white-space: pre-line;
-    font-size: 8px;
+    /* font-size: 8px; */
 }
 
 #support_display {
+    width: 27ch;
     padding: 5px;
     border: 1px solid var(--ls-trim);
 }
@@ -442,7 +439,7 @@ img.highlight_node[data-type="ability"] {
 .aspect_down {
     width: 5.4px;
     height: 13.5px;
-    font-size: 0.5rem;
+    /* font-size: 0.5rem; */
     line-height: 10px;
     position: absolute;
     background-size: 100%;
@@ -523,10 +520,6 @@ img.highlight_node[data-type="ability"] {
 .health {
     color: #dd0000;
 }
-
-/* .mana {
-    color: #1ed4b6;
-} */
 
 /* Fonts: */
 

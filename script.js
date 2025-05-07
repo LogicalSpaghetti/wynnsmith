@@ -153,15 +153,30 @@ function getSPMult(sp) {
     return spMultipliers[sp < 0 ? 0 : sp > 150 ? 150 : sp];
 }
 
-const elementalHeaders = {
-    "neutral": getHeaderForElement("neutral", "✣"),
-    "earth": getHeaderForElement("earth", "✤"),
-    "thunder": getHeaderForElement("thunder", "✦"),
-    "water": getHeaderForElement("water", "❉"),
-    "fire": getHeaderForElement("fire", "✹"),
-    "air": getHeaderForElement("air", "❋"),
+const iconHeaders = {
+    "neutral": getHeaderForIcon("neutral", "✣"),
+    "earth": getHeaderForIcon("earth", "✤"),
+    "thunder": getHeaderForIcon("thunder", "✦"),
+    "water": getHeaderForIcon("water", "❉"),
+    "fire": getHeaderForIcon("fire", "✹"),
+    "air": getHeaderForIcon("air", "❋"),
+    "health": getHeaderForIcon("health", "⚔"),
+    "mana": getHeaderForIcon("water", "✺"),
 }
 
-function getHeaderForElement(element, elementEmoji) {
-    return '<span class="'+ element + '"><b class="font-minecraft" style="display: inline-block; width: 0.8rem">' + elementEmoji + '</b> ';
+const colorHeaders = {
+    "earth": getHeaderForColor("earth"),
+    "thunder": getHeaderForColor("thunder"),
+    "water": getHeaderForColor("water"),
+    "fire": getHeaderForColor("fire"),
+    "air": getHeaderForColor("air"),
+    "health": getHeaderForColor("health"),
+}
+
+function getHeaderForIcon(color, elementEmoji) {
+    return '<span class="'+ color + '"><b class="font-minecraft" style="display: inline-block; width: 1ch">' + elementEmoji + '</b> ';
+}
+
+function getHeaderForColor(color) {
+    return '<span class="'+ color + '">';
 }

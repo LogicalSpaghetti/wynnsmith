@@ -6,12 +6,12 @@ function addDamageDisplays(build) {
     Object.keys(build.attacks).forEach((attackName) => {
         const attack = build.attacks[attackName];
 
-        attackStrings += attackName + ":\n";
-        attackStrings += "Non-Crit:\n";
+        attackStrings += attackName + ":<br>";
+        attackStrings += "Non-Crit:<br>";
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
-                elementalHeaders[prefixes[i]] +
+                iconHeaders[prefixes[i]] +
                 selvify(attack.min[i], true) +
                 " - " +
                 selvify(attack.max[i], true) +
@@ -21,7 +21,7 @@ function addDamageDisplays(build) {
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             attackStrings +=
-                elementalHeaders[prefixes[i]] +
+                iconHeaders[prefixes[i]] +
                 selvify(attack.minc[i], true) +
                 " - " +
                 selvify(attack.maxc[i], true) +

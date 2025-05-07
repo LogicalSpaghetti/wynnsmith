@@ -16,25 +16,27 @@ function displayStats(build) {
     const final = build.final;
 
     support.innerHTML =
-        getStatDisplay("health", "⚔", "Health", final.health) +
-        getStatDisplay("health", "⚔", "Health Regen", final.healthRegen, "/4s") +
-        getStatDisplay("earth", "✤", "Earth Defence", final.totalEarthDefence) +
-        getStatDisplay("thunder", "✦", "Thunder Defence", final.totalThunderDefence) +
-        getStatDisplay("water", "❉", "Water Defence", final.totalWaterDefence) +
-        getStatDisplay("fire", "✹", "Fire Defence", final.totalFireDefence) +
-        getStatDisplay("air", "❋", "Air Defence", final.totalAirDefence) +
+        getStatDisplay("health", true, "Health", final.health) +
+        getStatDisplay("health", true, "Health Regen", final.healthRegen, "/4s") +
+        getStatDisplay("earth", true, "Earth Defence", final.totalEarthDefence) +
+        getStatDisplay("thunder", true, "Thunder Defence", final.totalThunderDefence) +
+        getStatDisplay("water", true, "Water Defence", final.totalWaterDefence) +
+        getStatDisplay("fire", true, "Fire Defence", final.totalFireDefence) +
+        getStatDisplay("air", true, "Air Defence", final.totalAirDefence) +
         "<hr></hr>" +
-        getStatDisplay("water", "✺", 'Mana Regen', ids.manaRegen, "/5s") +
-        getStatDisplay("water", false, "→ True Mana Regen", final.trueManaRegen, "/5s", false, true) +
-        getStatDisplay("water", "✺", 'Mana Steal', ids.manaSteal, "/3s") +
-        getStatDisplay("water", "✺", "Total Max Mana", final.maxMana) +
-        getStatDisplay("health", "⚔", "Life Steal", ids.lifeSteal, "/3s") +
+        getStatDisplay("water", true, 'Mana Regen', ids.manaRegen, "/5s") +
+        getStatDisplay("water", false, "True Mana Regen", final.trueManaRegen, "/5s", false, true) +
+        getStatDisplay("water", true, 'Mana Steal', ids.manaSteal, "/3s") +
+        getStatDisplay("water", false, "Mana per Hit", final.manaPerHit, "", false, true) +
+        getStatDisplay("water", true, "Total Max Mana", final.maxMana) +
+        getStatDisplay("health", true, "Life Steal", ids.lifeSteal, "/3s") +
+        getStatDisplay("health", false, "Life per Hit", final.lifePerHit, "", false, true) +
         getStatDisplay("earth", false, "Poison", ids.poison, "/3s") +
         getStatDisplay("earth", false, "Thorns", ids.thorns, "%") +
         getStatDisplay("thunder", false, "Reflection", ids.reflection, "%") +
         getStatDisplay("fire", false, "Exploding Chance", ids.exploding, "%") +
         getStatDisplay("air", false, "Walk Speed", ids.walkSpeed, "%") +
-        getStatDisplay("air", false, "→ Sprint Speed", final.effectiveWS, "m/s", true, true) +
+        getStatDisplay("air", false, "Sprint Speed", final.effectiveWS, "m/s", true, true) +
         getStatDisplay("air", false, "Sprint Duration", ids.sprint, "%") +
         getStatDisplay("air", false, "Sprint Regen", ids.sprintRegen, "%") +
         getStatDisplay("air", false, "Jump Height", ids.jumpHeight) +
@@ -50,13 +52,14 @@ function displayStats(build) {
         getStatDisplay("air", false, "XP Bonus", ids.xpBonus, "%");
 }
 
-function getStatDisplay(colorClass, symbol, label, stat, post, noColor, isSub) {
+function getStatDisplay(colorClass, includeSymbol, label, stat, post, noColor, isSub) {
     if (stat === undefined || stat === NaN) return "";
     return (
         '<div class="stat_row">' +
             '<div class="left' + (isSub ? " sub" : "") + '">' +
-                '<span class="' + colorClass + '">' +
-                    (symbol ? '<b class="font-minecraft" style="display: inline-block; width: 0.8rem;">' + symbol + "</b>" : "") + " " + label +
+                (includeSymbol ? iconHeaders[colorClass] : colorHeaders[colorClass]) +
+                    (isSub ? "→ " : "") + 
+                    label +
                 ":</span>" +
             "</div>" +
             '<div class="right ' + (noColor ? "" : Math.sign(stat) === 1 ? "positive" : "negative") + '">' +

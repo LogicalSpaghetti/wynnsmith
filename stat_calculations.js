@@ -501,6 +501,8 @@ function finalStatCalculations(build) {
     if (final.maxMana > 400) final.maxMana = 400;
 
     if (ids.manaRegen !== undefined) final.trueManaRegen = ids.manaRegen + 25;
+    if (ids.manaSteal !== undefined) final.manaPerHit = Math.round(ids.manaSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
+    if (ids.lifeSteal !== undefined) final.lifePerHit = Math.round(ids.lifeSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
 
     const baseWS = 5.612;
     if (ids.walkSpeed !== undefined) final.effectiveWS = baseWS * (ids.walkSpeed / 100 + 1);
