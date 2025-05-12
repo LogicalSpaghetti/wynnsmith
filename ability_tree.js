@@ -17,10 +17,11 @@ function refreshAbilities(build) {
 }
 
 function changeAbilityTree(build) {
-    document.getElementById("abilityTreeContainer").removeAttribute("hidden");
-
-    const treeMap = classes[build.wynnClass].map; // array
     const abilityTree = document.getElementById("abilityTree");
+    
+    abilityTree.removeAttribute("hidden");
+
+    const treeMap = classes[build.wynnClass].map;
     abilityTree.innerHTML = mapHTML(treeMap);
 
     const treeNodes = classes[build.wynnClass].tree;
@@ -111,11 +112,11 @@ function mapHTML(treeMap) {
     for (let i = 0; i < treeMap.length; i++) {
         const node = treeMap[i];
         if (node === undefined) {
-            tablePieces.push(new TablePiece(i + 1, undefined));
+            tablePieces.push(new TablePiece(i, undefined));
             continue;
         }
         const coords = node["coordinates"];
-        var index = coords.x + (coords.y - 1) * 9;
+        var index = coords.x + (coords.y - 1) * 9 - 1;
 
         const temp = Object.toString(node);
 
@@ -124,6 +125,7 @@ function mapHTML(treeMap) {
 
     var htmlOutput = "";
     for (let i = 0; i < tablePieces.length; i++) {
+        if (tablePieces[i].index > 8 && tablePieces[i].index % 54 < 9) continue;
         htmlOutput += tablePieces[i].getHTML();
     }
 
@@ -155,10 +157,10 @@ class TablePiece {
     }
 
     tdHead() {
-        return (this.index % 9 === 1 ? "<tr>" : "") + "<td>";
+        return ((this.index) % 9 === 0 ? "<tr>" : "") + "<td>";
     }
     tdFoot() {
-        return "</td>" + (this.index % 9 === 0 ? "</tr>" : "");
+        return "</td>" + ((this.index) % 9 === 8 ? "</tr>" : "");
     }
 
     getConnector() {

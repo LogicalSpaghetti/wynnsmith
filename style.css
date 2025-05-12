@@ -14,11 +14,12 @@
     --wy-rare: #f5f;
     --wy-set: #5f5;
     --wy-unique: #ff5;
+    --wy-crafted: #0aa;
     --wy-border: #5e4837;
     --wy-backbround: #82654c;
     --wy-slot: #cda870;
     --wy-tome_back: #d4bf8f;
-    font-family: monospace, "consolas", "Courier New";
+    font-family: minecraft;
 }
 
 body {
@@ -31,7 +32,7 @@ body {
 /* #content {} */
 #settings {
     background-color: var(--ls-background2);
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .hide_section {
@@ -106,22 +107,13 @@ input,
 .display {
     /* transition: all 0.2s ease; */
     border: 1px solid var(--ls-light-trim);
-    overflow: hidden;
-    padding: 0px;
+    padding: 0.2rem;
     margin: 0px;
-    height: 100%;
     text-align: center;
-    width: 250px;
     z-index: 1;
     background-color: var(--ls-background);
     position: absolute;
-}
-
-.collapse {
-    border-color: var(--ls-background);
-    height: 0px !important;
-    border-width: 0px;
-    padding: 0px;
+    display: none;
 }
 
 .effect:hover,
@@ -217,17 +209,18 @@ input:focus {
 
 [data-rarity="legendary"] {
     color: var(--wy-legendary);
-    /* border-right: 1px solid var(--wy-legendary); */
 }
 
 [data-rarity="fabled"] {
     color: var(--wy-fabled);
-    /* border-right: 1px solid var(--wy-fabled); */
 }
 
 [data-rarity="mythic"] {
     color: var(--wy-mythic);
-    /* border-right: 1px solid var(--wy-mythic); */
+}
+
+[data-rarity="crafted"] {
+    color: var(--wy-crafted);
 }
 
 /* Effect Selectors */
@@ -271,6 +264,7 @@ input:focus {
     width: 27ch;
     padding: 5px;
     border: 1px solid var(--ls-trim);
+    line-height: 150%;
 }
 
 .stat_row {
@@ -323,31 +317,22 @@ table {
 
 td {
     padding: 0px;
+    height: 18px;
+    width: 18px;
 }
 
-.abilityTreeSection {
-    width: 206px;
-    image-rendering: pixelated;
-}
-
-#abilityTreeInside {
-    border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;
-    padding: 22px;
-}
-
-/* TODO: Doesn't tile perfectly iirc */
 #abilityTree {
-    background-image: url(img/background/tree_scroll.png);
+    image-rendering: pixelated;
+    background-color: #373943;
+    border: #4f5466 2px solid;
+    padding: 8px;
 }
 
 .ability_node {
-    height: 16px;
-    width: 16px;
-
-    background-size: 200%;
-    scale: 128.571%;
-    z-index: 0;
-
+    height: 10px;
+    width: 10px;
+    translate: 4px 4px;
+    position: absolute;
     image-rendering: pixelated;
 }
 
@@ -364,23 +349,42 @@ img.highlight_node[data-type="ability"] {
     cursor: pointer;
 }
 
-.node_img[data-type="ability"] {
-    transform-origin: 0 0;
-    width: 200%;
-    object-fit: cover;
-    image-rendering: pixelated;
+.node_img_box[data-type="ability"] {
+    /* overflow: hidden; */
+    width: fit-content;
+    height: fit-content;
+
+    clip-path: rect(0% 50% 50% 0%);
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    translate: 25% 10%;
+    /* -ms-transform: translateX(-50%); */
+    /* transform: translateX(50%); */
+    /* translate: -50% -50%; */
 }
 
-.node_img_box[data-type="ability"] {
-    width: 16px;
-    height: 16px;
-    overflow: hidden;
+.full_center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+}
+
+.node_img[data-type="ability"] {
+    display: block;
 }
 
 /* -- Attacks: -- */
 
 #attack_display {
     text-align: center;
+    line-height: 150%;
 }
 
 /* Aspects */
@@ -390,11 +394,15 @@ img.highlight_node[data-type="ability"] {
     width: 206px;
 }
 
-.aspects_border {
+#aspects_border {
     border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;
     padding: 22px;
     width: 162px;
     line-height: 0;
+}
+
+#aspects_background {
+    background-image: url(img/background/tree_scroll.png);
 }
 
 #active_aspects,
@@ -402,7 +410,10 @@ img.highlight_node[data-type="ability"] {
     image-rendering: pixelated;
     line-height: 0;
     min-height: 27px;
-    background-image: url(img/background/tree_scroll.png);
+}
+
+#inactive_aspects {
+    overflow: hidden;
 }
 
 #active_aspects > div {
@@ -424,9 +435,10 @@ img.highlight_node[data-type="ability"] {
 }
 
 .aspect_tier {
-    translate: 7px -7px;
+    translate: -4px -10px;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    font-size: 0.5rem;
+    width: 32.4px;
+    text-align: center;
 
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
@@ -439,7 +451,6 @@ img.highlight_node[data-type="ability"] {
 .aspect_down {
     width: 5.4px;
     height: 13.5px;
-    /* font-size: 0.5rem; */
     line-height: 10px;
     position: absolute;
     background-size: 100%;
@@ -519,6 +530,13 @@ img.highlight_node[data-type="ability"] {
 
 .health {
     color: #dd0000;
+}
+
+aqua {
+    color: var(--wy-legendary);
+}
+darkAqua {
+    color: var(--wy-crafted);
 }
 
 /* Fonts: */

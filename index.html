@@ -11,16 +11,10 @@
             <div class="flexCol">
                 <!-- Cloumn 1 -->
                 <section class="abilityTreeSection column">
-                    <div id="aTree">
-                        <div id="abilityTreeContainer" hidden>
-                            <span id="abilityTreeInside">
-                                <table id="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void">
-                                    <!-- Filled by js -->
-                                </table>
-                            </span>
-                        </div>
-                    </div>
-                    <div id="dev_output" class="output"></div>               
+                    <div style="margin-left: auto; margin-right: 0">00/45 AP</div>
+                    <table id="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void" hidden>
+                        <!-- Filled by js -->
+                    </table>
                 </section>
                 <!-- Column 2 -->
                 <section class="inputs column">
@@ -36,7 +30,7 @@
                             <input id="input_helmet" class="input" placeholder="Helmet" data-slot="helmet" />
                             <input id="powder_helmet" class="powder" placeholder="0 Slots" />
                         </div>
-                        <pre id="display-helmet" class="display collapse"></pre>
+                        <pre id="display-helmet" class="display"></pre>
                         <div class="input_section">
                             <a id="chestplate_link" target="_blank">
                                 <span
@@ -48,7 +42,7 @@
                             <input id="input_chestplate" class="input" placeholder="Chestplate" data-slot="chestplate" />
                             <input id="powder_chestplate" class="powder" placeholder="0 Slots" />
                         </div>
-                        <pre id="display-chestplate" class="display collapse"></pre>
+                        <pre id="display-chestplate" class="display"></pre>
                         <div class="input_section">
                             <a id="leggings_link" target="_blank">
                                 <span
@@ -60,7 +54,7 @@
                             <input id="input_leggings" class="input" placeholder="Leggings" data-slot="leggings" />
                             <input id="powder_leggings" class="powder" placeholder="0 Slots" />
                         </div>
-                        <pre id="display-leggings" class="display collapse"></pre>
+                        <pre id="display-leggings" class="display"></pre>
                         <div class="input_section">
                             <a id="boots_link" target="_blank">
                                 <span
@@ -72,7 +66,7 @@
                             <input id="input_boots" class="input" placeholder="Boots" data-slot="boots" />
                             <input id="powder_boots" class="powder" placeholder="0 Slots" maxlength="0" />
                         </div>
-                        <pre id="display-boots" class="display collapse"></pre>
+                        <pre id="display-boots" class="display"></pre>
                         <div class="input_section">
                             <a id="ring0_link" target="_blank">
                                 <span
@@ -86,7 +80,7 @@
                                 <img id="miku" src="img/hatsune-miku.gif" />
                             </div>
                         </div>
-                        <pre id="display-ring0" class="display collapse"></pre>
+                        <pre id="display-ring0" class="display"></pre>
                         <div class="input_section">
                             <a id="ring1_link" target="_blank">
                                 <span
@@ -97,7 +91,7 @@
                             ></a>
                             <input id="input_ring1" class="input input--ring" placeholder="Ring 2" data-slot="ring1" />
                         </div>
-                        <pre id="display-ring1" class="display collapse"></pre>
+                        <pre id="display-ring1" class="display"></pre>
                         <div class="input_section">
                             <a id="bracelet_link" target="_blank">
                                 <span
@@ -108,7 +102,7 @@
                             </a>
                             <input id="input_bracelet" class="input" placeholder="Bracelet" data-slot="bracelet" />
                         </div>
-                        <pre id="display-bracelet" class="display collapse"></pre>
+                        <pre id="display-bracelet" class="display"></pre>
                         <div class="input_section">
                             <a id="necklace_link" target="_blank">
                                 <span
@@ -119,7 +113,7 @@
                             </a>
                             <input id="input_necklace" class="input" placeholder="Neckalce" data-slot="necklace" />
                         </div>
-                        <pre id="display-necklace" class="display collapse"></pre>
+                        <pre id="display-necklace" class="display"></pre>
                         <div class="input_section">
                             <a id="weapon_link" target="_blank">
                                 <span
@@ -131,7 +125,7 @@
                             <input id="input_weapon" class="input" placeholder="Weapon" data-slot="weapon" />
                             <input id="powder_weapon" class="powder" placeholder="0 Slots" maxlength="0" />
                         </div>
-                        <pre id="display-weapon" class="display collapse"></pre>
+                        <pre id="display-weapon" class="display"></pre>
                     </div>
                     <div class="copy_buttons">
                         <p>
@@ -248,32 +242,23 @@
                             <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome" /></td>
                         </tr>
                     </table>
-                    <br /><br />
-                    <div>
-                        <div><b>Build Errors:</b></div>
-                        TODO: Conflicting gear, SP reqs...
-                    </div>
-                    <br />
-                    <div>
-                        <label><b>External Buffs:</b></label>
-                        TODO: Raids, lootruns, consus, edited ids...<br />
-                        <label><b>Identification Editor:</b></label>
-                        <div id="id_editor"></div>
-                    </div>
                 </section>
                 <!-- Cloumn 3 -->
                 <section class="outputs column">
                     <div id="support_display">
-                    <!-- Filled by js -->
+                        <!-- Filled by js -->
                     </div>
                     <br />
                     <div>
-                        <div class="aspects_border">
-                            <div id="active_aspects">
-                                <!-- Filled by js -->
-                            </div>
-                            <div id="inactive_aspects">
-                                <!-- Filled by js -->
+                        <div id="aspects_border">
+                            <div id="aspects_background">
+                                <div id="active_aspects">
+                                    <!-- Filled by js -->
+                                </div>
+                                <hr />
+                                <div id="inactive_aspects">
+                                    <!-- Filled by js -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -290,31 +275,31 @@
                             </span>
                         </div>
                     </template>
-                    <div class="" style="width: 200px; background-color: var(--ls-background2); border: 1px solid var(--ls-trim-hover); padding: 2px;">
-                         Melee!
+                    <div class="" style="width: 200px; background-color: var(--ls-background2); border: 1px solid var(--ls-trim-hover); padding: 2px">
+                        Melee!
                     </div>
                 </section>
                 <!-- Column 5 -->
-                <section>
-                    
-                </section>
+                <section></section>
             </div>
         </div>
         <div id="settings" class="hide_section">
             <button id="selv">Toggle Selvs</button>
-            <br><br>
-            <label for="gif_input">Set GIF:</label><br>
+            <br /><br />
+            <label for="gif_input">Set GIF:</label><br />
             <input id="gif_input" type="file" accept="image/gif" />
-            <br>
+            <br />
             <label for="opacity_slider">GIF Opacity:</label>
-            <div style="width: 210px; margin: 10px;">
-                <input id="opacity_slider" class="slider" type="range" value="15" />            
+            <div style="width: 210px; margin: 10px">
+                <input id="opacity_slider" class="slider" type="range" value="15" />
             </div>
-            <br><br>
+            <br /><br />
             <button id="settings_close" class="settings_toggle">Close Settings</button>
+            <br /><br />
+            <div id="dev_output" class="output"></div>
         </div>
 
-        <script src="data/grouped_items.js"></script>
+        <script src="grouped_items.js"></script>
         <script src="data_class_trees.js"></script>
         <script src="data_base_and_ids.js"></script>
         <script src="data_small_stuff.js"></script>
@@ -323,6 +308,8 @@
         <script src="script.js"></script>
         <script src="build_linking.js"></script>
         <script src="item_input.js"></script>
+        <script src="item_display.js"></script>
+        <script src="stat_display.js"></script>
         <script src="stat_calculations.js"></script>
         <script src="apply_node_effects.js"></script>
         <script src="data_abilities.js"></script>

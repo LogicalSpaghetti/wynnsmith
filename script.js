@@ -42,34 +42,6 @@ function refreshBuild() {
     displayForDevelopment(build);
 }
 
-function displayForDevelopment(build) {
-    roundAllForDisplay(build);
-    outputAll.textContent = JSON.stringify(build, undefined, 1)
-}
-
-function roundAllForDisplay(build) {
-    const base = build.base;
-    Object.keys(base).forEach((baseName) => {
-        if (!Number.isInteger(base[baseName])) return;
-        base[baseName] = roundForDisplay(base[baseName]);
-    });
-    const ids = build.ids;
-    Object.keys(ids).forEach((idName) => {
-        ids[idName] = roundForDisplay(ids[idName]);
-    });
-    const final = build.final;
-    Object.keys(final).forEach((idName) => {
-        final[idName] = roundForDisplay(final[idName]);
-    });
-}
-
-function resetLinkText() {
-    // resets the buttons if they were clicked
-    document.querySelectorAll(".copy_link").forEach((button) => {
-        button.textContent = button.dataset["default"];
-    });
-}
-
 function getMultiplierForSkillPoints(sp) {
     return ((1 - Math.pow(0.9908, sp + 1)) / 0.0092 - 1) / 100;
 }

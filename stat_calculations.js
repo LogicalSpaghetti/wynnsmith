@@ -557,11 +557,6 @@ function getAsMinMax(possibleInt) {
     return possibleInt;
 }
 
-function addMinAndMaxTo(target, source) {
-    target.min += source.min;
-    target.max += source.max;
-}
-
 function multiplyMinAndMaxBy(target, multiplier) {
     target.min *= multiplier + Number.EPSILON;
     target.max *= multiplier + Number.EPSILON;

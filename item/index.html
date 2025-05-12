@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="../style.css" />
+        <title>WynnSearch</title>
+        <!-- <link rel="icon" href="img/icons/yay.png" /> -->
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <pre id="output" class="display full_center" style="display: inline-block"></pre>
+
+        <script src="all_items.js"></script>
+        <script src="../item_display.js"></script>
+        <script src="../stat_display.js"></script>
+
+        <script type="text/javascript">
+            window.addEventListener("load", function () {
+                const search = window.location.search.substring(1, window.location.search.length);
+                const item = items[search];
+                const display = document.getElementById("output");
+
+                setDisplay(display, item, search);
+            });
+        </script>
+    </body>
+</html>

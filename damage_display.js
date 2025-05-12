@@ -13,7 +13,7 @@ function addDamageDisplays(build) {
             attackStrings +=
                 iconHeaders[prefixes[i]] +
                 selvify(attack.min[i], true) +
-                " - " +
+                " to " +
                 selvify(attack.max[i], true) +
                 "</span><br>";
         }
@@ -23,7 +23,7 @@ function addDamageDisplays(build) {
             attackStrings +=
                 iconHeaders[prefixes[i]] +
                 selvify(attack.minc[i], true) +
-                " - " +
+                " to " +
                 selvify(attack.maxc[i], true) +
                 "</span><br>";
         }

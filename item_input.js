@@ -23,11 +23,11 @@ function refreshItemData(build) {
         setLink(input);
         addPowders(build, input);
         addMajorIds(build, item);
-        addBasesToBuild(build, item);
+        addBases(build, item);
         addIds(build, item);
         if (item.attackSpeed === undefined) continue;
         addAttackSpeed(build, item);
-        document.title = "" + input.value + ": WynnSmith"
+        document.title = "" + input.value + ": WynnSmith";
     }
 }
 
@@ -57,7 +57,7 @@ function addIds(build, source) {
     }
 }
 
-function addBasesToBuild(build, item) {
+function addBases(build, item) {
     const base = item.base;
     const idNames = Object.keys(base);
     for (let i = 0; i < idNames.length; i++) {
@@ -93,53 +93,16 @@ function getItemByInput(input) {
     const itemCategory = itemGroups[input.dataset["slot"].replace("0", "").replace("1", "")];
 
     if (itemCategory === undefined) return;
-    const itemData = itemCategory.find(it => it.name == input.value)
+    const itemData = itemCategory.find((it) => it.name == input.value);
     if (itemData === undefined) return undefined;
-    return itemData.item
+    return itemData.item;
 }
 
 function refreshOwnData(input) {
     const display = document.getElementById("display-" + input.dataset.slot);
-
     const item = getItemByInput(input);
-    if (item === undefined) {
-        // TODO: disable the dropdown, hide the icon for it
-        display.textContent = "Invalid item!";
-        return;
-    }
 
-    const miniBuild = {
-        base: {},
-        ids: {},
-    };
-    addBasesToBuild(miniBuild, item);
-    addUnmaxedIds(miniBuild, item);
-
-    display.innerHTML =
-        "Item Statistics: \n" +
-        formatAttackSpeed(item) +
-        formatCombined(miniBuild.base) +
-        formatCombined(miniBuild.ids);
-}
-
-function formatCombined(ids) {
-    var combinedString = "";
-    const keys = Object.keys(ids);
-    for (let i = 0; i < keys.length; i++) {
-        const id = ids[keys[i]];
-        if (Number.isInteger(id)) {
-            combinedString += id >= 0 ? '<span class="positive">+' : '<span class="negative">';
-            combinedString += id + "</span>";
-        } else {
-            combinedString += id.min >= 0 ? '<span class="positive">+' : '<span class="negative">';
-            combinedString += id.min + "</span> to ";
-            combinedString += id.min >= 0 ? '<span class="positive">+' : '<span class="negative">';
-            combinedString += id.max + "</span>";
-        }
-        combinedString += " " + keys[i];
-        if (i <= keys.length) combinedString += "\n";
-    }
-    return combinedString;
+    setDisplay(display, item, input.value);
 }
 
 function addUnmaxedIds(build, item) {
@@ -162,20 +125,9 @@ function addUnmaxedId(build, id, idName) {
     }
 }
 
-String.prototype.replaceAt = function (index, replacement) {
-    return this.substring(0, index) + replacement + this.substring(index + replacement.length);
-};
-
-function formatAttackSpeed(item) {
-    if (item.type !== "weapon") return "";
-
-    var attackSpeed = item.attackSpeed;
-    const uSPos = attackSpeed.indexOf("_");
-    attackSpeed = attackSpeed.replaceAt(0, attackSpeed[0].toUpperCase());
-    attackSpeed = attackSpeed.replaceAt(uSPos + 1, attackSpeed[uSPos + 1].toUpperCase());
-    attackSpeed = attackSpeed.replaceAll("_", " ");
-
-    return "Attack Speed: " + attackSpeed + "\n";
+function addMinAndMaxTo(target, source) {
+    target.min += source.min;
+    target.max += source.max;
 }
 
 // Powders:
@@ -200,17 +152,13 @@ function colorSlot(input, item) {
 }
 
 function setLink(input) {
-    document.getElementById(input.dataset.slot + "_link").href =
-        "https://wynnbuilder.github.io/item/#" + input.value;
+    document.getElementById(input.dataset.slot + "_link").href = "../item/?" + input.value;
 }
 
 function addPowders(build, input) {
     const powderInput = document.getElementById("powder_" + input.dataset.slot);
     if (powderInput === null) return;
-    const powdersString =
-        powderInput.value.length % 2 === 0
-            ? powderInput.value
-            : powderInput.value.substring(0, powderInput.value.length - 1);
+    const powdersString = powderInput.value.length % 2 === 0 ? powderInput.value : powderInput.value.substring(0, powderInput.value.length - 1);
     const destination = input.dataset.slot === "weapon" ? build.powders.weapon : build.powders.armour;
     for (let i = 0; i < powdersString.length / 2; i++) {
         const powderName = powdersString.substring(i * 2, i * 2 + 2);
