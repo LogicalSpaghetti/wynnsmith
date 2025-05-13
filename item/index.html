@@ -22,7 +22,7 @@
 
         <script type="text/javascript">
             window.addEventListener("load", function () {
-                const search = window.location.search.substring(1, window.location.search.length);
+                const search = window.location.search.substring(1, window.location.search.length).replaceAll("%20", " ").replaceAll("_", " ");
                 const item = items[search];
                 const display = document.getElementById("output");
 

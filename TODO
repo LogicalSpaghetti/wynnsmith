@@ -90,7 +90,8 @@ Rarity tinting
 Tree relation logic
 Rich embeds if it's possible to generate them based on the provided build
     oEmbed?
-
+tabindex: 0/-1;
+pointer-events: none/initial;
 build.heals.map((heal) => {});
 
 https://api.wynncraft.com/v3/ability/map/shaman
