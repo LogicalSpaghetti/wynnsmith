@@ -15,10 +15,18 @@
     </head>
     <body>
         <pre id="output" class="display full_center" style="display: inline-block"></pre>
-
+<!-- 
+        <div id="createPNGButton">
+            <button onclick="saveImage()">Save as Image</button>
+        </div>
+        <div id="createPNGButton">
+            <button onclick="copyImage()">Copy Image to Clipboard</button>
+        </div>
+ -->
         <script src="all_items.js"></script>
         <script src="../item_display.js"></script>
         <script src="../stat_display.js"></script>
+        <script src="../html2canvas.min.js"></script>
 
         <script type="text/javascript">
             window.addEventListener("load", function () {
@@ -27,7 +35,42 @@
                 const display = document.getElementById("output");
 
                 setDisplay(display, item, search);
+
+                html2canvas(document.querySelector("#output")).then((canvas) => {
+                    canvas.id = "canvas";
+                    canvas.style.display = "none";
+                    document.body.appendChild(canvas);
+                });
+
+                document.addEventListener("keydown", function (event) {
+                    if (event.key === "c") {
+                        event.preventDefault();
+                        copyImage();
+
+                    }
+                });
             });
+
+            function saveImage() {
+                const canvas = document.getElementById("canvas");
+
+                const dataURL = canvas.toDataURL("image/png");
+
+                // Create a link element
+                const link = document.createElement("a");
+                link.href = dataURL;
+                link.download = "canvas-image.png";
+
+                link.click();
+                // document.body.appendChild(link);
+            }
+
+            function copyImage() {
+                const canvas = document.getElementById("canvas");
+                canvas.toBlob((blob) => {
+                    navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+                }, "image/png");
+            }
         </script>
     </body>
 </html>
