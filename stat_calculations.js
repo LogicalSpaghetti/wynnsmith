@@ -13,19 +13,6 @@ function calculateStats(build) {
     calculateSpellCosts(build);
 }
 
-function computeSPMults(build) {
-    for (let i = 0; i < 5; i++) {
-        const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
-
-        var mult = textInt === undefined ? 0 : spMultipliers[textInt];
-        if (i === 3) mult *= 0.867;
-        if (i === 4) mult *= 0.951;
-
-        build.sp.mults[i] = mult;
-        build.sp.ints[i] = textInt;
-    }
-}
-
 function precomputations(build) {
     radiance(build);
 }
@@ -62,6 +49,18 @@ function includeTomes(build) {
 
 function includeCharms(build) {
     // TODO
+}
+
+function computeSPMults(build) {
+    for (let i = 0; i < 5; i++) {
+        const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
+
+        var mult = textInt === undefined ? 0 : spMultipliers[textInt];
+        if (i === 3) mult *= 0.867;
+        if (i === 4) mult *= 0.951;
+
+        build.sp.mults[i] = mult;
+    }
 }
 
 function statCalculations(build) {
@@ -123,17 +122,18 @@ function calculateSpellCosts(build) {
         const spell = castedSpells[build.wynnClass][i];
 
         // get the base cost of the spell
-        var cost = spell.mana;
+        let cost = spell.mana;
         // apply Intelligence cost reduction
-        cost *= 1 - 0.5 * (build.sp.ints[2] / 150);
+        cost *= 1 - 0.5 * (build.sp.mults[2] / spMultipliers[150]);
         // apply raw cost modifier
         cost += build.ids["raw" + costName + "SpellCost"];
         // apply percent cost modifier
         cost *= 1 + build.ids[costName + "SpellCost"] / 100;
         // apply tree cost modifier
         cost += build.spells[costName].mod;
-        // TODO: Mask costs
+        // bound cost
         cost = Math.max(1, cost);
+        // apply Mask costs (does bypass the 1 cost minimum)
         if (build.sectionContains("toggles", "maskOfTheLunatic") && spell.name === "Aura") cost *= 0.7;
         if (build.sectionContains("toggles", "maskOfTheFanatic") && spell.name === "Totem") cost *= 0.35;
         if (build.sectionContains("toggles", "maskOfTheCoward") && spell.name === "Haul") cost *= 0.5;

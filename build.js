@@ -18,7 +18,6 @@ class Build {
         this.attacks = {};
         this.heals = {};
         this.sp = {
-            ints: [],
             mults: [],
         };
         this.spells = {
