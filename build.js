@@ -29,4 +29,14 @@ class Build {
         const build = this;
         return eval(str)
     }
+
+    
+    sectionContains(section, name) {
+        const sect = this[section];
+        if (sect.constructor === Array) {
+            return sect.includes(name);
+        } else {
+            return sect[name] === undefined;
+        }
+    }
 }

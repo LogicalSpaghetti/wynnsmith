@@ -65,6 +65,9 @@ function statCalculations(build) {
     final.manaPerHit = Math.round(ids.manaSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
     final.lifePerHit = Math.round(ids.lifeSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
 
+    if (build.sectionContains("toggles", "maskOfTheCoward")) ids.walkSpeed += 80;
+    if (build.sectionContains("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
+
     const baseWS = 5.612;
     if (ids.walkSpeed !== undefined) final.effectiveWS = baseWS * (ids.walkSpeed / 100 + 1);
 }
@@ -74,4 +77,16 @@ function calculateEHp(build) {
     final.ehp = final.health;
 
     final.ehp /= build.wynnClass === "shaman" ? 2 - 0.6 : build.wynnClass === "archer" ? 2 - 0.7 : build.wynnClass === "mage" ? 2 - 0.8 : 1;
+
+    applyEHpModifiers(build);
+}
+
+function applyEHpModifiers(build) {
+    applyEHpDivider(build, "toggles", "maskOfTheLunatic", 1 + 0.2)
+    applyEHpDivider(build, "toggles", "maskOfTheFanatic", 1 - 0.35)
+}
+
+function applyEHpDivider(build, section, checkName, div) {
+    if (!build.sectionContains(section, checkName)) return;
+    build.final.ehp /= div;
 }

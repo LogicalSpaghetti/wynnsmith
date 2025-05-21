@@ -130,6 +130,7 @@ function applyGlobalMultipliers(build) {
 function applyShamanMultipliers(build) {
     applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
     applySectMult(build, 1.35, "all", "toggles", "maskOfTheLunatic");
+    applySectMult(build, 0.9, "all", "toggles", "maskOfTheCoward");
     applySectMult(build, 1.20, "all", "toggles", "eldritchCall");
     applySectMult(build, 1.35, "all", "toggles", "maskOfTheAwakened");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");

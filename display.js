@@ -25,7 +25,8 @@ function displayStats(build) {
 
     support.innerHTML = (build.attackSpeed === undefined) ? "" :
         getStatDisplay("health", true, "Health", final.health) +
-        getStatDisplay("health", true, "Effective Health", final.ehp) +
+        getStatDisplay("health", false, "Effective Health", final.ehp, "", false, true) +
+        getStatDisplay("health", false, "EHp (no Agi)", final.ehp, "", false, true) +
         getStatDisplay("health", true, "Health Regen", final.healthRegen, "/4s") +
         getStatDisplay("earth", true, "Earth Defence", final.totalEarthDefence) +
         getStatDisplay("thunder", true, "Thunder Defence", final.totalThunderDefence) +

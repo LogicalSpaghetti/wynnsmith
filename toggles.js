@@ -8,6 +8,8 @@ function setUpOptionals(build) {
 
 function setUpToggles(build) {
     setUpSingleToggle(build, "nodes", "maskOfTheLunatic", "Mask of the Lunatic");
+    setUpSingleToggle(build, "nodes", "maskOfTheFanatic", "Mask of the Fanatic");
+    setUpSingleToggle(build, "nodes", "maskOfTheCoward", "Mask of the Coward");
     setUpSingleToggle(build, "nodes", "eldritchCall", "Eldritch Call");
     setUpSingleToggle(build, "nodes", "maskOfTheAwakened", "Awakened");
     setUpSingleToggle(build, "nodes", "bloodPool", "Boosted Aura");
