@@ -18,8 +18,15 @@ class Build {
         this.attacks = {};
         this.heals = {};
         this.sp = {
+            ints: [],
             mults: [],
         };
+        this.spells = {
+            "1st": {name: "", mod: 0},
+            "2nd": {name: "", mod: 0},
+            "3rd": {name: "", mod: 0},
+            "4th": {name: "", mod: 0},
+        }
         this.base = JSON.parse(emptyBaseString);
         this.ids = JSON.parse(emptyIdsString);
         this.mults = {};

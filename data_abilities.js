@@ -44,7 +44,7 @@ const amazinglynamedalternateclasses = {
                 dps: {
                     override: true,
                     mult: 2.5,
-                }
+                },
             },
             aura: {
                 name: "Aura",
@@ -100,22 +100,6 @@ const amazinglynamedalternateclasses = {
     },
 };
 
-const spellCostMods = {
-    shaman: {
-        totem: ["1st", 30],
-        haul: ["2nd", 15],
-        aura: ["3rd", 40],
-        uproot: ["4th", 30],
-        totemCost1: ["1st", -10],
-        totemCost2: ["1st", -5],
-        haulCost1: ["2nd", -5],
-        haulCost2: ["2nd", -5],
-        auraCost1: ["3rd", -5],
-        auraCost2: ["3rd", -5],
-        uprootCost1: ["4th", -5],
-        uprootCost2: ["4th", -5],
-    },
-};
 const proficiencies = {
     shaman: {
         relikProficiency: {
@@ -259,4 +243,28 @@ const aspects = {
             },
         ],
     },
+};
+
+const castedSpells = {
+    shaman: [
+        {
+            name: "Totem",
+            attack: "totem",
+            mana: 30,
+        },
+        {
+            name: "Haul",
+            mana: 15,
+        },
+        {
+            name: "Aura",
+            attack: "aura",
+            mana: 40,
+        },
+        {
+            name: "Uproot",
+            attack: "uproot",
+            mana: 30,
+        },
+    ],
 };

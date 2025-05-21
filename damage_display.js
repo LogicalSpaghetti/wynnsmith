@@ -3,10 +3,17 @@ const attackSection = document.getElementById("attack_display");
 function addDamageDisplays(build) {
     var attackStrings = "";
 
+        console.log(build.spells)
     Object.keys(build.attacks).forEach((attackName) => {
         const attack = build.attacks[attackName];
 
-        attackStrings += attackName + ":<br>";
+        attackStrings += attackName + ": ";
+
+        Object.keys(build.spells).forEach(spellName => {
+            const spell = build.spells[spellName];
+            if (spell.name == attackName) attackStrings += getMana(spell.cost);
+        })
+        attackStrings += "<br>";
         attackStrings += "Non-Crit:<br>";
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
@@ -55,4 +62,8 @@ function addDamageDisplays(build) {
 
 function selvify(num, addPeriod) {
     return selvs() ? roundForDisplay(num / 80000, addPeriod) + " selv" : roundForDisplay(num, addPeriod);
+}
+
+function getMana(cost) {
+    return "(" + iconHeaders["mana"] + roundForDisplay(cost, true) + "</span>)"
 }

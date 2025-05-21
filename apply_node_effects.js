@@ -26,6 +26,7 @@ function createShamanConversions(build) {
     addConv(build, "totemicsmash", [120, 0, 0, 0, 30, 0], "Totemic Smash");
     addConv(build, "uproot", [80, 30, 20, 0, 0, 0], "Uproot");
     addConv(build, "aura", [150, 0, 0, 30, 0, 0], "Aura");
+    addConv(build, "haul", [0, 0, 0, 0, 0, 0], "Haul");
     addConv(build, "totemShove", [90, 0, 0, 0, 0, 30], "Totem Shove");
     addConv(build, "naturejolt", [90, 30, 0, 0, 0, 0], "Nature's Jolt");
     addConv(build, "danceOfTheRain", [30, 0, 0, 30, 0, 0], "Rain Dance");

@@ -9,7 +9,6 @@ function computeOutputs(build) {
     splitMergedIds(build);
     damagesToArrays(build);
 
-    computeSPMults(build);
     addSPMults(build);
 
     conversions(build);
@@ -196,19 +195,6 @@ function damagesToArrays(build) {
     delete build.final.waterSpellDamage;
     delete build.final.fireSpellDamage;
     delete build.final.airSpellDamage;
-}
-
-function computeSPMults(build) {
-    for (let i = 0; i < 5; i++) {
-        const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
-
-        var mult = textInt === undefined ? 0 : spMultipliers[textInt];
-        if (i === 3) mult *= 0.867;
-        if (i === 4) mult *= 0.951;
-
-        build.sp.mults.push(mult);
-    }
-    build.sp.costMod = 75 / spInputs[2].value;
 }
 
 function addSPMults(build) {
