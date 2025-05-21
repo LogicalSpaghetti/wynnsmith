@@ -148,7 +148,7 @@ function applyShamanMultipliers(build) {
     applyAspectSectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
 
     applyHealMult(build, "nodes", "rebound", "First Wave Heal", 0.6)
-    applyHealMult(build, "nodes", "sharpHealing", "First Wave Heal", build.mults.fluidHealing)
+    applyHealMult(build, "nodes", "sharpHealing", "First Wave Heal", 1 + Math.min(75, build.ids.waterDamage * 0.3) / 100)
     // TODO
 }
 

@@ -34,6 +34,7 @@ function refreshBuild() {
     addToggles(build);
 
     removeOverridenEffects(build);
+    calculateStats(build);
     computeOutputs(build);
 
     addDamageDisplays(build);

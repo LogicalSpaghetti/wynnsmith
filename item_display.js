@@ -1,12 +1,12 @@
 function setDisplay(display, item, itemName) {
     if (item === undefined) {
         // TODO: disable the dropdown, hide the icon for it
-        display.textContent = "Invalid item!";
+        display.innerHTML = "Invalid item!";
         return;
     }
 
     display.innerHTML =
-        formatName(item, itemName) + formatAttackSpeed(item) + formatCombined(item.base) + formatCombined(item.identifications) + formatMId(item);
+        formatName(item, itemName) + formatAttackSpeed(item) + formatIds(item.base, false) + formatIds(item.identifications, true) + formatMId(item);
 }
 
 function formatName(item, itemName) {
@@ -29,7 +29,7 @@ function replaceCharacterAt(string, index, replacement) {
     return string.substring(0, index) + replacement + string.substring(index + replacement.length);
 }
 
-function formatCombined(ids) {
+function formatIds(ids, colorIds) {
     if (ids === undefined) return "";
     const keys = Object.keys(ids);
     if (keys.length < 1) return "";
@@ -37,24 +37,32 @@ function formatCombined(ids) {
     var combinedString = "<div>";
 
     for (let i = 0; i < keys.length; i++) {
-        combinedString += "<br>" + keys[i] + ": ";
-        const id = ids[keys[i]];
-        if (Number.isInteger(id)) {
-            combinedString += id >= 0 ? '<span class="positive">+' : '<span class="negative">';
-            combinedString += id + "</span>";
-        } else {
-            combinedString += id.min >= 0 ? '<span class="positive">+' : '<span class="negative">';
-            combinedString += id.min + "</span> to ";
-            combinedString += id.min >= 0 ? '<span class="positive">+' : '<span class="negative">';
-            combinedString += id.max + "</span>";
-        }
+        const key = keys[i];
+        const id = ids[key];
+        combinedString += formatId(key, id, colorIds);
     }
 
     return combinedString + "</div>";
 }
 
-function getColoredNumber() {
-    
+function formatId(idName, id, colorIds) {
+    let combinedString = "<br>" + statNames[idName] + ": ";
+    const signTag = colorIds
+        ? (id.min ?? id) * (isSpellCost(idName) ? -1 : 1) >= 0
+            ? '<span class="positive">'
+            : '<span class="negative">'
+        : "<span>";
+    if (Number.isInteger(id)) {
+        combinedString += signTag + id + "</span>";
+    } else {
+        combinedString += signTag + id.min + "</span> - ";
+        combinedString += signTag + id.max + "</span>";
+    }
+    return combinedString;
+}
+
+function isSpellCost(stat) {
+    return stat.includes("SpellCost");
 }
 
 function formatMId(item) {
@@ -62,34 +70,35 @@ function formatMId(item) {
 
     var returnString = "";
     Object.keys(item.majorIds).forEach((mIdName) => {
-        returnString += "<br><div style=\"max-width: 30ch; text-wrap: wrap; word-wrap: break-word; margin: 0 auto;\">" + item.majorIds[mIdName] + "</div>"
+        returnString +=
+            '<br><div style="max-width: 30ch; text-wrap: wrap; word-wrap: break-word; margin: 0 auto;">' + item.majorIds[mIdName] + "</div>";
     });
 
     return returnString;
 }
 
-const baseNames = {
+const statNames = {
+    // Base
     // Health
-    baseHealth: 0,
+    "baseHealth": "Health",
     // Eledef Raw
-    baseEarthDefence: 0,
-    baseThunderDefence: 0,
-    baseWaterDefence: 0,
-    baseFireDefence: 0,
-    baseAirDefence: 0,
+    "baseEarthDefence": "Earth Defence",
+    "baseThunderDefence": "Thunder Defence",
+    "baseWaterDefence": "Water Defence",
+    "baseFireDefence": "Fire Defence",
+    "baseAirDefence": "Air Defence",
     // Base Damage
-    baseDamage: "Neutral Damage",
-    baseEarthDamage: { min: 0, max: 0 },
-    baseThunderDamage: { min: 0, max: 0 },
-    baseWaterDamage: { min: 0, max: 0 },
-    baseFireDamage: { min: 0, max: 0 },
-    baseAirDamage: { min: 0, max: 0 },
+    "baseDamage": "Neutral Damage",
+    "baseEarthDamage": "Earth Damage",
+    "baseThunderDamage": "Thunder Damage",
+    "baseWaterDamage": "Water Damage",
+    "baseFireDamage": "Fire Damage",
+    "baseAirDamage": "Air Damage",
     // Charms
-    leveledLootBonus: 0,
-    damageFromMobs: 0,
-    leveledXpBonus: 0,
-};
-const idNames = {
+    "leveledLootBonus": "Leveled Loot Bonus",
+    "damageFromMobs": "Damage From Mobs %",
+    "leveledXpBonus": "Leveled XP Bonus %",
+    // Identifications
     // Skill Points
     "rawStrength": "Strength",
     "rawDexterity": "Dexterity",
@@ -104,98 +113,98 @@ const idNames = {
     "airDefence": "Air Defence %",
     "elementalDefence": "Elemental Defence %",
     // Raw Damage
-    "rawDamage": 0,
-    "rawMainAttackDamage": 0,
-    "rawSpellDamage": 0,
-    "rawNeutralDamage": 0,
-    "rawNeutralMainAttackDamage": 0,
-    "rawNeutralSpellDamage": 0,
-    "rawElementalDamage": 0,
-    "rawElementalMainAttackDamage": 0,
-    "rawElementalSpellDamage": 0,
-    "rawEarthDamage": 0,
-    "rawEarthMainAttackDamage": 0,
-    "rawEarthSpellDamage": 0,
-    "rawThunderDamage": 0,
-    "rawThunderMainAttackDamage": 0,
-    "rawThunderSpellDamage": 0,
-    "rawWaterDamage": 0,
-    "rawWaterMainAttackDamage": 0,
-    "rawWaterSpellDamage": 0,
-    "rawFireDamage": 0,
-    "rawFireMainAttackDamage": 0,
-    "rawFireSpellDamage": 0,
-    "rawAirDamage": 0,
-    "rawAirMainAttackDamage": 0,
-    "rawAirSpellDamage": 0,
+    "rawDamage": "Raw Damage",
+    "rawMainAttackDamage": "Raw Main Attack Damage",
+    "rawSpellDamage": "Raw Spell Damage",
+    "rawNeutralDamage": "Raw Neutral Damage",
+    "rawNeutralMainAttackDamage": "Raw Neutral Main Attack Damage",
+    "rawNeutralSpellDamage": "Raw Neutral Spell Damage",
+    "rawElementalDamage": "Raw Elemental Damage",
+    "rawElementalMainAttackDamage": "Raw Elemental Main Attack Damage",
+    "rawElementalSpellDamage": "Raw Elemental Spell Damage",
+    "rawEarthDamage": "Raw Earth Damage",
+    "rawEarthMainAttackDamage": "Raw Earth Main Attack Damage",
+    "rawEarthSpellDamage": "Raw Earth Spell Damage",
+    "rawThunderDamage": "Raw Thunder Damage",
+    "rawThunderMainAttackDamage": "Raw Thunder Main Attack Damage",
+    "rawThunderSpellDamage": "Raw Thunder Spell Damage",
+    "rawWaterDamage": "Raw Water Damage",
+    "rawWaterMainAttackDamage": "Raw Water Main Atttack Damage",
+    "rawWaterSpellDamage": "Raw Water Spell Damage",
+    "rawFireDamage": "Raw Fire Damage",
+    "rawFireMainAttackDamage": "Raw Fire Main Attack Damage",
+    "rawFireSpellDamage": "Raw Fire Spell Damage",
+    "rawAirDamage": "Raw Air Damage",
+    "rawAirMainAttackDamage": "Raw Air Main Attack Damage",
+    "rawAirSpellDamage": "Raw Air Spell Damage",
     // % Damage
-    "damage": 0,
-    "spellDamage": 0,
-    "mainAttackDamage": 0,
-    "neutralDamage": 0,
-    "neutralMainAttackDamage": 0,
-    "neutralSpellDamage": 0,
-    "elementalDamage": 0,
-    "elementalMainAttackDamage": 0,
-    "elementalSpellDamage": 0,
-    "earthDamage": 0,
-    "earthMainAttackDamage": 0,
-    "earthSpellDamage": 0,
-    "thunderDamage": 0,
-    "thunderMainAttackDamage": 0,
-    "thunderSpellDamage": 0,
-    "waterDamage": 0,
-    "waterMainAttackDamage": 0,
-    "waterSpellDamage": 0,
-    "fireDamage": 0,
-    "fireMainAttackDamage": 0,
-    "fireSpellDamage": 0,
-    "airDamage": 0,
-    "airMainAttackDamage": 0,
-    "airSpellDamage": 0,
+    "damage": "Damage %",
+    "spellDamage": "Spell Damage %",
+    "mainAttackDamage": "Main Attack Damage %",
+    "neutralDamage": "Neutral Damage %",
+    "neutralMainAttackDamage": "Neutral Main Attack Damage %",
+    "neutralSpellDamage": "Neutral Spell Damage %",
+    "elementalDamage": "Elemental Damage %",
+    "elementalMainAttackDamage": "Elemental Main Attack Damage %",
+    "elementalSpellDamage": "Elemental Spell Damage %",
+    "earthDamage": "Earth Damage %",
+    "earthMainAttackDamage": "Earth Main Attack Damage %",
+    "earthSpellDamage": "Earth Spell Damage %",
+    "thunderDamage": "Thunder Damage %",
+    "thunderMainAttackDamage": "Thunder Main Attack Damage %",
+    "thunderSpellDamage": "Thunder Spell Damage %",
+    "waterDamage": "Water Damage %",
+    "waterMainAttackDamage": "Water Main Attack Damage %",
+    "waterSpellDamage": "Water Spell Damage %",
+    "fireDamage": "Fire Damage %",
+    "fireMainAttackDamage": "Fire Main Attack Damage %",
+    "fireSpellDamage": "Fire Spell Damage %",
+    "airDamage": "Air Damage %",
+    "airMainAttackDamage": "Air Main Attack Damage %",
+    "airSpellDamage": "Air Spell Damage %",
     // Passive Damage
-    "exploding": 0,
-    "poison": 0,
-    "thorns": 0,
-    "reflection": 0,
+    "exploding": "Exploding",
+    "poison": "Poison",
+    "thorns": "Thorns",
+    "reflection": "Reflection",
     // Other Damage
-    "criticalDamageBonus": 0,
-    "knockback": 0,
-    "mainAttackRange": 0,
-    "rawAttackSpeed": 0,
+    "criticalDamageBonus": "Critical Damage Bonus %",
+    "knockback": "Knockback %",
+    "mainAttackRange": "Main Attack Range %",
+    "rawAttackSpeed": "Attack Speed",
     // Health
-    "rawHealth": 0,
-    "healingEfficiency": 0,
-    "healthRegenRaw": 0,
-    "healthRegen": 0,
+    "rawHealth": "Health Bonus",
+    "healingEfficiency": "Healing Efficiency %",
+    "healthRegenRaw": "Raw Health Regen",
+    "healthRegen": "Health Regen %",
     // Mana
-    "rawMaxMana": 0,
-    "manaRegen": 0,
+    "rawMaxMana": "Max Mana",
+    "manaRegen": "Mana Regen",
     // Steals
-    "lifeSteal": 0,
-    "manaSteal": 0,
+    "lifeSteal": "Life Steal",
+    "manaSteal": "Mana Steal",
     // Costs
-    "1stSpellCost": 0,
-    "2ndSpellCost": 0,
-    "3rdSpellCost": 0,
-    "4thSpellCost": 0,
-    "raw1stSpellCost": 0,
-    "raw2ndSpellCost": 0,
-    "raw3rdSpellCost": 0,
-    "raw4thSpellCost": 0,
+    "1stSpellCost": "1st Spell Cost %",
+    "2ndSpellCost": "2nd Spell Cost %",
+    "3rdSpellCost": "3rd Spell Cost %",
+    "4thSpellCost": "4th Spell Cost %",
+    "raw1stSpellCost": "1st Spell Cost",
+    "raw2ndSpellCost": "2nd Spell Cost",
+    "raw3rdSpellCost": "3rd Spell Cost",
+    "raw4thSpellCost": "4th Spell cost",
     // Movement
-    "walkSpeed": 0,
-    "jumpHeight": 0,
-    "sprint": 0,
-    "sprintRegen": 0,
+    "walkSpeed": "Walk Speed %",
+    "jumpHeight": "Jump height",
+    "sprint": "Sprint Speed %",
+    "sprintRegen": "Sprint Regen %",
     // XP and Gathering
-    "gatherSpeed": 0,
-    "gatherXpBonus": 0,
-    "lootBonus": 0,
-    "lootQuality": 0,
-    "stealing": 0,
-    "xpBonus": 0,
+    "gatherSpeed": "Gather Speed %",
+    "gatherXpBonus": "Gather Xp Bonus %",
+    "lootBonus": "Loot Bonus",
+    "lootQuality": "Loot Quality",
+    "stealing": "Stealing %",
+    "xpBonus": "Combat XP Bonus %",
     // Debuffs
-    "weakenEnemy": 0,
-    "slowEnemy": 0,
+    "weakenEnemy": "Weaken Enemy %",
+    "slowEnemy": "Slow Enemy %",
 };

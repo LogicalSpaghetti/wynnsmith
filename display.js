@@ -15,8 +15,17 @@ function displayStats(build) {
     const ids = build.ids;
     const final = build.final;
 
-    support.innerHTML =
+    // simple check for whether the build has a weapon, TODO: replace with better hide logic
+    if (build.attackSpeed === undefined) {
+        support.style.display = "none";
+        return;
+    } else {
+        support.style.display = "inline-block";
+    }
+
+    support.innerHTML = (build.attackSpeed === undefined) ? "" :
         getStatDisplay("health", true, "Health", final.health) +
+        getStatDisplay("health", true, "Effective Health", final.ehp) +
         getStatDisplay("health", true, "Health Regen", final.healthRegen, "/4s") +
         getStatDisplay("earth", true, "Earth Defence", final.totalEarthDefence) +
         getStatDisplay("thunder", true, "Thunder Defence", final.totalThunderDefence) +
@@ -53,7 +62,7 @@ function displayStats(build) {
 }
 
 function getStatDisplay(colorClass, includeSymbol, label, stat, post, noColor, isSub) {
-    if (stat === undefined || stat === NaN) return "";
+    if (stat === undefined || isNaN(stat)) return "";
     return (
         '<div class="stat_row">' +
             '<div class="left' + (isSub ? " sub" : "") + '">' +

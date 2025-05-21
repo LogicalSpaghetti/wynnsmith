@@ -12,11 +12,10 @@
                 margin: 0;
             }
         </style>
-            <meta property='og:image' content='https://fiel.us/gabriel/wynnsmith/item/warp.png' />
     </head>
     <body>
         <pre id="output" class="display full_center" style="display: inline-block"></pre>
-<!-- 
+        <!-- 
         <div id="createPNGButton">
             <button onclick="saveImage()">Save as Image</button>
         </div>
@@ -28,10 +27,11 @@
         <script src="../item_display.js"></script>
         <script src="../stat_display.js"></script>
         <script src="../html2canvas.min.js"></script>
+        <script src="../data_base_and_ids.js"></script>
 
         <script type="text/javascript">
             window.addEventListener("load", function () {
-                const search = window.location.search.substring(1, window.location.search.length).replaceAll("%20", " ").replaceAll("_", " ");
+                const search = window.location.search.substring(1, window.location.search.length).replaceAll("%20", " ").replaceAll("_", " ").replaceAll("%27", "'");
                 const item = items[search];
                 const display = document.getElementById("output");
 
@@ -47,14 +47,19 @@
                     if (event.key === "c") {
                         event.preventDefault();
                         copyImage();
+                    }
+                });
 
+                document.addEventListener("keydown", function (event) {
+                    if (event.key === "s") {
+                        event.preventDefault();
+                        saveImage();
                     }
                 });
             });
 
             function saveImage() {
                 const canvas = document.getElementById("canvas");
-
                 const dataURL = canvas.toDataURL("image/png");
 
                 // Create a link element
@@ -63,7 +68,6 @@
                 link.download = "canvas-image.png";
 
                 link.click();
-                // document.body.appendChild(link);
             }
 
             function copyImage() {
