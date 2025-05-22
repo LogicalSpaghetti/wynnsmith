@@ -82,9 +82,14 @@ function statCalculations(build) {
     final.manaPerHit = Math.round(ids.manaSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
     final.lifePerHit = Math.round(ids.lifeSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
 
-    if (build.sectionContains("toggles", "maskOfTheCoward")) ids.walkSpeed += 80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
-    if (build.sectionContains("toggles", "maskOfTheAwakened")) ids.walkSpeed += 80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
+    if (build.sectionContains("toggles", "maskOfTheCoward"))
+        ids.walkSpeed +=
+            80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
+    if (build.sectionContains("toggles", "maskOfTheAwakened"))
+        ids.walkSpeed +=
+            80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
     if (build.sectionContains("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
+    if (build.sectionContains("toggles", "cowardMemory")) ids.slowEnemy += 30;
 
     const baseWS = 5.612;
     if (ids.walkSpeed !== undefined) final.effectiveWS = baseWS * (ids.walkSpeed / 100 + 1);
@@ -122,6 +127,9 @@ function applyEHpModifiers(build) {
         "maskOfTheAwakened",
         1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0)
     );
+    applyEHpDivider(build, "toggles", "lunaticMemory", 1 - 0.15);
+    applyEHpDivider(build, "toggles", "warScream", 1 - 0.2);
+    applyEHpDivider(build, "toggles", "emboldeningCry", 1 - 0.25);
 }
 
 function applyEHpDivider(build, section, checkName, div) {

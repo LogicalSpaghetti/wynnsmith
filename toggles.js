@@ -7,10 +7,14 @@ function setUpOptionals(build) {
 }
 
 function setUpToggles(build) {
-    setUpSingleToggle(build, "nodes", "maskOfTheLunatic", "Mask of the Lunatic", "maskOfTheFanatic maskOfTheCoward maskOfTheAwakened");
-    setUpSingleToggle(build, "nodes", "maskOfTheFanatic", "Mask of the Fanatic", "maskOfTheLunatic maskOfTheCoward maskOfTheAwakened");
-    setUpSingleToggle(build, "nodes", "maskOfTheCoward", "Mask of the Coward", "maskOfTheLunatic maskOfTheFanatic maskOfTheAwakened");
-    setUpSingleToggle(build, "nodes", "maskOfTheAwakened", "Awakened", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward");
+    setUpSingleToggle(build, "nodes", "maskOfTheLunatic", "Mask of the Lunatic", "maskOfTheFanatic maskOfTheCoward maskOfTheAwakened lunaticMemory fanaticMemory cowardMemory");
+    setUpSingleToggle(build, "nodes", "maskOfTheFanatic", "Mask of the Fanatic", "maskOfTheLunatic maskOfTheCoward maskOfTheAwakened lunaticMemory fanaticMemory cowardMemory");
+    setUpSingleToggle(build, "nodes", "maskOfTheCoward", "Mask of the Heretic", "maskOfTheLunatic maskOfTheFanatic maskOfTheAwakened lunaticMemory fanaticMemory cowardMemory");
+    setUpSingleToggle(build, "nodes", "maskOfTheAwakened", "Awakened", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward lunaticMemory fanaticMemory cowardMemory");
+    setUpSingleToggle(build, "nodes", "hauntingMemory", "Haunting Memory Lunatic", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward maskOfTheAwakened fanaticMemory cowardMemory", "lunaticMemory");
+    setUpSingleToggle(build, "nodes", "hauntingMemory", "Haunting Memory Fanatic", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward maskOfTheAwakened lunaticMemory cowardMemory", "fanaticMemory");
+    setUpSingleToggle(build, "nodes", "hauntingMemory", "Haunting Memory Heretic", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward maskOfTheAwakened lunaticMemory fanaticMemory", "cowardMemory");
+
     setUpSingleToggle(build, "nodes", "eldritchCall", "Eldritch Call");
     setUpSingleToggle(build, "nodes", "bloodPool", "Boosted Aura");
     // no longer needs a toggle, kept as example for self:
@@ -30,17 +34,17 @@ function addToggles(build) {
 }
 
 // adds/removes the toggle button depending on if it's prereq is present.
-function setUpSingleToggle(build, section, name, displayName, blocks) {
-    const toggle = addedTogglesHolder.querySelector("." + name);
+function setUpSingleToggle(build, section, name, displayName, blocks, idOverride) {
+    const toggle = addedTogglesHolder.querySelector("." + (idOverride ?? name));
 
-    if (build[section].includes(name) ^ (toggle === null)) return;
+    if (build.sectionContains(section, name) ^ (toggle === null)) return;
 
-    if (build[section].includes(name)) {
+    if (build.sectionContains(section, name)) {
         const button = document.createElement("button");
 
         button.classList.add("effect");
-        button.classList.add(name);
-        button.dataset.modifier = name;
+        button.classList.add(idOverride ?? name);
+        button.dataset.modifier = idOverride ?? name;
         if (blocks) button.dataset.blockers = blocks;
         button.textContent = displayName;
 

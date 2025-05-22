@@ -36,7 +36,9 @@ Let items be removed from the item database
 Verify how all damage and defense miltipliers interact with each other
 -SP
 Make toggle ordering consistent
+    Have all toggles from a tree be loaded on initialization of a tree, and just hidden until available
 Test if Radiance applies per-item, or after summation.
+Hide Haunting Memory effects if Flaming Tongue is taken.
 
 Settings:
 Re-arrange GUI

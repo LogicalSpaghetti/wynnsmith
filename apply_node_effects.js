@@ -105,14 +105,18 @@ function addAspectConv(build, aspectName, nodeReq, convName, convs) {
 function applyMultipliers(build) {
     // Global
     applySectMult(build, 1.2, "all", "toggles", "vengefulspirit");
+    applySectMult(build, 1.08, "all", "toggles", "emboldeningCry");
+    applySectMult(build, 1.4, "all", "toggles", "fortitude");
     // Shaman
     applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
     const maskAspectMult =
         (aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).lunatic ?? 0;
     applySectMult(build, 1.35 + maskAspectMult, "all", "toggles", "maskOfTheLunatic");
     applySectMult(build, 1.35 + maskAspectMult, "all", "toggles", "maskOfTheAwakened");
+    applySectMult(build, 1 / (1 - 0.15), "all", "toggles", "fanaticMemory");
     applySectMult(build, 0.9, "all", "toggles", "maskOfTheCoward");
     applySectMult(build, 1.2, "all", "toggles", "eldritchCall");
+    applySectMult(build, 2, "Bleed", "toggles", "eldritchCall");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");
     applySectMult(build, 0.6, "Aura", "nodes", "rebound");
     const totemMult = build.nodes.includes("doubleTotem")
