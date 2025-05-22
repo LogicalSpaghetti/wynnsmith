@@ -26,6 +26,15 @@ document.getElementById("selv").addEventListener("click", function () {
     refreshBuild();
 });
 
+document.getElementById("damage_detail").addEventListener("click", function () {
+    localStorage.setItem("damage_detail", localStorage.getItem("damage_detail") !== "true");
+    refreshBuild();
+});
+
 function selvs() {
     return localStorage.getItem("selvs") === "true";
+}
+
+function showDetailedDamage() {
+    return localStorage.getItem("damage_detail") === "true";
 }

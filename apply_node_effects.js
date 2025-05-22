@@ -130,10 +130,12 @@ function applyGlobalMultipliers(build) {
 
 function applyShamanMultipliers(build) {
     applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
-    applySectMult(build, 1.35, "all", "toggles", "maskOfTheLunatic");
+    const maskAspectMult =
+        (aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).lunatic ?? 0;
+    applySectMult(build, 1.35 + maskAspectMult, "all", "toggles", "maskOfTheLunatic");
+    applySectMult(build, 1.35 + maskAspectMult, "all", "toggles", "maskOfTheAwakened");
     applySectMult(build, 0.9, "all", "toggles", "maskOfTheCoward");
-    applySectMult(build, 1.20, "all", "toggles", "eldritchCall");
-    applySectMult(build, 1.35, "all", "toggles", "maskOfTheAwakened");
+    applySectMult(build, 1.2, "all", "toggles", "eldritchCall");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");
     applySectMult(build, 0.6, "Aura", "nodes", "rebound");
     const totemMult = build.nodes.includes("doubleTotem")
@@ -149,8 +151,14 @@ function applyShamanMultipliers(build) {
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "tripleTotem");
     applyAspectSectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
 
-    applyHealMult(build, "nodes", "rebound", "First Wave Heal", 0.6)
-    applyHealMult(build, "nodes", "sharpHealing", "First Wave Heal", 1 + Math.min(75, build.ids.waterDamage * 0.3) / 100)
+    applyHealMult(build, "nodes", "rebound", "First Wave Heal", 0.6);
+    applyHealMult(
+        build,
+        "nodes",
+        "sharpHealing",
+        "First Wave Heal",
+        1 + Math.min(75, build.ids.waterDamage * 0.3) / 100
+    );
     // TODO
 }
 
@@ -218,12 +226,26 @@ function addShamanAttackVariants(build) {
     const hasDouble = build.nodes.includes("doubleTotem");
     const hasTriple = build.nodes.includes("tripleTotem");
     const hasQuad = build.aspects["Summoner's Embodiment of the Omnipotent Overseer"] !== undefined;
-    const totemCount = hasTotem ? 1 + (hasDouble ? 1 + (hasTriple ? 1 + (hasQuad ? 1 : 0) : 0) : 0) : 0;
-    addAttackVariant(build, "Totem", "totem", "nodes", "Per Totem Tick DPS", 2.5);
-    addAttackVariant(build, "Per Totem Tick DPS", "doubleTotem", "nodes", "Total Totem Tick DPS", totemCount);
+    const totemCount = hasTotem + hasDouble + hasTriple + hasQuad;
+    addAttackVariant(build, "Totem", "totem", "nodes", "Tick DPS Per Totem", 2.5);
+    addAttackVariant(build, "Tick DPS Per Totem", "doubleTotem", "nodes", "Total Totem Tick DPS", totemCount);
 
-    addAttackVariant(build, "Eldritch Call", "eldritchCall", "nodes", "Eldritch Call Single Target Total", 4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0));
-    addAttackVariant(build, "Eldritch Call Single Target Total", "eldritchCall", "nodes", "Eldritch Call Group Total", 4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0));
+    addAttackVariant(
+        build,
+        "Eldritch Call",
+        "eldritchCall",
+        "nodes",
+        "Eldritch Call Single Target Total",
+        4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0)
+    );
+    addAttackVariant(
+        build,
+        "Eldritch Call Single Target Total",
+        "eldritchCall",
+        "nodes",
+        "Eldritch Call Group Total",
+        4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0)
+    );
 
     const lanceMult =
         3 +
@@ -236,7 +258,14 @@ function addShamanAttackVariants(build) {
     addAttackVariant(build, "Blood Sorrow", "bloodLament", "nodes", "Blood Sorrow DPS", 5);
     addAttackVariant(build, "Blood Sorrow DPS", "bloodLament", "nodes", "Blood Sorrow Total Damage", sorrowMult);
     const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
-    addAttackVariant(build, "Frog Dance", "hymnOfFreedom", "nodes", "Frog Dance Total Damage", 3 + (frogDanceAspect === undefined ? 0 : 1 + frogDanceAspect));
+    addAttackVariant(
+        build,
+        "Frog Dance",
+        "hymnOfFreedom",
+        "nodes",
+        "Frog Dance Total Damage",
+        3 + (frogDanceAspect === undefined ? 0 : 1 + frogDanceAspect)
+    );
 
     const shamanHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
     if (build.heals["Regeneration Tick"] !== undefined) {

@@ -77,7 +77,7 @@
                             ></a>
                             <input id="input_ring0" class="input input--ring" placeholder="Ring 1" data-slot="ring0" />
                             <div id="gif_holder">
-                                <img id="miku" src="img/hatsune-miku.gif" />
+                                <img id="miku" src="" />
                             </div>
                         </div>
                         <pre id="display-ring0" class="display"></pre>
@@ -198,12 +198,16 @@
                                 <div class="tome" data-slot="mysticism_tome"></div>
                                 <div class="tome_selector"></div>
                             </td>
-                            <td><input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome" /></td>
+                            <td>
+                                <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome" />
+                            </td>
                             <td>
                                 <div class="tome" data-slot="mysticism_tome"></div>
                                 <div class="tome_selector"></div>
                             </td>
-                            <td><input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome" /></td>
+                            <td>
+                                <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -222,12 +226,16 @@
                                 <div class="tome" data-slot="expertise_tome"></div>
                                 <div class="tome_selector"></div>
                             </td>
-                            <td><input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome" /></td>
+                            <td>
+                                <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome" />
+                            </td>
                             <td>
                                 <div class="tome" data-slot="expertise_tome"></div>
                                 <div class="tome_selector"></div>
                             </td>
-                            <td><input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome" /></td>
+                            <td>
+                                <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome" />
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -275,7 +283,15 @@
                             </span>
                         </div>
                     </template>
-                    <div class="" style="width: 200px; background-color: var(--ls-background2); border: 1px solid var(--ls-trim-hover); padding: 2px">
+                    <div
+                        class=""
+                        style="
+                            width: 200px;
+                            background-color: var(--ls-background2);
+                            border: 1px solid var(--ls-trim-hover);
+                            padding: 2px;
+                        "
+                    >
                         Melee!
                     </div>
                 </section>
@@ -285,6 +301,8 @@
         </div>
         <div id="settings" class="hide_section">
             <button id="selv">Toggle Selvs</button>
+            <br /><br />
+            <button id="damage_detail">Toggle Detailed Damage</button>
             <br /><br />
             <label for="gif_input">Set GIF:</label><br />
             <input id="gif_input" type="file" accept="image/gif" />

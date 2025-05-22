@@ -2,37 +2,50 @@ const attackSection = document.getElementById("attack_display");
 
 function addDamageDisplays(build) {
     var attackStrings = "";
-
-        console.log(build.spells)
+    
     Object.keys(build.attacks).forEach((attackName) => {
         const attack = build.attacks[attackName];
 
         attackStrings += attackName + ": ";
 
-        Object.keys(build.spells).forEach(spellName => {
+        Object.keys(build.spells).forEach((spellName) => {
             const spell = build.spells[spellName];
             if (spell.name == attackName) attackStrings += getMana(spell.cost);
-        })
-        attackStrings += "<br>";
-        attackStrings += "Non-Crit:<br>";
+        });
+        let normAverage = 0;
+        let critAverage = 0;
         for (let i = 0; i < 6; i++) {
-            if (attack.max[i] <= 0) continue;
-            attackStrings +=
-                iconHeaders[prefixes[i]] +
-                selvify(attack.min[i], true) +
-                " - " +
-                selvify(attack.max[i], true) +
-                "</span><br>";
+            normAverage += attack.min[i] + attack.max[i];
+            critAverage += attack.minc[i] + attack.maxc[i];
         }
-        attackStrings += "Crit:<br>";
-        for (let i = 0; i < 6; i++) {
-            if (attack.max[i] <= 0) continue;
-            attackStrings +=
-                iconHeaders[prefixes[i]] +
-                selvify(attack.minc[i], true) +
-                " - " +
-                selvify(attack.maxc[i], true) +
-                "</span><br>";
+        normAverage /= 2;
+        critAverage /= 2;
+
+        const average = normAverage * (1 - build.sp.mults[1]) + critAverage * build.sp.mults[1];
+
+        attackStrings += "<br>";
+        attackStrings += "Average: " + selvify(average) + "<br>";
+        if (showDetailedDamage()) {
+            attackStrings += "Non-Crit:<br>";
+            for (let i = 0; i < 6; i++) {
+                if (attack.max[i] <= 0) continue;
+                attackStrings +=
+                    iconHeaders[prefixes[i]] +
+                    selvify(attack.min[i], true) +
+                    " - " +
+                    selvify(attack.max[i], true) +
+                    "</span><br>";
+            }
+            attackStrings += "Crit:<br>";
+            for (let i = 0; i < 6; i++) {
+                if (attack.max[i] <= 0) continue;
+                attackStrings +=
+                    iconHeaders[prefixes[i]] +
+                    selvify(attack.minc[i], true) +
+                    " - " +
+                    selvify(attack.maxc[i], true) +
+                    "</span><br>";
+            }
         }
         attackStrings += "<hr>";
     });
@@ -65,5 +78,5 @@ function selvify(num, addPeriod) {
 }
 
 function getMana(cost) {
-    return "(" + iconHeaders["mana"] + roundForDisplay(cost, true) + "</span>)"
+    return "(" + iconHeaders["mana"] + roundForDisplay(cost, true) + "</span>)";
 }

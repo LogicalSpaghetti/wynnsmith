@@ -7,13 +7,14 @@ function setUpOptionals(build) {
 }
 
 function setUpToggles(build) {
-    setUpSingleToggle(build, "nodes", "maskOfTheLunatic", "Mask of the Lunatic");
-    setUpSingleToggle(build, "nodes", "maskOfTheFanatic", "Mask of the Fanatic");
-    setUpSingleToggle(build, "nodes", "maskOfTheCoward", "Mask of the Coward");
+    setUpSingleToggle(build, "nodes", "maskOfTheLunatic", "Mask of the Lunatic", "maskOfTheFanatic maskOfTheCoward maskOfTheAwakened");
+    setUpSingleToggle(build, "nodes", "maskOfTheFanatic", "Mask of the Fanatic", "maskOfTheLunatic maskOfTheCoward maskOfTheAwakened");
+    setUpSingleToggle(build, "nodes", "maskOfTheCoward", "Mask of the Coward", "maskOfTheLunatic maskOfTheFanatic maskOfTheAwakened");
+    setUpSingleToggle(build, "nodes", "maskOfTheAwakened", "Awakened", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward");
     setUpSingleToggle(build, "nodes", "eldritchCall", "Eldritch Call");
-    setUpSingleToggle(build, "nodes", "maskOfTheAwakened", "Awakened");
     setUpSingleToggle(build, "nodes", "bloodPool", "Boosted Aura");
-    setUpMultiToggle(build, "bleed", "Bleed", ["sanguineStrike", "lashingLance"], ["nodes", "nodes"]);
+    // no longer needs a toggle, kept as example for self:
+    // setUpMultiToggle(build, "bleed", "Bleed", ["sanguineStrike", "lashingLance"], ["nodes", "nodes"]);
 }
 
 function addToggles(build) {
@@ -29,7 +30,7 @@ function addToggles(build) {
 }
 
 // adds/removes the toggle button depending on if it's prereq is present.
-function setUpSingleToggle(build, section, name, displayName) {
+function setUpSingleToggle(build, section, name, displayName, blocks) {
     const toggle = addedTogglesHolder.querySelector("." + name);
 
     if (build[section].includes(name) ^ (toggle === null)) return;
@@ -40,6 +41,7 @@ function setUpSingleToggle(build, section, name, displayName) {
         button.classList.add("effect");
         button.classList.add(name);
         button.dataset.modifier = name;
+        if (blocks) button.dataset.blockers = blocks;
         button.textContent = displayName;
 
         addedTogglesHolder.appendChild(button);

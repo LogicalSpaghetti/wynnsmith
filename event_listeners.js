@@ -44,27 +44,21 @@ function addEventListeners() {
     document.getElementById("abilityTree").addEventListener("click", (event) => {
         treeClicked(event);
     });
-    document.querySelectorAll(".slot_icon").forEach((toggle) => {
-        toggle.addEventListener("mouseover", function () {
-            document.getElementById("display-" + toggle.dataset.slot).style.display = "inline-block";
+    document.querySelectorAll(".slot_icon").forEach((slot_icon) => {
+        slot_icon.addEventListener("mouseover", function () {
+            document.getElementById("display-" + slot_icon.dataset.slot).style.display = "inline-block";
         });
-        toggle.addEventListener("mouseout", function () {
-            document.getElementById("display-" + toggle.dataset.slot).style.display = "none";
+        slot_icon.addEventListener("mouseout", function () {
+            document.getElementById("display-" + slot_icon.dataset.slot).style.display = "none";
         });
     });
 
     // Effect Toggles
     document.getElementById("effect_toggles").addEventListener("click", (event) => {
-        const effect = event.target;
-        if (!effect.classList.contains("effect")) return;
-        effect.classList.toggle("toggleOn");
-        refreshBuild();
+        toggleAbilityToggle(event);
     });
     document.getElementById("added_toggles").addEventListener("click", (event) => {
-        const effect = event.target;
-        if (!effect.classList.contains("effect")) return;
-        effect.classList.toggle("toggleOn");
-        refreshBuild();
+        toggleAbilityToggle(event);
     });
 
     document.getElementById(`copy_short`).addEventListener("click", function () {
@@ -90,6 +84,22 @@ function addEventListeners() {
     document.getElementById("opacity_slider").addEventListener("input", (event) => {
         document.getElementById("miku").style.opacity = event.target.value + "%";
     });
+}
+
+function toggleAbilityToggle(event) {
+    const effect = event.target;
+    if (!effect.classList.contains("effect")) return;
+    effect.classList.toggle("toggleOn");
+
+    if (effect.dataset.blockers !== undefined) {
+        const blockedNodes = effect.dataset.blockers.split(" ");
+        document.querySelectorAll(".effect").forEach((effectElement) => {
+            if (blockedNodes.includes(effectElement.dataset.modifier) && effectElement.classList.contains("toggleOn"))
+                effectElement.classList.toggle("toggleOn");
+        });
+    }
+
+    refreshBuild();
 }
 
 function addAspectListeners() {

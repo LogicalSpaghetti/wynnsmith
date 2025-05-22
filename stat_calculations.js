@@ -74,7 +74,6 @@ function statCalculations(build) {
     mergeElementalDefences(build);
 
     const maxManaMod = build.sp.mults[2] * 100 + (ids.rawMaxMana === undefined ? 0 : ids.rawMaxMana);
-    console.log();
     if (maxManaMod !== 0) final.maxMana = 100 + maxManaMod;
     if (final.maxMana > 400) final.maxMana = 400;
     if (maxManaMod === 0) final.maxMana = undefined;
@@ -83,7 +82,8 @@ function statCalculations(build) {
     final.manaPerHit = Math.round(ids.manaSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
     final.lifePerHit = Math.round(ids.lifeSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
 
-    if (build.sectionContains("toggles", "maskOfTheCoward")) ids.walkSpeed += 80;
+    if (build.sectionContains("toggles", "maskOfTheCoward")) ids.walkSpeed += 80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
+    if (build.sectionContains("toggles", "maskOfTheAwakened")) ids.walkSpeed += 80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
     if (build.sectionContains("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
 
     const baseWS = 5.612;
@@ -94,7 +94,14 @@ function calculateEHp(build) {
     const final = build.final;
     final.ehp = final.health;
 
-    final.ehp /= build.wynnClass === "shaman" ? 2 - 0.6 : build.wynnClass === "archer" ? 2 - 0.7 : build.wynnClass === "mage" ? 2 - 0.8 : 1;
+    final.ehp /=
+        build.wynnClass === "shaman"
+            ? 2 - 0.6
+            : build.wynnClass === "archer"
+            ? 2 - 0.7
+            : build.wynnClass === "mage"
+            ? 2 - 0.8
+            : 1;
 
     applyEHpModifiers(build);
 
@@ -103,7 +110,18 @@ function calculateEHp(build) {
 
 function applyEHpModifiers(build) {
     applyEHpDivider(build, "toggles", "maskOfTheLunatic", 1 + 0.2);
-    applyEHpDivider(build, "toggles", "maskOfTheFanatic", 1 - 0.35);
+    applyEHpDivider(
+        build,
+        "toggles",
+        "maskOfTheFanatic",
+        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0)
+    );
+    applyEHpDivider(
+        build,
+        "toggles",
+        "maskOfTheAwakened",
+        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0)
+    );
 }
 
 function applyEHpDivider(build, section, checkName, div) {

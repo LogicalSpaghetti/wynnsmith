@@ -180,18 +180,18 @@ const aspects = {
         "Aspect of the Amphibian": [2, 3, 4],
         "Aspect of Stances": [
             {
-                lunatic: 5,
-                fanatic: 5,
+                lunatic: 0.05,
+                fanatic: 0.05,
                 heratic: 10,
             },
             {
-                lunatic: 8,
-                fanatic: 8,
-                heratic: 18,
+                lunatic: 0.08,
+                fanatic: 0.08,
+                heratic: 16,
             },
             {
-                lunatic: 10,
-                fanatic: 10,
+                lunatic: 0.10,
+                fanatic: 0.10,
                 heratic: 20,
             },
         ],
