@@ -40,6 +40,12 @@
                                 ></span>
                             </a>
                             <input id="input_chestplate" class="input" placeholder="Chestplate" data-slot="chestplate" />
+                            <input
+                                id="input_chestplate"
+                                class="input"
+                                placeholder="Chestplate"
+                                data-slot="chestplate"
+                            />
                             <input id="powder_chestplate" class="powder" placeholder="0 Slots" />
                         </div>
                         <pre id="display-chestplate" class="display"></pre>
@@ -134,7 +140,6 @@
                             <button id="ansi_tree">Copy ANSI Tree</button>
                         </p>
                     </div>
-                    Skill Points:
                     <div id="sp_section">
                         <input id="strength" class="sp" placeholder="Strength" />
                         <input id="dexterity" class="sp" placeholder="Dexterity" />
@@ -144,14 +149,13 @@
                     </div>
                     <br />
                     <div id="effect_toggles">
-                        <div id="effect_toggles_label"><b>Toggle Effects:</b></div>
+                        Active Boosts:<br />
                         <button class="effect radiance" data-modifier="radiance">Radiance</button>
                         <button class="effect vs" data-modifier="vengefulspirit">Vengeful Spirit (+20%)</button>
                     </div>
                     <div id="added_toggles">
                         <!-- Filled by js -->
                     </div>
-                    <br />
                     <div id="added_sliders">
                         <!-- Filled by js -->
                     </div>
@@ -250,6 +254,15 @@
                             <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome" /></td>
                         </tr>
                     </table>
+                    <br />
+                    <div id="aspects_background">
+                        <div id="active_aspects">
+                            <!-- Filled by js -->
+                        </div>
+                        <div id="inactive_aspects">
+                            <!-- Filled by js -->
+                        </div>
+                    </div>
                 </section>
                 <!-- Cloumn 3 -->
                 <section class="outputs column">
@@ -257,19 +270,6 @@
                         <!-- Filled by js -->
                     </div>
                     <br />
-                    <div>
-                        <div id="aspects_border">
-                            <div id="aspects_background">
-                                <div id="active_aspects">
-                                    <!-- Filled by js -->
-                                </div>
-                                <hr />
-                                <div id="inactive_aspects">
-                                    <!-- Filled by js -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <button id="settings_open" class="settings_toggle">Open Settings</button>
                 </section>
                 <!-- Cloumn 4 -->
@@ -297,6 +297,12 @@
                 </section>
                 <!-- Column 5 -->
                 <section></section>
+            </div>
+            <br>
+            <div>
+                Created by LogicalSpaghetti<br>
+                related websites: 
+                <a href="https://punscake.github.io/wynnability" target="_blank">Wynnability</a>, <a href="https://wynnmana.github.io/", target="_blank">Wynnmana</a>
             </div>
         </div>
         <div id="settings" class="hide_section">

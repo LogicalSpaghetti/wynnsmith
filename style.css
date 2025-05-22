@@ -19,6 +19,7 @@
     --wy-backbround: #82654c;
     --wy-slot: #cda870;
     --wy-tome_back: #d4bf8f;
+    --ls-ability_background: #373943;
     font-family: minecraft;
 }
 
@@ -249,6 +250,7 @@ input:focus {
 
 .slider_div {
     text-align: center;
+    font-size: 0.8rem;
 }
 
 /* -- Output: -- */
@@ -323,7 +325,7 @@ td {
 
 #abilityTree {
     image-rendering: pixelated;
-    background-color: #373943;
+    background-color: var(--ls-ability_background);
     border: #4f5466 2px solid;
     padding: 8px;
 }
@@ -394,15 +396,12 @@ img.highlight_node[data-type="ability"] {
     width: 206px;
 }
 
-#aspects_border {
-    border-image: url(img/background/ability_tree.png) 22 / 22px / 0px repeat;
-    padding: 22px;
-    width: 162px;
-    line-height: 0;
-}
-
 #aspects_background {
-    background-image: url(img/background/tree_scroll.png);
+    image-rendering: pixelated;
+    background-color: var(--ls-ability_background);
+    border: #4f5466 2px solid;
+    padding: 2px;
+    width: 162px;
 }
 
 #active_aspects,

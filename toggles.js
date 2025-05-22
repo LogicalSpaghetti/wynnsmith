@@ -132,14 +132,13 @@ function setUpMultiSlider(build, id, displayName, divText, abilityNames, ability
     for (let i = 0; i < abilityNames.length; i++) {
         const abilityName = abilityNames[i];
         const abilitySource = abilitySources[i];
-
+        if (!build.sectionContains(abilitySource, abilityName)) continue;
+        
         if (abilitySource === "aspects") {
-            if (build.aspects[abilityName] === undefined) continue;
             const aspectSliderValue = aspects[build.wynnClass][abilityName][build.aspects[abilityName] - 1].slider;
             max += aspectSliderValue;
             start += aspectSliderValue;
         } else {
-            if (!build[abilitySource].includes(abilityName)) continue;
             max += maxes[i];
             start += starts[i];
         }

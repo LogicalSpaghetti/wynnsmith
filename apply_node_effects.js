@@ -103,32 +103,9 @@ function addAspectConv(build, aspectName, nodeReq, convName, convs) {
 }
 
 function applyMultipliers(build) {
-    applyGlobalMultipliers(build);
-    switch (build.wynnClass) {
-        case "shaman":
-            applyShamanMultipliers(build);
-            break;
-        case "archer":
-            applyArcherMultipliers(build);
-            break;
-        case "mage":
-            applyMageMultipliers(build);
-            break;
-        case "assassin":
-            applyAssassinMultipliers(build);
-            break;
-        case "warrior":
-            applyWarriorMultipliers(build);
-            break;
-    }
-}
-
-function applyGlobalMultipliers(build) {
+    // Global
     applySectMult(build, 1.2, "all", "toggles", "vengefulspirit");
-    // TODO
-}
-
-function applyShamanMultipliers(build) {
+    // Shaman
     applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
     const maskAspectMult =
         (aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).lunatic ?? 0;
@@ -149,7 +126,15 @@ function applyShamanMultipliers(build) {
     applySectMult(build, totemMult, "Aura", "nodes", "totem");
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "doubleTotem");
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "tripleTotem");
-    applyAspectSectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
+    applySectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
+    applySectMult(build, 1.2, "Puppet Knife", "toggles", "summonFocus");
+    applySectMult(build, 1.2, "Crimson Effigy", "toggles", "summonFocus");
+    applySectMult(build, 1.2, "Hummingbirds", "toggles", "summonFocus");
+    applySectMult(build, 1.2, "Totem", "toggles", "summonFocus");
+    applySectMult(build, 1.2, "Puppet Knife", "toggles", "summonFocus");
+    applySectMult(build, 1.2, "Crimson Effigy", "toggles", "summonFocus");
+    applySectMult(build, 1.2, "Hummingbirds", "toggles", "summonFocus");
+    applySectMult(build, 1.2, "Totem", "toggles", "summonFocus");
 
     applyHealMult(build, "nodes", "rebound", "First Wave Heal", 0.6);
     applyHealMult(
@@ -159,39 +144,21 @@ function applyShamanMultipliers(build) {
         "First Wave Heal",
         1 + Math.min(75, build.ids.waterDamage * 0.3) / 100
     );
-    // TODO
-}
-
-function applyArcherMultipliers(build) {
+    // Archer
     applySectMult(build, 1.05, "Melee", "nodes", "bowProficiency");
-    // TODO
-}
-
-function applyMageMultipliers(build) {
+    // Mage
     applySectMult(build, 1.05, "Melee", "nodes", "wandProficiency");
-    // TODO
-}
-
-function applyWarriorMultipliers(build) {
+    // Warrior
     applySectMult(build, 1.05, "Melee", "nodes", "spearProficiency");
-    // TODO
-}
-
-function applyAssassinMultipliers(build) {
+    // Assassin
     applySectMult(build, 1.05, "Melee", "nodes", "daggerProficiency");
-    // TODO
-}
-
-function applyAspectSectMult(build, mult, attackName, section, checkName) {
-    if (build[section][checkName] === undefined) return;
-    applyMult(build, mult, attackName);
 }
 
 function applySectMult(build, mult, attackName, section, checkName) {
-    if (build[section].includes(checkName)) {
-        applyMult(build, mult, attackName);
-    }
+    if (!build.sectionContains(section, checkName)) return;
+    applyMult(build, mult, attackName);
 }
+
 function applyMult(build, mult, attackName) {
     if (attackName === "all") {
         Object.keys(build.attacks).forEach((aName) => {

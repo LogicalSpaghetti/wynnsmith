@@ -45,6 +45,7 @@ customize how each stat displays
 Add a christmas theme (selvs -> santas)
 
 Features:
+Locked node icons
 Wynnability
     Update trees to match game
     Update format
@@ -98,6 +99,8 @@ Rich embeds if it's possible to generate them based on the provided build
 tabindex: 0/-1;
 pointer-events: none/initial;
 build.heals.map((heal) => {});
+ways to iterate over object:
+for (let key in yourobject) { console.log(key, yourobject[key]);}; for (let [key, value] of Object.entries(yourobject)) { console.log(key, value); }; for (let key in yourobject) {if (yourobject.hasOwnProperty(key)) {console.log(key, yourobject[key]);}} also: https://stackoverflow.com/questions/14379274/how-to-iterate-over-a-javascript-object
 
 https://api.wynncraft.com/v3/ability/map/shaman
 https://api.wynncraft.com/v3/ability/tree/shaman
@@ -109,16 +112,13 @@ https://github.com/RawFish69/Nori/blob/main/src/web/js_global/item_rerolling.js
 Use build.evaluate() for complex abstractions
     try to make it allow user input without being a security flaw for equation sharing.
 Shaman missing:
-All mask effects
-    Aspect
-Awakened (make it disable any other masks, and vise-versa)
 Shatter Healing
-All Chant Effects
-    Aspect
 Haunting Memory
 Bullwhip + Aspect
+Exploding Puppets DPS
 Invig
-Shepherd
+Shepherd (indicate which are from Sheppard)
+Commander
 Hummingbirds + Aspect
 Powder Specials
 MId Powder Specials
