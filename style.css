@@ -20,6 +20,15 @@
     --wy-slot: #cda870;
     --wy-tome_back: #d4bf8f;
     --ls-ability_background: #373943;
+
+    --wy-neutral: #ffaa00;
+    --wy-earth: #00aa00;
+    --wy-earth: #00aa00;
+    --wy-thunder: #ffff55;
+    --wy-water: #55ffff;
+    --wy-fire: #ff5555;
+    --wy-air: #fff;
+
     font-family: minecraft;
 }
 
@@ -30,19 +39,16 @@ body {
     margin: 0;
 }
 
-/* #content {} */
-#settings {
-    background-color: var(--ls-background2);
-    min-height: 100vh;
+input {
+    caret-color: #ccc;
+}
+
+.color-bar {
+    height: 1.5rem;
 }
 
 .hide_section {
     display: none;
-}
-
-.column {
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 span {
@@ -64,12 +70,6 @@ label {
     height: 16px;
     width: 16px;
     overflow: hidden;
-}
-
-.inputs {
-    caret-color: #ccc;
-    width: 300px;
-    padding: 0px;
 }
 
 .input_section {
@@ -129,11 +129,19 @@ input:focus {
 }
 
 #sp_section {
-    display: flex;
+    width: 64ch;
+    padding: 0px;
+    margin: 0px;
 }
 
 .sp {
-    width: 50px;
+    width: 7ch;
+}
+
+.sp-hold {
+    width: 12.5ch;
+    text-align: center;
+    line-height: 0.75rem;
 }
 
 /* Tomes */
@@ -515,12 +523,12 @@ img.highlight_node[data-type="ability"] {
     color: #ffff55;
 }
 
-.fire {
-    color: #ff5555;
-}
-
 .water {
     color: #55ffff;
+}
+
+.fire {
+    color: #ff5555;
 }
 
 .air {
@@ -538,7 +546,18 @@ darkAqua {
     color: var(--wy-crafted);
 }
 
+.m1 {
+    margin-left: 1ch;
+    margin-right: 1ch;
+}
+
 /* Fonts: */
+
+.small-font {
+    font-size: 0.5rem;
+}
+
+
 
 @font-face {
     font-family: "minecraft";

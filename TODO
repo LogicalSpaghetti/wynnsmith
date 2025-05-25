@@ -39,6 +39,8 @@ Make toggle ordering consistent
     Have all toggles from a tree be loaded on initialization of a tree, and just hidden until available
 Test if Radiance applies per-item, or after summation.
 Hide Haunting Memory effects if Flaming Tongue is taken.
+Use templates.
+Damage boosts in the same category override each other
 
 Settings:
 Re-arrange GUI

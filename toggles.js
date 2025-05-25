@@ -15,7 +15,6 @@ function setUpToggles(build) {
     setUpSingleToggle(build, "nodes", "hauntingMemory", "Haunting Memory Fanatic", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward maskOfTheAwakened lunaticMemory cowardMemory", "fanaticMemory");
     setUpSingleToggle(build, "nodes", "hauntingMemory", "Haunting Memory Heretic", "maskOfTheLunatic maskOfTheFanatic maskOfTheCoward maskOfTheAwakened lunaticMemory fanaticMemory", "cowardMemory");
 
-    setUpSingleToggle(build, "nodes", "eldritchCall", "Eldritch Call");
     setUpSingleToggle(build, "nodes", "bloodPool", "Boosted Aura");
     // no longer needs a toggle, kept as example for self:
     // setUpMultiToggle(build, "bleed", "Bleed", ["sanguineStrike", "lashingLance"], ["nodes", "nodes"]);
