@@ -12,14 +12,19 @@
             <div class="flexCol">
                 <!-- Column -->
                 <section>
-                    <div style="width: 3ch"></div>
+                    <div style="width: 3ch; text-align: center; border: 1px solid #222; height: 100%">
+                        <br />
+                        <button id="settings_open" class="settings_toggle">⚙</button>
+                    </div>
                 </section>
                 <!-- Column -->
                 <section>
-                    <div style="margin-left: auto; margin-right: 0">00/45 AP</div>
-                    <table id="abilityTree" class="m1" cellpadding="“0”" cellspacing="“0”" frame="void" hidden>
-                        <!-- Filled by js -->
-                    </table>
+                    <div class="m1">
+                        <div>00/45 AP</div>
+                        <table id="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void" hidden>
+                            <!-- Filled by js -->
+                        </table>
+                    </div>
                 </section>
                 <!-- Column -->
                 <section>
@@ -362,9 +367,8 @@
                     <div id="support_display">
                         <!-- Filled by js -->
                     </div>
-                    <br />
-                    <br />
-                    <button id="settings_open" class="settings_toggle">Open Settings</button>
+                    <br>
+                    <button>Edit Identifications</button>
                 </section>
                 <!-- Column -->
                 <section>
@@ -410,32 +414,88 @@
                                 background-color: #181818;
                                 /* border: 1px solid var(--ls-trim-hover); */
                                 padding: 2px;
-                                line-height: 150%;
+                                line-height: 100%;
                                 border: 1px solid var(--ls-background2);
                             "
                         >
-                            <span
-                                id="ct-chart"
-                                style="width: 2rem; height: 2rem; position: absolute; translate: 0px -4px"
-                            ></span>
                             <span style="width: 2rem"></span>
-                            <span style="text-align: center">Average: 2.69</span>
-                            <hr style="margin-top: 2px; margin-bottom: 4px" />
-                            <div>
-                                <span style="height: 1.5rem; width: 3ch; display: inline-block; margin: 0%; vertical-align: bottom; border: 1px solid #808080;">
-                                    <span
-                                        class="color-bar"
-                                        style="width: 12.864219791250360153541587277983%; background-color: var(--wy-thunder)"
-                                    ></span
-                                    ><span
-                                        class="color-bar"
-                                        style="width: 08.576146527500240102361058185322%; background-color: var(--wy-water)"
-                                    ></span
-                                    ><span class="color-bar" style="width: 78.559633681249399744097354536695%; background-color: var(--wy-air)"></span
-                                    >
-                                </span>
-                                <span style="color: #fff">Average: 2.69</span>
+                            <span style="text-align: center">Eldritch Call Total:</span>
+                            <div style="height: 0rem">
+                                <span
+                                    class="color-bar"
+                                    style="width: 16.66666666666666666666666666666%; background-color: #fca800"
+                                ></span
+                                ><span
+                                    class="color-bar"
+                                    style="width: 16.66666666666666666666666666666%; background-color: #0a0"
+                                ></span
+                                ><span
+                                    class="color-bar"
+                                    style="width: 16.66666666666666666666666666666%; background-color: #ff0"
+                                ></span
+                                ><span
+                                    class="color-bar"
+                                    style="width: 16.66666666666666666666666666666%; background-color: #1cc"
+                                ></span
+                                ><span
+                                    class="color-bar"
+                                    style="width: 16.66666666666666666666666666666%; background-color: #f11"
+                                ></span
+                                ><span
+                                    class="color-bar"
+                                    style="width: 16.66666666666666666666666666666%; background-color: #fff"
+                                ></span>
                             </div>
+                            <br />
+                            <div style="text-align: center">Average: 9,657,239.02</div>
+                        </div>
+                        <div
+                            class=""
+                            style="
+                                width: 21ch;
+                                background-color: #181818;
+                                /* border: 1px solid var(--ls-trim-hover); */
+                                padding: 2px;
+                                line-height: 100%;
+                                border: 1px solid var(--ls-background2);
+                            "
+                        >
+                            <span style="width: 2rem"></span>
+                            <span style="text-align: center">Eldritch Call Total:</span>
+                            <div style="height: 0rem">
+                                <span class="color-bar" style="width: 25%; background-color: #fca800"></span
+                                ><span class="color-bar" style="width: 0%; background-color: #0a0"></span
+                                ><span class="color-bar" style="width: 25%; background-color: #ff0"></span
+                                ><span class="color-bar" style="width: 25%; background-color: #1cc"></span
+                                ><span class="color-bar" style="width: 0%; background-color: #f11"></span
+                                ><span class="color-bar" style="width: 25%; background-color: #fff"></span>
+                            </div>
+                            <br />
+                            <div style="text-align: center">Average: 9,657,239.02</div>
+                        </div>
+                        <div
+                            class=""
+                            style="
+                                width: 21ch;
+                                background-color: #181818;
+                                /* border: 1px solid var(--ls-trim-hover); */
+                                padding: 2px;
+                                line-height: 100%;
+                                border: 1px solid var(--ls-background2);
+                            "
+                        >
+                            <span style="width: 2rem"></span>
+                            <span style="text-align: center">Eldritch Call Total:</span>
+                            <div style="height: 0rem">
+                                <span class="color-bar" style="width: 0%; background-color: #fca800"></span
+                                ><span class="color-bar" style="width: 0%; background-color: #0a0"></span
+                                ><span class="color-bar" style="width: 50%; background-color: #ff0"></span
+                                ><span class="color-bar" style="width: 0%; background-color: #1cc"></span
+                                ><span class="color-bar" style="width: 0%; background-color: #f11"></span
+                                ><span class="color-bar" style="width: 50%; background-color: #fff"></span>
+                            </div>
+                            <br />
+                            <div style="text-align: center">Average: 9,657,239.02</div>
                         </div>
                     </div>
                 </section>
@@ -494,21 +554,5 @@
         <script src="display.js"></script>
         <script src="damage_display.js"></script>
         <script src="settings.js"></script>
-
-        <!-- <script src="chartist.min.js"></script> -->
-        <script src="chartist.js"></script>
-        <script>
-            var data = {
-                series: [0, 0, 415.23, 276.82, 0, 2535.74],
-            };
-
-            var sum = function (a, b) {
-                return a + b;
-            };
-
-            new Chartist.Pie("#ct-chart", data, {
-                showLabel: false,
-            });
-        </script>
     </body>
 </html>

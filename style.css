@@ -21,8 +21,7 @@
     --wy-tome_back: #d4bf8f;
     --ls-ability_background: #373943;
 
-    --wy-neutral: #ffaa00;
-    --wy-earth: #00aa00;
+    --wy-neutral: #fca800;
     --wy-earth: #00aa00;
     --wy-thunder: #ffff55;
     --wy-water: #55ffff;
@@ -44,7 +43,7 @@ input {
 }
 
 .color-bar {
-    height: 1.5rem;
+    height: 0.5rem;
 }
 
 .hide_section {
@@ -272,7 +271,7 @@ input:focus {
 
 #support_display {
     width: 27ch;
-    padding: 5px;
+    padding: 0.4ch;
     border: 1px solid var(--ls-trim);
     line-height: 150%;
 }
