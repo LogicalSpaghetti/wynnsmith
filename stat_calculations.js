@@ -143,9 +143,12 @@ function calculateSpellCosts(build) {
     addSpellNames(build);
     sumCostModNodes(build);
 
+    const spells = castedSpells[build.wynnClass];
+    if (spells === undefined) return;
     for (let i = 0; i < 4; i++) {
         const costName = costNames[i];
-        const spell = castedSpells[build.wynnClass][i];
+        const spell = spells[i];
+        if (spell === undefined) continue;
 
         // get the base cost of the spell
         let cost = spell.mana;
@@ -193,4 +196,9 @@ function addSpellNames(build) {
 
 function addSpellName(build, nodeName, spellNumber, spellName) {
     if (build.nodes.includes(nodeName)) build.spells[spellNumber].name = spellName;
+}
+
+function computeHpr(base, percent) {
+    const effectivePercent = percent * Math.sign(base);
+    return base < 0 && effectivePercent < -1 ? 0 : base * (1 + effectivePercent);
 }

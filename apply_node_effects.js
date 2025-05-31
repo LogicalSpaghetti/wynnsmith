@@ -66,6 +66,7 @@ function createArcherConversions(build) {
 
 function createMageConversions(build) {
     addMeleeConversion(build);
+    addConv(build, "meteor", [330, 70, 0, 0, 0, 0], "Meteor");
     // TODO
 }
 
@@ -206,12 +207,12 @@ function addShamanAttackVariants(build) {
         "Eldritch Call",
         "eldritchCall",
         "nodes",
-        "Eldritch Call Single Target Total",
+        "Eldritch Call Total",
         4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0)
     );
     addAttackVariant(
         build,
-        "Eldritch Call Single Target Total",
+        "Eldritch Call Total",
         "eldritchCall",
         "nodes",
         "Eldritch Call Group Total",

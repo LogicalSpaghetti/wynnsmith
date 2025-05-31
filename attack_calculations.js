@@ -12,19 +12,23 @@ function computeOutputs(build) {
     addSPMults(build);
 
     conversions(build);
+
     powderConversions(build);
 
     applyMasteries(build);
+
     applySpellAttackSpeed(build);
 
     applyPercents(build);
-    mergeAttackDamage(build);
 
+    mergeAttackDamage(build);
     createHealing(build);
 
     applyMultipliers(build);
     addAttackVariants(build);
+    zeroNegatives(build);
 
+    // also adds crit damage min/max to each attacks (minc and maxc)
     applyStrDex(build);
 }
 
@@ -96,105 +100,96 @@ function splitMergedIds(build) {
 
 // splits base damage into a min and max array
 function damagesToArrays(build) {
+    const final = build.final;
+    const base = build.base;
+
     // base
-    build.base.min = [
-        build.base.baseDamage.min,
-        build.base.baseEarthDamage.min,
-        build.base.baseThunderDamage.min,
-        build.base.baseWaterDamage.min,
-        build.base.baseFireDamage.min,
-        build.base.baseAirDamage.min,
+    base.min = [
+        base.baseDamage.min,
+        base.baseEarthDamage.min,
+        base.baseThunderDamage.min,
+        base.baseWaterDamage.min,
+        base.baseFireDamage.min,
+        base.baseAirDamage.min,
     ];
-    build.base.max = [
-        build.base.baseDamage.max,
-        build.base.baseEarthDamage.max,
-        build.base.baseThunderDamage.max,
-        build.base.baseWaterDamage.max,
-        build.base.baseFireDamage.max,
-        build.base.baseAirDamage.max,
+    base.max = [
+        base.baseDamage.max,
+        base.baseEarthDamage.max,
+        base.baseThunderDamage.max,
+        base.baseWaterDamage.max,
+        base.baseFireDamage.max,
+        base.baseAirDamage.max,
     ];
 
-    build.final.totalDamage = {};
-    build.final.totalDamage.min =
-        build.base.min[0] +
-        build.base.min[1] +
-        build.base.min[2] +
-        build.base.min[3] +
-        build.base.min[4] +
-        build.base.min[5];
-    build.final.totalDamage.max =
-        build.base.max[0] +
-        build.base.max[1] +
-        build.base.max[2] +
-        build.base.max[3] +
-        build.base.max[4] +
-        build.base.max[5];
+    final.totalDamage = {};
+    final.totalDamage.min = base.min[0] + base.min[1] + base.min[2] + base.min[3] + base.min[4] + base.min[5];
+    final.totalDamage.max = base.max[0] + base.max[1] + base.max[2] + base.max[3] + base.max[4] + base.max[5];
 
     // raw
-    build.final.splitRawMainAttackDamage = [
-        build.final.rawNeutralMainAttackDamage,
-        build.final.rawEarthMainAttackDamage,
-        build.final.rawThunderMainAttackDamage,
-        build.final.rawWaterMainAttackDamage,
-        build.final.rawFireMainAttackDamage,
-        build.final.rawAirMainAttackDamage,
+    final.splitRawMainAttackDamage = [
+        final.rawNeutralMainAttackDamage,
+        final.rawEarthMainAttackDamage,
+        final.rawThunderMainAttackDamage,
+        final.rawWaterMainAttackDamage,
+        final.rawFireMainAttackDamage,
+        final.rawAirMainAttackDamage,
     ];
 
-    delete build.final.rawNeutralMainAttackDamage;
-    delete build.final.rawEarthMainAttackDamage;
-    delete build.final.rawThunderMainAttackDamage;
-    delete build.final.rawWaterMainAttackDamage;
-    delete build.final.rawFireMainAttackDamage;
-    delete build.final.rawAirMainAttackDamage;
+    delete final.rawNeutralMainAttackDamage;
+    delete final.rawEarthMainAttackDamage;
+    delete final.rawThunderMainAttackDamage;
+    delete final.rawWaterMainAttackDamage;
+    delete final.rawFireMainAttackDamage;
+    delete final.rawAirMainAttackDamage;
 
-    build.final.splitRawSpellDamage = [
-        build.final.rawNeutralSpellDamage,
-        build.final.rawEarthSpellDamage,
-        build.final.rawThunderSpellDamage,
-        build.final.rawWaterSpellDamage,
-        build.final.rawFireSpellDamage,
-        build.final.rawAirSpellDamage,
+    final.splitRawSpellDamage = [
+        final.rawNeutralSpellDamage,
+        final.rawEarthSpellDamage,
+        final.rawThunderSpellDamage,
+        final.rawWaterSpellDamage,
+        final.rawFireSpellDamage,
+        final.rawAirSpellDamage,
     ];
 
-    delete build.final.rawNeutralSpellDamage;
-    delete build.final.rawEarthSpellDamage;
-    delete build.final.rawThunderSpellDamage;
-    delete build.final.rawWaterSpellDamage;
-    delete build.final.rawFireSpellDamage;
-    delete build.final.rawAirSpellDamage;
+    delete final.rawNeutralSpellDamage;
+    delete final.rawEarthSpellDamage;
+    delete final.rawThunderSpellDamage;
+    delete final.rawWaterSpellDamage;
+    delete final.rawFireSpellDamage;
+    delete final.rawAirSpellDamage;
 
     // percent
-    build.final.mainAttackDamage = [
-        build.final.neutralMainAttackDamage,
-        build.final.earthMainAttackDamage,
-        build.final.thunderMainAttackDamage,
-        build.final.waterMainAttackDamage,
-        build.final.fireMainAttackDamage,
-        build.final.airMainAttackDamage,
+    final.mainAttackDamage = [
+        final.neutralMainAttackDamage,
+        final.earthMainAttackDamage,
+        final.thunderMainAttackDamage,
+        final.waterMainAttackDamage,
+        final.fireMainAttackDamage,
+        final.airMainAttackDamage,
     ];
 
-    delete build.final.neutralMainAttackDamage;
-    delete build.final.earthMainAttackDamage;
-    delete build.final.thunderMainAttackDamage;
-    delete build.final.waterMainAttackDamage;
-    delete build.final.fireMainAttackDamage;
-    delete build.final.airMainAttackDamage;
+    delete final.neutralMainAttackDamage;
+    delete final.earthMainAttackDamage;
+    delete final.thunderMainAttackDamage;
+    delete final.waterMainAttackDamage;
+    delete final.fireMainAttackDamage;
+    delete final.airMainAttackDamage;
 
-    build.final.spellDamage = [
-        build.final.neutralSpellDamage,
-        build.final.earthSpellDamage,
-        build.final.thunderSpellDamage,
-        build.final.waterSpellDamage,
-        build.final.fireSpellDamage,
-        build.final.airSpellDamage,
+    final.spellDamage = [
+        final.neutralSpellDamage,
+        final.earthSpellDamage,
+        final.thunderSpellDamage,
+        final.waterSpellDamage,
+        final.fireSpellDamage,
+        final.airSpellDamage,
     ];
 
-    delete build.final.neutralSpellDamage;
-    delete build.final.earthSpellDamage;
-    delete build.final.thunderSpellDamage;
-    delete build.final.waterSpellDamage;
-    delete build.final.fireSpellDamage;
-    delete build.final.airSpellDamage;
+    delete final.neutralSpellDamage;
+    delete final.earthSpellDamage;
+    delete final.thunderSpellDamage;
+    delete final.waterSpellDamage;
+    delete final.fireSpellDamage;
+    delete final.airSpellDamage;
 }
 
 function addSPMults(build) {
@@ -237,7 +232,7 @@ function convertBase(build) {
 }
 
 function convertRaw(build) {
-    build.rawAttacks = {};
+    const rawAttacks = (build.rawAttacks = {});
     Object.keys(build.convs).forEach((convName) => {
         const conv = build.convs[convName];
         const convMult = conv.reduce((partialSum, a) => partialSum + a, 0);
@@ -250,51 +245,54 @@ function convertRaw(build) {
 
         const baseMinTotal = baseMin.reduce((partialSum, a) => partialSum + a, 0);
         const baseMaxTotal = baseMax.reduce((partialSum, a) => partialSum + a, 0);
+        const baseSumTotal = baseMinTotal + baseMaxTotal;
 
         const baseElemMinTotal = baseMin.reduce((partialSum, a) => partialSum + a, 0) - baseMin[0];
         const baseElemMaxTotal = baseMax.reduce((partialSum, a) => partialSum + a, 0) - baseMax[0];
 
-        build.rawAttacks[convName] = {};
-        build.rawAttacks[convName].min = [0, 0, 0, 0, 0, 0];
-        build.rawAttacks[convName].max = [0, 0, 0, 0, 0, 0];
+        rawAttacks[convName] = {};
+        rawAttacks[convName].min = [0, 0, 0, 0, 0, 0];
+        rawAttacks[convName].max = [0, 0, 0, 0, 0, 0];
 
         const isMelee = meleeAttacks.includes(convName);
         const type = isMelee ? "MainAttack" : "Spell";
 
         for (let i = 0; i < 6; i++) {
             if (baseConvMax[i] === 0) continue;
+            const percentage = (baseMin[i] + baseMax[i]) / baseSumTotal;
 
             // min
             // NETWFA
-            build.rawAttacks[convName].min[i] = build.final["splitRaw" + type + "Damage"][i];
+            rawAttacks[convName].min[i] = build.final["splitRaw" + type + "Damage"][i];
+            console.log(rawAttacks[convName].min[i]);
             // damage
-            build.rawAttacks[convName].min[i] += (baseMin[i] / baseMinTotal) * build.ids.rawDamage;
+            rawAttacks[convName].min[i] += percentage * build.ids.rawDamage;
+            console.log(JSON.stringify(rawAttacks[convName]));
             // elemental damage
             if (i > 0) {
-                build.rawAttacks[convName].min[i] +=
-                    (baseMin[i] / baseElemMinTotal) *
-                    (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
+                rawAttacks[convName].min[i] +=
+                    percentage * (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
             }
+            console.log(JSON.stringify(rawAttacks[convName]));
             // main/spell
-            build.rawAttacks[convName].min[i] += (baseMin[i] / baseMinTotal) * build.ids["raw" + type + "Damage"];
+            rawAttacks[convName].min[i] += percentage * build.ids["raw" + type + "Damage"];
 
-            build.rawAttacks[convName].min[i] *= convMult / 100;
+            rawAttacks[convName].min[i] *= convMult / 100;
 
             // max
             // NETWFA
-            build.rawAttacks[convName].max[i] = build.final["splitRaw" + type + "Damage"][i];
+            rawAttacks[convName].max[i] = build.final["splitRaw" + type + "Damage"][i];
             // damage
-            build.rawAttacks[convName].max[i] += (baseMax[i] / baseMaxTotal) * build.ids.rawDamage;
+            rawAttacks[convName].max[i] += percentage * build.ids.rawDamage;
             // elemental damage
             if (i > 0) {
-                build.rawAttacks[convName].max[i] +=
+                rawAttacks[convName].max[i] +=
                     (baseMax[i] / baseElemMaxTotal) *
                     (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
             }
             // main/spell
-            build.rawAttacks[convName].max[i] += (baseMax[i] / baseMaxTotal) * build.ids["raw" + type + "Damage"];
-
-            build.rawAttacks[convName].max[i] *= convMult / 100;
+            rawAttacks[convName].max[i] += percentage * build.ids["raw" + type + "Damage"];
+            rawAttacks[convName].max[i] *= convMult / 100;
         }
     });
 }
@@ -399,6 +397,16 @@ function applyStrDex(build) {
     });
 }
 
+function zeroNegatives(build) {
+    Object.keys(build.attacks).forEach((attackName) => {
+        const attack = build.attacks[attackName];
+        for (let i = 0; i < 6; i++) {
+            if (attack.min[i] < 0) attack.min[i] = 0;
+            if (attack.max[i] < 0) attack.max[i] = 0;
+        }
+    });
+}
+
 function createHealing(build) {
     addHeal(build, "nodes", "bloodPool", "First Wave Heal", 25);
     addHeal(build, "nodes", "regeneration", "Regeneration Tick", 1);
@@ -408,11 +416,6 @@ function addHeal(build, sect, checkName, healName, healAmount) {
     if (build[sect].includes(checkName)) {
         build.heals[healName] = healAmount;
     }
-}
-
-function computeHpr(base, percent) {
-    const effectivePercent = percent * Math.sign(base);
-    return base < 0 && effectivePercent < -1 ? 0 : base * (1 + effectivePercent);
 }
 
 function mergeElementalDefences(build) {
