@@ -36,7 +36,7 @@ function addDamageDisplays(build) {
         attackStrings += "<br>";
         if (!(average <= 0 && build.spells["2nd"].name === attackName))
             attackStrings += "Average: " + selvify(average) + "<br>";
-        if (showDetailedDamage()) {
+        if (getBoolean("detailed_damage")) {
             if (!(average <= 0 && build.spells["2nd"].name === attackName) || normAverage < 0)
                 attackStrings += "Non-Crit:<br>";
             for (let i = 0; i < 6; i++) {
@@ -44,7 +44,7 @@ function addDamageDisplays(build) {
                 attackStrings +=
                     iconHeaders[prefixes[i]] +
                     selvify(attack.min[i], true) +
-                    " - " +
+                    " – " +
                     selvify(attack.max[i], true) +
                     "</span><br>";
             }
@@ -55,37 +55,20 @@ function addDamageDisplays(build) {
                 attackStrings +=
                     iconHeaders[prefixes[i]] +
                     selvify(attack.minc[i], true) +
-                    " - " +
+                    " – " +
                     selvify(attack.maxc[i], true) +
                     "</span><br>";
             }
-        } else {
-            attackStrings += `<div>`;
 
-            attackStrings +=
-                `<span class="color-bar" style="width: ` +
-                (elementalAverages[0] * 100) / average +
-                `%; background-color: #fca800"></span>`;
-            attackStrings +=
-                `<span class="color-bar" style="width: ` +
-                (elementalAverages[1] * 100) / average +
-                `%; background-color: #0a0"></span>`;
-            attackStrings +=
-                `<span class="color-bar" style="width: ` +
-                (elementalAverages[2] * 100) / average +
-                `%; background-color: #ff0"></span>`;
-            attackStrings +=
-                `<span class="color-bar" style="width: ` +
-                (elementalAverages[3] * 100) / average +
-                `%; background-color: #1cc"></span>`;
-            attackStrings +=
-                `<span class="color-bar" style="width: ` +
-                (elementalAverages[4] * 100) / average +
-                `%; background-color: #f11"></span>`;
-            attackStrings +=
-                `<span class="color-bar" style="width: ` +
-                (elementalAverages[5] * 100) / average +
-                `%; background-color: #fff"></span>`;
+            attackStrings += `<div class="color-bar-holder">`;
+            for (let i = 0; i < 6; i++) {
+                attackStrings +=
+                    `<span class="color-bar" style="width: ` +
+                    (elementalAverages[i] * 100) / average +
+                    `%; background-color: ` +
+                    getDamageColor(i) +
+                    `"></span>`;
+            }
             attackStrings += `</div>`;
         }
         attackStrings += "<hr>";
@@ -114,8 +97,22 @@ function addDamageDisplays(build) {
     attackSection.innerHTML = attackStrings;
 }
 
+function getDamageColor(index) {
+    switch (index) {
+        case 0: return "#fca800";
+        case 1: return "#0a0";
+        case 2: return "#ff0";
+        case 3: return "#1cc";
+        case 4: return "#f11";
+        case 5: return "#fff";
+        default: return "#ff00ff";
+    }
+}
+
+const oneSelv = 80000;
+
 function selvify(num, addPeriod) {
-    return selvs() ? roundForDisplay(num / 80000, addPeriod) + " selv" : roundForDisplay(num, addPeriod);
+    return getBoolean("selvs") ? roundForDisplay(num / oneSelv, addPeriod) + " selv" : roundForDisplay(num, addPeriod);
 }
 
 function getMana(cost) {

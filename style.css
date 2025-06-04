@@ -42,8 +42,14 @@ input {
     caret-color: #ccc;
 }
 
+.color-bar-holder {
+    height: fit-content;
+    line-height: 0px;
+    padding-bottom: 0.3rem;
+}
+
 .color-bar {
-    height: 0.5rem;
+    height: 1px;
 }
 
 .hide_section {
@@ -270,7 +276,7 @@ input:focus {
 }
 
 #support_display {
-    width: 27ch;
+    width: 24ch;
     padding: 0.4ch;
     border: 1px solid var(--ls-trim);
     line-height: 150%;

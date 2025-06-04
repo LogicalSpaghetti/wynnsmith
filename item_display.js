@@ -55,7 +55,7 @@ function formatId(idName, id, colorIds) {
     if (Number.isInteger(id)) {
         combinedString += signTag + id + "</span>";
     } else {
-        combinedString += signTag + id.min + "</span> - ";
+        combinedString += signTag + id.min + "</span> – ";
         combinedString += signTag + id.max + "</span>";
     }
     return combinedString;

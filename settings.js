@@ -22,19 +22,19 @@ function hideSettings() {
 }
 
 document.getElementById("selv").addEventListener("click", function () {
-    localStorage.setItem("selvs", localStorage.getItem("selvs") !== "true");
+    toggleBoolean("selvs");
     refreshBuild();
 });
 
-document.getElementById("damage_detail").addEventListener("click", function () {
-    localStorage.setItem("damage_detail", localStorage.getItem("damage_detail") !== "true");
+document.getElementById("detailed_damage").addEventListener("click", function () {
+    toggleBoolean("detailed_damage");
     refreshBuild();
 });
 
-function selvs() {
-    return localStorage.getItem("selvs") === "true";
+function getBoolean(id) {
+    return localStorage.getItem(id) === "true";
 }
 
-function showDetailedDamage() {
-    return localStorage.getItem("damage_detail") === "true";
+function toggleBoolean(id) {
+    localStorage.setItem(id, localStorage.getItem(id) !== "true");
 }
