@@ -1,0 +1,20 @@
+{
+  "name": "wynnsmith",
+  "version": "1.0.0",
+  "description": "NOT COMPLETE\r DO NOT USE",
+  "main": "ability_tree.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@typescript-eslint/eslint-plugin": "^8.33.1",
+    "@typescript-eslint/parser": "^8.33.1",
+    "eslint": "^9.28.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3"
+  }
+}
