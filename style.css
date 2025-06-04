@@ -310,6 +310,19 @@ input:focus {
     padding-left: 1rem;
 }
 
+.attack-holder {
+    width: 21ch;
+    background-color: #181818;
+    padding: 2px;
+    line-height: 150%;
+    border: 1px solid var(--ls-background2);
+    margin-bottom: 1rem;
+}
+
+.attack-holder:last-child {
+    margin-bottom: 0;
+}
+
 /* Link Buttons */
 button {
     cursor: pointer;
@@ -561,8 +574,6 @@ darkAqua {
 .small-font {
     font-size: 0.5rem;
 }
-
-
 
 @font-face {
     font-family: "minecraft";

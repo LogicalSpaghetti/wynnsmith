@@ -1,18 +1,21 @@
 const attackSection = document.getElementById("attack_display");
 
 function addDamageDisplays(build) {
-    var attackStrings = "";
+    var html = "";
+
+    html += getNewAttackHTML(build);
+    html += "<br>";
 
     Object.keys(build.attacks).forEach((attackName) => {
         const attack = build.attacks[attackName];
 
-        attackStrings += attackName + ": ";
+        html += attackName + " ";
 
         let hasCost = false;
         Object.keys(build.spells).forEach((spellName) => {
             const spell = build.spells[spellName];
             if (spell.name == attackName) {
-                attackStrings += getMana(spell.cost);
+                html += getMana(spell.cost);
                 hasCost = true;
             }
         });
@@ -33,26 +36,23 @@ function addDamageDisplays(build) {
 
         const average = normAverage * (1 - build.sp.mults[1]) + critAverage * build.sp.mults[1];
 
-        attackStrings += "<br>";
-        if (!(average <= 0 && build.spells["2nd"].name === attackName))
-            attackStrings += "Average: " + selvify(average) + "<br>";
+        html += "<br>";
+        if (!(average <= 0 && build.spells["2nd"].name === attackName)) html += "Average: " + selvify(average) + "<br>";
         if (getBoolean("detailed_damage")) {
-            if (!(average <= 0 && build.spells["2nd"].name === attackName) || normAverage < 0)
-                attackStrings += "Non-Crit:<br>";
+            if (!(average <= 0 && build.spells["2nd"].name === attackName) || normAverage < 0) html += "Non-Crit:<br>";
             for (let i = 0; i < 6; i++) {
                 if (attack.max[i] <= 0) continue;
-                attackStrings +=
+                html +=
                     iconHeaders[prefixes[i]] +
                     selvify(attack.min[i], true) +
                     " – " +
                     selvify(attack.max[i], true) +
                     "</span><br>";
             }
-            if (!(average <= 0 && build.spells["2nd"].name === attackName) || critAverage < 0)
-                attackStrings += "Crit:<br>";
+            if (!(average <= 0 && build.spells["2nd"].name === attackName) || critAverage < 0) html += "Crit:<br>";
             for (let i = 0; i < 6; i++) {
                 if (attack.max[i] <= 0) continue;
-                attackStrings +=
+                html +=
                     iconHeaders[prefixes[i]] +
                     selvify(attack.minc[i], true) +
                     " – " +
@@ -60,18 +60,18 @@ function addDamageDisplays(build) {
                     "</span><br>";
             }
 
-            attackStrings += `<div class="color-bar-holder">`;
+            html += `<div class="color-bar-holder">`;
             for (let i = 0; i < 6; i++) {
-                attackStrings +=
+                html +=
                     `<span class="color-bar" style="width: ` +
                     (elementalAverages[i] * 100) / average +
                     `%; background-color: ` +
                     getDamageColor(i) +
                     `"></span>`;
             }
-            attackStrings += `</div>`;
+            html += `</div>`;
         }
-        attackStrings += "<hr>";
+        html += "<hr>";
     });
 
     Object.keys(build.heals).forEach((healName) => {
@@ -84,28 +84,49 @@ function addDamageDisplays(build) {
             true
         );
 
-        attackStrings += "" + healName + ':<br><div class="positive">' + healAmount + "</div><br>";
+        html += "" + healName + ':<br><div class="positive">' + healAmount + "</div><br>";
     });
 
-    // TODO
-    if (build.nodes.includes("altruism")) {
-        if (build.ids.lifeSteal !== undefined) {
-        }
-        attackStrings += "\nSpaghetti" + build.ids.lifeSteal;
-    }
+    attackSection.innerHTML = html;
+}
 
-    attackSection.innerHTML = attackStrings;
+function getNewAttackHTML(build) {
+    let html = "";
+
+    html += perAttackHTML(build, "Melee DPS");
+    html += perAttackHTML(build, "Totem");
+
+    return html;
+}
+
+function perAttackHTML(build, name) {
+    if (!build.sectionContains("attacks", name)) return "";
+
+    let html = "";
+    html += "<div class='attack-holder'>";
+
+    html += name;
+
+    html += "</div>";
+    return html;
 }
 
 function getDamageColor(index) {
     switch (index) {
-        case 0: return "#fca800";
-        case 1: return "#0a0";
-        case 2: return "#ff0";
-        case 3: return "#1cc";
-        case 4: return "#f11";
-        case 5: return "#fff";
-        default: return "#ff00ff";
+        case 0:
+            return "#fca800";
+        case 1:
+            return "#0a0";
+        case 2:
+            return "#ff0";
+        case 3:
+            return "#1cc";
+        case 4:
+            return "#f11";
+        case 5:
+            return "#fff";
+        default:
+            return "#ff00ff";
     }
 }
 
