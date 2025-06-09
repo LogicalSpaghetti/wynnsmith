@@ -19,33 +19,36 @@ function createConversions(build) {
 }
 
 function createShamanConversions(build) {
-    if (build.attackSpeed !== undefined) build.convs["Melee"] = [33.4, 0, 0, 0, 0, 0];
-    addConv(build, "totem", [6, 0, 0, 0, 0, 6], "Totem");
-    // TODO: does this work?
-    // addConv(build, "relikProficiency", [1.67, 0, 0, 0, 0, 0], "Melee");
-    addConv(build, "totemicsmash", [120, 0, 0, 0, 30, 0], "Totemic Smash");
-    addConv(build, "uproot", [80, 30, 20, 0, 0, 0], "Uproot");
-    addConv(build, "aura", [150, 0, 0, 30, 0, 0], "Aura");
-    addConv(build, "haul", [0, 0, 0, 0, 0, 0], "Haul");
-    addConv(build, "totemShove", [90, 0, 0, 0, 0, 30], "Totem Shove");
-    addConv(build, "naturejolt", [90, 30, 0, 0, 0, 0], "Nature's Jolt");
-    addConv(build, "danceOfTheRain", [30, 0, 0, 30, 0, 0], "Rain Dance");
-    addConv(build, "shockingAura", [0, 0, 20, 0, 0, 0], "Aura");
-    addConv(build, "flamingTongue", [-15, -30, -15, 0, 10, 0], "Uproot");
-    addConv(build, "puppetMaster", [16, 2, 0, 0, 0, 2], "Puppet Knife");
-    addConv(build, "hauntingMemory", [240, 0, 0, 0, 0, 0], "Haunting Memory");
-    addConv(build, "explodingPuppet", [150, 0, 0, 0, 50, 0], "Puppet Explosion");
-    addConv(build, "lashingLance", [-5, 0, 5, 0, 0, 0], "Uproot");
-    addConv(build, "auraPull", [0, 0, 0, 0, 0, 30], "Aura");
-    addConv(build, "tether", [35, 0, 0, 0, 0, 15], "Twisted Tether");
-    addConv(build, "jungleSlayer", [75, 0, 0, 25, 0, 0], "Crimson Effigy");
-    addConv(build, "eldritchCall", [640, 0, 100, 0, 100, 0], "Eldritch Call");
-    addConv(build, "auraDamage1", [4, 0, 0, 0, 0, 0], "Totem"); // Imbued Totem
-    addConv(build, "deeperWounds", [20, 0, 0, 0, 0, 0], "Bleed");
-    addConv(build, "strongerTether", [20, 0, 0, 0, 0, 0], "Twisted Tether");
-    addConv(build, "hummingbirds", [20, 0, 5, 0, 0, 5], "Hummingbirds");
-    addConv(build, "hymnOfFreedom", [150, 0, 0, 50, 0, 0], "Frog Dance");
-    addConv(build, "bloodLament", [100, 0, 0, 20, 0, 0], "Blood Sorrow");
+    addMeleeConversion(build, 33.4);
+    // build, name, conv, req, sect, replace = false
+    addConv(build, "Totem", [6, 0, 0, 0, 0, 6], "totem");
+    addConv(build, "Totemic Smash", [120, 0, 0, 0, 30, 0], "totemicsmash");
+    addConv(build, "Uproot", [80, 30, 20, 0, 0, 0], "uproot");
+    addConv(build, "Aura", [150, 0, 0, 30, 0, 0], "aura");
+    addConv(build, "Haul", [0, 0, 0, 0, 0, 0], "haul");
+    addConv(build, "Totem Shove", [90, 0, 0, 0, 0, 30], "totemShove");
+    addConv(build, "Nature's Jolt", [90, 30, 0, 0, 0, 0], "naturejolt");
+    addConv(build, "Rain Dance", [30, 0, 0, 30, 0, 0], "danceOfTheRain");
+    addConv(build, "Aura", [0, 0, 20, 0, 0, 0], "shockingAura");
+    addConv(build, "Uproot", [-15, -30, -15, 0, 10, 0], "flamingTongue");
+    addConv(build, "Puppet Knife", [16, 2, 0, 0, 0, 2], "puppetMaster");
+    addConv(build, "Haunting Memory", [240, 0, 0, 0, 0, 0], "hauntingMemory");
+    addConv(build, "Puppet Explosion", [150, 0, 0, 0, 50, 0], "explodingPuppet");
+    addConv(build, "Uproot", [-5, 0, 5, 0, 0, 0], "lashingLance");
+    addConv(build, "Aura", [0, 0, 0, 0, 0, 30], "auraPull");
+    addConv(build, "Twisted Tether", [35, 0, 0, 0, 0, 15], "tether");
+    addConv(build, "Crimson Effigy", [75, 0, 0, 25, 0, 0], "jungleSlayer");
+    addConv(build, "Eldritch Call", [640, 0, 100, 0, 100, 0], "eldritchCall");
+    addConv(build, "Totem", [4, 0, 0, 0, 0, 0], "auraDamage1"); // Imbued Totem
+    addConv(build, "Bleed", [20, 0, 0, 0, 0, 0], "deeperWounds");
+    addConv(build, "Twisted Tether", [20, 0, 0, 0, 0, 0], "strongerTether");
+    addConv(build, "Hummingbirds", [20, 0, 5, 0, 0, 5], "hummingbirds");
+    addConv(build, "Frog Dance", [150, 0, 0, 50, 0, 0], "hymnOfFreedom");
+    addConv(build, "Blood Sorrow", [100, 0, 0, 20, 0, 0], "bloodLament");
+
+    addANDConv(build, "Frog Dance", [0, 0, 400, 0, 0, 0], "Faustian Gambit", "aspects", "hymnOfFreedom", "nodes", true);
+
+    addORConv(build, "Bleed", [30, 0, 0, 0, 0, 0], "sanguineStrike", "nodes", "lashingLance", "nodes");
 
     addAspectConv(build, "Aspect of Lashing Fire", "flamingTongue", "Uproot", [
         [-11, 0, -1, 0, -2, 0],
@@ -53,10 +56,6 @@ function createShamanConversions(build) {
         [-20, 0, -3, 0, -6, 0],
         [-22, 0, -4, 0, -8, 0],
     ]);
-
-    if (build.nodes.includes("lashingLance") || build.nodes.includes("sanguineStrike")) {
-        build.convs["Bleed"] = [30, 0, 0, 0, 0, 0];
-    }
 }
 
 function createArcherConversions(build) {
@@ -66,7 +65,7 @@ function createArcherConversions(build) {
 
 function createMageConversions(build) {
     addMeleeConversion(build);
-    addConv(build, "meteor", [330, 70, 0, 0, 0, 0], "Meteor");
+    addConv(build, "Meteor", [330, 70, 0, 0, 0, 0], "meteor");
     // TODO
 }
 
@@ -80,14 +79,27 @@ function createWarriorConversions(build) {
     // TODO
 }
 
-function addMeleeConversion(build) {
-    if (build.attackSpeed !== undefined) build.convs["Melee"] = [100, 0, 0, 0, 0, 0];
+function addMeleeConversion(build, conv = 100) {
+    if (build.attackSpeed !== undefined) addANYConv(build, "Melee", [conv, 0, 0, 0, 0, 0]);
 }
 
-function addConv(build, nodeReq, conv, name) {
-    if (!build.nodes.includes(nodeReq)) return;
+function addConv(build, name, conv, req, sect = "nodes", replace = false) {
+    if (build.has(sect, req))
+        addANYConv(build, name, conv, replace);
+}
 
-    if (build.convs[name] === undefined) {
+function addANDConv(build, name, conv, req1, sect1, req2, sect2, replace = false) {
+    if (build.has(sect1, req1) && build.has(sect2, req2)) 
+        addANYConv(build, name, conv, replace);
+}
+
+function addORConv(build, name, conv, req1, sect1, req2, sect2, replace = false) {
+    if (build.has(sect1, req1) || build.has(sect2, req2)) 
+        addANYConv(build, name, conv, replace);
+}
+
+function addANYConv(build, name, conv, replace = false) {
+    if (build.convs[name] === undefined || replace) {
         build.convs[name] = conv.slice(0);
         return;
     }
@@ -101,6 +113,11 @@ function addAspectConv(build, aspectName, nodeReq, convName, convs) {
     const aspectTier = build.aspects[aspectName];
     if (aspectTier === undefined) return;
     addConv(build, nodeReq, convs[aspectTier - 1], convName);
+}
+
+function addMaIdConv(build, maId, nodeReq, conv, name, replace = false) {
+    if (!build.has("maIds", maId)) return;
+    addConv(build, nodeReq, conv, name);
 }
 
 function applyMultipliers(build) {
@@ -127,8 +144,9 @@ function applyMultipliers(build) {
                 : 0.5
             : 0.6
         : 1;
+    const auraMult = build.has("maIds", "Geocentrism") ? 1 : totemMult;
     applySectMult(build, totemMult, "Totem", "nodes", "totem");
-    applySectMult(build, totemMult, "Aura", "nodes", "totem");
+    applySectMult(build, auraMult, "Aura", "nodes", "totem");
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "doubleTotem");
     applySectMult(build, 0.8, "Crimson Effigy", "nodes", "tripleTotem");
     applySectMult(build, 0.8, "Crimson Effigy", "aspects", "Summoner's Embodiment of the Omnipotent Overseer");
@@ -140,6 +158,9 @@ function applyMultipliers(build) {
     applySectMult(build, 1.2, "Crimson Effigy", "toggles", "summonFocus");
     applySectMult(build, 1.2, "Hummingbirds", "toggles", "summonFocus");
     applySectMult(build, 1.2, "Totem", "toggles", "summonFocus");
+    applySectMult(build, 2, "Tick DPS Per Totem", "maIds", "Furious Effigy");
+    applySectMult(build, 2, "Twisted Tether", "maIds", "Gruesome Knots");
+    applySectMult(build, 2, "Bleed", "maIds", "Gruesome Knots");
 
     applyHealMult(build, "nodes", "rebound", "First Wave Heal", 0.6);
     applyHealMult(
@@ -149,6 +170,7 @@ function applyMultipliers(build) {
         "First Wave Heal",
         1 + Math.min(75, build.ids.waterDamage * 0.3) / 100
     );
+
     // Archer
     applySectMult(build, 1.05, "Melee", "nodes", "bowProficiency");
     // Mage
@@ -160,7 +182,8 @@ function applyMultipliers(build) {
 }
 
 function applySectMult(build, mult, attackName, section, checkName) {
-    if (!build.sectionContains(section, checkName)) return;
+    if (!build.has(section, checkName)) return;
+    console.log("Multiplier applied: " + section + "." + checkName);
     applyMult(build, mult, attackName);
 }
 
@@ -199,6 +222,7 @@ function addShamanAttackVariants(build) {
     const hasTriple = build.nodes.includes("tripleTotem");
     const hasQuad = build.aspects["Summoner's Embodiment of the Omnipotent Overseer"] !== undefined;
     const totemCount = hasTotem + hasDouble + hasTriple + hasQuad;
+    const auraCount = build.has("maIds", "Geocentrism") ? 1 : totemCount;
     addAttackVariant(build, "Totem", "totem", "nodes", "Tick DPS Per Totem", 2.5);
     addAttackVariant(build, "Tick DPS Per Totem", "doubleTotem", "nodes", "Total Totem Tick DPS", totemCount);
 
@@ -229,28 +253,29 @@ function addShamanAttackVariants(build) {
     const sorrowMult = 4 + (acoTier === undefined ? 0 : acoTier > 2 ? 3 : 2);
     addAttackVariant(build, "Blood Sorrow", "bloodLament", "nodes", "Blood Sorrow DPS", 5);
     addAttackVariant(build, "Blood Sorrow DPS", "bloodLament", "nodes", "Blood Sorrow Total Damage", sorrowMult);
-    const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
-    addAttackVariant(
-        build,
-        "Frog Dance",
-        "hymnOfFreedom",
-        "nodes",
-        "Frog Dance Total Damage",
-        3 + (frogDanceAspect === undefined ? 0 : 1 + frogDanceAspect)
-    );
 
-    const shamanHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
+    const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
+    if (!build.has("maIds", "Faustian Gambit"))
+        addAttackVariant(
+            build,
+            "Frog Dance",
+            "hymnOfFreedom",
+            "nodes",
+            "Frog Dance Total Damage",
+            3 + (1 + (frogDanceAspect ?? -1))
+        );
+
+    const totemHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
+    const auraHealMult = build.has("maIds", "Geocentrism") ? 1 : totemHealMult;
     if (build.heals["Regeneration Tick"] !== undefined) {
         console.log(build.heals["Regeneration Tick"] * 2.5 * totemCount);
-        build.heals["Regeneration Tick"] *= shamanHealMult;
+        build.heals["Regeneration Tick"] *= totemHealMult;
         build.heals["Total Regeneration Per Second"] = build.heals["Regeneration Tick"] * 2.5 * totemCount;
     }
     if (build.heals["First Wave Heal"] !== undefined) {
-        build.heals["First Wave Heal"] *= shamanHealMult * totemCount;
-        if (totemCount > 1) build.heals["Per Totem First Wave Heal"] = build.heals["First Wave Heal"] / totemCount;
-        if (build.nodes.includes("rebound"))
-            build.heals["Total Rebound Heal"] =
-                2 * (totemCount > 1 ? build.heals["Per Totem First Wave Heal"] : build.heals["First Wave Heal"]);
+        build.heals["First Wave Heal"] *= auraHealMult * auraCount;
+        if (auraCount > 1) build.heals["Per Totem First Wave Heal"] = build.heals["First Wave Heal"] / auraCount;
+        if (build.nodes.includes("rebound")) build.heals["Total Rebound Heal"] = 2 * build.heals["First Wave Heal"];
     }
 }
 

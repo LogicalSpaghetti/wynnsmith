@@ -2,9 +2,10 @@ class Build {
     constructor() {
         this.wynnClass = "";
         this.attackSpeed = undefined;
-        this.mIds = [];
+        this.maIds = [];
         this.nodes = [];
-        this.aspects = {};
+        this.aspects = [];
+        this.aspectTiers = [];
         this.tomes = [];
         this.adds = {};
         this.toggles = [];
@@ -36,7 +37,7 @@ class Build {
         return eval(str);
     }
 
-    sectionContains(section, name) {
+    has(section, name) {
         const sect = this[section];
         return sect.constructor === Array ? sect.includes(name) : sect[name] !== undefined;
     }

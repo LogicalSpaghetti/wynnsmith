@@ -240,6 +240,7 @@ function addNodesToBuild(build) {
 function addAspectsToBuild(build) {
     const aspects = document.getElementById("active_aspects").querySelectorAll(".aspect");
     aspects.forEach((aspect) => {
-        build.aspects[aspect.dataset.aspect] = Number(aspect.childNodes[2].dataset.tier);
+        build.aspects.push(aspect.dataset.aspect);
+        build.aspectTiers.push(Number(aspect.childNodes[2].dataset.tier));
     });
 }

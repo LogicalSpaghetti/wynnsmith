@@ -100,7 +100,7 @@ function getNewAttackHTML(build) {
 }
 
 function perAttackHTML(build, name) {
-    if (!build.sectionContains("attacks", name)) return "";
+    if (!build.has("attacks", name)) return "";
 
     let html = "";
     html += "<div class='attack-holder'>";

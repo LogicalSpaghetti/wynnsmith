@@ -98,6 +98,13 @@ Rarity tinting
 Tree relation logic
 Alternate rounding options for people who don't care about .xx
     Full rounding, i.e. 10k, 25.2m, 2.5k
+mana/ls displayed in the melee hover
+add an "important" system like CSS, (maybe a proper customizable priority system if I'm feeling insane), to resolve load-order dependance.
+    for now, just nodes -> aspects is enough
+    just making Aspects/Aspect parts have dependancies is enough
+    also, having a distinction between defining and modifying an ability will also work. (only have the display name and such on the source, etc.)
+
+
 Rich embeds if it's possible to generate them based on the provided build
     oEmbed?
 tabindex: 0/-1;
@@ -121,16 +128,19 @@ Haunting Memory
 Bullwhip + Aspect
 Exploding Puppets DPS
 Invig
-Shepherd (indicate which are from Sheppard)
 Commander
-Hummingbirds + Aspect
+Hummingbirds + Aspect   
 Powder Specials
-MId Powder Specials
+    MaId Powder Specials
 Attack Display
-    Spell Mana stuff
-        Currently just wrong, it doesn't immediately sum
-Puppet Explosion effective dps
-    Schadenfreude
 Sacrifical Shrine -hp
-Pain Cycle
-Check for other MaIds
+Lifestream
+	Blood Sorrow deals
+ [500, 0, 0, 0, 0, 0] and grants 4 times the overhealth, but shortens its duration by 75%.
+Strings of Fate
+	Your puppets have a lifetime of 3 seconds and deal double damage with attacks and explosions.
+Sublimation
+	(Shatter Healing)
+	Totemic Shatter heals 75% of Regeneration's usual amount at the cost of 2 blocks of radius.
+Totemic Fuse
+	Totemic Smash deals [40, 90, 90, 0, 60, 0] at the cost of half of Totem's duration.

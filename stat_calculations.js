@@ -82,14 +82,14 @@ function statCalculations(build) {
     final.manaPerHit = Math.round(ids.manaSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
     final.lifePerHit = Math.round(ids.lifeSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
 
-    if (build.sectionContains("toggles", "maskOfTheCoward"))
+    if (build.has("toggles", "maskOfTheCoward"))
         ids.walkSpeed +=
             80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
-    if (build.sectionContains("toggles", "maskOfTheAwakened"))
+    if (build.has("toggles", "maskOfTheAwakened"))
         ids.walkSpeed +=
             80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
-    if (build.sectionContains("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
-    if (build.sectionContains("toggles", "cowardMemory")) ids.slowEnemy += 30;
+    if (build.has("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
+    if (build.has("toggles", "cowardMemory")) ids.slowEnemy += 30;
 
     const baseWS = 5.612;
     if (ids.walkSpeed !== undefined) final.effectiveWS = baseWS * (ids.walkSpeed / 100 + 1);
@@ -133,7 +133,7 @@ function applyEHpModifiers(build) {
 }
 
 function applyEHpDivider(build, section, checkName, div) {
-    if (!build.sectionContains(section, checkName)) return;
+    if (!build.has(section, checkName)) return;
     build.final.ehp /= div;
 }
 
@@ -163,9 +163,9 @@ function calculateSpellCosts(build) {
         // bound cost
         cost = Math.max(1, cost);
         // apply Mask costs (does bypass the 1 cost minimum)
-        if (build.sectionContains("toggles", "maskOfTheLunatic") && spell.name === "Aura") cost *= 0.7;
-        if (build.sectionContains("toggles", "maskOfTheFanatic") && spell.name === "Totem") cost *= 0.35;
-        if (build.sectionContains("toggles", "maskOfTheCoward") && spell.name === "Haul") cost *= 0.5;
+        if (build.has("toggles", "maskOfTheLunatic") && spell.name === "Aura") cost *= 0.7;
+        if (build.has("toggles", "maskOfTheFanatic") && spell.name === "Totem") cost *= 0.35;
+        if (build.has("toggles", "maskOfTheCoward") && spell.name === "Haul") cost *= 0.5;
 
         build.spells[costName].cost = cost;
     }

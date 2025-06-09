@@ -36,9 +36,9 @@ function addToggles(build) {
 function setUpSingleToggle(build, section, name, displayName, blocks, idOverride) {
     const toggle = addedTogglesHolder.querySelector("." + (idOverride ?? name));
 
-    if (build.sectionContains(section, name) ^ (toggle === null)) return;
+    if (build.has(section, name) ^ (toggle === null)) return;
 
-    if (build.sectionContains(section, name)) {
+    if (build.has(section, name)) {
         const button = document.createElement("button");
 
         button.classList.add("effect");
@@ -135,7 +135,7 @@ function setUpMultiSlider(build, id, displayName, divText, abilityNames, ability
     for (let i = 0; i < abilityNames.length; i++) {
         const abilityName = abilityNames[i];
         const abilitySource = abilitySources[i];
-        if (!build.sectionContains(abilitySource, abilityName)) continue;
+        if (!build.has(abilitySource, abilityName)) continue;
         
         if (abilitySource === "aspects") {
             const aspectSliderValue = aspects[build.wynnClass][abilityName][build.aspects[abilityName] - 1].slider;
