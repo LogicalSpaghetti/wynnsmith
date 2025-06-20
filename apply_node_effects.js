@@ -46,7 +46,9 @@ function createShamanConversions(build) {
     addConv(build, "Frog Dance", [150, 0, 0, 50, 0, 0], "hymnOfFreedom");
     addConv(build, "Blood Sorrow", [100, 0, 0, 20, 0, 0], "bloodLament");
 
-    addANDConv(build, "Frog Dance", [0, 0, 400, 0, 0, 0], "Faustian Gambit", "aspects", "hymnOfFreedom", "nodes", true);
+    addANDConv(build, "Frog Dance", [0, 0, 400, 0, 0, 0], "Faustian Gambit", "maIds", "hymnOfFreedom", "nodes", true);
+    addANDConv(build, "Blood Sorrow", [500, 0, 0, 0, 0, 0], "Lifestream", "maIds", "bloodLament", "nodes", true);
+    addANDConv(build, "Totemic Smash", [40, 90, 90, 0, 60, 0], "Totemic Fuse", "maIds", "totemicSmash", "nodes", true);
 
     addORConv(build, "Bleed", [30, 0, 0, 0, 0, 0], "sanguineStrike", "nodes", "lashingLance", "nodes");
 
@@ -84,18 +86,15 @@ function addMeleeConversion(build, conv = 100) {
 }
 
 function addConv(build, name, conv, req, sect = "nodes", replace = false) {
-    if (build.has(sect, req))
-        addANYConv(build, name, conv, replace);
+    if (build.has(sect, req)) addANYConv(build, name, conv, replace);
 }
 
 function addANDConv(build, name, conv, req1, sect1, req2, sect2, replace = false) {
-    if (build.has(sect1, req1) && build.has(sect2, req2)) 
-        addANYConv(build, name, conv, replace);
+    if (build.has(sect1, req1) && build.has(sect2, req2)) addANYConv(build, name, conv, replace);
 }
 
 function addORConv(build, name, conv, req1, sect1, req2, sect2, replace = false) {
-    if (build.has(sect1, req1) || build.has(sect2, req2)) 
-        addANYConv(build, name, conv, replace);
+    if (build.has(sect1, req1) || build.has(sect2, req2)) addANYConv(build, name, conv, replace);
 }
 
 function addANYConv(build, name, conv, replace = false) {
@@ -121,10 +120,6 @@ function addMaIdConv(build, maId, nodeReq, conv, name, replace = false) {
 }
 
 function applyMultipliers(build) {
-    // Global
-    applySectMult(build, 1.2, "all", "toggles", "vengefulspirit");
-    applySectMult(build, 1.08, "all", "toggles", "emboldeningCry");
-    applySectMult(build, 1.4, "all", "toggles", "fortitude");
     // Shaman
     applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
     const maskAspectMult =
@@ -133,7 +128,6 @@ function applyMultipliers(build) {
     applySectMult(build, 1.35 + maskAspectMult, "all", "toggles", "maskOfTheAwakened");
     applySectMult(build, 1 / (1 - 0.15), "all", "toggles", "fanaticMemory");
     applySectMult(build, 0.9, "all", "toggles", "maskOfTheCoward");
-    applySectMult(build, 1.2, "all", "toggles", "eldritchCall");
     applySectMult(build, 2, "Bleed", "toggles", "eldritchCall");
     applySectMult(build, 1.35, "Aura", "toggles", "bloodPool");
     applySectMult(build, 0.6, "Aura", "nodes", "rebound");
@@ -161,6 +155,9 @@ function applyMultipliers(build) {
     applySectMult(build, 2, "Tick DPS Per Totem", "maIds", "Furious Effigy");
     applySectMult(build, 2, "Twisted Tether", "maIds", "Gruesome Knots");
     applySectMult(build, 2, "Bleed", "maIds", "Gruesome Knots");
+    applySectMult(build, 0.25, "Blood Sorrow Total Damage", "maIds", "bloodLament"); // definitely not perfect since 5/s isn't divisible cleanly by 4
+    applySectMult(build, 2, "Puppet Explosion", "maIds", "Strings of Fate");
+    applySectMult(build, 2, "Puppet Knife", "maIds", "Strings of Fate");
 
     applyHealMult(build, "nodes", "rebound", "First Wave Heal", 0.6);
     applyHealMult(
@@ -178,7 +175,52 @@ function applyMultipliers(build) {
     // Warrior
     applySectMult(build, 1.05, "Melee", "nodes", "spearProficiency");
     // Assassin
+    // TODO: WynnBuilder people said Assassin multi-hit is cooked
     applySectMult(build, 1.05, "Melee", "nodes", "daggerProficiency");
+}
+
+function applyOverridingDamageBuffs(build) {
+    findHighestBuffs(build);
+    applyHighestBuffs(build);
+}
+
+function findHighestBuffs(build) {
+    // Shaman
+    applyDamageBuff(build, 1.2, "dmg", "vengefulspirit");
+    applyDamageBuff(build, 1.2, "vuln", "eldritchCall");
+    applyDamageBuff(build, 1.15, "vuln", "fanaticMemory");
+    // Warrior    
+    applyDamageBuff(build, 1.4, "vuln", "armorBreaker");
+    applyDamageBuff(build, 1.08, "dmg", "emboldeningCry");
+    // Mage
+    applyDamageBuff(build, 1.4, "dmg", "fortitude");
+    // Archer
+    applyDamageBuff(build, 1.15, "vuln", "coursingRestraints");
+}
+
+function applyHighestBuffs(build) {
+    Object.keys(build.mults).forEach((multName) => {
+        const mult = build.mults[multName];
+        console.log(multName + ": " + mult);
+        Object.keys(build.attacks).forEach((attackName) => {
+            const attack = build.attacks[attackName];
+            for (let i = 0; i < 6; i++) {
+                attack.min[i] *= mult;
+                attack.max[i] *= mult;
+            }
+        });
+    });
+}
+
+function createHealing(build) {
+    addHeal(build, "nodes", "bloodPool", "First Wave Heal", 25);
+    addHeal(build, "nodes", "regeneration", "Regeneration Tick", 1);
+}
+
+function addHeal(build, sect, checkName, healName, healAmount) {
+    if (build[sect].includes(checkName)) {
+        build.heals[healName] = healAmount;
+    }
 }
 
 function applySectMult(build, mult, attackName, section, checkName) {
@@ -210,6 +252,12 @@ function addAttackVariants(build) {
         addShamanAttackVariants(build);
     } else {
         addMeleeDPS(build, "Melee");
+    }
+}
+
+function applyDamageBuff(build, mult, type, checkName) {
+    if (build.has("toggles", checkName)) {
+        build.mults[type] = Math.max(build.mults[type], mult);
     }
 }
 
@@ -253,6 +301,14 @@ function addShamanAttackVariants(build) {
     const sorrowMult = 4 + (acoTier === undefined ? 0 : acoTier > 2 ? 3 : 2);
     addAttackVariant(build, "Blood Sorrow", "bloodLament", "nodes", "Blood Sorrow DPS", 5);
     addAttackVariant(build, "Blood Sorrow DPS", "bloodLament", "nodes", "Blood Sorrow Total Damage", sorrowMult);
+    addAttackVariant(
+        build,
+        "Hummingbirds DPS",
+        "hummingbirds",
+        "nodes",
+        "Hummingbirds",
+        4 * (build.maIds["Summoner's Embodiment of the Omnipotent Overseer"] > 1 ? 3 : 2)
+    );
 
     const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
     if (!build.has("maIds", "Faustian Gambit"))
@@ -267,12 +323,16 @@ function addShamanAttackVariants(build) {
 
     const totemHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
     const auraHealMult = build.has("maIds", "Geocentrism") ? 1 : totemHealMult;
-    if (build.heals["Regeneration Tick"] !== undefined) {
+    if (build.has("heals", "Regeneration Tick")) {
         console.log(build.heals["Regeneration Tick"] * 2.5 * totemCount);
         build.heals["Regeneration Tick"] *= totemHealMult;
         build.heals["Total Regeneration Per Second"] = build.heals["Regeneration Tick"] * 2.5 * totemCount;
+        if (build.has("nodes", "totemicShatter")) {
+            build.heals["Shatter Healing"] =
+                build.heals["Regeneration Tick"] * 20 * (build.has("maIds", "Sublimation") ? 0.75 : 0.5);
+        }
     }
-    if (build.heals["First Wave Heal"] !== undefined) {
+    if (build.has("heals", "First Wave Heal")) {
         build.heals["First Wave Heal"] *= auraHealMult * auraCount;
         if (auraCount > 1) build.heals["Per Totem First Wave Heal"] = build.heals["First Wave Heal"] / auraCount;
         if (build.nodes.includes("rebound")) build.heals["Total Rebound Heal"] = 2 * build.heals["First Wave Heal"];

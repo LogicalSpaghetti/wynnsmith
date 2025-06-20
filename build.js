@@ -29,7 +29,10 @@ class Build {
         };
         this.base = JSON.parse(emptyBaseString);
         this.ids = JSON.parse(emptyIdsString);
-        this.mults = {};
+        this.mults = {
+            vuln: 1,
+            dmg: 1,
+        };
     }
 
     evaluate(str) {

@@ -25,6 +25,7 @@ function computeOutputs(build) {
     createHealing(build);
 
     applyMultipliers(build);
+    applyOverridingDamageBuffs(build);
     addAttackVariants(build);
     zeroNegatives(build);
 
@@ -405,17 +406,6 @@ function zeroNegatives(build) {
             if (attack.max[i] < 0) attack.max[i] = 0;
         }
     });
-}
-
-function createHealing(build) {
-    addHeal(build, "nodes", "bloodPool", "First Wave Heal", 25);
-    addHeal(build, "nodes", "regeneration", "Regeneration Tick", 1);
-}
-
-function addHeal(build, sect, checkName, healName, healAmount) {
-    if (build[sect].includes(checkName)) {
-        build.heals[healName] = healAmount;
-    }
 }
 
 function mergeElementalDefences(build) {
