@@ -201,7 +201,6 @@ function findHighestBuffs(build) {
 function applyHighestBuffs(build) {
     Object.keys(build.mults).forEach((multName) => {
         const mult = build.mults[multName];
-        console.log(multName + ": " + mult);
         Object.keys(build.attacks).forEach((attackName) => {
             const attack = build.attacks[attackName];
             for (let i = 0; i < 6; i++) {

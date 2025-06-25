@@ -1,9 +1,11 @@
 `use strict`;
 
 function treeClicked(event) {
-    const node = event.target;
-    if (node.dataset.type !== "ability") return;
-    toggleNode(node);
+    const target = event.target;
+    if (target.dataset.type !== "ability") return;
+    toggleNode(target);
+    refreshBuild();
+    refreshTreeHighlights();
 }
 
 function refreshAbilities(build) {
@@ -18,13 +20,12 @@ function refreshAbilities(build) {
 
 function changeAbilityTree(build) {
     const abilityTree = document.getElementById("abilityTree");
-    
+
     abilityTree.removeAttribute("hidden");
 
-    const treeMap = classes[build.wynnClass].map;
-    abilityTree.innerHTML = mapHTML(treeMap);
-
-    const treeNodes = classes[build.wynnClass].tree;
+    const tree = punscake;
+    abilityTree.innerHTML = "";
+    mapHTML(tree, abilityTree, build.wynnClass);
 
     // prevent images from being dragged
     document.querySelectorAll(".node_img").forEach((img) => {
@@ -81,158 +82,79 @@ function changeAspects(build) {
     }
 }
 
-function toggleNode(node) {
-    node.classList.toggle("highlight_node");
-    node.parentElement.parentElement.classList.toggle("highlight_node");
-    refreshBuild();
+function toggleNode(img) {
+    // node.classList.toggle("highlight_node");
+    img.parentElement.dataset.selected = img.parentElement.dataset.selected !== "true";
 }
 
-function mapHTML(treeMap) {
-    // sort treeMap
-    const nodeIndexes = [];
-    for (let i = 0; i < treeMap.length; i++) {
-        const node = treeMap[i];
-        const coords = node["coordinates"];
-        nodeIndexes.push(coords["x"] + (coords["y"] - 1) * 9);
-    }
-    const newTreeMap = [];
-    for (let i = 0; i < treeMap.length; i++) {
-        const node = treeMap[i];
-        if (node === undefined) continue;
-        const index = nodeIndexes[i];
+function mapHTML(tree, abilityTree, wynnClass) {
+    const cellMap = tree.cellMap;
+    const abilities = tree.abilities;
+    abilityTree.innerHTML = "";
+    // add spacing
+    const treeArray = [];
+    for (let key in cellMap) {
+        const index = parseInt(key);
+        const node = cellMap[key];
 
-        while (newTreeMap.length < index) {
-            newTreeMap.push(undefined);
+        while (treeArray.length < index) {
+            treeArray.push(undefined);
         }
-        newTreeMap[index - 1] = node;
+        treeArray[index - 1] = node;
     }
-    treeMap = newTreeMap;
 
-    var tablePieces = [];
-    for (let i = 0; i < treeMap.length; i++) {
-        const node = treeMap[i];
-        if (node === undefined) {
-            tablePieces.push(new TablePiece(i, undefined));
+    let row = undefined;
+    for (let i = 0; i < treeArray.length; i++) {
+        if (i % 54 < 9 && i > 8) continue;
+        const ability = treeArray[i];
+        if (i % 9 === 0) {
+            const tr = document.createElement("tr");
+            abilityTree.appendChild(tr);
+            row = tr;
+        }
+        const cell = document.createElement("td");
+
+        row.appendChild(cell);
+        if (ability === undefined) continue;
+        cell.classList.add("tree_cell");
+        cell.classList.add("cell_" + i);
+
+        // Connector
+        if (ability.abilityID === undefined) {
+            const dirs = ability.travelNode;
+            cell.dataset.type = "connector";
+            cell.style["background-image"] = "url(img/branch/" + dirs.up + dirs.down + dirs.left + dirs.right + ".png)";
+            cell.dataset.points = "" + dirs.up + dirs.down + dirs.left + dirs.right;
             continue;
         }
-        const coords = node["coordinates"];
-        var index = coords.x + (coords.y - 1) * 9 - 1;
+        cell.dataset.type = "node";
 
-        const temp = Object.toString(node);
+        const img = document.createElement("img");
 
-        tablePieces.push(new TablePiece(index, node));
-    }
+        let abilityType = abilities[ability.abilityID].type;
+        if (abilityType === "skill") abilityType = wynnClass;
+        img.src = "img/node/" + abilityType + "_open.png";
+        img.style.display = "block";
+        img.style.width = "100%";
+        img.style.scale = (100 * img.naturalHeight) / 18 + "%";
+        img.style.cursor = "pointer";
+        img.dataset.type = "ability";
+        img.dataset.name = abilities[ability.abilityID]._plainname;
+        img.title = abilities[ability.abilityID]._plainname; // hover text
+        img.classList.add("ability_img");
 
-    var htmlOutput = "";
-    for (let i = 0; i < tablePieces.length; i++) {
-        if (tablePieces[i].index > 8 && tablePieces[i].index % 54 < 9) continue;
-        htmlOutput += tablePieces[i].getHTML();
-    }
-
-    for (let i = 0; i < treeMap.length; i++) {
-        if (treeMap.node === undefined) continue;
-    }
-
-    return htmlOutput;
-}
-
-class TablePiece {
-    constructor(index, node) {
-        this.index = index;
-        this.node = node;
-    }
-
-    getHTML() {
-        if (this.node !== undefined && this.node.meta.id === "altruism") {
-            const d = new Date();
-            if (d.getDay() === 2) {
-                return this.tdHead() + this.tdFoot();
-            }
-        }
-        return (
-            this.tdHead() +
-            (this.node === undefined ? "" : this.node.type === "connector" ? this.getConnector() : this.getAbility()) +
-            this.tdFoot()
-        );
-    }
-
-    tdHead() {
-        return ((this.index) % 9 === 0 ? "<tr>" : "") + "<td>";
-    }
-    tdFoot() {
-        return "</td>" + ((this.index) % 9 === 8 ? "</tr>" : "");
-    }
-
-    getConnector() {
-        const nodeName = this.node.meta.icon.replaceAll("abilityTree.", "");
-        return (
-            '<div class="connector" data-name="' +
-            nodeName +
-            '" style="background-image: url(img/abilities/' +
-            this.node.type +
-            "/" +
-            nodeName +
-            '.png)"></div>'
-        );
-    }
-
-    getAbility() {
-        const nodeName = this.node.meta.icon.value.name.replaceAll("abilityTree.", "");
-
-        return "<div" + this.encodeNodeData(nodeName) + ">" + this.imgHTML(nodeName) + "</div>";
-    }
-
-    imgHTML(nodeName) {
-        return (
-            '<div class="node_img_box"' +
-            ' data-name="' +
-            nodeName +
-            '"' +
-            ' data-type="' +
-            this.node.type +
-            '"><img class="node_img" src="img/abilities/' +
-            this.node.type +
-            "/" +
-            nodeName +
-            '.png" data-type="' +
-            this.node.type +
-            '"></div>'
-        );
-    }
-
-    encodeNodeData(nodeName) {
-        return (
-            ' class="ability_node" data-type="' +
-            this.node.type +
-            '"' +
-            ' title="' +
-            this.node.meta.id +
-            '"' +
-            ' data-page="' +
-            this.node.meta.page +
-            '"' +
-            ' data-id="' +
-            this.node.meta.id +
-            '"' +
-            ' data-name="' +
-            nodeName +
-            '"' +
-            ' data-index="' +
-            this.index +
-            '"' +
-            ' data-family="' +
-            this.node.family +
-            '"'
-        );
+        cell.appendChild(img);
+        // cell.style["background-image"] = "url(img/node/" + abilityType + "_open.png)";
+        // cell.style["background-size"] = "100%";
     }
 }
 
 // called any time the build changes but the class doesn't
 function addNodesToBuild(build) {
-    const treeNodes = document.querySelectorAll(".ability_node");
+    const treeNodes = document.querySelectorAll(".ability_img");
     treeNodes.forEach((node) => {
-        if (node.classList.contains("highlight_node")) {
-            build.nodes.push(node.dataset.id);
+        if (node.parentElement.dataset.selected === "true") {
+            build.nodes.push(node.dataset.name);
         }
     });
 }
@@ -243,4 +165,47 @@ function addAspectsToBuild(build) {
         build.aspects.push(aspect.dataset.aspect);
         build.aspectTiers.push(Number(aspect.childNodes[2].dataset.tier));
     });
+}
+
+function refreshTreeHighlights() {
+    const grid = document.querySelectorAll(".tree_cell");
+    if (grid.length < 1) {
+        console.log("no tree found!");
+        return;
+    }
+    console.log(grid);
+    // reset reachable
+    for (let i = 0; i < grid.length; i++) {
+        const cell = grid[i];
+        if (!cell.dataset.type) continue;
+        // top node is left reachable
+        cell.dataset.reachable = cell.dataset.index === "4" ? "true" : "false";
+    }
+    propagateFromNode(grid, 4);
+}
+
+const dirs = {
+    up: -9,
+    down: 9,
+    left: -1,
+    right: 1,
+};
+
+function propagateFromNode(grid, node) {
+    // if selected, propogate to all neighbors
+    if (node.dataset.selected === "true") {
+
+    }
+}
+
+function propogateTo(grid, cell, source) {
+    // if node,
+        // toggle reachable
+        // if selected, return true
+        // return false
+    // if connection,
+        // propagate every direction except source
+        // if it gets back a true, mark that direction as 2
+        // once all have returned, if any were true
+            // mark the source direction as true and return true
 }

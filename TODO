@@ -110,6 +110,8 @@ Overhealth
     Trickster
 Healing that ignores hef
     Sacrifical Shrine -hp
+Find a better design for the buff toggles
+grey out Aspects whose node requirement(s) aren't met.
 
 Rich embeds if it's possible to generate them based on the provided build
     oEmbed?
@@ -130,7 +132,6 @@ Use build.evaluate() for complex abstractions
     try to make it allow user input without being a security flaw for equation sharing.
 Shaman missing:
 Shatter Healing
-Haunting Memory
 Bullwhip + Aspect
 Exploding Puppets DPS
 Invig

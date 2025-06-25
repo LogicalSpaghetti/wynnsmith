@@ -356,44 +356,11 @@ td {
     padding: 8px;
 }
 
-.ability_node {
-    height: 10px;
-    width: 10px;
-    translate: 4px 4px;
-    position: absolute;
-    image-rendering: pixelated;
+.tree_cell[data-selected="true"] > img {
+    opacity: 50%;
 }
 
-.connector {
-    height: 18px;
-    width: 18px;
-}
-
-img.highlight_node[data-type="ability"] {
-    translate: -50% 0%;
-}
-
-.ability_node[data-type="ability"] {
-    cursor: pointer;
-}
-
-.node_img_box[data-type="ability"] {
-    /* overflow: hidden; */
-    width: fit-content;
-    height: fit-content;
-
-    clip-path: rect(0% 50% 50% 0%);
-    margin: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    translate: 25% 10%;
-    /* -ms-transform: translateX(-50%); */
-    /* transform: translateX(50%); */
-    /* translate: -50% -50%; */
-}
+/*  */
 
 .full_center {
     position: absolute;
@@ -402,10 +369,6 @@ img.highlight_node[data-type="ability"] {
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
-}
-
-.node_img[data-type="ability"] {
-    display: block;
 }
 
 /* -- Attacks: -- */

@@ -55,10 +55,10 @@ function addEventListeners() {
 
     // Effect Toggles
     document.getElementById("effect_toggles").addEventListener("click", (event) => {
-        toggleAbilityToggle(event);
+        toggleEffectToggle(event);
     });
     document.getElementById("added_toggles").addEventListener("click", (event) => {
-        toggleAbilityToggle(event);
+        toggleEffectToggle(event);
     });
 
     document.getElementById(`copy_short`).addEventListener("click", function () {
@@ -86,7 +86,7 @@ function addEventListeners() {
     });
 }
 
-function toggleAbilityToggle(event) {
+function toggleEffectToggle(event) {
     const effect = event.target;
     if (!effect.classList.contains("effect")) return;
     effect.classList.toggle("toggleOn");
