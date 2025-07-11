@@ -33,14 +33,14 @@ Proficiencies
     Test if their damage is additive with %s
     Test if their other effects add or multiply
 Let items be removed from the item database
-Verify how all damage and defense miltipliers interact with each other
+Verify how all damage and defense multipliers interact with each other
 -SP
 Make toggle ordering consistent
     Have all toggles from a tree be loaded on initialization of a tree, and just hidden until available
 Test if Radiance applies per-item, or after summation.
 Hide Haunting Memory effects if Flaming Tongue is taken.
 Use templates.
-Damage boosts in the same category override each other
+Clicking the emoji on buffs doesn't toggle them
 
 Settings:
 Re-arrange GUI

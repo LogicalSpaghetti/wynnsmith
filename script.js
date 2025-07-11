@@ -39,6 +39,7 @@ function refreshBuild() {
 
     addDamageDisplays(build);
     displayFinalValues(build);
+    updateTreeRender(build);
 
     displayForDevelopment(build);
 }
@@ -152,4 +153,8 @@ function getHeaderForIcon(color, elementEmoji) {
 
 function getHeaderForColor(color) {
     return '<span class="'+ color + '">';
+}
+
+function replaceAt(string, index, replacement) {
+    return string.substring(0, index) + replacement + string.substring(index + replacement.length);
 }

@@ -1,613 +1,445 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="style.css" />
-        <title>WynnSmith</title>
-        <link rel="icon" href="img/icons/yay.png" />
-    </head>
-    <body>
-        <div id="content">
-            <div class="flexCol">
-                <!-- Column -->
-                <section>
-                    <div style="width: 3ch; text-align: center; border: 1px solid #222; height: 100%">
-                        <br />
-                        <button id="settings_open" class="settings_toggle">⚙</button>
-                    </div>
-                </section>
-                <!-- Column -->
-                <section>
-                    <div class="m1">
-                        <div>00/45 AP</div>
-                        <table id="abilityTree" cellpadding="“0”" cellspacing="“0”" frame="void" hidden>
-                            <!-- Filled by js -->
-                        </table>
-                    </div>
-                </section>
-                <!-- Column -->
-                <section>
-                    <div class="item_inputs">
-                        <div class="input_section">
-                            <a id="helmet_link" target="_blank">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="style.css"/>
+    <title>WynnSmith</title>
+    <link rel="icon" href="img/icons/yay.png"/>
+</head>
+<body>
+<div id="content">
+    <div class="flexCol">
+        <!-- Column -->
+        <section>
+            <div style="width: 3ch; text-align: center; border: 1px solid #222; height: 100%">
+                <br/>
+                <button id="settings_open" class="settings_toggle">⚙</button>
+            </div>
+        </section>
+        <!-- Column -->
+        <section>
+            <div class="m1">
+                <div>00/45 AP</div>
+                <table id="abilityTree">
+                    <!-- Filled by js -->
+                </table>
+            </div>
+        </section>
+        <!-- Column -->
+        <section>
+            <div class="item_inputs">
+                <div class="input_section">
+                    <a id="helmet_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="helmet"
-                                    style="background-image: url(img/items/all.png); background-position: 112px 0px"
+                                        class="slot_icon"
+                                        data-slot="helmet"
+                                        style="background-image: url(img/items/all.png); background-position: 112px 0"
                                 ></span>
-                            </a>
-                            <input id="input_helmet" class="input" placeholder="Helmet" data-slot="helmet" />
-                            <input id="powder_helmet" class="powder" placeholder="0 Slots" />
-                        </div>
-                        <pre id="display-helmet" class="display"></pre>
-                        <div class="input_section">
-                            <a id="chestplate_link" target="_blank">
+                    </a>
+                    <input id="input_helmet" class="input" placeholder="Helmet" data-slot="helmet"/>
+                    <input id="powder_helmet" class="powder" placeholder="0 Slots"/>
+                </div>
+                <pre id="display-helmet" class="display"></pre>
+                <div class="input_section">
+                    <a id="chestplate_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="chestplate"
-                                    style="background-image: url(img/items/all.png); background-position: 96px 0px"
+                                        class="slot_icon"
+                                        data-slot="chestplate"
+                                        style="background-image: url(img/items/all.png); background-position: 96px 0"
                                 ></span>
-                            </a>
-                            <input
-                                id="input_chestplate"
-                                class="input"
-                                placeholder="Chestplate"
-                                data-slot="chestplate"
-                            />
-                            <input id="powder_chestplate" class="powder" placeholder="0 Slots" />
-                        </div>
-                        <pre id="display-chestplate" class="display"></pre>
-                        <div class="input_section">
-                            <a id="leggings_link" target="_blank">
+                    </a>
+                    <input
+                            id="input_chestplate"
+                            class="input"
+                            placeholder="Chestplate"
+                            data-slot="chestplate"
+                    />
+                    <input id="powder_chestplate" class="powder" placeholder="0 Slots"/>
+                </div>
+                <pre id="display-chestplate" class="display"></pre>
+                <div class="input_section">
+                    <a id="leggings_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="leggings"
-                                    style="background-image: url(img/items/all.png); background-position: 80px 0px"
+                                        class="slot_icon"
+                                        data-slot="leggings"
+                                        style="background-image: url(img/items/all.png); background-position: 80px 0"
                                 ></span>
-                            </a>
-                            <input id="input_leggings" class="input" placeholder="Leggings" data-slot="leggings" />
-                            <input id="powder_leggings" class="powder" placeholder="0 Slots" />
-                        </div>
-                        <pre id="display-leggings" class="display"></pre>
-                        <div class="input_section">
-                            <a id="boots_link" target="_blank">
+                    </a>
+                    <input id="input_leggings" class="input" placeholder="Leggings" data-slot="leggings"/>
+                    <input id="powder_leggings" class="powder" placeholder="0 Slots"/>
+                </div>
+                <pre id="display-leggings" class="display"></pre>
+                <div class="input_section">
+                    <a id="boots_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="boots"
-                                    style="background-image: url(img/items/all.png); background-position: 64px 0px"
+                                        class="slot_icon"
+                                        data-slot="boots"
+                                        style="background-image: url(img/items/all.png); background-position: 64px 0"
                                 ></span>
-                            </a>
-                            <input id="input_boots" class="input" placeholder="Boots" data-slot="boots" />
-                            <input id="powder_boots" class="powder" placeholder="0 Slots" maxlength="0" />
-                        </div>
-                        <pre id="display-boots" class="display"></pre>
-                        <div class="input_section">
-                            <a id="ring0_link" target="_blank">
+                    </a>
+                    <input id="input_boots" class="input" placeholder="Boots" data-slot="boots"/>
+                    <input id="powder_boots" class="powder" placeholder="0 Slots" maxlength="0"/>
+                </div>
+                <pre id="display-boots" class="display"></pre>
+                <div class="input_section">
+                    <a id="ring0_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="ring0"
-                                    style="background-image: url(img/items/all.png); background-position: 48px 0px"
+                                        class="slot_icon"
+                                        data-slot="ring0"
+                                        style="background-image: url(img/items/all.png); background-position: 48px 0"
                                 ></span
-                            ></a>
-                            <input id="input_ring0" class="input input--ring" placeholder="Ring 1" data-slot="ring0" />
-                            <div id="gif_holder">
-                                <img id="miku" src="" />
-                            </div>
-                        </div>
-                        <pre id="display-ring0" class="display"></pre>
-                        <div class="input_section">
-                            <a id="ring1_link" target="_blank">
+                                ></a>
+                    <input id="input_ring0" class="input input--ring" placeholder="Ring 1" data-slot="ring0"/>
+                    <div id="gif_holder">
+                        <img id="miku" src="" alt=""/>
+                    </div>
+                </div>
+                <pre id="display-ring0" class="display"></pre>
+                <div class="input_section">
+                    <a id="ring1_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="ring1"
-                                    style="background-image: url(img/items/all.png); background-position: 48px 0px"
+                                        class="slot_icon"
+                                        data-slot="ring1"
+                                        style="background-image: url(img/items/all.png); background-position: 48px 0"
                                 ></span
-                            ></a>
-                            <input id="input_ring1" class="input input--ring" placeholder="Ring 2" data-slot="ring1" />
-                        </div>
-                        <pre id="display-ring1" class="display"></pre>
-                        <div class="input_section">
-                            <a id="bracelet_link" target="_blank">
+                                ></a>
+                    <input id="input_ring1" class="input input--ring" placeholder="Ring 2" data-slot="ring1"/>
+                </div>
+                <pre id="display-ring1" class="display"></pre>
+                <div class="input_section">
+                    <a id="bracelet_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="bracelet"
-                                    style="background-image: url(img/items/all.png); background-position: 32px 0px"
+                                        class="slot_icon"
+                                        data-slot="bracelet"
+                                        style="background-image: url(img/items/all.png); background-position: 32px 0"
                                 ></span>
-                            </a>
-                            <input id="input_bracelet" class="input" placeholder="Bracelet" data-slot="bracelet" />
-                        </div>
-                        <pre id="display-bracelet" class="display"></pre>
-                        <div class="input_section">
-                            <a id="necklace_link" target="_blank">
+                    </a>
+                    <input id="input_bracelet" class="input" placeholder="Bracelet" data-slot="bracelet"/>
+                </div>
+                <pre id="display-bracelet" class="display"></pre>
+                <div class="input_section">
+                    <a id="necklace_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="necklace"
-                                    style="background-image: url(img/items/all.png); background-position: 16px 0px"
+                                        class="slot_icon"
+                                        data-slot="necklace"
+                                        style="background-image: url(img/items/all.png); background-position: 16px 0"
                                 ></span>
-                            </a>
-                            <input id="input_necklace" class="input" placeholder="Neckalce" data-slot="necklace" />
-                        </div>
-                        <pre id="display-necklace" class="display"></pre>
-                        <div class="input_section">
-                            <a id="weapon_link" target="_blank">
+                    </a>
+                    <input id="input_necklace" class="input" placeholder="Necklace" data-slot="necklace"/>
+                </div>
+                <pre id="display-necklace" class="display"></pre>
+                <div class="input_section">
+                    <a id="weapon_link" target="_blank">
                                 <span
-                                    class="slot_icon"
-                                    data-slot="weapon"
-                                    style="background-image: url(img/items/all.png); background-position: -64px 0px"
+                                        class="slot_icon"
+                                        data-slot="weapon"
+                                        style="background-image: url(img/items/all.png); background-position: -64px 0"
                                 ></span>
-                            </a>
-                            <input id="input_weapon" class="input" placeholder="Weapon" data-slot="weapon" />
-                            <input id="powder_weapon" class="powder" placeholder="0 Slots" maxlength="0" />
-                        </div>
-                        <pre id="display-weapon" class="display"></pre>
-                    </div>
-                    <br />
-                    <div class="copy_buttons">
-                        <button id="copy_long" class="copy_link" data-default="Copy Short">Copy Short</button>
-                        <button id="copy_short" class="copy_link" data-default="Copy Long">Copy Long</button>
-                        <button id="ansi_tree">Copy ANSI Tree</button>
-                    </div>
-                    <br />
-                    <div id="sp_section" class="small-font">
+                    </a>
+                    <input id="input_weapon" class="input" placeholder="Weapon" data-slot="weapon"/>
+                    <input id="powder_weapon" class="powder" placeholder="0 Slots" maxlength="0"/>
+                </div>
+                <pre id="display-weapon" class="display"></pre>
+            </div>
+            <br/>
+            <div class="copy_buttons">
+                <button id="copy_short" class="copy_link" data-default="Copy Short">Copy Short</button>
+                <button id="copy_long" class="copy_link" data-default="Copy Long">Copy Long</button>
+                <button id="ansi_tree">Copy ANSI Tree</button>
+            </div>
+            <br/>
+            <div id="sp_section" class="small-font">
                         <span class="small-font sp-hold">
                             <span class="earth">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">✤</b>
                                 Strength
                             </span>
-                            <input id="strength" class="sp" placeholder="Strength" />
+                            <input id="strength" class="sp" placeholder="Strength"/>
                             Assign: 100
-                            <br />
+                            <br/>
                             Original: 150
-                            <br />
+                            <br/>
                             80.8% damage </span
                         ><span class="small-font sp-hold">
                             <span class="thunder">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">✦</b>
                                 Dexterity
                             </span>
-                            <input id="dexterity" class="sp" placeholder="Dexterity" />
+                            <input id="dexterity" class="sp" placeholder="Dexterity"/>
                             Assign: 100
-                            <br />
+                            <br/>
                             Original: 150
-                            <br />
+                            <br/>
                             80.8% crit </span
-                        ><span class="small-font sp-hold">
+            ><span class="small-font sp-hold">
                             <span class="water">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">❉</b>
                                 Intelligence
                             </span>
-                            <input id="intelligence" class="sp" placeholder="Intelligence" />
+                            <input id="intelligence" class="sp" placeholder="Intelligence"/>
                             Assign: 100
-                            <br />
+                            <br/>
                             Original: 150
-                            <br />
+                            <br/>
                             80.8% cost red. </span
-                        ><span class="small-font sp-hold">
+            ><span class="small-font sp-hold">
                             <span class="fire">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">✹</b>
                                 Defense
                             </span>
-                            <input id="defence" class="sp" placeholder="Defence" />
+                            <input id="defence" class="sp" placeholder="Defence"/>
                             Assign: 100
-                            <br />
+                            <br/>
                             Original: 150
-                            <br />
+                            <br/>
                             80.8% resist </span
-                        ><span class="small-font sp-hold">
+            ><span class="small-font sp-hold">
                             <span class="air">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">❋</b>
                                 Agility
                             </span>
-                            <input id="agility" class="sp" placeholder="Agility" />
+                            <input id="agility" class="sp" placeholder="Agility"/>
                             Assign: 100
-                            <br />
+                            <br/>
                             Original: 150
-                            <br />
+                            <br/>
                             80.8% dodge
                         </span>
-                    </div>
-                    <br />
-                    <div id="effect_toggles" style="width: 32ch; padding-left: 1ch; padding-right: 1ch">
-                        <div style="text-align: center">Active Boosts:</div>
-                        <button class="effect radiance" data-modifier="radiance">Radiance</button>
-                        <button class="effect vengefulspirit" data-modifier="vengefulspirit">
-                            Vengeful Spirit
-                            <span class="positive">
+            </div>
+            <br/>
+            <div id="effect_toggles" style="width: 32ch; padding-left: 1ch; padding-right: 1ch">
+                <div style="text-align: center">Active Boosts:</div>
+                <button class="effect radiance" data-modifier="radiance">Radiance</button>
+                <button class="effect vengefulspirit" data-modifier="vengefulspirit">
+                    Vengeful Spirit
+                    <span class="positive">
                                 <b class="font-minecraft" style="display: inline-block">⚔</b>
                             </span>
-                            20%
-                        </button>
-                        <button class="effect eldritchCall" data-modifier="eldritchCall">
-                            Eldritch Call
-                            <span class="negative">
+                    20%
+                </button>
+                <button class="effect eldritchCall" data-modifier="eldritchCall">
+                    Eldritch Call
+                    <span class="negative">
                                 <b class="font-minecraft" style="display: inline-block">✃</b>
                             </span>
-                            20%
-                        </button>
-                        <button class="effect warScream" data-modifier="warScream" data-blockers="emboldeningCry">
-                            War Scream
-                            <span class="positive">
+                    20%
+                </button>
+                <button class="effect warScream" data-modifier="warScream" data-blockers="emboldeningCry">
+                    War Scream
+                    <span class="positive">
                                 <b class="font-minecraft" style="display: inline-block">❁</b>
                             </span>
-                            20%
-                        </button>
-                        <button class="effect emboldeningCry" data-modifier="emboldeningCry" data-blockers="warScream">
-                            Emboldening Cry
-                            <span class="positive">
+                    20%
+                </button>
+                <button class="effect emboldeningCry" data-modifier="emboldeningCry" data-blockers="warScream">
+                    Emboldening Cry
+                    <span class="positive">
                                 <b class="font-minecraft" style="display: inline-block">❁</b>
                             </span>
-                            25%
-                            <span class="positive">
+                    25%
+                    <span class="positive">
                                 <b class="font-minecraft" style="display: inline-block">⚔</b>
                             </span>
-                            8%
-                        </button>
-                        <button class="effect fortitude" data-modifier="fortitude">
-                            Fortitude
-                            <span class="positive">
+                    8%
+                </button>
+                <button class="effect fortitude" data-modifier="fortitude">
+                    Fortitude
+                    <span class="positive">
                                 <b class="font-minecraft" style="display: inline-block">⚔</b>
                             </span>
-                            40%
-                        </button>
-                    </div>
-                    <div id="added_toggles">
-                        <!-- Filled by js -->
-                    </div>
-                    <div id="added_sliders">
-                        <!-- Filled by js -->
-                    </div>
-                    <br />
-                    <table id="tomes_section">
-                        <tr>
-                            <td>
-                                <div class="tome" data-slot="guild_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="guild_tome" placeholder="Guild Tome" /></td>
-                            <td>
-                                <div class="tome" data-slot="lootrun_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="lootrun_tome" placeholder="Lootrun Tome" /></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="tome" data-slot="armour_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome" /></td>
-                            <td>
-                                <div class="tome" data-slot="armour_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome" /></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="tome" data-slot="armour_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome" /></td>
-                            <td>
-                                <div class="tome" data-slot="armour_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome" /></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="tome" data-slot="mysticism_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td>
-                                <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome" />
-                            </td>
-                            <td>
-                                <div class="tome" data-slot="mysticism_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td>
-                                <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="tome" data-slot="weapon_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="weapon_tome" placeholder="Weapon Tome" /></td>
-                            <td>
-                                <div class="tome" data-slot="weapon_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="weapon_tome" placeholder="Weapon Tome" /></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="tome" data-slot="expertise_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td>
-                                <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome" />
-                            </td>
-                            <td>
-                                <div class="tome" data-slot="expertise_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td>
-                                <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="tome" data-slot="marathon_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome" /></td>
-                            <td>
-                                <div class="tome" data-slot="marathon_tome"></div>
-                                <div class="tome_selector"></div>
-                            </td>
-                            <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome" /></td>
-                        </tr>
-                    </table>
-                    <br />
-                    <div id="aspects_background">
-                        <div id="active_aspects">
-                            <!-- Filled by js -->
-                        </div>
-                        <div id="inactive_aspects">
-                            <!-- Filled by js -->
-                        </div>
-                    </div>
-                </section>
-                <!-- Column -->
-                <section>
-                    <div id="support_display">
-                        <!-- Filled by js -->
-                    </div>
-                    <br />
-                    <button>Edit Identifications</button>
-                    <br />
-                    <br />
-                    <div
-                        class=""
-                        style="
-                            width: 21ch;
-                            background-color: #181818;
-                            /* border: 1px solid var(--ls-trim-hover); */
-                            padding: 2px;
-                            line-height: 150%;
-                            border: 1px solid var(--ls-background2);
-                        "
-                    >
-                        <div>
-                            <img
-                                src="img/buttons/exper_closed.png"
-                                style="display: inline-block; width: 1rem; scale: 150%; translate: 0px 2px"
-                            />
-                            <span style="text-align: center">Eldritch Call Total:</span>
-                        </div>
-                        <!-- <hr style="margin-top: 2px; margin-bottom: 4px" /> -->
-                        <div>
-                            <div class="color-bar-holder">
-                                <span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #fca800"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #0a0"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #ff0"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #1cc"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #f11"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #fff"
-                                ></span>
-                            </div>
-                            <div style="color: #fff; text-align: center; line-height: 100%">Average: 2,000,000.00</div>
-                            <div class="color-bar-holder">
-                                <span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #fca800"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #0a0"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #ff0"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #1cc"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #f11"
-                                ></span
-                                ><span
-                                    class="color-bar"
-                                    style="width: 16.66666666666666666666666666666%; background-color: #fff"
-                                ></span>
-                            </div>
-                        </div>
-                    </div>
-                    <br />
-                    <div
-                        class=""
-                        style="
-                            width: 21ch;
-                            background-color: #181818;
-                            /* border: 1px solid var(--ls-trim-hover); */
-                            padding: 2px;
-                            line-height: 100%;
-                            border: 1px solid var(--ls-background2);
-                        "
-                    >
-                        <span style="width: 2rem"></span>
-                        <span style="text-align: center">Eldritch Call Total:</span>
-                        <div class="color-bar-holder">
-                            <span
-                                class="color-bar"
-                                style="width: 16.66666666666666666666666666666%; background-color: #fca800"
-                            ></span
-                            ><span
-                                class="color-bar"
-                                style="width: 16.66666666666666666666666666666%; background-color: #0a0"
-                            ></span
-                            ><span
-                                class="color-bar"
-                                style="width: 16.66666666666666666666666666666%; background-color: #ff0"
-                            ></span
-                            ><span
-                                class="color-bar"
-                                style="width: 16.66666666666666666666666666666%; background-color: #1cc"
-                            ></span
-                            ><span
-                                class="color-bar"
-                                style="width: 16.66666666666666666666666666666%; background-color: #f11"
-                            ></span
-                            ><span
-                                class="color-bar"
-                                style="width: 16.66666666666666666666666666666%; background-color: #fff"
-                            ></span>
-                        </div>
-                        <br />
-                        <div style="text-align: center">Average: 9,657,239.02</div>
-                    </div>
-                    <div
-                        class=""
-                        style="
-                            width: 21ch;
-                            background-color: #181818;
-                            /* border: 1px solid var(--ls-trim-hover); */
-                            padding: 2px;
-                            line-height: 100%;
-                            border: 1px solid var(--ls-background2);
-                        "
-                    >
-                        <span style="width: 2rem"></span>
-                        <span style="text-align: center">Eldritch Call Total:</span>
-                        <div class="color-bar-holder">
-                            <span class="color-bar" style="width: 25%; background-color: #fca800"></span
-                            ><span class="color-bar" style="width: 0%; background-color: #0a0"></span
-                            ><span class="color-bar" style="width: 25%; background-color: #ff0"></span
-                            ><span class="color-bar" style="width: 25%; background-color: #1cc"></span
-                            ><span class="color-bar" style="width: 0%; background-color: #f11"></span
-                            ><span class="color-bar" style="width: 25%; background-color: #fff"></span>
-                        </div>
-                        <br />
-                        <div style="text-align: center">Average: 9,657,239.02</div>
-                    </div>
-                    <div
-                        class=""
-                        style="
-                            width: 21ch;
-                            background-color: #181818;
-                            /* border: 1px solid var(--ls-trim-hover); */
-                            padding: 2px;
-                            line-height: 100%;
-                            border: 1px solid var(--ls-background2);
-                        "
-                    >
-                        <span style="width: 2rem"></span>
-                        <span style="text-align: center">Eldritch Call Total:</span>
-                        <div class="color-bar-holder">
-                            <span class="color-bar" style="width: 0%; background-color: #fca800"></span
-                            ><span class="color-bar" style="width: 0%; background-color: #0a0"></span
-                            ><span class="color-bar" style="width: 50%; background-color: #ff0"></span
-                            ><span class="color-bar" style="width: 0%; background-color: #1cc"></span
-                            ><span class="color-bar" style="width: 0%; background-color: #f11"></span
-                            ><span class="color-bar" style="width: 50%; background-color: #fff"></span>
-                        </div>
-                        <br />
-                        <div style="text-align: center">Average: 9,657,239.02</div>
-                    </div>
-                </section>
-                <!-- Column -->
-                <section>
-                    <!-- <div>
-                        <template id="attackTemplate">
-                            <div>
-                                <img /><span>
-                                    <div></div>
-                                    <div></div>
-                                </span>
-                            </div>
-                        </template>
-                    </div> -->
-                    <div class="m1">
-                        <p id="attack_display"></p>
-                    </div>
-                </section>
+                    40%
+                </button>
             </div>
-            <br />
-            <div class="font-minecraft">
-                Created by LogicalSpaghetti<br />
-                related websites:
-                <a href="https://punscake.github.io/wynnability" target="_blank">Wynnability</a>,
-                <a href="https://wynnmana.github.io/" , target="_blank">Wynnmana</a>
+            <div id="added_toggles">
+                <!-- Filled by js -->
             </div>
-        </div>
-        <div
-            id="settings"
-            class="hide_section"
-            style="text-align: center; background-color: var(--ls-background2); min-height: 100vh"
-        >
-            <button id="selv">Toggle Selvs</button>
-            <br /><br />
-            <button id="detailed_damage">Toggle Detailed Damage</button>
-            <br /><br />
-            <label for="gif_input">Set GIF:</label><br />
-            <input id="gif_input" type="file" accept="image/gif" />
-            <br />
-            <br />
-            <label for="opacity_slider">GIF Opacity:</label>
-            <div>
-                <input id="opacity_slider" class="slider" type="range" value="15" style="width: 210px" />
+            <div id="added_sliders">
+                <!-- Filled by js -->
             </div>
-            <br />
-            <button id="settings_close" class="settings_toggle">Close Settings</button>
-            <br /><br /><br /><br />
-            <div id="dev_output" class="output font-minecraft"></div>
-        </div>
+            <br/>
+            <table id="tomes_section">
+                <tr>
+                    <td>
+                        <div class="tome" data-slot="guild_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="guild_tome" placeholder="Guild Tome"/></td>
+                    <td>
+                        <div class="tome" data-slot="lootrun_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="lootrun_tome" placeholder="Lootrun Tome"/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tome" data-slot="armour_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
+                    <td>
+                        <div class="tome" data-slot="armour_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tome" data-slot="armour_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
+                    <td>
+                        <div class="tome" data-slot="armour_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tome" data-slot="mysticism_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td>
+                        <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome"/>
+                    </td>
+                    <td>
+                        <div class="tome" data-slot="mysticism_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td>
+                        <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tome" data-slot="weapon_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="weapon_tome" placeholder="Weapon Tome"/></td>
+                    <td>
+                        <div class="tome" data-slot="weapon_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="weapon_tome" placeholder="Weapon Tome"/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tome" data-slot="expertise_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td>
+                        <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome"/>
+                    </td>
+                    <td>
+                        <div class="tome" data-slot="expertise_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td>
+                        <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tome" data-slot="marathon_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome"/></td>
+                    <td>
+                        <div class="tome" data-slot="marathon_tome"></div>
+                        <div class="tome_selector"></div>
+                    </td>
+                    <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome"/></td>
+                </tr>
+            </table>
+            <br/>
+            <div id="aspects_background">
+                <div id="active_aspects">
+                    <!-- Filled by js -->
+                </div>
+                <div id="inactive_aspects">
+                    <!-- Filled by js -->
+                </div>
+            </div>
+        </section>
+        <!-- Column -->
+        <section>
+            <div id="support_display">
+                <!-- Filled by js -->
+            </div>
+            <br/>
+            <button>Edit Identifications</button>
+        </section>
+        <!-- Column -->
+        <section>
+            <!-- <div>
+                <template id="attackTemplate">
+                    <div>
+                        <img /><span>
+                            <div></div>
+                            <div></div>
+                        </span>
+                    </div>
+                </template>
+            </div> -->
+            <div class="m1">
+                <p id="attack_display"></p>
+            </div>
+        </section>
+    </div>
+    <br/>
+    <div class="font-minecraft">
+        Created by LogicalSpaghetti<br/>
+        related websites:
+        <a href="https://punscake.github.io/wynnability" target="_blank">Wynnability</a>,
+        <a href="https://wynnmana.github.io/" target="_blank">Wynnmana</a>
+    </div>
+</div>
+<div
+        id="settings"
+        class="hide_section"
+        style="text-align: center; background-color: var(--ls-background2); min-height: 100vh"
+>
+    <button id="selv">Toggle Selvs</button>
+    <br/><br/>
+    <button id="detailed_damage">Toggle Detailed Damage</button>
+    <br/><br/>
+    <label for="gif_input">Set GIF:</label><br/>
+    <input id="gif_input" type="file" accept="image/gif"/>
+    <br/>
+    <br/>
+    <label for="opacity_slider">GIF Opacity:</label>
+    <div>
+        <input id="opacity_slider" class="slider" type="range" value="15" style="width: 210px"/>
+    </div>
+    <br/>
+    <button id="settings_close" class="settings_toggle">Close Settings</button>
+    <br/><br/><br/><br/>
+    <div id="dev_output" class="output font-minecraft"></div>
+</div>
 
-        <script src="grouped_items.js"></script>
-        <script src="data_class_trees.js"></script>
-        <script src="shaman.js"></script>
-        <script src="data_base_and_ids.js"></script>
-        <script src="data_small_stuff.js"></script>
+<script src="grouped_items.js"></script>
+<script src="data_class_trees.js"></script>
+<script src="shaman.js"></script>
+<script src="data_base_and_ids.js"></script>
+<script src="data_small_stuff.js"></script>
 
-        <script src="build.js"></script>
-        <script src="script.js"></script>
-        <script src="attack_calculations.js"></script>
-        <script src="stat_calculations.js"></script>
-        <script src="effect_overrides.js"></script>
-        <script src="build_linking.js"></script>
-        <script src="item_input.js"></script>
-        <script src="apply_node_effects.js"></script>
-        <script src="data_abilities.js"></script>
-        <script src="toggles.js"></script>
-        <script src="ability_tree.js"></script>
-        <script src="event_listeners.js"></script>
+<script src="build.js"></script>
+<script src="script.js"></script>
+<script src="attack_calculations.js"></script>
+<script src="stat_calculations.js"></script>
+<script src="effect_overrides.js"></script>
+<script src="build_linking.js"></script>
+<script src="item_input.js"></script>
+<script src="apply_node_effects.js"></script>
+<script src="data_abilities.js"></script>
+<script src="toggles.js"></script>
+<script src="ability_tree.js"></script>
+<script src="event_listeners.js"></script>
 
-        <script src="item_display.js"></script>
-        <script src="stat_display.js"></script>
-        <script src="damage_display.js"></script>
+<script src="item_display.js"></script>
+<script src="stat_display.js"></script>
+<script src="damage_display.js"></script>
 
-        <script src="settings.js"></script>
-    </body>
+<script src="settings.js"></script>
+</body>
 </html>

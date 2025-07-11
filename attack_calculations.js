@@ -265,16 +265,13 @@ function convertRaw(build) {
             // min
             // NETWFA
             rawAttacks[convName].min[i] = build.final["splitRaw" + type + "Damage"][i];
-            console.log(rawAttacks[convName].min[i]);
             // damage
             rawAttacks[convName].min[i] += percentage * build.ids.rawDamage;
-            console.log(JSON.stringify(rawAttacks[convName]));
             // elemental damage
             if (i > 0) {
                 rawAttacks[convName].min[i] +=
                     percentage * (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
             }
-            console.log(JSON.stringify(rawAttacks[convName]));
             // main/spell
             rawAttacks[convName].min[i] += percentage * build.ids["raw" + type + "Damage"];
 
@@ -381,12 +378,6 @@ function applyStrDex(build) {
         attack.maxc = attack.max.slice(0);
 
         for (let i = 1; i < 6; i++) {
-            // what is this for?
-            // const textInt = parseInt(spInputs[i - 1].value > 150 ? 150 : spInputs[i - 1].value);
-            // const mult = textInt === undefined ? 0 : spMultipliers[textInt];
-            // attack.min[i] *= 1 + mult;
-            // attack.max[i] *= 1 + mult;
-
             // Crit
             attack.minc[i] *= dexMult + strMult;
             attack.maxc[i] *= dexMult + strMult;
@@ -426,29 +417,7 @@ function deleteAllZerosFromObject(source) {
     }
 }
 
-// undefined to zero
-function udfZ(value) {
-    return value === undefined ? 0 : value;
-}
-
 function getAsMax(possibleInt) {
     if (Number.isInteger(possibleInt)) return possibleInt;
     return possibleInt.max;
-}
-
-function getAsMinMax(possibleInt) {
-    if (Number.isInteger(possibleInt)) {
-        return {
-            min: possibleInt,
-            max: possibleInt,
-        };
-    }
-    delete possibleInt.raw;
-
-    return possibleInt;
-}
-
-function multiplyMinAndMaxBy(target, multiplier) {
-    target.min *= multiplier + Number.EPSILON;
-    target.max *= multiplier + Number.EPSILON;
 }

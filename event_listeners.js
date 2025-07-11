@@ -36,7 +36,7 @@ function addEventListeners() {
 
     spInputs.forEach((input) => {
         input.addEventListener("input", function () {
-            if (input.value != "") refreshBuild();
+            if (input.value !== "") refreshBuild();
         });
     });
 
@@ -74,9 +74,8 @@ function addEventListeners() {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (event) => {
-            const imageUrl = event.target.result;
             // display the image on the page
-            document.getElementById("miku").src = imageUrl;
+            document.getElementById("miku").src = event.target.result;
         };
     });
 

@@ -19,6 +19,7 @@ const emptyBaseString = JSON.stringify({
     damageFromMobs: 0,
     leveledXpBonus: 0,
 });
+
 const emptyIdsString = JSON.stringify({
     // Skill Points
     "rawStrength": 0,
@@ -26,7 +27,7 @@ const emptyIdsString = JSON.stringify({
     "rawIntelligence": 0,
     "rawDefence": 0,
     "rawAgility": 0,
-    // Eledef %
+    // Ele-def %
     "earthDefence": 0,
     "thunderDefence": 0,
     "waterDefence": 0,
@@ -130,6 +131,129 @@ const emptyIdsString = JSON.stringify({
     "slowEnemy": 0,
 });
 
-const idMinMaxes = {
-    walkSpeed: [-100, 400],
+const base_stats = {
+    "baseHealth": { name: "Health" },
+    "baseEarthDefence": { name: "Earth Defence" },
+    "baseThunderDefence": { name: "Thunder Defence" },
+    "baseWaterDefence": { name: "Water Defence" },
+    "baseFireDefence": { name: "Fire Defence" },
+    "baseAirDefence": { name: "Air Defence" },
+
+    "baseDamage": { name: "Neutral Damage" },
+    "baseEarthDamage": { name: "Earth Damage" },
+    "baseThunderDamage": { name: "Thunder Damage" },
+    "baseWaterDamage": { name: "Water Damage" },
+    "baseFireDamage": { name: "Fire Damage" },
+    "baseAirDamage": { name: "Air Damage" },
+};
+
+const identifications = {
+    // Skill Points
+    "rawStrength": { name: "Strength" },
+    "rawDexterity": { name: "Dexterity" },
+    "rawIntelligence": { name: "Intelligence" },
+    "rawDefence": { name: "Defence" },
+    "rawAgility": { name: "Agility" },
+    // Ele-def %
+    "earthDefence": { name: "Earth Defence %", suffix: "%" },
+    "thunderDefence": { name: "Thunder Defence %", suffix: "%" },
+    "waterDefence": { name: "Water Defence %", suffix: "%" },
+    "fireDefence": { name: "Fire Defence %", suffix: "%" },
+    "airDefence": { name: "Air Defence %", suffix: "%" },
+    "elementalDefence": { name: "Elemental Defence %", suffix: "%" },
+    // Raw Damage
+    "rawDamage": { name: "Raw Damage" },
+    "rawMainAttackDamage": { name: "Raw Main Attack Damage" },
+    "rawSpellDamage": { name: "Raw Spell Damage" },
+    "rawNeutralDamage": { name: "Raw Neutral Damage" },
+    "rawNeutralMainAttackDamage": { name: "Raw Neutral Main Attack Damage" },
+    "rawNeutralSpellDamage": { name: "Raw Neutral Spell Damage" },
+    "rawElementalDamage": { name: "Raw Elemental Damage" },
+    "rawElementalMainAttackDamage": { name: "Raw Elemental Main Attack Damage" },
+    "rawElementalSpellDamage": { name: "Raw Elemental Spell Damage" },
+    "rawEarthDamage": { name: "Raw Earth Damage" },
+    "rawEarthMainAttackDamage": { name: "Raw Earth Main Attack Damage" },
+    "rawEarthSpellDamage": { name: "Raw Earth Spell Damage" },
+    "rawThunderDamage": { name: "Raw Thunder Damage" },
+    "rawThunderMainAttackDamage": { name: "Raw Thunder Main Attack Damage" },
+    "rawThunderSpellDamage": { name: "Raw Thunder Spell Damage" },
+    "rawWaterDamage": { name: "Raw Water Damage" },
+    "rawWaterMainAttackDamage": { name: "Raw Water Main Attack Damage" },
+    "rawWaterSpellDamage": { name: "Raw Water Spell Damage" },
+    "rawFireDamage": { name: "Raw Fire Damage" },
+    "rawFireMainAttackDamage": { name: "Raw Fire Main Attack Damage" },
+    "rawFireSpellDamage": { name: "Raw Fire Spell Damage" },
+    "rawAirDamage": { name: "Raw Air Damage" },
+    "rawAirMainAttackDamage": { name: "Raw Air Main Attack Damage" },
+    "rawAirSpellDamage": { name: "Raw Air Spell Damage" },
+    // % Damage
+    "damage": { name: "Damage %", suffix: "%" },
+    "spellDamage": { name: "Spell Damage %", suffix: "%" },
+    "mainAttackDamage": { name: "Main Attack Damage %", suffix: "%" },
+    "neutralDamage": { name: "Neutral Damage %", suffix: "%" },
+    "neutralMainAttackDamage": { name: "Neutral Main Attack Damage %", suffix: "%" },
+    "neutralSpellDamage": { name: "Neutral Spell Damage %", suffix: "%" },
+    "elementalDamage": { name: "Elemental Damage %", suffix: "%" },
+    "elementalMainAttackDamage": { name: "Elemental Spell Damage %", suffix: "%" },
+    "elementalSpellDamage": { name: "Elemental Spell Damage %", suffix: "%" },
+    "earthDamage": { name: "Earth Damage %", suffix: "%" },
+    "earthMainAttackDamage": { name: "Earth Main Attack Damage %", suffix: "%" },
+    "earthSpellDamage": { name: "Earth Spell Damage %", suffix: "%" },
+    "thunderDamage": { name: "Thunder Damage %", suffix: "%" },
+    "thunderMainAttackDamage": { name: "Thunder Main Attack Damage %", suffix: "%" },
+    "thunderSpellDamage": { name: "Thunder Spell Damage %", suffix: "%" },
+    "waterDamage": { name: "Water Damage %", suffix: "%" },
+    "waterMainAttackDamage": { name: "Water Main Attack Damage %", suffix: "%" },
+    "waterSpellDamage": { name: "Water Spell Damage %", suffix: "%" },
+    "fireDamage": { name: "Fire Damage %", suffix: "%" },
+    "fireMainAttackDamage": { name: "Fire Main Attack Damage %", suffix: "%" },
+    "fireSpellDamage": { name: "Fire Spell Damage %", suffix: "%" },
+    "airDamage": { name: "Air Damage %", suffix: "%" },
+    "airMainAttackDamage": { name: "Air Main Attack Damage %", suffix: "%" },
+    "airSpellDamage": { name: "Air Spell Damage %", suffix: "%" },
+    // Passive Damage
+    "exploding": { name: "Exploding", suffix: "%" },
+    "poison": { name: "Poison", suffix: "/3s" },
+    "thorns": { name: "Thorns", suffix: "%" },
+    "reflection": { name: "Reflection", suffix: "%" },
+    // Other Damage
+    "criticalDamageBonus": { name: "Critical Damage Bonus", suffix: "%" },
+    "knockback": { name: "Knockback %" },
+    "mainAttackRange": { name: "Main Attack Range", suffix: "%" },
+    "rawAttackSpeed": { name: "Attack Speed", suffix: " tier" },
+    // Health
+    "rawHealth": { name: "Health" },
+    "healingEfficiency": { name: "Healing Efficiency", suffix: "%" },
+    "healthRegenRaw": { name: "Health Regen" },
+    "healthRegen": { name: "Health Regen %", suffix: "%" },
+    // Mana
+    "rawMaxMana": { name: "Max Mana" },
+    "manaRegen": { name: "Mana Regen", suffix: "/5s" },
+    // Steals
+    "lifeSteal": { name: "Life Steal", suffix: "/3s" },
+    "manaSteal": { name: "Mana Steal", suffix: "/3s" },
+    // Costs
+    "1stSpellCost": { name: "1st Spell Cost %", suffix: "%" },
+    "2ndSpellCost": { name: "2nd Spell Cost %", suffix: "%" },
+    "3rdSpellCost": { name: "3rd Spell Cost %", suffix: "%" },
+    "4thSpellCost": { name: "4th Spell Cost %", suffix: "%" },
+    "raw1stSpellCost": { name: "1st Spell Cost" },
+    "raw2ndSpellCost": { name: "2nd Spell Cost" },
+    "raw3rdSpellCost": { name: "3rd Spell Cost" },
+    "raw4thSpellCost": { name: "4th Spell Cost" },
+    // Movement
+    "walkSpeed": { name: "Walk Speed %", suffix: "%" },
+    "jumpHeight": { name: "jump Height" },
+    "sprint": { name: "Sprint", suffix: "%" },
+    "sprintRegen": { name: "Sprint Regen", suffix: "%" },
+    // XP and Gathering
+    "gatherSpeed": { name: "Gather Speed", suffix: "%" },
+    "gatherXpBonus": { name: "Gather XP Bonus", suffix: "%" },
+    "lootBonus": { name: "Loot Bonus", suffix: "%" },
+    "lootQuality": { name: "Loot Quality", suffix: "%" },
+    "stealing": { name: "Stealing", suffix: "%" },
+    "xpBonus": { name: "Combat XP Bonus", suffix: "%" },
+    // Debuffs
+    "weakenEnemy": { name: "Weaken Enemy", suffix: "%" },
+    "slowEnemy": { name: "Slow Enemy", suffix: "%" },
 };

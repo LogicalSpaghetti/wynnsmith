@@ -23,17 +23,17 @@ function displayStats(build) {
         support.style.display = "inline-block";
     }
 
-    support.innerHTML = (build.attackSpeed === undefined) ? "" :
+    support.innerHTML =
         getStatDisplay("health", true, "Health", final.health) +
         getStatDisplay("health", false, "Effective Hp", final.ehp, "", false, true) +
         getStatDisplay("health", false, "EHp (no Agi)", final.ehp, "", false, true) +
         getStatDisplay("health", true, "Health Regen", final.healthRegen, "/4s") +
-        getStatDisplay("earth", true, "Earth Defence", final.totalEarthDefence) +
-        getStatDisplay("thunder", true, "Thunder Defence", final.totalThunderDefence) +
-        getStatDisplay("water", true, "Water Defence", final.totalWaterDefence) +
-        getStatDisplay("fire", true, "Fire Defence", final.totalFireDefence) +
-        getStatDisplay("air", true, "Air Defence", final.totalAirDefence) +
-        "<hr></hr>" +
+            getStatDisplay("earth", true, "Earth Defence", final["totalEarthDefence"]) +
+        getStatDisplay("thunder", true, "Thunder Defence", final["totalThunderDefence"]) +
+        getStatDisplay("water", true, "Water Defence", final["totalWaterDefence"]) +
+        getStatDisplay("fire", true, "Fire Defence", final["totalFireDefence"]) +
+        getStatDisplay("air", true, "Air Defence", final["totalAirDefence"]) +
+        "<hr>" +
         getStatDisplay("water", true, 'Mana Regen', ids.manaRegen, "/5s") +
         getStatDisplay("water", false, "True Mana Regen", final.trueManaRegen, "/5s", false, true) +
         getStatDisplay("water", true, 'Mana Steal', ids.manaSteal, "/3s") +
@@ -66,15 +66,15 @@ function getStatDisplay(colorClass, includeSymbol, label, stat, post, noColor, i
     if (stat === undefined || isNaN(stat)) return "";
     return (
         '<div class="stat_row">' +
-            '<div class="left' + (isSub ? " sub" : "") + '">' +
-                (includeSymbol ? iconHeaders[colorClass] : colorHeaders[colorClass]) +
-                    (isSub ? "→ " : "") + 
-                    label +
-                ":</span>" +
-            "</div>" +
-            '<div class="right ' + (noColor ? "" : Math.sign(stat) === 1 ? "positive" : "negative") + '">' +
-                roundForDisplay(stat) + (post ? post : "") +
-            "</div>" +
+        '<div class="left' + (isSub ? " sub" : "") + '">' +
+        (includeSymbol ? iconHeaders[colorClass] : colorHeaders[colorClass]) +
+        (isSub ? "→ " : "") +
+        label +
+        ":</span>" +
+        "</div>" +
+        '<div class="right ' + (noColor ? "" : Math.sign(stat) === 1 ? "positive" : "negative") + '">' +
+        roundForDisplay(stat) + (post ? post : "") +
+        "</div>" +
         "</div>"
     );
 }

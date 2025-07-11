@@ -356,10 +356,6 @@ td {
     padding: 8px;
 }
 
-.tree_cell[data-selected="true"] > img {
-    opacity: 50%;
-}
-
 /*  */
 
 .full_center {
