@@ -104,13 +104,17 @@ function mapHTML(tree, abilityTree, wynnClass) {
 
     let row = undefined;
     for (let i = 0; i < treeArray.length; i++) {
-        if (i % 54 < 9 && i > 8) continue;
+        // if (i % 54 < 9 && i > 8) continue;
         const ability = treeArray[i];
         if (i % 9 === 0) {
             const tr = document.createElement("tr");
             abilityTree.appendChild(tr);
             row = tr;
         }
+        if (i % 54 < 9 && i > 8) {
+            row.hidden = true;
+        }
+
         const cell = document.createElement("td");
         row.appendChild(cell);
 
@@ -172,30 +176,40 @@ function addAspectsToBuild(build) {
 }
 
 function updateTreeRender(build) {
+    if (build.wynnClass === undefined) return;
     validateTree(build.wynnClass);
-    renderTree(build.wynnClass);
+    renderHighlights();
+
 }
 
 function validateTree(wynnClass) {
+
     const treeHTML = document.getElementById("abilityTree");
+    // reset tree highlights
+    treeHTML.querySelectorAll(".tree_cell").forEach(connector => {
+        connector.dataset.highlights = "0000";
+    });
 
     const nodes = {};
     const unvalidatedIDs = [];
     const archetypePoints = {};
+    const unselectedIDs = [];
 
     // initialize archetype points
-    for (let i = 0; i < punscake.archetypes; i++) {
+    for (let i = 0; i < punscake.archetypes.length; i++) {
         archetypePoints[punscake.archetypes[i]] = 0;
     }
 
     // gather all nodes
     Object.keys(punscake.abilities).forEach(abilityID => {
-        const treeNode = treeHTML.querySelector("td[data-ability_id='" + abilityID + "']");
+        const treeNode = getElementFromAbilityID(abilityID);
+
 
         nodes[abilityID] = {
             // grab their selected state from the html
             selected: treeNode.dataset.selected === "true",
             mapID: parseInt(treeNode.dataset.map_id),
+            element: treeNode,
         };
 
         // determine what the parent node is, and mark it as reachable
@@ -229,53 +243,108 @@ function validateTree(wynnClass) {
         const node = nodes[unvalidatedID];
         const ability = punscake.abilities[unvalidatedID];
 
-        // if node is not selected
         if (!node.selected) {
-            // if any exclusives are selected, mark as locked
-            if (blockedByExclusive(unvalidatedID)) {
-                node.locked = true;
-            }
-
-            // remove from array, and reset
             unvalidatedIDs.splice(i, 1);
-            i = 0;
-        } else if (!node.reachable ||
-            (ability.requires !== -1 && !nodes[ability.requires].selected) ||
+            unselectedIDs.push(unvalidatedID);
+            i = -1;
+        } else if ((ability.requires !== -1 && !nodes[ability.requires].selected) ||
             blockedByExclusive(unvalidatedID)) {
             // if node is definitely not valid
-
             node.red = true;
+            if (blockedByExclusive(unvalidatedID)) node.locked = true;
             unvalidatedIDs.splice(i, 1);
-            i = 0;
-        } else if (ability.archetypePointsRequired === -1 ||
-            ability.archetypePointsRequired <= archetypePoints[ability.archetype]) {
+            i = -1;
+        } else if (node.reachable &&
+            (ability.archetypePointsRequired <= 0 ||
+                ability.archetypePointsRequired <= archetypePoints[ability.archetype])) {
             // node is reachable and has met its archetype req.
             node.valid = true;
+            propagateHighlightFrom(nodes, wynnClass, node.mapID);
             if (ability.archetype !== "") archetypePoints[ability.archetype] += 1;
             unvalidatedIDs.splice(i, 1);
-            i = 0;
+            i = -1;
         }
         // node hasn't met its archetype req. yet
     }
 
+    unselectedIDs.forEach((id) => {
+    })
+    for (let i = 0; i < unselectedIDs.length; i++) {
+        const id = unselectedIDs[i];
+        const ability = punscake.abilities[id];
+        const node = nodes[id];
+
+        if (blockedByExclusive(id)) node.locked = true;
+        if ((ability.requires !== -1 && !nodes[ability.requires].selected)) node.unavailable = true;
+        if (!(ability.archetypePointsRequired <= 0 ||
+            ability.archetypePointsRequired <= archetypePoints[ability.archetype])) node.unavailable = true;
+    }
+
+    unvalidatedIDs.forEach((unvalidatedID) => {
+        nodes[unvalidatedID].red = true;
+    });
+
+
     // loop over the list, setting the images for nodes
-    // 	1. if it's still in the unconfirmed list, color red
-    // 	2. if it's marked red, color red
-    // 	3. if it's marked valid, color blue
-    // 	4. if it's marked locked, color locked
-    // 	5. if it's marked reachable, color reachable
-    // 	6. mark unreachable
+    Object.keys(nodes).forEach(abilityID => {
+        changeNodeImg(nodes, abilityID, wynnClass);
+    })
 }
 
-function renderTree(wynnClass) {
-    propagateHighlights(punscake);
-    renderHighlights();
+function changeNodeImg(nodes, abilityID, wynnClass) {
+    const node = nodes[abilityID];
+
+    const element = node.element;
+    element.innerHTML = "";
+
+    const img = document.createElement("img");
+
+    let suffix;
+    if (node.red) {
+        suffix = "_error";
+    } else if (node.valid) {
+        suffix = "_active";
+    } else if (node.locked) {
+        suffix = "_shatter";
+    } else if (node.unavailable) {
+        suffix = "";
+    } else if (node.reachable) {
+        suffix = "_open";
+    } else {
+        suffix = "";
+    }
+
+    let abilityType = punscake.abilities[abilityID].type;
+    if (abilityType === "skill") abilityType = wynnClass;
+    img.src = "img/node/" + abilityType + suffix + ".png";
+    img.style.display = "block";
+    img.style.width = "100%";
+    img.style.cursor = "pointer";
+    img.dataset.type = "ability";
+    img.dataset.name = punscake.abilities[abilityID]._plainname;
+    img.title = punscake.abilities[abilityID]._plainname; // hover text
+    img.classList.add("ability_img");
+    img.onload = function () {
+        img.style.scale = (100 * img.naturalHeight) / 18 + "%";
+    };
+    img.ondragstart = function () {
+        return false;
+    };
+
+    element.appendChild(img);
 }
 
 function getElementFromMapIndex(index) {
     return document.getElementById("abilityTree")
         .querySelector("td[data-map_id='" + index + "']");
 }
+
+function getElementFromAbilityID(index) {
+    return document.getElementById("abilityTree")
+        .querySelector("td[data-ability_id='" + index + "']");
+}
+
+const dirs = ["up", "down", "left", "right"];
 
 const dirOffsets = {
     up: -9,
@@ -298,84 +367,53 @@ const dirIndexes = {
     right: 3,
 };
 
-function propagateHighlights(tree) {
-    const grid = document.getElementById("abilityTree").querySelectorAll("td");
-    if (grid.length < 1) throw new Error("Ability Tree Grid Trying to Highlight While Empty!");
-
-    // reset reachable
-    for (let i = 0; i < grid.length; i++) {
-        const cell = grid[i];
-        if (cell.dataset.type === "connector") {
-            cell.dataset.highlights = "0000";
-        } else if (cell.dataset.type === "node") {
-            cell.dataset.highlights = "0000";
-            cell.dataset.reached = "false";
-        }
-    }
-
-    // propagate from the starting node
-    for (let i = 0; i < grid.length; i++) {
-        if (grid[i].dataset.type === "node") {
-            // verify that it's the starting node
-
-            if (punscake.cellMap[parseInt(grid[i].dataset.map_id)].abilityID === punscake.startingAbilityID) {
-                propagateHighlightFrom(tree, grid, i);
-                break;
-            }
-        }
-    }
+function propagateHighlightTo(nodes, wynnClass, destIndex, sourceDir) {
+    const cell = punscake.cellMap[destIndex];
+    const node = nodes[cell.abilityID];
+    if (node) {
+        node.reachable = true;
+        return node.selected;
+    } else
+        return propagateHighlightFrom(nodes, wynnClass, destIndex, sourceDir);
 }
 
-function propagateHighlightTo(tree, grid, destIndex, sourceDir) {
-    const cell = grid[destIndex];
-    if (cell.dataset.type === "connector") {
-        // if it's connected from the source, re-propagate and return the success of that
-        if (tree.cellMap[parseInt(grid[destIndex].dataset.map_id)].travelNode[inverseDirs[sourceDir]]) {
-            return propagateHighlightFrom(tree, grid, destIndex, sourceDir);
-        }
-        return false;
-    } else if (cell.dataset.type === "node") {
-        cell.dataset.reached = "true";
-        return cell.dataset.selected === "true";
-    }
-    return false;
-}
+function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
+    const sourceCell = punscake.cellMap[sourceIndex];
+    const element = getElementFromMapIndex(sourceIndex);
+    const highlights = Array.from(element.dataset.highlights);
 
-function propagateHighlightFrom(tree, grid, sourceIndex, sourceDir) {
-    const highlights = ["0", "0", "0", "0"];
-    Object.keys(dirOffsets).forEach(dirName => {
+    dirs.forEach(newDir => {
         // if the node is going up
-        if (dirName === "up") return;
-        // if the node doesn't go in this direction
-        if (!tree.cellMap[parseInt(grid[sourceIndex].dataset.map_id)].travelNode[dirName]) return;
+        if (newDir === "up") return;
+        // if the cell doesn't go in this direction
+        if (sourceCell.travelNode[newDir] === 0) return;
         // if this is the same direction it came from
-        if (inverseDirs[sourceDir] === dirName) return;
+        if (inverseDirs[sourceDir] === newDir) return;
 
-        const destIndex = dirOffsets[dirName] + sourceIndex;
-        // too high or low
-        if (destIndex < 0 || destIndex >= grid.length) return;
+        const destIndex = sourceIndex + dirOffsets[newDir];
+
+        const destCell = punscake.cellMap[destIndex];
+
+        // if it's not a used cell
+        if (destCell === undefined) return;
+        // if dest doesn't connect to this
+        if (destCell.travelNode[inverseDirs[newDir]] === 0) return;
+
         // left on left edge or right on right edge
-        if (sourceIndex % 9 === 0 && dirName === "left") return;
-        if (sourceIndex % 9 === 8 && dirName === "right") return;
+        if (sourceIndex % 9 === 1 && newDir === "left") return;
+        if (sourceIndex % 9 === 0 && newDir === "right") return;
 
-        // if the direction is valid:
-
-        if (propagateHighlightTo(tree, grid, destIndex, dirName)) {
-            highlights[dirIndexes[dirName]] = "1";
-            highlights[dirIndexes[inverseDirs[sourceDir]]] = "1";
+        // if it finds a selected node:
+        if (propagateHighlightTo(nodes, wynnClass, destIndex, newDir)) {
+            highlights[dirIndexes[newDir]] = 2;
+            highlights[dirIndexes[inverseDirs[sourceDir]]] = 2;
         }
     });
 
-    grid[sourceIndex].dataset.highlights = decimalToBinary(
-        binaryToDecimal(highlights[0] + highlights[1] + highlights[2] + highlights[3]) |
-        binaryToDecimal(grid[sourceIndex].dataset.highlights));
-
-    while (grid[sourceIndex].dataset.highlights.length < 4) {
-        grid[sourceIndex].dataset.highlights = "0" + grid[sourceIndex].dataset.highlights;
-    }
+    element.dataset.highlights = highlights.join("");
 
     // if it's not 0000, return true
-    return grid[sourceIndex].dataset.highlights !== "0000";
+    return element.dataset.highlights !== "0000";
 }
 
 function renderHighlights() {
@@ -384,11 +422,8 @@ function renderHighlights() {
         if (connector.dataset.highlights === "0000") return;
 
         const img = document.createElement("img");
-        let twosString = "";
-        Array.from(connector.dataset.highlights).forEach(highlight => {
-            twosString += (highlight === "1") ? "2" : "0";
-        });
-        img.src = "img/branch/" + twosString + ".png";
+
+        img.src = "img/branch/" + connector.dataset.highlights + ".png";
         img.style.display = "block";
         img.ondragstart = function () {
             return false;
