@@ -22,7 +22,7 @@ function changeAbilityTree(build) {
 
     abilityTree.removeAttribute("hidden");
 
-    const tree = punscake;
+    const tree = punscake[build.wynnClass];
     abilityTree.innerHTML = "";
     mapHTML(tree, abilityTree, build.wynnClass);
 
@@ -104,7 +104,6 @@ function mapHTML(tree, abilityTree, wynnClass) {
 
     let row = undefined;
     for (let i = 0; i < treeArray.length; i++) {
-        // if (i % 54 < 9 && i > 8) continue;
         const ability = treeArray[i];
         if (i % 9 === 0) {
             const tr = document.createElement("tr");
@@ -118,14 +117,14 @@ function mapHTML(tree, abilityTree, wynnClass) {
         const cell = document.createElement("td");
         row.appendChild(cell);
 
-        if (ability === undefined) continue;
+        if (ability == null) continue;
 
         cell.classList.add("tree_cell");
 
         cell.dataset.map_id = (i + 1).toString();
 
         // Connector
-        if (ability.abilityID === undefined) {
+        if (ability.abilityID == null) {
             const dirs = ability.travelNode;
             cell.dataset.type = "connector";
             cell.style["background-image"] = "url(img/branch/" + dirs.up + dirs.down + dirs.left + dirs.right + ".png)";
@@ -186,6 +185,9 @@ function validateTree(wynnClass) {
 
     const treeHTML = document.getElementById("abilityTree");
     // reset tree highlights
+    treeHTML.querySelectorAll("td[data-type='node']").forEach((red) => {
+        red.dataset.red = "false";
+    })
     treeHTML.querySelectorAll(".tree_cell").forEach(connector => {
         connector.dataset.highlights = "0000";
     });
@@ -196,12 +198,12 @@ function validateTree(wynnClass) {
     const unselectedIDs = [];
 
     // initialize archetype points
-    for (let i = 0; i < punscake.archetypes.length; i++) {
-        archetypePoints[punscake.archetypes[i]] = 0;
+    for (let i = 0; i < punscake[wynnClass].archetypes.length; i++) {
+        archetypePoints[punscake[wynnClass].archetypes[i]] = 0;
     }
 
     // gather all nodes
-    Object.keys(punscake.abilities).forEach(abilityID => {
+    Object.keys(punscake[wynnClass].abilities).forEach(abilityID => {
         const treeNode = getElementFromAbilityID(abilityID);
 
 
@@ -213,22 +215,16 @@ function validateTree(wynnClass) {
         };
 
         // determine what the parent node is, and mark it as reachable
-        if (abilityID === punscake.startingAbilityID)
+        if (abilityID === punscake[wynnClass].startingAbilityID)
             nodes[abilityID].reachable = true;
 
         unvalidatedIDs.push(abilityID);
 
     });
 
-    // propagation
-    // - from the node, propagate out to find other nodes, marking any found as reachable
-    const propagateReachable = function (index) {
-
-    };
-
     // loop over all nodes in its exclusion list, returning whether any block it
     const blockedByExclusive = function (abilityID) {
-        const exclusives = punscake.abilities[abilityID].unlockingWillBlock;
+        const exclusives = punscake[wynnClass].abilities[abilityID].unlockingWillBlock;
         for (let i = 0; i < exclusives.length; i++) {
             if (nodes[exclusives[i]].selected) {
                 return true;
@@ -241,7 +237,7 @@ function validateTree(wynnClass) {
     for (let i = 0; i < unvalidatedIDs.length; i++) {
         const unvalidatedID = unvalidatedIDs[i];
         const node = nodes[unvalidatedID];
-        const ability = punscake.abilities[unvalidatedID];
+        const ability = punscake[wynnClass].abilities[unvalidatedID];
 
         if (!node.selected) {
             unvalidatedIDs.splice(i, 1);
@@ -267,11 +263,9 @@ function validateTree(wynnClass) {
         // node hasn't met its archetype req. yet
     }
 
-    unselectedIDs.forEach((id) => {
-    })
     for (let i = 0; i < unselectedIDs.length; i++) {
         const id = unselectedIDs[i];
-        const ability = punscake.abilities[id];
+        const ability = punscake[wynnClass].abilities[id];
         const node = nodes[id];
 
         if (blockedByExclusive(id)) node.locked = true;
@@ -284,6 +278,9 @@ function validateTree(wynnClass) {
         nodes[unvalidatedID].red = true;
     });
 
+    Object.keys(nodes).forEach(key => {
+        nodes[key].element.dataset.red = (nodes[key].red);
+    })
 
     // loop over the list, setting the images for nodes
     Object.keys(nodes).forEach(abilityID => {
@@ -294,10 +291,7 @@ function validateTree(wynnClass) {
 function changeNodeImg(nodes, abilityID, wynnClass) {
     const node = nodes[abilityID];
 
-    const element = node.element;
-    element.innerHTML = "";
-
-    const img = document.createElement("img");
+    const img = node.element.querySelector("img");
 
     let suffix;
     if (node.red) {
@@ -305,7 +299,7 @@ function changeNodeImg(nodes, abilityID, wynnClass) {
     } else if (node.valid) {
         suffix = "_active";
     } else if (node.locked) {
-        suffix = "_shatter";
+        suffix = "_blocked";
     } else if (node.unavailable) {
         suffix = "";
     } else if (node.reachable) {
@@ -314,24 +308,10 @@ function changeNodeImg(nodes, abilityID, wynnClass) {
         suffix = "";
     }
 
-    let abilityType = punscake.abilities[abilityID].type;
+    let abilityType = punscake[wynnClass].abilities[abilityID].type;
     if (abilityType === "skill") abilityType = wynnClass;
     img.src = "img/node/" + abilityType + suffix + ".png";
-    img.style.display = "block";
-    img.style.width = "100%";
-    img.style.cursor = "pointer";
-    img.dataset.type = "ability";
-    img.dataset.name = punscake.abilities[abilityID]._plainname;
-    img.title = punscake.abilities[abilityID]._plainname; // hover text
-    img.classList.add("ability_img");
-    img.onload = function () {
-        img.style.scale = (100 * img.naturalHeight) / 18 + "%";
-    };
-    img.ondragstart = function () {
-        return false;
-    };
-
-    element.appendChild(img);
+    img.style.scale = (100 * img.naturalHeight) / 18 + "%";
 }
 
 function getElementFromMapIndex(index) {
@@ -368,7 +348,7 @@ const dirIndexes = {
 };
 
 function propagateHighlightTo(nodes, wynnClass, destIndex, sourceDir) {
-    const cell = punscake.cellMap[destIndex];
+    const cell = punscake[wynnClass].cellMap[destIndex];
     const node = nodes[cell.abilityID];
     if (node) {
         node.reachable = true;
@@ -378,7 +358,7 @@ function propagateHighlightTo(nodes, wynnClass, destIndex, sourceDir) {
 }
 
 function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
-    const sourceCell = punscake.cellMap[sourceIndex];
+    const sourceCell = punscake[wynnClass].cellMap[sourceIndex];
     const element = getElementFromMapIndex(sourceIndex);
     const highlights = Array.from(element.dataset.highlights);
 
@@ -392,7 +372,7 @@ function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
 
         const destIndex = sourceIndex + dirOffsets[newDir];
 
-        const destCell = punscake.cellMap[destIndex];
+        const destCell = punscake[wynnClass].cellMap[destIndex];
 
         // if it's not a used cell
         if (destCell === undefined) return;

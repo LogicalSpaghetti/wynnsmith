@@ -52,6 +52,21 @@ function addEventListeners() {
             document.getElementById("display-" + slot_icon.dataset.slot).style.display = "none";
         });
     });
+    document.getElementById("clear_tree").addEventListener("click", (event) => {
+        document.getElementById("abilityTree")
+            .querySelectorAll("td[data-selected='true']").forEach((td) => {
+            td.dataset.selected = "false";
+        })
+        refreshBuild();
+    })
+    document.getElementById("clear_reds").addEventListener("click", (event) => {
+        document.getElementById("abilityTree")
+            .querySelectorAll("td[data-red='true']").forEach((td) => {
+            td.removeAttribute("data-red");
+            td.dataset.selected = "false";
+        })
+        refreshBuild();
+    })
 
     // Effect Toggles
     document.getElementById("effect_toggles").addEventListener("click", (event) => {

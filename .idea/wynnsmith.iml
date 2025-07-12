@@ -5,6 +5,9 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/.obsidian" />
+      <excludeFolder url="file://$MODULE_DIR$/reference" />
+      <excludeFolder url="file://$MODULE_DIR$/wynnsmith_markdown/.obsidian" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
