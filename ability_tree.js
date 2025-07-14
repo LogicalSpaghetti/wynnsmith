@@ -110,9 +110,6 @@ function mapHTML(tree, abilityTree, wynnClass) {
             abilityTree.appendChild(tr);
             row = tr;
         }
-        if (i % 54 < 9 && i > 8) {
-            row.hidden = true;
-        }
 
         const cell = document.createElement("td");
         row.appendChild(cell);
@@ -143,7 +140,7 @@ function mapHTML(tree, abilityTree, wynnClass) {
         img.style.cursor = "pointer";
         img.dataset.type = "ability";
         img.dataset.name = abilities[ability.abilityID]._plainname;
-        img.title = abilities[ability.abilityID]._plainname; // hover text
+        img.title = abilities[ability.abilityID].description; // hover text
         img.classList.add("ability_img");
         img.onload = function () {
             img.style.scale = (100 * img.naturalHeight) / 18 + "%";
@@ -364,7 +361,7 @@ function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
 
     dirs.forEach(newDir => {
         // if the node is going up
-        if (newDir === "up") return;
+        if (!punscake[wynnClass].bTravesableUp && newDir === "up") return;
         // if the cell doesn't go in this direction
         if (sourceCell.travelNode[newDir] === 0) return;
         // if this is the same direction it came from
@@ -380,8 +377,8 @@ function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
         if (destCell.travelNode[inverseDirs[newDir]] === 0) return;
 
         // left on left edge or right on right edge
-        if (sourceIndex % 9 === 1 && newDir === "left") return;
-        if (sourceIndex % 9 === 0 && newDir === "right") return;
+        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 1 && newDir === "left") return;
+        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 0 && newDir === "right") return;
 
         // if it finds a selected node:
         if (propagateHighlightTo(nodes, wynnClass, destIndex, newDir)) {

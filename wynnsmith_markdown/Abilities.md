@@ -1,0 +1,1 @@
+Detailed descriptions of every ability in the game

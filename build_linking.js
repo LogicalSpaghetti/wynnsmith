@@ -8,8 +8,8 @@ function copyBuildLink(button, long) {
 }
 
 function getBuildLink(long) {
-    var text = location.href.replace(location.search, "") + "?";
-    var appendedText = "";
+    let text = location.href.replace(location.search, "") + "?";
+    let appendedText = "";
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
 
@@ -26,10 +26,8 @@ function loadBuildFromLink() {
     inputs.forEach(input => {
         const itemType = input.dataset["slot"];
         if (searchParams.get(itemType) === null) return;
-        const inputParam = searchParams.get(itemType).split(">")[0];
-        if (inputParam === undefined || inputParam === null) return;
-
-        const slotContent = inputParam;
+        const slotContent = searchParams.get(itemType).split(">")[0];
+        if (slotContent === undefined || slotContent === null) return;
 
         input.value = slotContent.replaceAll("_", " ");
     })
@@ -107,13 +105,12 @@ function copyTreeAsText() {
     const tree = document.getElementById("abilityTree");
     const trs = tree.firstChild.childNodes;
 
-    var output = "```ansi";
-    var counter = 0;
+    let output = "```ansi";
     console.log(trs);
-    var rowCounter = 0;
+    let rowCounter = 0;
     trs.forEach((tr) => {
         rowCounter++;
-        if (rowCounter % 6 == 1 && rowCounter !== 1) return;
+        if (rowCounter % 6 === 1 && rowCounter !== 1) return;
         output += "\n";
         tr.childNodes.forEach((td) => {
             if (td.firstChild === null) {

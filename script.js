@@ -12,7 +12,7 @@ const inputs = [
     document.getElementById(`input_weapon`),
 ];
 
-const tomeInputs = document.querySelectorAll('.tome_input')
+const tomeInputs = document.querySelectorAll(".tome_input");
 
 const spInputs = document.querySelectorAll(".sp");
 
@@ -26,6 +26,7 @@ function refreshBuild() {
     fixSPInputs();
 
     refreshClass(build);
+    if (currentClass === "") return;
     refreshItemData(build);
     refreshTomes(build);
     refreshAbilities(build);
@@ -115,7 +116,7 @@ function deromanize(str) {
     var str = str.toUpperCase();
     var validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/;
     var token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g;
-    var key = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
+    var key = {M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1};
     var num = 0,
         m;
     if (!(str && validator.test(str))) return false;
@@ -136,7 +137,7 @@ const iconHeaders = {
     "air": getHeaderForIcon("air", "❋"),
     "health": getHeaderForIcon("health", "⚔"),
     "mana": getHeaderForIcon("water", "✺"),
-}
+};
 
 const colorHeaders = {
     "earth": getHeaderForColor("earth"),
@@ -145,14 +146,14 @@ const colorHeaders = {
     "fire": getHeaderForColor("fire"),
     "air": getHeaderForColor("air"),
     "health": getHeaderForColor("health"),
-}
+};
 
 function getHeaderForIcon(color, elementEmoji) {
-    return '<span class="'+ color + '"><b class="font-minecraft" style="display: inline-block; width: 1ch">' + elementEmoji + '</b> ';
+    return "<span class=\"${color}\"><b class=\"font-minecraft\" style=\"display: inline-block; width: 1ch\">" + elementEmoji + "</b> ";
 }
 
 function getHeaderForColor(color) {
-    return '<span class="'+ color + '">';
+    return "<span class=\"${color}\">";
 }
 
 function replaceAt(string, index, replacement) {

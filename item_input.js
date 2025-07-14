@@ -1,7 +1,7 @@
 `use strict`;
 
-var previousClass = "";
-var currentClass = "";
+let previousClass = "";
+let currentClass = "";
 
 function refreshClass(build) {
     previousClass = currentClass;
@@ -93,7 +93,7 @@ function getItemByInput(input) {
     const itemCategory = itemGroups[input.dataset["slot"].replace("0", "").replace("1", "")];
 
     if (itemCategory === undefined) return;
-    const itemData = itemCategory.find((it) => it.name == input.value);
+    const itemData = itemCategory.find((it) => it.name === input.value);
     if (itemData === undefined) return undefined;
     return itemData.item;
 }
@@ -103,26 +103,6 @@ function refreshOwnData(input) {
     const item = getItemByInput(input);
 
     setDisplay(display, item, input.value);
-}
-
-function addUnmaxedIds(build, item) {
-    const ids = item.identifications;
-    const idNames = Object.keys(ids);
-    for (let i = 0; i < idNames.length; i++) {
-        const id = ids[idNames[i]];
-        addUnmaxedId(build, id, idNames[i]);
-    }
-}
-
-function addUnmaxedId(build, id, idName) {
-    if (Number.isInteger(id)) {
-        build.base[idName] = build.ids[idName] === undefined ? id : build.ids[idName] + id;
-    } else {
-        if (build.ids[idName] === undefined) {
-            build.ids[idName] = { min: 0, max: 0 };
-        }
-        addMinAndMaxTo(build.ids[idName], id);
-    }
 }
 
 function addMinAndMaxTo(target, source) {

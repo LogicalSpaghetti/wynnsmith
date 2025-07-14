@@ -28,13 +28,13 @@
     --wy-fire: #ff5555;
     --wy-air: #fff;
 
-    font-family: minecraft;
+    font-family: minecraft, serif;
 }
 
 body {
     color: #fff;
     background-color: var(--ls-background);
-    padding: 0px;
+    padding: 0;
     margin: 0;
 }
 
@@ -44,7 +44,7 @@ input {
 
 .color-bar-holder {
     height: fit-content;
-    line-height: 0px;
+    line-height: 0;
     padding-bottom: 0.3rem;
 }
 
@@ -69,6 +69,30 @@ label {
     text-align: center;
 }
 
+#cursorTooltip {
+    position: fixed;
+    z-index: 40;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.minecraftTooltip {
+    padding: 1px 5px 1px 5px;
+    border: 2px solid #230158;
+    background-color: #110111;
+    color: white;
+    font-family: minecraft, mojangles, unifont, unifontEmoji, serif;
+    -webkit-filter: blur(0);
+    filter: blur(0);
+    text-shadow: 0.125rem 0.125rem 0 color-mix(in srgb, currentColor 24%, black);
+    min-height: 30px;
+    border-radius: 4px;
+    word-spacing: 0.1rem;
+    letter-spacing: 0.02rem;
+    text-underline-offset: 0.1875rem;
+    line-height: 1.25rem;
+}
+
 /* -- Inputs: -- */
 
 .slot_icon {
@@ -80,7 +104,7 @@ label {
 .input_section {
     display: flex;
     line-height: 0;
-    padding: 0px;
+    padding: 0;
     /* width: 250px; */
 }
 
@@ -114,7 +138,7 @@ input,
     /* transition: all 0.2s ease; */
     border: 1px solid var(--ls-light-trim);
     padding: 0.2rem;
-    margin: 0px;
+    margin: 0;
     text-align: center;
     z-index: 1;
     background-color: var(--ls-background);
@@ -135,8 +159,8 @@ input:focus {
 
 #sp_section {
     width: 64ch;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .sp {
@@ -162,9 +186,8 @@ input:focus {
     background-size: 16px;
     background-repeat: no-repeat;
     background-position: 1px, 1px;
-    border-left: 0px;
-    display: inline-block;
-    margin: 0px;
+    border-left: 0;
+    margin: 0;
     outline: none;
     vertical-align: top;
 }
@@ -296,7 +319,7 @@ input:focus {
     /* box-sizing: border-box; */
     /* padding: 0px; */
     display: inline;
-    flex: 1 0 0%;
+    flex: 1 0 0;
 }
 
 .right {
@@ -344,7 +367,7 @@ table {
 }
 
 td {
-    padding: 0px;
+    padding: 0;
     height: 18px;
     width: 18px;
 }
@@ -364,7 +387,6 @@ td {
     left: 50%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
 }
 
 /* -- Attacks: -- */
@@ -424,8 +446,7 @@ td {
     width: 32.4px;
     text-align: center;
 
-    -moz-user-select: -moz-none;
-    -khtml-user-select: none;
+    -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
@@ -444,7 +465,7 @@ td {
 
 .aspect_up {
     background-image: url(img/buttons/page_up.png);
-    translate: -5.4px 0px;
+    translate: -5.4px 0;
 }
 
 .aspect_down {
