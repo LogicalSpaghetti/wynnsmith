@@ -97,8 +97,8 @@ function decimalToBinary(decimal) {
 
 function romanize(num) {
     if (!+num) return false;
-    var digits = String(+num).split("");
-    var key = [
+    const digits = String(+num).split("");
+    const key = [
         "", "C", "CC", "CCC", "CD",
         "D", "DC", "DCC", "DCCC", "CM",
         "", "X", "XX", "XXX", "XL",
@@ -106,26 +106,22 @@ function romanize(num) {
         "", "I", "II", "III", "IV",
         "V", "VI", "VII", "VIII", "IX",
     ];
-    var roman = "",
+    let roman = "",
         i = 3;
     while (i--) roman = (key[+digits.pop() + i * 10] || "") + roman;
     return Array(+digits.join("") + 1).join("M") + roman;
 }
 
 function deromanize(str) {
-    var str = str.toUpperCase();
-    var validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/;
-    var token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g;
-    var key = {M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1};
-    var num = 0,
+    str = str.toUpperCase();
+    const validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/;
+    const token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g;
+    const key = {M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1};
+    let num = 0,
         m;
     if (!(str && validator.test(str))) return false;
     while ((m = token.exec(str))) num += key[m[0]];
     return num;
-}
-
-function getSPMult(sp) {
-    return spMultipliers[sp < 0 ? 0 : sp > 150 ? 150 : sp];
 }
 
 const iconHeaders = {
@@ -149,13 +145,9 @@ const colorHeaders = {
 };
 
 function getHeaderForIcon(color, elementEmoji) {
-    return "<span class=\"${color}\"><b class=\"font-minecraft\" style=\"display: inline-block; width: 1ch\">" + elementEmoji + "</b> ";
+    return `<span class=\"${color}\"><b class=\"font-minecraft\" style=\"display: inline-block; width: 1ch\">${elementEmoji}</b> `;
 }
 
 function getHeaderForColor(color) {
-    return "<span class=\"${color}\">";
-}
-
-function replaceAt(string, index, replacement) {
-    return string.substring(0, index) + replacement + string.substring(index + replacement.length);
+    return `<span class=\"${color}\">`;
 }

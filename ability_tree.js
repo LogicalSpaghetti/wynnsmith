@@ -140,7 +140,6 @@ function mapHTML(tree, abilityTree, wynnClass) {
         img.style.cursor = "pointer";
         img.dataset.type = "ability";
         img.dataset.name = abilities[ability.abilityID]._plainname;
-        img.title = abilities[ability.abilityID].description; // hover text
         img.classList.add("ability_img");
         img.onload = function () {
             img.style.scale = (100 * img.naturalHeight) / 18 + "%";
@@ -148,9 +147,46 @@ function mapHTML(tree, abilityTree, wynnClass) {
         img.ondragstart = function () {
             return false;
         };
+        img.addEventListener("mouseover", () => {
+            this.renderHoverAbilityTooltip(
+                getHoverTextForAbility(ability.abilityID, wynnClass),
+            );
+        });
+        img.addEventListener("mouseout", () => {
+            this.hideHoverAbilityTooltip();
+        });
 
         cell.appendChild(img);
     }
+}
+
+function getHoverTextForAbility(abilityID, wynnClass) {
+    const abilities = punscake[wynnClass].abilities;
+    const ability = abilities[abilityID];
+
+    let result = `${ability.name}\n\n`;
+
+    result += `${ability.description}\n\n`;
+
+    if (ability.unlockingWillBlock.length) {
+        result += `§cUnlocking will block:\n`;
+        for (let id of ability.unlockingWillBlock)
+            result += `§c- §7${abilities[id]._plainname}\n`;
+        result += "\n";
+    }
+
+    if (ability.archetype !== "")
+        result += ability.archetype + "\n\n";
+
+    result += "§7Ability points: §f" + ability.pointsRequired;
+
+    if (ability.requires !== -1)
+        result += "\n§7Required Ability: §f" + abilities[ability.requires]._plainname;
+
+    if (ability.archetype !== "" && ability.archetypePointsRequired > 0)
+        result += `\n§7Min ${stripMinecraftFormatting(ability.archetype)} Archetype: §f${ability.archetypePointsRequired}`;
+
+    return minecraftToHTML(result);
 }
 
 // called any time the build changes but the class doesn't
@@ -184,11 +220,12 @@ function validateTree(wynnClass) {
     // reset tree highlights
     treeHTML.querySelectorAll("td[data-type='node']").forEach((red) => {
         red.dataset.red = "false";
-    })
+    });
     treeHTML.querySelectorAll(".tree_cell").forEach(connector => {
         connector.dataset.highlights = "0000";
     });
 
+    let usedAP = 0;
     const nodes = {};
     const unvalidatedIDs = [];
     const archetypePoints = {};
@@ -256,9 +293,12 @@ function validateTree(wynnClass) {
             if (ability.archetype !== "") archetypePoints[ability.archetype] += 1;
             unvalidatedIDs.splice(i, 1);
             i = -1;
+            usedAP += ability.pointsRequired;
         }
         // node hasn't met its archetype req. yet
     }
+
+    displayAP(usedAP);
 
     for (let i = 0; i < unselectedIDs.length; i++) {
         const id = unselectedIDs[i];
@@ -277,12 +317,19 @@ function validateTree(wynnClass) {
 
     Object.keys(nodes).forEach(key => {
         nodes[key].element.dataset.red = (nodes[key].red);
-    })
+    });
 
     // loop over the list, setting the images for nodes
     Object.keys(nodes).forEach(abilityID => {
         changeNodeImg(nodes, abilityID, wynnClass);
-    })
+    });
+
+    // 
+}
+
+function displayAP(usedAP) {
+    const apCount = document.getElementById("ap_assigned");
+    apCount.textContent = String(usedAP);
 }
 
 function changeNodeImg(nodes, abilityID, wynnClass) {
@@ -376,6 +423,7 @@ function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
         // if dest doesn't connect to this
         if (destCell.travelNode[inverseDirs[newDir]] === 0) return;
 
+        // TODO: looping doesn't work, btw use a coordinate system instead?
         // left on left edge or right on right edge
         if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 1 && newDir === "left") return;
         if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 0 && newDir === "right") return;
@@ -408,4 +456,48 @@ function renderHighlights() {
 
         connector.appendChild(img);
     });
+}
+
+function stripMinecraftFormatting(text = "") {
+
+    let result = "";
+
+    const colorSplitArr = splitByColorFormats(text);
+
+    colorSplitArr.forEach(colorSplit => {
+        const formatSplitArr = splitByOtherFormats(colorSplit["content"]);
+
+        formatSplitArr.forEach(formatSplit => {
+            result += formatSplit["content"];
+        });
+    });
+
+    return result;
+}
+
+class Tree {
+    tree;
+    wynnClass;
+
+    constructor(wynnClass) {
+        this.wynnClass = wynnClass;
+
+        this.tree = punscake[wynnClass];
+    }
+}
+
+class Ability {
+
+}
+
+class Connector {
+
+}
+
+class Properties {
+
+}
+
+class State {
+
 }

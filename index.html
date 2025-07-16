@@ -19,7 +19,8 @@
         <!-- Column -->
         <section>
             <div class="m1">
-                <div id="ap_display"><span id="ap_assigned">00</span>/45 AP</div>
+                <div id="ap_display">AP: <span id="ap_assigned">0</span>/45 AP</div>
+                <div id="tree_errors" class="fire small-font" style="text-align: left">Error: errors not created!</div>
                 <table id="abilityTree">
                     <!-- Filled by js -->
                 </table>
@@ -150,64 +151,74 @@
                 <button id="ansi_tree">Copy ANSI Tree</button>
             </div>
             <br/>
-            <div id="sp_section" class="small-font">
-                        <span class="small-font sp-hold">
-                            <span class="earth">
-                                <b class="font-minecraft" style="display: inline-block; width: 1ch">✤</b>
-                                Strength
-                            </span>
-                            <input id="strength" class="sp" placeholder="Strength"/>
-                            Assign: 100
-                            <br/>
-                            Original: 150
-                            <br/>
-                            80.8% damage </span
-                        ><span class="small-font sp-hold">
+            <table id="sp_section" class="small-font">
+                <tr>
+                    <td class="small-font sp-hold">
+                        <span class="earth">
+                            <b class="font-minecraft" style="display: inline-block; width: 1ch">✤</b>
+                            Strength
+                        </span>
+                        <br>
+                        <input id="strength" class="sp" placeholder="Strength"/>
+                        <br>
+                        Assign: 100
+                        <br/>
+                        Minimum: 150
+                        <br/>
+                        80.8% damage
+                    </td>
+                    <td class="small-font sp-hold">
                             <span class="thunder">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">✦</b>
                                 Dexterity
                             </span>
-                            <input id="dexterity" class="sp" placeholder="Dexterity"/>
-                            Assign: 100
-                            <br/>
-                            Original: 150
-                            <br/>
-                            80.8% crit </span
-            ><span class="small-font sp-hold">
+                        <br>
+                        <input id="dexterity" class="sp" placeholder="Dexterity"/>
+                        <br>
+                        Assign: 100
+                        <br/>
+                        Minimum: 150
+                        <br/>
+                        80.8% crit
+                    </td>
+                    <td class="small-font sp-hold">
                             <span class="water">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">❉</b>
                                 Intelligence
                             </span>
-                            <input id="intelligence" class="sp" placeholder="Intelligence"/>
-                            Assign: 100
-                            <br/>
-                            Original: 150
-                            <br/>
-                            80.8% cost red. </span
-            ><span class="small-font sp-hold">
-                            <span class="fire">
+                        <input id="intelligence" class="sp" placeholder="Intelligence"/>
+                        Assign: 100
+                        <br/>
+                        Minimum: 150
+                        <br/>
+                        80.8% cost red.
+                    </td>
+                    <td class="small-font sp-hold">
+                           <span class="fire">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">✹</b>
                                 Defense
                             </span>
-                            <input id="defence" class="sp" placeholder="Defence"/>
-                            Assign: 100
-                            <br/>
-                            Original: 150
-                            <br/>
-                            80.8% resist </span
-            ><span class="small-font sp-hold">
+                        <input id="defence" class="sp" placeholder="Defence"/>
+                        Assign: 100
+                        <br/>
+                        Minimum: 150
+                        <br/>
+                        80.8% resist
+                    </td>
+                    <td class="small-font sp-hold">
                             <span class="air">
                                 <b class="font-minecraft" style="display: inline-block; width: 1ch">❋</b>
                                 Agility
                             </span>
-                            <input id="agility" class="sp" placeholder="Agility"/>
-                            Assign: 100
-                            <br/>
-                            Original: 150
-                            <br/>
-                            80.8% dodge
-                        </span>
-            </div>
+                        <input id="agility" class="sp" placeholder="Agility"/>
+                        Assign: 100
+                        <br/>
+                        Minimum: 150
+                        <br/>
+                        80.8% dodge
+                    </td>
+                </tr>
+            </table>
             <br/>
             <div id="effect_toggles" style="width: 32ch; padding-left: 1ch; padding-right: 1ch">
                 <div style="text-align: center">Active Boosts:</div>
@@ -419,6 +430,8 @@
     <div id="dev_output" class="output font-minecraft"></div>
 </div>
 
+<div class="minecraftTooltip" id="cursorTooltip" hidden></div>
+
 <script src="grouped_items.js"></script>
 <script src="data_class_trees.js"></script>
 <script src="trees.js"></script>
@@ -443,5 +456,7 @@
 <script src="damage_display.js"></script>
 
 <script src="settings.js"></script>
+
+<script src="punscake.js"></script>
 </body>
 </html>

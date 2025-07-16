@@ -44,20 +44,17 @@ input {
 
 .color-bar-holder {
     height: fit-content;
-    line-height: 0;
+    /*line-height: 0;*/
     padding-bottom: 0.3rem;
 }
 
 .color-bar {
     height: 1px;
+    display: inline-block;
 }
 
 .hide_section {
     display: none;
-}
-
-span {
-    display: inline-block;
 }
 
 .flexCol {
@@ -91,6 +88,14 @@ label {
     letter-spacing: 0.02rem;
     text-underline-offset: 0.1875rem;
     line-height: 1.25rem;
+}
+
+.fw-bold {
+    font-weight: bold;
+}
+
+.minecraftTooltip .fw-bold {
+    letter-spacing: 0.15rem;
 }
 
 /* -- Inputs: -- */
@@ -158,6 +163,8 @@ input:focus {
 }
 
 #sp_section {
+    line-height: 0.75rem;
+    text-align: center;
     width: 64ch;
     padding: 0;
     margin: 0;
@@ -165,12 +172,7 @@ input:focus {
 
 .sp {
     width: 7ch;
-}
-
-.sp-hold {
-    width: 12.5ch;
     text-align: center;
-    line-height: 0.75rem;
 }
 
 /* Tomes */
@@ -433,6 +435,7 @@ td {
     height: 27px;
     width: 27px;
     background-size: 100%;
+    display: inline-block;
 }
 
 .aspect {

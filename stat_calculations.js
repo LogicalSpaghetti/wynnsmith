@@ -4,7 +4,7 @@ function calculateStats(build) {
     applyExternalBuffs(build);
     includeOtherGear(build);
 
-    computeSPMults(build);
+    computeSPMultipliers(build);
 
     statCalculations(build);
 
@@ -41,7 +41,6 @@ function includeOtherGear(build) {
 }
 
 function includeTomes(build) {
-    // TODO
     for (let i = 0; i < build.tomes.length; i++) {
         addIds(build, itemGroups.tome[build.tomes[i]]);
     }
@@ -51,15 +50,18 @@ function includeCharms(build) {
     // TODO
 }
 
-function computeSPMults(build) {
+function capSP(sp) {
+    return isNaN(sp) ? 0 :
+        Math.min(Math.max(sp, 0), 150);
+}
+
+function computeSPMultipliers(build) {
     for (let i = 0; i < 5; i++) {
-        const textInt = parseInt(spInputs[i].value > 150 ? 150 : spInputs[i].value < 0 ? 0 : spInputs[i].value);
+        let mlt = spMultipliers[capSP(spInputs[i].value)];
+        if (i === 3) mlt *= 0.867;
+        if (i === 4) mlt *= 0.951;
 
-        let mult = textInt === undefined ? 0 : spMultipliers[textInt];
-        if (i === 3) mult *= 0.867;
-        if (i === 4) mult *= 0.951;
-
-        build.sp.mults[i] = mult;
+        build.sp.mults[i] = mlt;
     }
 }
 
@@ -103,10 +105,10 @@ function calculateEHp(build) {
         build.wynnClass === "shaman"
             ? 2 - 0.6
             : build.wynnClass === "archer"
-            ? 2 - 0.7
-            : build.wynnClass === "mage"
-            ? 2 - 0.8
-            : 1;
+                ? 2 - 0.7
+                : build.wynnClass === "mage"
+                    ? 2 - 0.8
+                    : 1;
 
     applyEHpModifiers(build);
 
@@ -119,13 +121,13 @@ function applyEHpModifiers(build) {
         build,
         "toggles",
         "maskOfTheFanatic",
-        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0)
+        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0),
     );
     applyEHpDivider(
         build,
         "toggles",
         "maskOfTheAwakened",
-        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0)
+        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0),
     );
     applyEHpDivider(build, "toggles", "lunaticMemory", 1 - 0.15);
     applyEHpDivider(build, "toggles", "warScream", 1 - 0.2);
