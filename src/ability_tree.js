@@ -129,6 +129,7 @@ function mapHTML(tree, abilityTree, wynnClass) {
         }
         cell.dataset.type = "node";
         cell.dataset.ability_id = ability.abilityID;
+        cell.dataset.color = abilities[ability.abilityID].type;
 
         const img = document.createElement("img");
 
@@ -414,7 +415,15 @@ function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
         // if this is the same direction it came from
         if (inverseDirs[sourceDir] === newDir) return;
 
-        const destIndex = sourceIndex + dirOffsets[newDir];
+        // left on left edge or right on right edge
+        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 1 && newDir === "left") return;
+        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 0 && newDir === "right") return;
+
+        let destIndex = sourceIndex + dirOffsets[newDir];
+        if (punscake[wynnClass].loopTree) {
+            if (newDir === "left") destIndex += 9;
+            if (newDir === "right") destIndex -= 9;
+        }
 
         const destCell = punscake[wynnClass].cellMap[destIndex];
 
@@ -423,10 +432,7 @@ function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
         // if dest doesn't connect to this
         if (destCell.travelNode[inverseDirs[newDir]] === 0) return;
 
-        // TODO: looping doesn't work, btw use a coordinate system instead?
-        // left on left edge or right on right edge
-        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 1 && newDir === "left") return;
-        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 0 && newDir === "right") return;
+
 
         // if it finds a selected node:
         if (propagateHighlightTo(nodes, wynnClass, destIndex, newDir)) {
@@ -473,31 +479,4 @@ function stripMinecraftFormatting(text = "") {
     });
 
     return result;
-}
-
-class Tree {
-    tree;
-    wynnClass;
-
-    constructor(wynnClass) {
-        this.wynnClass = wynnClass;
-
-        this.tree = punscake[wynnClass];
-    }
-}
-
-class Ability {
-
-}
-
-class Connector {
-
-}
-
-class Properties {
-
-}
-
-class State {
-
 }

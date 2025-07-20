@@ -30,7 +30,7 @@ function loadBuildFromLink() {
         if (slotContent === undefined || slotContent === null) return;
 
         input.value = slotContent.replaceAll("_", " ");
-    })
+    });
 }
 
 // new system:
@@ -100,10 +100,14 @@ function copyTreeAsText() {
     const purple = `[2;35m`;
     const white = "[2;37m";
 
+    const grey = "[2;30m";
+    const teal = "[2;36m";
+
+    const bold = "[1;2m"
     const foot = `[0m`;
 
     const tree = document.getElementById("abilityTree");
-    const trs = tree.firstChild.childNodes;
+    const trs = tree.childNodes;
 
     let output = "```ansi";
     console.log(trs);
@@ -113,85 +117,83 @@ function copyTreeAsText() {
         if (rowCounter % 6 === 1 && rowCounter !== 1) return;
         output += "\n";
         tr.childNodes.forEach((td) => {
-            if (td.firstChild === null) {
+            if (!td.classList.contains("tree_cell")) {
                 output += " ";
                 return;
             }
-            const nodeType = td.firstChild.dataset.name;
-            if (td.firstChild.classList.contains("ability_node")) {
-                switch (nodeType) {
-                    case "nodeRed":
+
+            if (td.dataset.type === "node") {
+                if (td.dataset.selected !== "true") {
+                    output += grey;
+
+                } else
+                switch (td.dataset.color) {
+                    case "red":
                         output += red;
                         break;
-                    case "nodeShaman":
+                    case "skill":
                         output += green;
                         break;
-                    case "nodeArcher":
-                        output += green;
-                        break;
-                    case "nodeMage":
-                        output += green;
-                        break;
-                    case "nodeWarrior":
-                        output += green;
-                        break;
-                    case "nodeAssassin":
-                        output += green;
-                        break;
-                    case "nodeBlue":
+                    case "blue":
                         output += blue;
                         break;
-                    case "nodePurple":
+                    case "purple":
                         output += purple;
                         break;
-                    case "nodeYellow":
+                    case "yellow":
                         output += yellow;
                         break;
-                    case "nodeWhite":
+                    case "white":
                         output += white;
                         break;
                     default:
-                        output += "ERROR";
+                        output += "?";
                 }
                 output += "♦" + foot;
-            } else if (td.firstChild.classList.contains("connector")) {
-                switch (nodeType.replace("connector_", "")) {
-                    case "down_left":
+            } else if (td.dataset.type === "connector") {
+                if (td.dataset.highlights === "0000") {
+                    output += " ";
+                    return;
+                }
+                output += teal;
+                switch (td.dataset.highlights) {
+                    case "0220":
                         output += "┐";
                         break;
-                    case "right_down":
+                    case "0202":
                         output += "┌";
                         break;
-                    case "right_down_left":
+                    case "0222":
                         output += "┬";
                         break;
-                    case "right_left":
+                    case "0022":
                         output += "─";
                         break;
-                    case "up_down":
+                    case "2200":
                         output += "│";
                         break;
-                    case "up_down_left":
+                    case "2220":
                         output += "┤";
                         break;
-                    case "up_left":
+                    case "2020":
                         output += "┘";
                         break;
-                    case "up_right":
+                    case "2002":
                         output += "└";
                         break;
-                    case "up_right_down":
+                    case "2202":
                         output += "├";
                         break;
-                    case "up_right_down_left":
+                    case "2222":
                         output += "┼";
                         break;
-                    case "up_right_left":
+                    case "2022":
                         output += "┴";
                         break;
                     default:
-                        output += ".";
+                        output += "?";
                 }
+                output += foot;
             }
         });
     });

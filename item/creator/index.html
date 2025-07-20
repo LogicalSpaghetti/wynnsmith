@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Creator</title>
+    <link rel="icon" href="../../img/icons/w.png"/>
+    <link rel="stylesheet" href="../../style.css"/>
+</head>
+<body>
+
+<table id="holder" style="padding:3ch">
+    <tr>
+        <td style="width:350px">
+            <label for="input">Item Text: </label>
+            <br>
+            <span class="genericUnicodeContainer" style="pointer-events: auto"></span>
+            <br>
+            <span class="classUnicodeContainer" style="pointer-events: auto"></span>
+            <br>
+            <span class="commonAbilityUnicodeContainer" style="pointer-events: auto"></span>
+            <br>
+            <span class="colorContainer" style="pointer-events: auto"></span>
+            <br>
+            <span class="row justify-content-end mt-2" style="text-align: end;">
+            <!--<button type="button" class="btn btn-secondary me-2 medium-btn" style="width: 100px;" onclick="insertStringBeforeSelected(preferredDelimiter + 'r')">Reset style</button>-->
+            <button type="button" class="btn btn-secondary me-2 fw-bold medium-btn" title="Bold" onclick="insertStringBeforeSelected(preferredDelimiter + 'l')">B</button>
+            <button type="button" class="btn btn-secondary me-2 fst-italic medium-btn" title="Italic" onclick="insertStringBeforeSelected(preferredDelimiter + 'o')">I</button>
+            <button type="button" class="btn btn-secondary me-2 text-decoration-underline medium-btn" title="Underline" onclick="insertStringBeforeSelected(preferredDelimiter + 'n')">U</button>
+            <button type="button" class="btn btn-secondary me-2 text-decoration-line-through medium-btn" title="Strikethrough" onclick="insertStringBeforeSelected(preferredDelimiter + 'm')">S</button>
+            <input type="color" style="height: 25px; width: 25px;" class="form-control form-control-color me-3" value="#18f7d1" title="Custom color" onchange="insertStringBeforeSelected(preferredDelimiter + value)">
+        </span>
+            <br>
+            <textarea id="input" class="focusable" placeholder="input" cols="40" rows="5"></textarea>
+        </td>
+        <td>
+            <div id="itemDisplay" class="minecraftTooltip" style="width: fit-content"></div>
+        </td>
+    </tr>
+</table>
+
+<script src="../../src/punscake.js"></script>
+<script type="text/javascript">
+    document.getElementById("holder")
+        .addEventListener("pointerdown", (e) => e.target.classList.contains("focusable") ? function () {
+        } : e.preventDefault());
+
+    const input = document.getElementById("input");
+    input.addEventListener("input", () => {
+        document.getElementById("itemDisplay").innerHTML = minecraftToHTML(input.value);
+    });
+
+    input.addEventListener("input", () => {
+        localStorage.setItem("input", input.value);
+    })
+
+    window.addEventListener("load", () => {
+        input.value = localStorage.getItem("input");
+        input.dispatchEvent(new Event("input"));
+    })
+
+    //Populates color options from codeDictionaryColor map
+    const colorContainers = document.getElementsByClassName("colorContainer");
+
+    for (let key in codeDictionaryColor) {
+
+        if (codeDictionaryColor[key] == null)
+            continue;
+
+        const button = document.createElement("button");
+        button.style = "height: 16px; width: 16px; margin-right: 4px; background-color:" + codeDictionaryColor[key];
+        button.tabIndex = -1;
+        button.type = "button";
+
+        for (let container of colorContainers) {
+            const clone = button.cloneNode(false);
+            container.appendChild(clone);
+            clone.addEventListener("click", () => {
+                insertStringBeforeSelected(preferredDelimiter + key);
+            });
+        }
+
+        button.remove();
+
+    }
+
+    //Populates generic unicode options from codeDictionaryGenericSymbols map
+    const genericUnicodeContainers = document.getElementsByClassName("genericUnicodeContainer");
+
+    for (let key in codeDictionaryGenericSymbols) {
+
+        const button = document.createElement("button");
+        button.title = key;
+        button.classList.add("small-btn", "font-minecraft");
+
+        const div = document.createElement("div");
+        button.appendChild(div);
+        div.innerHTML = minecraftToHTML(codeDictionaryGenericSymbols[key]);
+        button.tabIndex = "-1";
+        button.type = "button";
+
+        for (container of genericUnicodeContainers) {
+            const clone = button.cloneNode(true);
+            container.appendChild(clone);
+            clone.addEventListener("click", () => {
+                insertStringBeforeSelected(codeDictionaryGenericSymbols[key]);
+            });
+        }
+
+        button.remove();
+
+    }
+
+    //Populates class unicode options from codeDictionaryClassSymbols map
+    const classUnicodeContainers = document.getElementsByClassName("classUnicodeContainer");
+
+    for (let key in codeDictionaryClassSymbols) {
+
+        const button = document.createElement("button");
+        button.title = key;
+        button.classList.add("small-btn", "font-minecraft");
+
+        const div = document.createElement("div");
+        button.appendChild(div);
+        div.innerHTML = minecraftToHTML(codeDictionaryClassSymbols[key]);
+
+        button.tabIndex = "-1";
+        button.type = "button";
+
+        for (container of classUnicodeContainers) {
+            const clone = button.cloneNode(true);
+            container.appendChild(clone);
+            clone.addEventListener("click", () => {
+                insertStringBeforeSelected(codeDictionaryClassSymbols[key]);
+            });
+        }
+
+        button.remove();
+
+    }
+
+    //Populates common ability options from codeDictionaryCommonAbilityAttributes map
+    const commonAbilityUnicodeContainers = document.getElementsByClassName("commonAbilityUnicodeContainer");
+
+    for (let key in codeDictionaryCommonAbilityAttributes) {
+
+        const button = document.createElement("button");
+        button.title = key;
+        button.classList.add("large-btn", "font-minecraft");
+
+        const div = document.createElement("div");
+        button.appendChild(div);
+        div.innerHTML = minecraftToHTML(codeDictionaryCommonAbilityAttributes[key][0]);
+
+        button.tabIndex = "-1";
+        button.type = "button";
+
+        for (let container of commonAbilityUnicodeContainers) {
+            const clone = button.cloneNode(true);
+            container.appendChild(clone);
+            clone.addEventListener("click", () => {
+                insertStringBeforeSelected(codeDictionaryCommonAbilityAttributes[key][1]);
+            });
+        }
+
+        button.remove();
+
+    }
+</script>
+</body>
+</html>

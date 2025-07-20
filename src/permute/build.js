@@ -1,5 +1,8 @@
+`use strict`;
+
 class Build {
     constructor() {
+        this.items = {}
         this.wynnClass = "";
         this.attackSpeed = undefined;
         this.maIds = [];

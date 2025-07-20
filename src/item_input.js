@@ -28,6 +28,15 @@ function refreshItemData(build) {
         if (item.attackSpeed === undefined) continue;
         addAttackSpeed(build, item);
         document.title = "" + input.value + ": WynnSmith";
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement("link");
+            link.rel = "icon";
+            document.head.appendChild(link);
+        }
+        link.href = "img/icons/" + item.requirements.classRequirement + ".png";
+        let weaponImg = document.querySelector(".slot_icon[data-slot='weapon']");
+        weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png"
     }
 }
 
@@ -50,6 +59,7 @@ function addAttackSpeed(build, item) {
 
 function addIds(build, source) {
     const adds = source.identifications;
+    if (!adds) return;
     const idNames = Object.keys(adds);
     for (let i = 0; i < idNames.length; i++) {
         const id = getAsMax(adds[idNames[i]]);
@@ -71,7 +81,7 @@ function addBase(build, id, idName) {
         build.base[idName] = build.base[idName] === undefined ? id : build.base[idName] + id;
     } else {
         if (build.base[idName] === undefined) {
-            build.base[idName] = { min: 0, max: 0 };
+            build.base[idName] = {min: 0, max: 0};
         }
         addMinAndMaxTo(build.base[idName], id);
     }
@@ -132,7 +142,7 @@ function colorSlot(input, item) {
 }
 
 function setLink(input) {
-    document.getElementById(input.dataset.slot + "_link").href = "../item/?" + input.value;
+    document.getElementById(input.dataset.slot + "_link").href = "./item/?" + input.value;
 }
 
 function addPowders(build, input) {
@@ -158,7 +168,7 @@ function refreshTomes(build) {
 
 function fixSPInputs() {
     for (let i = 0; i < 5; i++) {
-        if (!isNaN(parseInt(spInputs[i].value))) continue;
-        spInputs[i].value = 0;
+        let value = parseInt(spInputs[i].value);
+        spInputs[i].value = isNaN(value) ? 0 : value;
     }
 }

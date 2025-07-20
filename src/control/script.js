@@ -1,23 +1,5 @@
 `use strict`;
 
-const inputs = [
-    document.getElementById(`input_helmet`),
-    document.getElementById(`input_chestplate`),
-    document.getElementById(`input_leggings`),
-    document.getElementById(`input_boots`),
-    document.getElementById(`input_ring0`),
-    document.getElementById(`input_ring1`),
-    document.getElementById(`input_bracelet`),
-    document.getElementById(`input_necklace`),
-    document.getElementById(`input_weapon`),
-];
-
-const tomeInputs = document.querySelectorAll(".tome_input");
-
-const spInputs = document.querySelectorAll(".sp");
-
-const outputAll = document.getElementById(`dev_output`);
-
 function refreshBuild() {
     console.log("begin new refresh:");
     resetLinkText();
@@ -45,29 +27,20 @@ function refreshBuild() {
     displayForDevelopment(build);
 }
 
-function getMultiplierForSkillPoints(sp) {
-    return ((1 - Math.pow(0.9908, sp + 1)) / 0.0092 - 1) / 100;
-}
-
 function roundForDisplay(number, addPeriod) {
     if (typeof number !== "number") return number;
     const ret = Math.round((number + Number.EPSILON) * 100) / 100;
-    // return ret;
-    // add trailing zeros
 
+    // add trailing zeros
     if (ret.toString().split(".").length === 1) {
-        if (addPeriod) {
-            return ret + ".00";
-        } else {
-            return ret;
-        }
+        return ret + (addPeriod ? ".00" : "");
     } else {
         return ret.toString().split(".")[1].length < 2 ? ret + "0" : ret;
     }
 }
 
 function intToBase64(decimal) {
-    var sfStr = "";
+    let sfStr = "";
     do {
         sfStr = base64Values[decimal % 64] + sfStr;
         decimal -= decimal % 64;
@@ -77,10 +50,10 @@ function intToBase64(decimal) {
 }
 
 function base64ToDecimal(sixtyFour) {
-    var binary = "";
+    let binary = "";
     for (let i = 0; i < sixtyFour.length; i++) {
         const character = sixtyFour[i];
-        var subBinary = "" + base64Values.indexOf(character).toString(2);
+        let subBinary = "" + base64Values.indexOf(character).toString(2);
         while (subBinary.length % 6 !== 0) subBinary = "0" + subBinary;
         binary += subBinary;
     }
@@ -104,10 +77,8 @@ function romanize(num) {
         "", "X", "XX", "XXX", "XL",
         "L", "LX", "LXX", "LXXX", "XC",
         "", "I", "II", "III", "IV",
-        "V", "VI", "VII", "VIII", "IX",
-    ];
-    let roman = "",
-        i = 3;
+        "V", "VI", "VII", "VIII", "IX"];
+    let roman = "", i = 3;
     while (i--) roman = (key[+digits.pop() + i * 10] || "") + roman;
     return Array(+digits.join("") + 1).join("M") + roman;
 }
@@ -117,8 +88,7 @@ function deromanize(str) {
     const validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/;
     const token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g;
     const key = {M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1};
-    let num = 0,
-        m;
+    let num = 0, m;
     if (!(str && validator.test(str))) return false;
     while ((m = token.exec(str))) num += key[m[0]];
     return num;

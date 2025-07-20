@@ -102,7 +102,7 @@ function addEventListeners() {
 }
 
 function toggleEffectToggle(event) {
-    const effect = event.target;
+    let effect = event.target.closest("button");
     if (!effect.classList.contains("effect")) return;
     effect.classList.toggle("toggleOn");
 

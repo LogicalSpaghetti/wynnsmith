@@ -1,3 +1,5 @@
+`use strict`;
+
 function setDisplay(display, item, itemName) {
     if (item === undefined) {
         // TODO: disable the dropdown, hide the icon for it
@@ -16,7 +18,7 @@ function formatName(item, itemName) {
 function formatAttackSpeed(item) {
     if (item.type !== "weapon") return "";
 
-    var attackSpeed = item.attackSpeed;
+    let attackSpeed = item.attackSpeed;
     const uSPos = attackSpeed.indexOf("_");
     attackSpeed = replaceCharacterAt(attackSpeed, 0, attackSpeed[0].toUpperCase());
     attackSpeed = replaceCharacterAt(attackSpeed, uSPos + 1, attackSpeed[uSPos + 1].toUpperCase());
@@ -34,7 +36,7 @@ function formatIds(ids, colorIds) {
     const keys = Object.keys(ids);
     if (keys.length < 1) return "";
 
-    var combinedString = "<div>";
+    let combinedString = "<div>";
 
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -68,7 +70,7 @@ function isSpellCost(stat) {
 function formatMId(item) {
     if (item.majorIds === undefined) return "";
 
-    var returnString = "";
+    let returnString = "";
     Object.keys(item.majorIds).forEach((mIdName) => {
         returnString +=
             '<br><div style="max-width: 30ch; text-wrap: wrap; word-wrap: break-word; margin: 0 auto;">' + item.majorIds[mIdName] + "</div>";

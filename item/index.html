@@ -1,81 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="../style.css" />
-        <title>WynnSearch</title>
-        <!-- <link rel="icon" href="img/icons/yay.png" /> -->
-        <style>
-            html,
-            body {
-                height: 100%;
-                margin: 0;
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="../style.css"/>
+    <title>WynnSearch</title>
+    <!-- <link rel="icon" href="img/icons/yay.png" /> -->
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+    <link rel="icon" href="../img/icons/w.png"/>
+</head>
+<body>
+<pre id="output" class="display full_center" style="display: inline-block"></pre>
+
+<!-- TODO: minify all_items.js -->
+<script src="../src/data/all_items.js"></script>
+<script src="../src/item_display.js"></script>
+<script src="../src/stat_display.js"></script>
+<script src="../lib/html2canvas.min.js"></script>
+<script src="../src/data/base_and_ids.js"></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", function () {
+        const search = window.location.search.substring(1, window.location.search.length).replaceAll("%20", " ").replaceAll("_", " ").replaceAll("%27", "'");
+        const item = items[search];
+        const display = document.getElementById("output");
+
+        document.title = "WynnSearch: " + search;
+
+        setDisplay(display, item, search);
+
+        html2canvas(display).then((canvas) => {
+            canvas.id = "canvas";
+            canvas.style.display = "none";
+            document.body.appendChild(canvas);
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "c") {
+                event.preventDefault();
+                copyImage();
             }
-        </style>
-    </head>
-    <body>
-        <pre id="output" class="display full_center" style="display: inline-block"></pre>
-        <!-- 
-        <div>
-            <button onclick="saveImage()">Save as Image</button>
-        </div>
-        <div>
-            <button onclick="copyImage()">Copy Image to Clipboard</button>
-        </div>
- -->
-        <script src="all_items.js"></script>
-        <script src="../item_display.js"></script>
-        <script src="../stat_display.js"></script>
-        <script src="../html2canvas.min.js"></script>
-        <script src="../data_base_and_ids.js"></script>
+        });
 
-        <script type="text/javascript">
-            window.addEventListener("load", function () {
-                const search = window.location.search.substring(1, window.location.search.length).replaceAll("%20", " ").replaceAll("_", " ").replaceAll("%27", "'");
-                const item = items[search];
-                const display = document.getElementById("output");
-
-                setDisplay(display, item, search);
-
-                html2canvas(document.querySelector("#output")).then((canvas) => {
-                    canvas.id = "canvas";
-                    canvas.style.display = "none";
-                    document.body.appendChild(canvas);
-                });
-
-                document.addEventListener("keydown", function (event) {
-                    if (event.key === "c") {
-                        event.preventDefault();
-                        copyImage();
-                    }
-                });
-
-                document.addEventListener("keydown", function (event) {
-                    if (event.key === "s") {
-                        event.preventDefault();
-                        saveImage();
-                    }
-                });
-            });
-
-            function saveImage() {
-                const canvas = document.getElementById("canvas");
-                const dataURL = canvas.toDataURL("image/png");
-
-                // Create a link element
-                const link = document.createElement("a");
-                link.href = dataURL;
-                link.download = "canvas-image.png";
-
-                link.click();
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "s") {
+                event.preventDefault();
+                saveImage();
             }
+        });
 
-            function copyImage() {
-                const canvas = document.getElementById("canvas");
-                canvas.toBlob((blob) => {
-                    navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-                }, "image/png");
-            }
-        </script>
-    </body>
+
+    });
+
+    function saveImage() {
+        const canvas = document.getElementById("canvas");
+        const dataURL = canvas.toDataURL("image/png");
+
+        // Create a link element
+        const link = document.createElement("a");
+        link.href = dataURL;
+        link.download = "canvas-image.png";
+
+        link.click();
+    }
+
+    function copyImage() {
+        const canvas = document.getElementById("canvas");
+        canvas.toBlob((blob) => {
+            navigator.clipboard.write([new ClipboardItem({"image/png": blob})]);
+        }, "image/png");
+    }
+</script>
+</body>
 </html>
