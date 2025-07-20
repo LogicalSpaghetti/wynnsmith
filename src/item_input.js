@@ -35,7 +35,7 @@ function refreshItemData(build) {
             document.head.appendChild(link);
         }
         link.href = "img/icons/" + item.requirements.classRequirement + ".png";
-        let weaponImg = document.querySelector(".slot_icon[data-slot='weapon']");
+        let weaponImg = document.querySelector(".slot_img[data-slot='weapon']");
         weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png"
     }
 }

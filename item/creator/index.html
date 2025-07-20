@@ -67,7 +67,11 @@
             continue;
 
         const button = document.createElement("button");
-        button.style = "height: 16px; width: 16px; margin-right: 4px; background-color:" + codeDictionaryColor[key];
+        button.style.height = "16px";
+        button.style.height = "16px";
+        button.style.padding = "2px";
+        button.style.backgroundColor = codeDictionaryColor[key];
+
         button.tabIndex = -1;
         button.type = "button";
 

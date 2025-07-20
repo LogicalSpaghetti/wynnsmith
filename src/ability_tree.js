@@ -1,6 +1,7 @@
 `use strict`;
 
 function treeClicked(event) {
+    console.log(event.target);
     const target = event.target;
     if (target.dataset.type !== "ability") return;
     toggleNode(target);

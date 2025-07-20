@@ -1,11 +1,13 @@
 "use strict";
 
 // called when the page finishes loading
-window.addEventListener("load", function () {
+window.addEventListener("load", async function () {
     loadBuildFromLink();
     loadFullBuildFromLink();
 
     refreshBuild();
+
+    await preLoadAssets();
 
     // added after everything has loaded to prevent premature reloads
     addEventListeners();
@@ -41,17 +43,18 @@ function addEventListeners() {
         });
     });
 
+    document.querySelectorAll(".slot_img").forEach((slot_img) => {
+        slot_img.addEventListener("mouseover", function () {
+            document.getElementById("display-" + slot_img.dataset.slot).style.display = "inline-block";
+        });
+        slot_img.addEventListener("mouseout", function () {
+            document.getElementById("display-" + slot_img.dataset.slot).style.display = "none";
+        });
+    });
+
     // Ability Tree
     document.getElementById("abilityTree").addEventListener("click", (event) => {
         treeClicked(event);
-    });
-    document.querySelectorAll(".slot_icon").forEach((slot_icon) => {
-        slot_icon.addEventListener("mouseover", function () {
-            document.getElementById("display-" + slot_icon.dataset.slot).style.display = "inline-block";
-        });
-        slot_icon.addEventListener("mouseout", function () {
-            document.getElementById("display-" + slot_icon.dataset.slot).style.display = "none";
-        });
     });
     document.getElementById("clear_tree").addEventListener("click", (event) => {
         document.getElementById("abilityTree")
