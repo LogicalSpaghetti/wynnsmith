@@ -92,6 +92,11 @@ const abilityImages = [
     "node/yellow_blocked.png",
     "node/yellow_error.png",
     "node/yellow_open.png",
+    "aspect/archer.png",
+    "aspect/assassin.png",
+    "aspect/mage.png",
+    "aspect/shaman.png",
+    "aspect/warrior.png",
 ];
 
 async function preLoadAssets() {

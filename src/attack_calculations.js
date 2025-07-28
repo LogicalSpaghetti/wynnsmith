@@ -60,9 +60,6 @@ function addWeaponSpecial(build) {
     // TODO
 }
 
-const prefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
-const damageTypes = ["Neutral", "Earth", "Thunder", "Water", "Fire", "Air"];
-
 function splitMergedIds(build) {
     const ids = build.ids;
     const final = build.final;

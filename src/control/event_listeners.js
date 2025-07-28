@@ -44,11 +44,13 @@ function addEventListeners() {
     });
 
     document.querySelectorAll(".slot_img").forEach((slot_img) => {
-        slot_img.addEventListener("mouseover", function () {
-            document.getElementById("display-" + slot_img.dataset.slot).style.display = "inline-block";
+        slot_img.addEventListener("mouseover", () => {
+            renderHoverTooltip(
+                getHoverTextForItem(getItemByInput(document.querySelector(`.input[data-slot=${slot_img.dataset.slot}]`))),
+            );
         });
-        slot_img.addEventListener("mouseout", function () {
-            document.getElementById("display-" + slot_img.dataset.slot).style.display = "none";
+        slot_img.addEventListener("mouseout", () => {
+            hideHoverAbilityTooltip();
         });
     });
 
@@ -56,14 +58,14 @@ function addEventListeners() {
     document.getElementById("abilityTree").addEventListener("click", (event) => {
         treeClicked(event);
     });
-    document.getElementById("clear_tree").addEventListener("click", (event) => {
+    document.getElementById("clear_tree").addEventListener("click", () => {
         document.getElementById("abilityTree")
             .querySelectorAll("td[data-selected='true']").forEach((td) => {
             td.dataset.selected = "false";
         });
         refreshBuild();
     });
-    document.getElementById("clear_reds").addEventListener("click", (event) => {
+    document.getElementById("clear_reds").addEventListener("click", () => {
         document.getElementById("abilityTree")
             .querySelectorAll("td[data-red='true']").forEach((td) => {
             td.removeAttribute("data-red");
@@ -106,7 +108,7 @@ function addEventListeners() {
 
 function toggleEffectToggle(event) {
     let effect = event.target.closest("button");
-    if (!effect.classList.contains("effect")) return;
+    if (!effect || !effect.classList.contains("effect")) return;
     effect.classList.toggle("toggleOn");
 
     if (effect.dataset.blockers !== undefined) {
@@ -128,27 +130,27 @@ function addAspectListeners() {
         const clickTarget = event.target;
 
         if (clickTarget.classList.contains("aspect_up")) {
-            const neumeral = clickTarget.parentElement.childNodes[2];
-            neumeral.dataset.tier = parseInt(neumeral.dataset.tier) + 1;
-            if (neumeral.dataset.tier > (clickTarget.parentElement.classList.contains("legendary") ? 4 : 3)) {
-                neumeral.dataset.tier -= 1;
+            const numeral = clickTarget.parentElement.childNodes[2];
+            numeral.dataset.tier = String(parseInt(numeral.dataset.tier) + 1);
+            if (numeral.dataset.tier > (clickTarget.parentElement.classList.contains("legendary") ? 4 : 3)) {
+                numeral.dataset.tier -= 1;
             } else {
-                neumeral.classList.remove("Tier_" + romanize(neumeral.dataset.tier - 1));
-                neumeral.classList.add("Tier_" + romanize(neumeral.dataset.tier));
+                numeral.classList.remove("Tier_" + romanize(numeral.dataset.tier - 1));
+                numeral.classList.add("Tier_" + romanize(numeral.dataset.tier));
                 refreshBuild();
             }
-            neumeral.textContent = romanize(neumeral.dataset.tier);
+            numeral.textContent = romanize(numeral.dataset.tier);
             return;
         }
         if (clickTarget.classList.contains("aspect_down")) {
-            const neumeral = clickTarget.parentElement.childNodes[2];
-            if (neumeral.dataset.tier > 1) {
-                neumeral.classList.remove("Tier_" + romanize(neumeral.dataset.tier));
-                neumeral.dataset.tier = parseInt(neumeral.dataset.tier) - 1;
-                neumeral.classList.add("Tier_" + romanize(neumeral.dataset.tier));
+            const numeral = clickTarget.parentElement.childNodes[2];
+            if (numeral.dataset.tier > 1) {
+                numeral.classList.remove("Tier_" + romanize(numeral.dataset.tier));
+                numeral.dataset.tier -= 1;
+                numeral.classList.add("Tier_" + romanize(numeral.dataset.tier));
                 refreshBuild();
             }
-            neumeral.textContent = romanize(neumeral.dataset.tier);
+            numeral.textContent = romanize(numeral.dataset.tier);
             return;
         }
 
@@ -156,6 +158,7 @@ function addAspectListeners() {
         const aspect = clickTarget.parentElement;
 
         const newNode = aspect.cloneNode(true);
+
         newNode.childNodes[0].style.display = "none";
         newNode.childNodes[1].style.display = "none";
         newNode.childNodes[2].style.display = "none";
@@ -220,7 +223,7 @@ function addTooltipListener() {
         moveTooltip(e.clientX, e.clientY, true);
     });
 
-    document.addEventListener("wheel", (e) => hideHoverAbilityTooltip());
+    document.addEventListener("wheel", () => hideHoverAbilityTooltip());
 }
 
 function moveTooltip(X, Y, checkHidden = false) {

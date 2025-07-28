@@ -138,18 +138,6 @@ input,
     width: 58px;
 }
 
-.display {
-    /* transition: all 0.2s ease; */
-    border: 1px solid var(--ls-light-trim);
-    padding: 0.2rem;
-    margin: 0;
-    text-align: center;
-    z-index: 1;
-    background-color: var(--ls-background);
-    position: absolute;
-    display: none;
-}
-
 .effect:hover,
 input:hover {
     border: 1px solid var(--ls-trim-hover);
@@ -337,7 +325,7 @@ input:focus {
 .attack-holder {
     width: 21ch;
     background-color: #181818;
-    padding: 2px;
+    padding: 1ch;
     line-height: 150%;
     border: 1px solid var(--ls-background2);
     margin-bottom: 1rem;

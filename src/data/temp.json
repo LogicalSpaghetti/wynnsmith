@@ -1,0 +1,67 @@
+{
+  "dropRestriction": "normal",
+  "requirements": {
+    "level": 97,
+    "classRequirement": "shaman",
+    "defence": 115
+  },
+  "lore": "A deep regret stains this weapon—once a healing implement of the scholar-priest, its gentle power was turned and twisted as his ideals and resolve were tested, and faltered. With its wielder long passed, perhaps it can finally be absolved of the atrocities committed by his hand... and remember the peace it has long forgotten.",
+  "icon": {
+    "format": "attribute",
+    "value": {
+      "customModelData": "414",
+      "name": "relik.fire3",
+      "id": "minecraft:iron_horse_armor"
+    }
+  },
+  "type": "weapon",
+  "identifications": {
+    "healingEfficiency": {
+      "min": 23,
+      "max": 100,
+      "raw": 77
+    },
+    "fireDamage": {
+      "min": 6,
+      "max": 26,
+      "raw": 20
+    },
+    "raw1stSpellCost": {
+      "min": -6,
+      "max": -26,
+      "raw": -20
+    },
+    "earthDefence": {
+      "min": 14,
+      "max": 59,
+      "raw": 45
+    },
+    "manaRegen": {
+      "min": 5,
+      "max": 21,
+      "raw": 16
+    },
+    "rawHealth": {
+      "min": 900,
+      "max": 3900,
+      "raw": 3000
+    },
+    "thunderDefence": {
+      "min": 14,
+      "max": 59,
+      "raw": 45
+    }
+  },
+  "averageDps": 774,
+  "attackSpeed": "super_fast",
+  "name": "Absolution",
+  "subType": "relik",
+  "base": {
+    "baseFireDamage": {
+      "min": 175,
+      "max": 185,
+      "raw": 175
+    }
+  },
+  "rarity": "mythic"
+}

@@ -1,7 +1,7 @@
 const addedTogglesHolder = document.getElementById("added_toggles");
 const addedSlidersHolder = document.getElementById("added_sliders");
 
-function setUpOptionals(build) {
+function fixOptionals(build) {
     setUpToggles(build);
     setUpSliders(build);
 }
@@ -22,7 +22,7 @@ function setUpToggles(build) {
     // setUpMultiToggle(build, "bleed", "Bleed", ["sanguineStrike", "lashingLance"], ["nodes", "nodes"]);
 }
 
-function addToggles(build) {
+function readToggles(build) {
     document.querySelectorAll(".effect").forEach((toggle) => {
         if (toggle.classList.contains("toggleOn")) {
             build.toggles.push(toggle.dataset.modifier);

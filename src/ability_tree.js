@@ -8,7 +8,7 @@ function treeClicked(event) {
     refreshBuild();
 }
 
-function refreshAbilities(build) {
+function readAbilities(build) {
     if (previousClass === build.wynnClass) {
         addNodesToBuild(build);
         addAspectsToBuild(build);
@@ -150,7 +150,7 @@ function mapHTML(tree, abilityTree, wynnClass) {
             return false;
         };
         img.addEventListener("mouseover", () => {
-            this.renderHoverAbilityTooltip(
+            this.renderHoverTooltip(
                 getHoverTextForAbility(ability.abilityID, wynnClass),
             );
         });
@@ -209,11 +209,9 @@ function addAspectsToBuild(build) {
     });
 }
 
-function updateTreeRender(build) {
-    if (build.wynnClass === undefined) return;
+function renderTree(build) {
     validateTree(build.wynnClass);
     renderHighlights();
-
 }
 
 function validateTree(wynnClass) {

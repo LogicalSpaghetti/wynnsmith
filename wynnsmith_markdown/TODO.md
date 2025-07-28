@@ -6,7 +6,7 @@
 1. Dynamic Weapon icon swapping 
 2. All Shaman Nodes
 	- Write detailed explanations of each node as I go
-3. Powder eledefs
+3. Powder ele-defs
 4. Overhaul Aspect Selector
 5. Neutral Conversions
 	- not removing neutral?
@@ -30,18 +30,20 @@
 16. Attack Speed id
 17. Item database
 	- Ensure items are removable
+18. Figure out why html2canvas can't parse punscake items
+
 # Eventual
 
 ## Features
 
 - Separate input and display, minimize read/write from HTML
-- Wynnbuilder link conversion, explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546)
+- WynnBuilder link conversion, explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546)
 - proper build linking
 - WynnAbility integration
     - Add aspect creator
     - Add ability equation interaction creator
 - WynnMana
-    - WynnCycler
+    - WynnCycle
 - add fancy aspect icons like [these](https://discord.com/channels/143852930036924417/296377212939010050/1366799330534756423)
 - Offhand weapons
 - More buffs
@@ -50,11 +52,11 @@
 	- Trinkets
 		- Well of Power, etc.
 	- Raid buffs
-	- Lootrun Boons
+	- Loot-run Boons
 - Custom Identification Modifications
 	- Within possible range indicator
 	- a check for if the hpr is negative but can cancel and displaying that
-- Show the time factor of attacks that hit over a duration (ie. Blood Sorrow Total Damage (/4s))
+- Show the time factor of attacks that hit over a duration (i.e. Blood Sorrow Total Damage (/4s))
 - Attack conversion display
 - Indicate partially filled powder slots
     - Indicate if it has half a powder inputted, or an invalid powder
@@ -85,14 +87,14 @@
 	- slot search
 	- ./search page
 - mr/ls displayed in the melee hover
-- a full dependency system should prevent attacks from showing up from an aspect who's node isn't selected
-- Overhealth
+- a full dependency system should prevent attacks from showing up from an aspect whose node isn't selected
+- Over-Health
 	- Blood Sorrow
-		- Lifestream affecting Overhealth gain
+		- Lifestream affecting Over-Health gain
 	- Paladin
 	- Trickster
 - "Healing" that ignores hef vs respects it
-	- Sacrifical Shrine -hp
+	- Sacrificial Shrine -hp
 - Find a better design for the buff toggles
 - more node textures based on the exact state
 - Investigate Discord rich embeds
@@ -108,8 +110,8 @@
 - ways to iterate over object:	 
 	- also: https://stackoverflow.com/questions/14379274/how-to-iterate-over-a-javascript-object
 ```javascript
-for (let key in yourobject) {...}; 
-for (let [key, value] of Object.entries(yourobject)) {...}; 
+for (let key in yourobject) {/*...*/}; 
+for (let [key, value] of Object.entries(yourobject)) {/*...*/}; 
 // necessity of if statement unknown, investigate.
 for (let key in yourobject) {
 	if (yourobject.hasOwnProperty(key)) {
@@ -122,10 +124,8 @@ for (let key in yourobject) {
 - Modified SP amount display+indication
 	- save between build refreshes
 - Use HTML templates?
-- if an ability tree row is completely connections, mark it
-- any marked row following a marked row should be hidden
 - mobile support
-### Settings
+## Settings
 - Re-arrange GUI
 - Change color theme
 - customize how each stat displays
@@ -155,4 +155,12 @@ for (let key in yourobject) {
     - Have all toggles from a tree be loaded on initialization of a tree, and just hidden until available
 - Hide Haunting Memory effects if Flaming Tongue is taken.
 	- Some should be persistent effects visible from any class
-- Clicking the emoji on buffs doesn't toggle them
+- Item Database should use internal name when updating
+  - If an item is ever removed, keep all its data, but tag it is removed
+    - Removed tag triggers an error
+    - there's no handling for removed items right now
+      - loop over all current items making sure they exist in the new
+      - loop over all new items making sure they exist in the current
+- Ability Tree shrinks a bit if the screen isn't wide enough
+  - Set up the resizing logic
+    - Nice and simple, all columns should have equal width

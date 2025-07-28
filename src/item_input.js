@@ -12,7 +12,7 @@ function refreshClass(build) {
     build.wynnClass = currentClass;
 }
 
-function refreshItemData(build) {
+function readItems(build) {
     addBasePlayerStats(build);
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
@@ -36,7 +36,7 @@ function refreshItemData(build) {
         }
         link.href = "img/icons/" + item.requirements.classRequirement + ".png";
         let weaponImg = document.querySelector(".slot_img[data-slot='weapon']");
-        weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png"
+        weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png";
     }
 }
 
@@ -48,13 +48,7 @@ function addAttackSpeed(build, item) {
     const attackSpeed = item.attackSpeed;
     build.attackSpeed = attackSpeed;
     const speeds = Object.keys(attackSpeedMultipliers);
-    build.neumericalAttackSpeed = undefined;
-    for (let i = 0; i < speeds.length; i++) {
-        if (attackSpeed === speeds[i]) {
-            build.neumericalAttackSpeed = i;
-            break;
-        }
-    }
+    build.neumericalAttackSpeed = orderedAttackSpeed.indexOf(attackSpeed);
 }
 
 function addIds(build, source) {
@@ -112,7 +106,6 @@ function refreshOwnData(input) {
     const display = document.getElementById("display-" + input.dataset.slot);
     const item = getItemByInput(input);
 
-    setDisplay(display, item, input.value);
 }
 
 function addMinAndMaxTo(target, source) {
@@ -158,7 +151,7 @@ function addPowders(build, input) {
     }
 }
 
-function refreshTomes(build) {
+function readTomes(build) {
     for (let i = 0; i < tomeInputs.length; i++) {
         if (getItemByInput(tomeInputs[i]) === undefined) continue;
 

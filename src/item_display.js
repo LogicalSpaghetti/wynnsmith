@@ -1,34 +1,17 @@
 `use strict`;
 
-function setDisplay(display, item, itemName) {
-    if (item === undefined) {
-        // TODO: disable the dropdown, hide the icon for it
-        display.innerHTML = "Invalid item!";
-        return;
-    }
-
-    display.innerHTML =
-        formatName(item, itemName) + formatAttackSpeed(item) + formatIds(item.base, false) + formatIds(item.identifications, true) + formatMId(item);
-}
-
 function formatName(item, itemName) {
     return "<div data-rarity=" + item.rarity + ">" + itemName + "</div>";
 }
 
-function formatAttackSpeed(item) {
-    if (item.type !== "weapon") return "";
+function getFormattedAttackSpeed(item) {
+    if (item.type !== "weapon") throw new Error(`Trying to Format Attack Speed for non-weapon: ${item.name}!`);
 
-    let attackSpeed = item.attackSpeed;
-    const uSPos = attackSpeed.indexOf("_");
-    attackSpeed = replaceCharacterAt(attackSpeed, 0, attackSpeed[0].toUpperCase());
-    attackSpeed = replaceCharacterAt(attackSpeed, uSPos + 1, attackSpeed[uSPos + 1].toUpperCase());
-    attackSpeed = attackSpeed.replaceAll("_", " ");
-
-    return "<br><div>Attack Speed: " + attackSpeed + "</div>";
+    return item.attackSpeed.split('_').map(upperFirst).join(' ');
 }
 
-function replaceCharacterAt(string, index, replacement) {
-    return string.substring(0, index) + replacement + string.substring(index + replacement.length);
+function upperFirst(string) {
+    return string.slice(0, 1).toUpperCase() + string.slice(1, string.length);
 }
 
 function formatIds(ids, colorIds) {
@@ -77,6 +60,123 @@ function formatMId(item) {
     });
 
     return returnString;
+}
+
+function getHoverTextForItem(item) {
+
+    let result = '';
+
+// §5Olympic
+    result += codeDictionaryRarityColor[item.rarity] + item.name + "\n";
+// §7Fast Attack Speed
+    if (item.type === "weapon")
+        result += "§7" + getFormattedAttackSpeed(item) + " Attack Speed\n";
+//
+    result += "\n";
+    if (item.base) {
+// §f❋ Air§7 Damage 325-355
+        // TODO: orderedBaseStats[]
+        let hasDamage = false;
+        for (let i = 0; i < 6; i++) {
+            const baseDamage = item.base[`base${damageTypes[i]}Damage`];
+            if (baseDamage) {
+                result += `${codeDictionaryGenericSymbols[prefixes[i]]} ${damageTypes[i]} §7Damage: ${baseDamage.min}-${baseDamage.max}\n`;
+                hasDamage = true;
+            }
+        }
+//    §8Average DPS: §7850
+//
+        if (hasDamage)
+            result += `§8Average DPS: ${getAverageDPS(item)}\n\n`;
+    }
+// Class Req: Shaman
+    const classReq = item.requirements.classRequirement;
+    if (classReq) {
+        result += `§7Class Req: ${upperFirst(classReq)}\n`;
+    }
+// §4Combat Lv. Min: §793
+    const levelReq = item.requirements.level;
+    if (levelReq) {
+        result += `§4Combat Lv. Min: §7${levelReq}\n`;
+    }
+// §fAgility §7Min: 105
+    skillPointNames.forEach((name) => {
+        const requirement = item.requirements[name];
+        if (requirement) {
+            result += `${codeDictionarySkillPointColor[name]}${upperFirst(name)} §7Min: ${requirement}\n`;
+        }
+    })
+//
+    result += `\n`;
+// §a+25 §7Agility
+    //TODO: orderedSkillPointIds[]
+    // TODO: orderedRegularIds[]
+//
+// §a11% §7to §a46% §7Walk Speed
+// §a2 §7to §a8 §7Jump Height
+//
+// §a6% §7to §a26% §7Air Damage
+// §a9% §7to §a39% §7Air Defense
+//
+// §a-3 §7to §a-13 §7Totem Cost
+// §a-3 §7to §a-13 §7Haul Cost
+//
+// [3/3] Powder Slots [§f❋§f❋§f❋§7]
+    if (item.powderSlots > 0) {
+        result += `§7[0/${item.powderSlots}] Powder Slots []\n`
+    }
+// §5Mythic Relik
+    result += `${codeDictionaryRarityColor[item.rarity]}${upperFirst(item.rarity)} ${upperFirst(item.subType)}\n`;
+// §8When one has climbed the
+// highest mountain, traversed
+// the vastest plain, what is
+// left to conquer? One
+// challenges the human limit,
+// and attempts to push beyond
+// what any has accomplished
+// before. Sculpted in honor of
+// the first champion, this idol
+// emboldens you to best your
+// greatest opponent: yourself.
+    result += "§8" + formatLore(item);
+
+    return minecraftToHTML(result);
+}
+
+function getAverageDPS(item) {
+    let result = 0;
+    if (item.base)
+        for (let i = 0; i < 6; i++) {
+            const baseDamage = item.base[`base${damageTypes[i]}Damage`];
+            if (baseDamage) {
+                result += baseDamage.min + baseDamage.max;
+            }
+        }
+    return roundForDisplay(result / 2) * attackSpeedMultipliers[item.attackSpeed];
+}
+
+function formatLore(item) {
+    const lore = item.lore;
+    const words = lore.split(" ");
+
+    let result = "";
+
+    let subString = "";
+    words.forEach((word) => {
+        // TODO: is 29 the correct number?
+        if (subString.length + word.length >= 29) {
+            if (subString.length > 1)
+                result += subString + "\n";
+            subString = word;
+        } else {
+            if (subString.length > 0)
+                subString += " ";
+            subString += word;
+        }
+    })
+    result += subString;
+
+    return result;
 }
 
 const statNames = {

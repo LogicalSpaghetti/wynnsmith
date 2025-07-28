@@ -346,10 +346,10 @@ function addShamanMelees(build) {
 
 function addMeleeDPS(build, meleeName) {
     if (build.neumericalAttackSpeed === undefined) return;
-    var attackSpeed = build.neumericalAttackSpeed + -1 * build.ids.rawAttackSpeed;
+    let attackSpeed = build.neumericalAttackSpeed + build.ids.rawAttackSpeed;
     attackSpeed = Math.max(0, attackSpeed);
     attackSpeed = Math.min(6, attackSpeed);
-    build.attackSpeedMult = attackSpeedMultipliers[Object.keys(attackSpeedMultipliers)[attackSpeed]];
+    build.attackSpeedMult = attackSpeedMultipliers[orderedAttackSpeed[attackSpeed]];
     addAttackVariant(build, meleeName, "", true, "Melee DPS", build.attackSpeedMult);
 }
 

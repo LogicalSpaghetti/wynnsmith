@@ -1,7 +1,7 @@
 const attackSection = document.getElementById("attack_display");
 
 function addDamageDisplays(build) {
-    var html = "";
+    let html = "";
 
     html += getNewAttackHTML(build);
     html += "<br>";
@@ -11,10 +11,11 @@ function addDamageDisplays(build) {
 
         html += attackName + " ";
 
+        // TODO: what is hasCost for?
         let hasCost = false;
         Object.keys(build.spells).forEach((spellName) => {
             const spell = build.spells[spellName];
-            if (spell.name == attackName) {
+            if (spell.name === attackName) {
                 html += getMana(spell.cost);
                 hasCost = true;
             }
@@ -59,18 +60,19 @@ function addDamageDisplays(build) {
                     selvify(attack.maxc[i], true) +
                     "</span><br>";
             }
-
-            html += `<div class="color-bar-holder">`;
-            for (let i = 0; i < 6; i++) {
-                html +=
-                    `<span class="color-bar" style="width: ` +
-                    (elementalAverages[i] * 100) / average +
-                    `%; background-color: ` +
-                    getDamageColor(i) +
-                    `"></span>`;
-            }
-            html += `</div>`;
         }
+
+        html += `<div class="color-bar-holder">`;
+        for (let i = 0; i < 6; i++) {
+            html +=
+                `<span class="color-bar" style="width: ` +
+                (elementalAverages[i] * 100) / average +
+                `%; background-color: ` +
+                getDamageColor(i) +
+                `"></span>`;
+        }
+        html += `</div>`;
+
         html += "<hr>";
     });
 
@@ -93,7 +95,10 @@ function addDamageDisplays(build) {
 function getNewAttackHTML(build) {
     let html = "";
 
+    // doing this explicitly until I can abstract away child attack types
     html += perAttackHTML(build, "Melee DPS");
+    html += perAttackHTML(build, "Melee Total");
+    html += perAttackHTML(build, "Melee");
     html += perAttackHTML(build, "Totem");
 
     return html;
@@ -105,9 +110,73 @@ function perAttackHTML(build, name) {
     let html = "";
     html += "<div class='attack-holder'>";
 
-    html += name;
+    const attack = build.attacks[name];
+    console.log(JSON.stringify(attack))
+
+    html += name + " ";
+
+    Object.keys(build.spells).forEach((spellName) => {
+        const spell = build.spells[spellName];
+        if (spell.name === name) {
+            html += getMana(spell.cost);
+        }
+    });
+    let normAverage = 0;
+    let critAverage = 0;
+    const elementalAverages = [0, 0, 0, 0, 0, 0];
+    for (let i = 0; i < 6; i++) {
+        if (attack.max[i] <= 0) continue;
+        normAverage += attack.min[i] + attack.max[i];
+        critAverage += attack.minc[i] + attack.maxc[i];
+        elementalAverages[i] +=
+            ((attack.min[i] + attack.max[i]) * (1 - build.sp.mults[1]) +
+                (attack.minc[i] + attack.maxc[i]) * build.sp.mults[1]) /
+            2;
+    }
+    normAverage /= 2;
+    critAverage /= 2;
+
+    const average = normAverage * (1 - build.sp.mults[1]) + critAverage * build.sp.mults[1];
+
+    html += "<br>";
+
+    if (!(average <= 0 && build.spells["2nd"].name === name)) html += "Average: " + selvify(average) + "<br>";
+    if (getBoolean("detailed_damage")) {
+        if (!(average <= 0 && build.spells["2nd"].name === name) || normAverage < 0) html += "Non-Crit:<br>";
+        for (let i = 0; i < 6; i++) {
+            if (attack.max[i] <= 0) continue;
+            html +=
+                iconHeaders[prefixes[i]] +
+                selvify(attack.min[i], true) +
+                " – " +
+                selvify(attack.max[i], true) +
+                "</span><br>";
+        }
+        if (!(average <= 0 && build.spells["2nd"].name === name) || critAverage < 0) html += "Crit:<br>";
+        for (let i = 0; i < 6; i++) {
+            if (attack.max[i] <= 0) continue;
+            html +=
+                iconHeaders[prefixes[i]] +
+                selvify(attack.minc[i], true) +
+                " – " +
+                selvify(attack.maxc[i], true) +
+                "</span><br>";
+        }
+    }
+
+    html += `<div class="color-bar-holder">`;
+    for (let i = 0; i < 6; i++) {
+        html +=
+            `<span class="color-bar" style="width: ` +
+            (elementalAverages[i] * 100) / average +
+            `%; background-color: ` +
+            getDamageColor(i) +
+            `"></span>`;
+    }
+    html += `</div>`;
 
     html += "</div>";
+    console.log("W");
     return html;
 }
 
@@ -133,7 +202,7 @@ function getDamageColor(index) {
 const oneSelv = 80000;
 
 function selvify(num, addPeriod) {
-    return getBoolean("selvs") ? roundForDisplay(num / oneSelv, addPeriod) + " selv" : roundForDisplay(num, addPeriod);
+    return getBoolean("selvs") ? roundForDisplay(num / oneSelv, addPeriod) + ` ${new Date().getMonth() === 11 ? "santa" : "selv"}` : roundForDisplay(num, addPeriod);
 }
 
 function getMana(cost) {

@@ -2,29 +2,34 @@
 
 function refreshBuild() {
     console.log("begin new refresh:");
-    resetLinkText();
     const build = new Build();
+
+    // read
+    refreshClass(build);
+    if (build.wynnClass === "") return;
 
     fixSPInputs();
 
-    refreshClass(build);
-    if (currentClass === "") return;
-    refreshItemData(build);
-    refreshTomes(build);
-    refreshAbilities(build);
+    readItems(build);
+    readTomes(build);
+    readAbilities(build);
 
-    setUpOptionals(build);
-    addToggles(build);
+    fixOptionals(build);
+    readToggles(build);
 
+    // compute
     removeOverridenEffects(build);
     calculateStats(build);
     computeOutputs(build);
 
+    // display
     addDamageDisplays(build);
     displayFinalValues(build);
-    updateTreeRender(build);
+    renderTree(build);
 
     displayForDevelopment(build);
+
+    resetLinkText();
 }
 
 function roundForDisplay(number, addPeriod) {
@@ -115,6 +120,8 @@ const colorHeaders = {
 };
 
 function getHeaderForIcon(color, elementEmoji) {
+    // TODO: (doesn't work because it cuts off at the end instead of letting the color continue on)
+    // return minecraftToHTML(`${codeDictionaryGenericSymbols[color]} `)
     return `<span class=\"${color}\"><b class=\"font-minecraft\" style=\"display: inline-block; width: 1ch\">${elementEmoji}</b> `;
 }
 
