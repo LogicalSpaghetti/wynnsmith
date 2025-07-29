@@ -138,7 +138,7 @@ const orderedBaseStats = [
     "baseFireDefence",
     "baseWaterDefence",
     "baseAirDefence",
-    "",
+
     "baseDamage",
     "baseEarthDamage",
     "baseThunderDamage",
@@ -151,7 +151,7 @@ const orderedSkillPointIds = ["rawStrength", "rawDexterity", "rawIntelligence", 
 
 const orderedRegularIds = [
     "rawAttackSpeed", // the single most important stat
-    "", // Most stuff
+    // Most stuff
     "rawHealth", // Health
     "healthRegenRaw",
     "healthRegen",
@@ -177,15 +177,14 @@ const orderedRegularIds = [
     "lootQuality",
     "xpBonus",
     "weakenEnemy", // enemy debuffs
-    "slowEnemy",
-    "", // Ele-defs
+    "slowEnemy", // Ele-defs
     "earthDefence",
     "thunderDefence",
     "waterDefence",
     "fireDefence",
     "airDefence",
     "elementalDefence",
-    "", // Damage
+    // Damage
     "rawDamage",
     "rawMainAttackDamage",
     "rawSpellDamage",
@@ -235,7 +234,7 @@ const orderedRegularIds = [
     "airMainAttackDamage",
     "airSpellDamage",
     "criticalDamageBonus",
-    "", // Spell Costs
+    // Spell Costs
     "1stSpellCost",
     "2ndSpellCost",
     "3rdSpellCost",
@@ -247,7 +246,7 @@ const orderedRegularIds = [
 ];
 
 const base_stats = {
-    "baseHealth": {name: "Health"},
+    "baseHealth": {name: "§4Health"},
     "baseEarthDefence": {name: "Earth Defence"},
     "baseThunderDefence": {name: "Thunder Defence"},
     "baseWaterDefence": {name: "Water Defence"},

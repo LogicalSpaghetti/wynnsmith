@@ -62,85 +62,103 @@ function formatMId(item) {
     return returnString;
 }
 
-function getHoverTextForItem(item) {
+function getHoverTextForItem(item, invalidityText = "") {
+    if (!item) return invalidityText;
 
-    let result = '';
+    let sections = []
+    let section = ""
 
-// §5Olympic
-    result += codeDictionaryRarityColor[item.rarity] + item.name + "\n";
-// §7Fast Attack Speed
+    section += codeDictionaryRarityColor[item.rarity] + item.name + "\n";
     if (item.type === "weapon")
-        result += "§7" + getFormattedAttackSpeed(item) + " Attack Speed\n";
-//
-    result += "\n";
+        section += `§7${getFormattedAttackSpeed(item)} Attack Speed\n`;
+
+    sections.push(section);
+    section = "";
+
     if (item.base) {
-// §f❋ Air§7 Damage 325-355
-        // TODO: orderedBaseStats[]
-        let hasDamage = false;
-        for (let i = 0; i < 6; i++) {
-            const baseDamage = item.base[`base${damageTypes[i]}Damage`];
-            if (baseDamage) {
-                result += `${codeDictionaryGenericSymbols[prefixes[i]]} ${damageTypes[i]} §7Damage: ${baseDamage.min}-${baseDamage.max}\n`;
-                hasDamage = true;
-            }
-        }
-//    §8Average DPS: §7850
-//
-        if (hasDamage)
-            result += `§8Average DPS: ${getAverageDPS(item)}\n\n`;
+        for (let i in orderedBaseStats)
+            section += getFormattedBase(orderedBaseStats[i], item.base[orderedBaseStats[i]], base_stats, false);
+
+        if (item.type === "weapon")
+            section += `§8Average DPS: ${getAverageDPS(item)}\n`;
     }
-// Class Req: Shaman
+
+    sections.push(section);
+    section = "";
+
     const classReq = item.requirements.classRequirement;
     if (classReq) {
-        result += `§7Class Req: ${upperFirst(classReq)}\n`;
+        section += `§7Class Req: ${upperFirst(classReq)}\n`;
     }
-// §4Combat Lv. Min: §793
+
     const levelReq = item.requirements.level;
     if (levelReq) {
-        result += `§4Combat Lv. Min: §7${levelReq}\n`;
+        section += `§4Combat Lv.§7 Min: ${levelReq}\n`;
     }
-// §fAgility §7Min: 105
+
     skillPointNames.forEach((name) => {
         const requirement = item.requirements[name];
         if (requirement) {
-            result += `${codeDictionarySkillPointColor[name]}${upperFirst(name)} §7Min: ${requirement}\n`;
+            section += `${codeDictionarySkillPointColor[name]}${upperFirst(name)} §7Min: ${requirement}\n`;
         }
-    })
-//
-    result += `\n`;
-// §a+25 §7Agility
-    //TODO: orderedSkillPointIds[]
-    // TODO: orderedRegularIds[]
-//
-// §a11% §7to §a46% §7Walk Speed
-// §a2 §7to §a8 §7Jump Height
-//
-// §a6% §7to §a26% §7Air Damage
-// §a9% §7to §a39% §7Air Defense
-//
-// §a-3 §7to §a-13 §7Totem Cost
-// §a-3 §7to §a-13 §7Haul Cost
-//
-// [3/3] Powder Slots [§f❋§f❋§f❋§7]
-    if (item.powderSlots > 0) {
-        result += `§7[0/${item.powderSlots}] Powder Slots []\n`
-    }
-// §5Mythic Relik
-    result += `${codeDictionaryRarityColor[item.rarity]}${upperFirst(item.rarity)} ${upperFirst(item.subType)}\n`;
-// §8When one has climbed the
-// highest mountain, traversed
-// the vastest plain, what is
-// left to conquer? One
-// challenges the human limit,
-// and attempts to push beyond
-// what any has accomplished
-// before. Sculpted in honor of
-// the first champion, this idol
-// emboldens you to best your
-// greatest opponent: yourself.
-    result += "§8" + formatLore(item);
+    });
 
-    return minecraftToHTML(result);
+    sections.push(section);
+    section = "";
+
+    for (let i in orderedSkillPointIds)
+        section += getFormattedSP(orderedSkillPointIds[i], item.identifications[orderedSkillPointIds[i]], identifications);
+
+    sections.push(section);
+    section = "";
+
+    for (let i in orderedRegularIds)
+        section += getFormattedId(orderedRegularIds[i], item.identifications[orderedRegularIds[i]], identifications);
+
+    sections.push(section);
+    section = "";
+
+    if (item.powderSlots > 0) {
+        section += `§7[0/${item.powderSlots}] Powder Slots []\n`;
+    }
+
+    section += `${codeDictionaryRarityColor[item.rarity]}${upperFirst(item.rarity)} ${upperFirst(item.subType)}\n`;
+
+    section += "§8" + formatLore(item);
+
+    sections.push(section);
+    section = "";
+
+    return minecraftToHTML(sections.filter(str => str !== "").join("\n"));
+}
+
+function getFormattedBase(name, value, source) {
+    if (!value) return "";
+    if (value.max) {
+        return `§7${source[name].name} ${value.min}${source[name].suffix ?? ""}§7-${value.max}${source[name].suffix ?? ""}\n`
+    } else {
+        return `§7${source[name].name}§7: ${value}${source[name].suffix ?? ""}\n`
+    }
+}
+
+function getFormattedSP(name, value, source) {
+    if (!value) return "";
+    const colorPrefix = codeDictionaryPositivityColors[isSpellCost(name) !== (value.max ?? value >= 0)];
+    if (value.max) {
+        return `${colorPrefix}${value.min}${source[name].suffix ?? ""}§7 to ${colorPrefix}${value.max}${source[name].suffix ?? ""} §7${source[name].name}\n`
+    } else {
+        return `${colorPrefix}${value > 0 ? "+" : ""}${value}${source[name].suffix ?? ""} §7${source[name].name}\n`
+    }
+}
+
+function getFormattedId(name, value, source, colorSign = true) {
+    if (!value) return "";
+    const colorPrefix = colorSign ? codeDictionaryPositivityColors[isSpellCost(name) !== ((value.max ?? value) >= 0)] : "§7";
+    if (value.max) {
+        return `${colorPrefix}${value.min}${source[name].suffix ?? ""}§7 to ${colorPrefix}${value.max}${source[name].suffix ?? ""} §7${source[name].name}\n`
+    } else {
+        return `${colorPrefix}${value}${source[name].suffix ?? ""} §7${source[name].name}\n`
+    }
 }
 
 function getAverageDPS(item) {
@@ -157,6 +175,9 @@ function getAverageDPS(item) {
 
 function formatLore(item) {
     const lore = item.lore;
+
+    if (!lore) return "";
+
     const words = lore.split(" ");
 
     let result = "";
@@ -173,7 +194,7 @@ function formatLore(item) {
                 subString += " ";
             subString += word;
         }
-    })
+    });
     result += subString;
 
     return result;

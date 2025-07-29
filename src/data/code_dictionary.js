@@ -105,6 +105,11 @@ const codeDictionaryItemRequirementMetIndicators = {
     "false": "§c✖",
 };
 
+const codeDictionaryPositivityColors = {
+    "true": "§a",
+    "false": "§c",
+};
+
 const codeDictionaryDecoration = {
     "m": "line-through", "n": "underline",
 };

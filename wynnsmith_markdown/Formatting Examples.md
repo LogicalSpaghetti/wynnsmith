@@ -35,3 +35,11 @@ the first champion, this idol
 emboldens you to best your
 greatest opponent: yourself.
 ```
+```
+§5Acolyte's Embodiment of Unwavering Adherence
+
+§7§nBlood Sorrow§7 gains §f+2s §d⌛ §7Duration.
+
+§nEldritch Call§7 summons §f+1§7 tentacle, and strikes §f20%§7 faster.
+§7Tier II / III [10]
+```

@@ -192,7 +192,7 @@ function damagesToArrays(build) {
 
 function addSPMults(build) {
     for (let i = 0; i < 5; i++) {
-        var mult = build.sp.mults[i] * 100;
+        const mult = build.sp.mults[i] * 100;
 
         build.final.mainAttackDamage[i + 1] += mult;
         build.final.spellDamage[i + 1] += mult;
@@ -296,7 +296,7 @@ function powderConversions(build) {
     // TODO
 }
 
-// Attack Speed multiplies the damage of spells relative to the weapon's base attack speed multiplier
+// Attack Speed multiplies the spell damage relative to the weapon's base attack speed multiplier
 function applySpellAttackSpeed(build) {
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
     Object.keys(build.base.attacks).forEach((convName) => {

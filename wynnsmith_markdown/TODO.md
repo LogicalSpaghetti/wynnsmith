@@ -106,6 +106,8 @@
 - make elements look clickable or not 
 	- pointer-events: none/initial;
 		- fill, `.svg` only, but proper circle detection
+- Add MaIds to items
+  - Strip the included HTML tags from the API's results (they don't even look right, i.e. with Hero)
 
 - ways to iterate over object:	 
 	- also: https://stackoverflow.com/questions/14379274/how-to-iterate-over-a-javascript-object

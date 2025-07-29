@@ -460,12 +460,3 @@ const base64Values = [
     "M", "N", "O", "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z", "_", "'",
 ];
-
-const spellManaNames = {
-    shaman: {
-        "1": "Totem",
-        "2": "Haul",
-        "3": "Aura",
-        "4": "Uproot",
-    }
-}

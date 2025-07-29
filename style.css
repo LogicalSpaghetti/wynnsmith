@@ -45,7 +45,9 @@ input {
 .color-bar-holder {
     height: fit-content;
     /*line-height: 0;*/
-    padding-bottom: 0.3rem;
+    padding-bottom: 0.4rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .color-bar {
@@ -322,19 +324,6 @@ input:focus {
     padding-left: 1rem;
 }
 
-.attack-holder {
-    width: 21ch;
-    background-color: #181818;
-    padding: 1ch;
-    line-height: 150%;
-    border: 1px solid var(--ls-background2);
-    margin-bottom: 1rem;
-}
-
-.attack-holder:last-child {
-    margin-bottom: 0;
-}
-
 /* Link Buttons */
 button {
     cursor: pointer;
@@ -383,6 +372,19 @@ td {
 #attack_display {
     text-align: center;
     line-height: 150%;
+}
+
+.attack-holder {
+    width: 21ch;
+    background-color: #181818;
+    /*padding: 1ch;*/
+    /*line-height: 150%;*/
+    border: 1px solid var(--ls-background2);
+    margin-bottom: 0.5ch;
+}
+
+.attack-holder:last-child {
+    /*margin-bottom: 0;*/
 }
 
 /* Aspects */

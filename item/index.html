@@ -36,7 +36,7 @@
 
         document.title = "WynnSearch: " + search;
 
-        display.innerHTML = getHoverTextForItem(item)
+        display.innerHTML = getHoverTextForItem(item, "Invalid Item!")
 
         html2canvas(display).then((canvas) => {
             canvas.id = "canvas";
