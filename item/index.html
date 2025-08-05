@@ -19,24 +19,25 @@
 
 <!-- TODO: minify all_items.js -->
 <script src="../src/data/small_stuff.js"></script>
-<script src="../src/punscake.js"></script>
+<script src="../src/data_manipulation/minecraft_html.js"></script>
 <script src="../src/data/code_dictionary.js"></script>
 <script src="../src/data/all_items.js"></script>
-<script src="../src/item_display.js"></script>
-<script src="../src/stat_display.js"></script>
+<script src="../src/display/item_display.js"></script>
+<script src="../src/display/stat_display.js"></script>
 <script src="../lib/html2canvas.min.js"></script>
 <script src="../src/data/base_and_ids.js"></script>
 <script src="../src/control/script.js"></script>
 
 <script type="text/javascript">
     window.addEventListener("load", function () {
-        const search = window.location.search.substring(1, window.location.search.length).replaceAll("%20", " ").replaceAll("_", " ").replaceAll("%27", "'");
+        const search = window.location.search.substring(1, window.location.search.length)
+          .replaceAll("%20", " ").replaceAll("_", " ").replaceAll("%27", "'").replaceAll("+", "'");
         const item = items[search];
         const display = document.getElementById("output");
 
         document.title = "WynnSearch: " + search;
 
-        display.innerHTML = getHoverTextForItem(item, "Invalid Item!")
+        display.innerHTML = getHoverHTMLForItem(item, "Invalid Item!")
 
         html2canvas(display).then((canvas) => {
             canvas.id = "canvas";
@@ -65,7 +66,6 @@
         const canvas = document.getElementById("canvas");
         const dataURL = canvas.toDataURL("image/png");
 
-        // Create a link element
         const link = document.createElement("a");
         link.href = dataURL;
         link.download = "canvas-image.png";

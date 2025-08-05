@@ -18,7 +18,7 @@
     --wy-border: #5e4837;
     --wy-backbround: #82654c;
     --wy-slot: #cda870;
-    --wy-tome_back: #d4bf8f;
+    /*--wy-tome_back: #d4bf8f;*/
     --ls-ability_background: #373943;
 
     --wy-neutral: #fca800;
@@ -102,16 +102,20 @@ label {
 
 /* -- Inputs: -- */
 
-.slot_img {
-    height: 16px;
-    width: 16px;
-}
-
-.input_section {
+.input_cluster {
     display: flex;
     line-height: 0;
     padding: 0;
-    /* width: 250px; */
+}
+
+.slot_img {
+    height: 16px;
+    width: 16px;
+    display: block;
+}
+
+.item_link {
+    display: inline-block;
 }
 
 input,
@@ -121,7 +125,7 @@ input,
     border: 1px solid var(--ls-background);
 }
 
-.input {
+.item_input {
     width: 160px;
 }
 
@@ -136,7 +140,7 @@ input,
     object-fit: cover;
 }
 
-.powder {
+.powder_input {
     width: 58px;
 }
 
@@ -159,8 +163,8 @@ input:focus {
     margin: 0;
 }
 
-.sp {
-    width: 7ch;
+.sp_input {
+    width: 4ch;
     text-align: center;
 }
 
@@ -184,39 +188,7 @@ input:focus {
 }
 
 .tome_input {
-    width: 120px;
-}
-
-.tome_selector {
-    position: absolute;
-}
-
-.tome[data-slot="guild_tome"] {
-    background-image: url(img/books/tome/guild.png);
-}
-
-.tome[data-slot="lootrun_tome"] {
-    background-image: url(img/books/tome/lootrun.png);
-}
-
-.tome[data-slot="armour_tome"] {
-    background-image: url(img/books/tome/armour.png);
-}
-
-.tome[data-slot="mysticism_tome"] {
-    background-image: url(img/books/tome/mysticism.png);
-}
-
-.tome[data-slot="weapon_tome"] {
-    background-image: url(img/books/tome/weapon.png);
-}
-
-.tome[data-slot="expertise_tome"] {
-    background-image: url(img/books/tome/expertise.png);
-}
-
-.tome[data-slot="marathon_tome"] {
-    background-image: url(img/books/tome/marathon.png);
+    width: 35ch;
 }
 
 [data-rarity="common"] {
@@ -286,7 +258,6 @@ input:focus {
     margin-left: 20px;
     word-wrap: normal;
     white-space: pre-line;
-    /* font-size: 8px; */
 }
 
 #support_display {
@@ -545,6 +516,10 @@ darkAqua {
 
 .small-font {
     font-size: 0.5rem;
+}
+
+.normal-font {
+    font-size: initial;
 }
 
 @font-face {

@@ -32,69 +32,68 @@
     </section>
     <!-- Column -->
     <section>
-      <div class="item_inputs">
-        <div class="input_section">
-          <a id="helmet_link" target="_blank">
-            <img src="img/item/helmet.png" alt="" class="slot_img" data-slot="helmet">
+      <div id="item_inputs" class="inputs_holder">
+        <div class="input_cluster" data-slot="helmet" data-group="gear">
+          <a class="item_link" target="_blank">
+            <img src="img/item/helmet.png" alt="He" class="slot_img">
           </a>
-          <input id="input_helmet" class="input" placeholder="Helmet" data-slot="helmet"/>
-          <input id="powder_helmet" class="powder" placeholder="0 Slots"/>
+          <input class="input item_input" placeholder="Helmet"/>
+          <input class="input powder_input" placeholder="0 Slots"/>
         </div>
-        <div class="input_section">
-          <a id="chestplate_link" target="_blank">
-            <img src="img/item/chestplate.png" alt="" class="slot_img" data-slot="chestplate">
+        <div class="input_cluster" data-slot="chestplate" data-group="gear">
+          <a class="item_link" target="_blank">
+            <img src="img/item/chestplate.png" alt="He" class="slot_img">
           </a>
-          <input id="input_chestplate" class="input" placeholder="Chestplate" data-slot="chestplate"/>
-          <input id="powder_chestplate" class="powder" placeholder="0 Slots"/>
+          <input class="input item_input" placeholder="Chestplate"/>
+          <input class="input powder_input" placeholder="0 Slots"/>
         </div>
-        <div class="input_section">
-          <a id="leggings_link" target="_blank">
-            <img src="img/item/leggings.png" alt="" class="slot_img" data-slot="leggings">
+        <div class="input_cluster" data-slot="leggings" data-group="gear">
+          <a class="item_link" target="_blank">
+            <img src="img/item/leggings.png" alt="He" class="slot_img">
           </a>
-          <input id="input_leggings" class="input" placeholder="Leggings" data-slot="leggings"/>
-          <input id="powder_leggings" class="powder" placeholder="0 Slots"/>
+          <input class="input item_input" placeholder="Leggings"/>
+          <input class="input powder_input" placeholder="0 Slots"/>
         </div>
-        <div class="input_section">
-          <a id="boots_link" target="_blank">
-            <img src="img/item/boots.png" alt="" class="slot_img" data-slot="boots">
+        <div class="input_cluster" data-slot="boots" data-group="gear">
+          <a class="item_link" target="_blank">
+            <img src="img/item/boots.png" alt="He" class="slot_img">
           </a>
-          <input id="input_boots" class="input" placeholder="Boots" data-slot="boots"/>
-          <input id="powder_boots" class="powder" placeholder="0 Slots" maxlength="0"/>
+          <input class="input item_input" placeholder="Boots"/>
+          <input class="input powder_input" placeholder="0 Slots"/>
         </div>
-        <div class="input_section">
-          <a id="ring0_link" target="_blank">
-            <img src="img/item/ring.png" alt="" class="slot_img" data-slot="ring0">
+        <div class="input_cluster" data-slot="ring" data-group="gear">
+          <a class="item_link" target="_blank" data-slot="ring">
+            <img src="img/item/ring.png" alt="He" class="slot_img">
           </a>
-          <input id="input_ring0" class="input input--ring" placeholder="Ring 1" data-slot="ring0"/>
-          <div id="gif_holder">
-            <img id="miku" src="" alt=""/>
-          </div>
+          <input class="input item_input" placeholder="Ring"/>
+          <div id="gif_holder"><img id="miku" src="" alt=""/></div>
         </div>
-        <div class="input_section">
-          <a id="ring1_link" target="_blank">
-            <img src="img/item/ring.png" alt="" class="slot_img" data-slot="ring1">
+        <div class="input_cluster" data-slot="ring" data-group="gear">
+          <a class="item_link" target="_blank" data-slot="ring">
+            <img src="img/item/ring.png" alt="He" class="slot_img">
           </a>
-          <input id="input_ring1" class="input input--ring" placeholder="Ring 2" data-slot="ring1"/>
+          <input class="input item_input" placeholder="Ring"/>
         </div>
-        <div class="input_section">
-          <a id="bracelet_link" target="_blank">
-            <img src="img/item/bracelet.png" alt="" class="slot_img" data-slot="bracelet">
+        <div class="input_cluster" data-slot="bracelet" data-group="gear">
+          <a class="item_link" target="_blank">
+            <img src="img/item/bracelet.png" alt="He" class="slot_img">
           </a>
-          <input id="input_bracelet" class="input" placeholder="Bracelet" data-slot="bracelet"/>
+          <input class="input item_input" placeholder="Bracelet"/>
         </div>
-        <div class="input_section">
-          <a id="necklace_link" target="_blank">
-            <img src="img/item/ring.png" alt="" class="slot_img" data-slot="necklace">
+        <div class="input_cluster" data-slot="necklace" data-group="gear">
+          <a class="item_link" target="_blank" data-slot="necklace">
+            <img src="img/item/necklace.png" alt="He" class="slot_img">
           </a>
-          <input id="input_necklace" class="input" placeholder="Necklace" data-slot="necklace"/>
+          <input class="input item_input" placeholder="Necklace"/>
         </div>
-        <div class="input_section">
-          <a id="weapon_link" target="_blank">
-            <img src="img/item/archer.png" alt="" class="slot_img" data-slot="weapon">
+        <div class="input_cluster primary_weapon_cluster" data-slot="weapon" data-group="weapon">
+          <a class="item_link" target="_blank">
+            <img src="img/item/archer.png" alt="He" class="slot_img">
           </a>
-          <input id="input_weapon" class="input" placeholder="Weapon" data-slot="weapon"/>
-          <input id="powder_weapon" class="powder" placeholder="0 Slots" maxlength="0"/>
+          <input class="input item_input" placeholder="Weapon"/>
+          <input class="input powder_input" placeholder="0 Slots"/>
         </div>
+        <div class="offhand"></div>
       </div>
       <br>
       <div class="copy_buttons">
@@ -105,12 +104,10 @@
       <table id="sp_section" class="small-font">
         <tr>
           <td class="sp-hold">
-            <label for="strength" class="earth">
+            <label for="strength" class="earth normal-font">
               <b class="font-minecraft" style="display: inline-block; width: 1ch">✤</b>
-              Strength
             </label>
-            <br>
-            <input id="strength" class="sp" placeholder="Strength"/>
+            <input id="strength" class="input sp_input" placeholder="Strength"/>
             <br>
             Assign: 100
             <br>
@@ -119,12 +116,10 @@
             80.8% damage
           </td>
           <td class="sp-hold">
-            <label for="dexterity" class="thunder">
+            <label for="dexterity" class="thunder normal-font">
               <b class="font-minecraft" style="display: inline-block; width: 1ch">✦</b>
-              Dexterity
             </label>
-            <br>
-            <input id="dexterity" class="sp" placeholder="Dexterity"/>
+            <input id="dexterity" class="input sp_input" placeholder="Dexterity"/>
             <br>
             Assign: 100
             <br>
@@ -133,12 +128,10 @@
             80.8% crit
           </td>
           <td class="sp-hold">
-            <label for="intelligence" class="water">
+            <label for="intelligence" class="water normal-font">
               <b class="font-minecraft" style="display: inline-block; width: 1ch">❉</b>
-              Intelligence
             </label>
-            <br>
-            <input id="intelligence" class="sp" placeholder="Intelligence"/>
+            <input id="intelligence" class="input sp_input" placeholder="Intelligence"/>
             Assign: 100
             <br>
             Minimum: 150
@@ -146,12 +139,10 @@
             80.8% cost red.
           </td>
           <td class="sp-hold">
-            <label for="defence" class="fire">
+            <label for="defence" class="fire normal-font">
               <b class="font-minecraft" style="display: inline-block; width: 1ch">✹</b>
-              Defense
             </label>
-            <br>
-            <input id="defence" class="sp" placeholder="Defence"/>
+            <input id="defence" class="input sp_input" placeholder="Defence"/>
             Assign: 100
             <br>
             Minimum: 150
@@ -159,12 +150,10 @@
             80.8% resist
           </td>
           <td class="sp-hold">
-            <label for="agility" class="air">
+            <label for="agility" class="air normal-font">
               <b class="font-minecraft" style="display: inline-block; width: 1ch">❋</b>
-              Agility
             </label>
-            <br>
-            <input id="agility" class="sp" placeholder="Agility"/>
+            <input id="agility" class="input sp_input" placeholder="Agility"/>
             Assign: 100
             <br>
             Minimum: 150
@@ -174,46 +163,49 @@
         </tr>
       </table>
       <br>
+      <button>Balance Str/Dex</button>
+      <br>
+      <br>
       <div id="effect_toggles" style="width: 32ch; padding-left: 1ch; padding-right: 1ch">
         <div style="text-align: center">Active Boosts:</div>
         <button class="effect radiance" data-modifier="radiance">Radiance</button>
         <button class="effect vengefulspirit" data-modifier="vengefulspirit">
           Vengeful Spirit
           <span class="positive">
-                                <b class="font-minecraft" style="display: inline-block">⚔</b>
-                            </span>
+            <b class="font-minecraft" style="display: inline-block">⚔</b>
+          </span>
           20%
         </button>
         <button class="effect eldritchCall" data-modifier="eldritchCall">
           Eldritch Call
           <span class="negative">
-                                <b class="font-minecraft" style="display: inline-block">✃</b>
-                            </span>
+            <b class="font-minecraft" style="display: inline-block">✃</b>
+          </span>
           20%
         </button>
         <button class="effect warScream" data-modifier="warScream" data-blockers="emboldeningCry">
           War Scream
           <span class="positive">
-                                <b class="font-minecraft" style="display: inline-block">❁</b>
-                            </span>
+            <b class="font-minecraft" style="display: inline-block">❁</b>
+          </span>
           20%
         </button>
         <button class="effect emboldeningCry" data-modifier="emboldeningCry" data-blockers="warScream">
           Emboldening Cry
           <span class="positive">
-                                <b class="font-minecraft" style="display: inline-block">❁</b>
-                            </span>
+            <b class="font-minecraft" style="display: inline-block">❁</b>
+          </span>
           25%
           <span class="positive">
-                                <b class="font-minecraft" style="display: inline-block">⚔</b>
-                            </span>
+            <b class="font-minecraft" style="display: inline-block">⚔</b>
+          </span>
           8%
         </button>
         <button class="effect fortitude" data-modifier="fortitude">
           Fortitude
           <span class="positive">
-                                <b class="font-minecraft" style="display: inline-block">⚔</b>
-                            </span>
+            <b class="font-minecraft" style="display: inline-block">⚔</b>
+          </span>
           40%
         </button>
       </div>
@@ -224,100 +216,92 @@
         <!-- Filled by js -->
       </div>
       <br>
-      <table id="tomes_section">
-        <tr>
-          <td>
-            <div class="tome" data-slot="guild_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="guild_tome" placeholder="Guild Tome"/></td>
-          <td>
-            <div class="tome" data-slot="lootrun_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="lootrun_tome" placeholder="Lootrun Tome"/></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="tome" data-slot="armour_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
-          <td>
-            <div class="tome" data-slot="armour_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="tome" data-slot="armour_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
-          <td>
-            <div class="tome" data-slot="armour_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="armour_tome" placeholder="Armour Tome"/></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="tome" data-slot="mysticism_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td>
-            <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome"/>
-          </td>
-          <td>
-            <div class="tome" data-slot="mysticism_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td>
-            <input class="tome_input" data-slot="mysticism_tome" placeholder="Mysticism Tome"/>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="tome" data-slot="weapon_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="weapon_tome" placeholder="Weapon Tome"/></td>
-          <td>
-            <div class="tome" data-slot="weapon_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="weapon_tome" placeholder="Weapon Tome"/></td>
-        </tr>
-        <tr>
-          <td>
-            <div class="tome" data-slot="expertise_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td>
-            <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome"/>
-          </td>
-          <td>
-            <div class="tome" data-slot="expertise_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td>
-            <input class="tome_input" data-slot="expertise_tome" placeholder="Expertise Tome"/>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="tome" data-slot="marathon_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome"/></td>
-          <td>
-            <div class="tome" data-slot="marathon_tome"></div>
-            <div class="tome_selector"></div>
-          </td>
-          <td><input class="tome_input" data-slot="marathon_tome" placeholder="Marathon Tome"/></td>
-        </tr>
-      </table>
+      <div id="tomes_section">
+        <div class="input_cluster" data-slot="guild_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/guild.png" alt="Gu" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Guild Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="lootrun_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/lootrun.png" alt="Lr" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Lootrun Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="armour_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/armour.png" alt="Ar" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Armour Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="armour_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/armour.png" alt="Ar" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Armour Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="armour_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/armour.png" alt="Ar" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Armour Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="armour_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/armour.png" alt="Ar" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Armour Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="mysticism_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/mysticism.png" alt="My" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Mysticism Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="mysticism_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/mysticism.png" alt="My" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Mysticism Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="weapon_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/weapon.png" alt="We" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Weapon Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="weapon_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/weapon.png" alt="We" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Weapon Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="expertise_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/expertise.png" alt="Ex" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Expertise Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="expertise_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/expertise.png" alt="Ex" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Expertise Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="marathon_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/marathon.png" alt="Ma" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Marathon Tome"/>
+        </div>
+        <div class="input_cluster" data-slot="marathon_tome" data-group="tome">
+          <a class="item_link" target="_blank">
+            <img src="img/tomes/marathon.png" alt="Ma" class="slot_img">
+          </a>
+          <input class="input tome_input" placeholder="Marathon Tome"/>
+        </div>
+      </div>
       <br>
       <div id="aspects_background">
         <div id="active_aspects">
@@ -376,35 +360,36 @@
 
 <div class="minecraftTooltip" id="cursorTooltip" hidden></div>
 
-<script src="src/punscake.js"></script>
+<script src="src/data/item_search.js"></script>
+
+<script src="src/data_manipulation/minecraft_html.js"></script>
 <script src="src/data/code_dictionary.js"></script>
 
-<script src="src/data/grouped_items.js"></script>
-<script src="src/data/constant_elements.js"></script>
+<script src="src/data/items.js"></script>
 <script src="src/data/data_class_trees.js"></script>
-<script src="src/trees.js"></script>
+<script src="src/data/trees.js"></script>
 <script src="src/data/base_and_ids.js"></script>
 <script src="src/data/small_stuff.js"></script>
 <script src="src/control/preloading.js"></script>
 
-<script src="src/permute/build.js"></script>
+<script src="src/control/build.js"></script>
 <script src="src/control/script.js"></script>
-<script src="src/attack_calculations.js"></script>
-<script src="src/permute/stat_calculations.js"></script>
-<script src="src/effect_overrides.js"></script>
-<script src="src/build_linking.js"></script>
+<script src="src/data_manipulation/attack_calculations.js"></script>
+<script src="src/data_manipulation/stat_calculations.js"></script>
+<script src="src/data_manipulation/effect_overrides.js"></script>
+<script src="src/control/build_linking.js"></script>
 <script src="src/item_input.js"></script>
-<script src="src/apply_node_effects.js"></script>
+<script src="src/data_manipulation/apply_node_effects.js"></script>
 <script src="src/data/abilities.js"></script>
-<script src="src/toggles.js"></script>
-<script src="src/ability_tree.js"></script>
+<script src="src/data_manipulation/toggles.js"></script>
+<script src="src/data_manipulation/ability_tree.js"></script>
 <script src="src/control/event_listeners.js"></script>
 
-<script src="src/item_display.js"></script>
-<script src="src/stat_display.js"></script>
-<script src="src/damage_display.js"></script>
+<script src="src/display/item_display.js"></script>
+<script src="src/display/stat_display.js"></script>
+<script src="src/display/damage_display.js"></script>
 
-<script src="src/settings.js"></script>
+<script src="src/control/settings.js"></script>
 
 </body>
 </html>

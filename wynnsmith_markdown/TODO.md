@@ -31,11 +31,19 @@
 17. Item database
 	- Ensure items are removable
 18. Figure out why html2canvas can't parse punscake items
+19. hpr canceling guide
 
 # Eventual
 
 ## Features
 
+- +Napalm applies after +Fallout
+- add spacing between id categories
+- hpr canceling guide
+- Clicking any item icon will generate a popup search/selector for that category
+  - Items ((advanced) item search)
+  - tomes (list)
+  - aspects (list, marks out already selected, clicking a selected swaps positions)
 - Separate input and display, minimize read/write from HTML
 - WynnBuilder link conversion, explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546)
 - proper build linking
@@ -116,9 +124,7 @@ for (let key in yourobject) {/*...*/};
 for (let [key, value] of Object.entries(yourobject)) {/*...*/}; 
 // necessity of if statement unknown, investigate.
 for (let key in yourobject) {
-	if (yourobject.hasOwnProperty(key)) {
-		console.log(key, yourobject[key]);
-	}
+	if (yourobject.hasOwnProperty(key)) {/*...*/}
 };
 ```
 - Use build.evaluate() for complex abstractions
@@ -166,3 +172,5 @@ for (let key in yourobject) {
 - Ability Tree shrinks a bit if the screen isn't wide enough
   - Set up the resizing logic
     - Nice and simple, all columns should have equal width
+- Making images as backgrounds is less functional
+- Figure out why html2canvas can't parse punscake items

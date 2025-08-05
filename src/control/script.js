@@ -1,30 +1,34 @@
 `use strict`;
 
 function refreshBuild() {
-    console.log("begin new refresh:");
     const build = new Build();
 
-    // read
-    refreshClass(build);
+    readBuild(build);
     if (build.wynnClass === "") return;
+    permuteBuild(build);
+    displayBuild(build);
+}
 
-    fixSPInputs();
-
+function readBuild(build) {
+    readSkillPointMultipliers(build);
     readItems(build);
     readTomes(build);
     readAbilities(build);
+}
 
-    fixOptionals(build);
+function permuteBuild(build) {
+    reconfigureOptionals(build);
     readToggles(build);
 
-    // compute
-    removeOverridenEffects(build);
-    calculateStats(build);
-    computeOutputs(build);
+    removeOverriddenEffects(build);
 
-    // display
+    calculateSupportiveStats(build);
+    calculateDamageConversions(build);
+}
+
+function displayBuild(build) {
     addDamageDisplays(build);
-    displayFinalValues(build);
+    displayBuildStats(build);
     renderTree(build);
 
     displayForDevelopment(build);
@@ -70,10 +74,10 @@ function binaryToDecimal(binary) {
 }
 
 function decimalToBinary(decimal) {
-    return decimal.toString(2);
+    return (decimal >>> 0).toString(2);
 }
 
-function romanize(num) {
+function decimalToRoman(num) {
     if (!+num) return false;
     const digits = String(+num).split("");
     const key = [
@@ -88,7 +92,7 @@ function romanize(num) {
     return Array(+digits.join("") + 1).join("M") + roman;
 }
 
-function deromanize(str) {
+function romanToDecimal(str) {
     str = str.toUpperCase();
     const validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/;
     const token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g;

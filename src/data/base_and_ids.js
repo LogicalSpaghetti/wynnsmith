@@ -1,7 +1,7 @@
 const emptyBaseString = JSON.stringify({
     // Health
     baseHealth: 0,
-    // Eledef Raw
+    // Ele-def Raw
     baseEarthDefence: 0,
     baseThunderDefence: 0,
     baseWaterDefence: 0,

@@ -1,28 +1,29 @@
-"use strict";
+`use strict`;
 
 // called when the page finishes loading
-window.addEventListener("load", async function () {
-    loadBuildFromLink();
-    loadFullBuildFromLink();
+window.addEventListener("load", function () {
+    // loadBuildFromLink();
+    // loadFullBuildFromLink();
 
     refreshBuild();
 
-    await preLoadAssets();
+    loadMiku();
 
     // added after everything has loaded to prevent premature reloads
     addEventListeners();
 });
 
-function addEventListeners() {
-    inputs.forEach((input) => {
-        refreshOwnData(input);
-        input.addEventListener("input", function () {
-            refreshBuild();
-            refreshOwnData(input);
-        });
-    });
+window.addEventListener("load", async function () {
+    await preLoadAssets();
+});
 
-    document.querySelectorAll(".powder").forEach((input) => {
+function loadMiku() {
+    document.getElementById("miku").src = readString("miku");
+}
+
+function addEventListeners() {
+    // gets all inputs, including
+    document.querySelectorAll(".input").forEach((input) => {
         input.addEventListener("input", function () {
             refreshBuild();
         });
@@ -31,25 +32,14 @@ function addEventListeners() {
     addAspectListeners();
     addTooltipListener();
 
-    tomeInputs.forEach((input) => {
-        input.addEventListener("input", function () {
-            refreshBuild();
-        });
-    });
+    document.querySelectorAll(".input_cluster").forEach((cluster) => {
+        const input = cluster.querySelector(".item_input");
+        const link = cluster.querySelector(".item_link");
 
-    spInputs.forEach((input) => {
-        input.addEventListener("input", function () {
-            if (input.value !== "") refreshBuild();
+        link.addEventListener("mouseover", () => {
+            renderHoverTooltip(getHoverHTMLForItem(getItem(input.value)));
         });
-    });
-
-    document.querySelectorAll(".slot_img").forEach((slot_img) => {
-        slot_img.addEventListener("mouseover", () => {
-            renderHoverTooltip(
-                getHoverTextForItem(getItemByInput(document.querySelector(`.input[data-slot=${slot_img.dataset.slot}]`))),
-            );
-        });
-        slot_img.addEventListener("mouseout", () => {
+        link.addEventListener("mouseout", () => {
             hideHoverAbilityTooltip();
         });
     });
@@ -94,9 +84,11 @@ function addEventListeners() {
         // do something with the file
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = (event) => {
+        reader.onload = () => {
+            const src = reader.result;
             // display the image on the page
-            document.getElementById("miku").src = event.target.result;
+            document.getElementById("miku").src = src;
+            writeString("miku", src);
         };
     });
 
@@ -135,22 +127,22 @@ function addAspectListeners() {
             if (numeral.dataset.tier > (clickTarget.parentElement.classList.contains("legendary") ? 4 : 3)) {
                 numeral.dataset.tier -= 1;
             } else {
-                numeral.classList.remove("Tier_" + romanize(numeral.dataset.tier - 1));
-                numeral.classList.add("Tier_" + romanize(numeral.dataset.tier));
+                numeral.classList.remove("Tier_" + decimalToRoman(numeral.dataset.tier - 1));
+                numeral.classList.add("Tier_" + decimalToRoman(numeral.dataset.tier));
                 refreshBuild();
             }
-            numeral.textContent = romanize(numeral.dataset.tier);
+            numeral.textContent = decimalToRoman(numeral.dataset.tier);
             return;
         }
         if (clickTarget.classList.contains("aspect_down")) {
             const numeral = clickTarget.parentElement.childNodes[2];
             if (numeral.dataset.tier > 1) {
-                numeral.classList.remove("Tier_" + romanize(numeral.dataset.tier));
+                numeral.classList.remove("Tier_" + decimalToRoman(numeral.dataset.tier));
                 numeral.dataset.tier -= 1;
-                numeral.classList.add("Tier_" + romanize(numeral.dataset.tier));
+                numeral.classList.add("Tier_" + decimalToRoman(numeral.dataset.tier));
                 refreshBuild();
             }
-            numeral.textContent = romanize(numeral.dataset.tier);
+            numeral.textContent = decimalToRoman(numeral.dataset.tier);
             return;
         }
 

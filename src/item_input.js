@@ -1,111 +1,107 @@
 `use strict`;
 
-let previousClass = "";
-let currentClass = "";
-
-function refreshClass(build) {
-    previousClass = currentClass;
-    const item = getItemByInput(inputs[8]);
-    if (item !== undefined && item.requirements.classRequirement !== undefined) {
-        currentClass = item.requirements.classRequirement;
-    }
-    build.wynnClass = currentClass;
-}
-
 function readItems(build) {
-    addBasePlayerStats(build);
-    for (let i = 0; i < inputs.length; i++) {
-        const input = inputs[i];
-        const item = getItemByInput(input);
-        setPowderSlots(input, item);
-        if (item === undefined) continue;
-        colorSlot(input, item);
-        setLink(input);
-        addPowders(build, input);
-        addMajorIds(build, item);
-        addBases(build, item);
-        addIds(build, item);
-        if (item.attackSpeed === undefined) continue;
-        addAttackSpeed(build, item);
-        document.title = "" + input.value + ": WynnSmith";
-        let link = document.querySelector("link[rel~='icon']");
-        if (!link) {
-            link = document.createElement("link");
-            link.rel = "icon";
-            document.head.appendChild(link);
-        }
-        link.href = "img/icons/" + item.requirements.classRequirement + ".png";
-        let weaponImg = document.querySelector(".slot_img[data-slot='weapon']");
-        weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png";
+    readGear(build);
+    readWeapons(build);
+}
+
+function readGear(build) {
+    const itemInputs = document.getElementById("item_inputs");
+    const gearClusters = itemInputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
+
+    for (let cluster of gearClusters) {
+        const item = getItemByCluster(cluster);
+        addItem(build, cluster, item);
     }
 }
 
-function addBasePlayerStats(build) {
-    build.base["baseHealth"] = 535;
+function readWeapons(build) {
+    readWeapon(build);
+    // todo: off-hands, requires restructuring it so that we read, then loop through weapons adding.
+}
+
+function readWeapon(build) {
+    const itemInputs = document.getElementById("item_inputs");
+    const weaponCluster = itemInputs.querySelector(".primary_weapon_cluster");
+    const weaponInput = weaponCluster.querySelector(".item_input");
+
+    const item = getItemInGroup("weapon", weaponInput.value);
+    if (!item) return;
+
+    addItem(build, weaponCluster, item);
+
+    build.wynnClass = item.requirements.classRequirement;
+    addAttackSpeed(build, item);
+
+    document.title = `${weaponInput.value} - WynnSmith`;
+
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+        link = document.createElement("link");
+        link.rel = "icon";
+        document.head.appendChild(link);
+    }
+    link.href = "img/icons/" + item.requirements.classRequirement + ".png";
+
+    let weaponImg = weaponCluster.querySelector(".slot_img");
+    weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png";
+
+}
+
+function addItem(build, cluster, item) {
+    setPowderSlots(cluster, item);
+
+    if (!item) return;
+
+    colorSlot(cluster, item);
+    setLink(cluster, item);
+
+    addPowders(build, cluster);
+    addMajorIds(build, item);
+    addBases(build, item);
+    addIds(build, item);
 }
 
 function addAttackSpeed(build, item) {
-    const attackSpeed = item.attackSpeed;
-    build.attackSpeed = attackSpeed;
-    const speeds = Object.keys(attackSpeedMultipliers);
-    build.neumericalAttackSpeed = orderedAttackSpeed.indexOf(attackSpeed);
+    build.attackSpeed = item.attackSpeed;
 }
 
-function addIds(build, source) {
-    const adds = source.identifications;
-    if (!adds) return;
-    const idNames = Object.keys(adds);
-    for (let i = 0; i < idNames.length; i++) {
-        const id = getAsMax(adds[idNames[i]]);
-        addId(build, id, idNames[i]);
-    }
+function addIds(build, item) {
+    const ids = item.identifications;
+    if (!ids) return;
+    for (let idName in ids)
+        addId(build, getAsMax(ids[idName]), idName);
+}
+
+function addId(build, id, idName) {
+    build.ids[idName] += id;
 }
 
 function addBases(build, item) {
-    const base = item.base;
-    const idNames = Object.keys(base);
-    for (let i = 0; i < idNames.length; i++) {
-        const id = base[idNames[i]];
-        addBase(build, id, idNames[i]);
-    }
+    const ids = item.base;
+    if (!ids) return;
+    for (let idName in ids)
+        addBase(build, ids[idName], idName);
 }
 
 function addBase(build, id, idName) {
     if (Number.isInteger(id)) {
-        build.base[idName] = build.base[idName] === undefined ? id : build.base[idName] + id;
+        build.base[idName] += id;
     } else {
-        if (build.base[idName] === undefined) {
-            build.base[idName] = {min: 0, max: 0};
-        }
         addMinAndMaxTo(build.base[idName], id);
     }
 }
 
-function addId(build, id, idName) {
-    if (build.ids[idName] === undefined) {
-        build.ids[idName] = 0;
-    }
-    build.ids[idName] += id;
-}
-
 function addMajorIds(build, item) {
-    if (item.majorIds === undefined) return;
-    build.maIds.push(Object.keys(item.majorIds)[0]);
+    for (let maId in item.majorIds) build.maIds.push(maId);
 }
 
-function getItemByInput(input) {
-    const itemCategory = itemGroups[input.dataset["slot"].replace("0", "").replace("1", "")];
+function getItemByCluster(cluster) {
+    if (!cluster) throw new Error(`cluster ${cluster} does not exist!`);
+    const input = cluster.querySelector(".item_input");
+    if (!input) throw new Error(`cluster does not have an input!`);
 
-    if (itemCategory === undefined) return;
-    const itemData = itemCategory.find((it) => it.name === input.value);
-    if (itemData === undefined) return undefined;
-    return itemData.item;
-}
-
-function refreshOwnData(input) {
-    const display = document.getElementById("display-" + input.dataset.slot);
-    const item = getItemByInput(input);
-
+    return getItemInGroup(cluster.dataset.slot, input.value);
 }
 
 function addMinAndMaxTo(target, source) {
@@ -113,16 +109,17 @@ function addMinAndMaxTo(target, source) {
     target.max += source.max;
 }
 
-// Powders:
-function setPowderSlots(input, item) {
-    const powderInput = document.getElementById("powder_" + input.dataset.slot);
-    if (powderInput === null || item === undefined) return;
-    if (item.powderSlots === undefined) {
+function setPowderSlots(cluster, item) {
+    const powderInput = cluster.querySelector(".powder_input");
+    if (!powderInput) return;
+
+    if (!item || !item.powderSlots) {
         powderInput.placeholder = "No Slots";
         powderInput.maxLength = 0;
         powderInput.value = "";
         return;
     }
+
     powderInput.placeholder = item.powderSlots + " slots";
     powderInput.maxLength = item.powderSlots * 2;
     if (powderInput.value.length > powderInput.maxLength) {
@@ -130,19 +127,22 @@ function setPowderSlots(input, item) {
     }
 }
 
-function colorSlot(input, item) {
+function colorSlot(cluster, item) {
+    const input = cluster.querySelector(".item_input");
     input.dataset.rarity = item.rarity;
 }
 
-function setLink(input) {
-    document.getElementById(input.dataset.slot + "_link").href = "./item/?" + input.value;
+function setLink(cluster, item) {
+    cluster.querySelector(".item_link")
+        .href = "./item/?" + item.name ?? "";
 }
 
-function addPowders(build, input) {
-    const powderInput = document.getElementById("powder_" + input.dataset.slot);
-    if (powderInput === null) return;
+function addPowders(build, cluster) {
+    const powderInput = cluster.querySelector(".powder_input");
+    if (!powderInput) return;
+
     const powdersString = powderInput.value.length % 2 === 0 ? powderInput.value : powderInput.value.substring(0, powderInput.value.length - 1);
-    const destination = input.dataset.slot === "weapon" ? build.powders.weapon : build.powders.armour;
+    const destination = cluster.dataset.slot === "weapon" ? build.powders.weapon : build.powders.armour;
     for (let i = 0; i < powdersString.length / 2; i++) {
         const powderName = powdersString.substring(i * 2, i * 2 + 2);
         const powder = powders[powderName];
@@ -152,16 +152,38 @@ function addPowders(build, input) {
 }
 
 function readTomes(build) {
-    for (let i = 0; i < tomeInputs.length; i++) {
-        if (getItemByInput(tomeInputs[i]) === undefined) continue;
+    const tomeInputClusters = document.getElementById("tomes_section")
+        .querySelectorAll(".input_cluster");
 
-        build.tomes.push(tomeInputs[i].value);
+    for (let tomeInputCluster of tomeInputClusters) {
+        const input = tomeInputCluster.querySelector(".tome_input");
+        console.log(input);
+        const item = getItemInGroup(tomeInputCluster.dataset.slot, input.value);
+        if (!item) continue;
+
+        build.tomes.push(item);
     }
 }
 
-function fixSPInputs() {
+// TODO: calculate mins given build
+function readSkillPointMultipliers(build) {
+    const spInputs = document.getElementById("sp_section").querySelectorAll(".sp_input");
     for (let i = 0; i < 5; i++) {
         let value = parseInt(spInputs[i].value);
         spInputs[i].value = isNaN(value) ? 0 : value;
+
+        build.sp.mults[i] = getSkillPointMultiplier(value, i);
     }
+}
+
+function getSkillPointMultiplier(value, i) {
+    let mlt = spMultipliers[capSkillPoint(value)];
+    if (i === 3) mlt *= 0.867;
+    if (i === 4) mlt *= 0.951;
+
+    return mlt;
+}
+
+function capSkillPoint(sp) {
+    return isNaN(sp) ? 0 : Math.min(Math.max(sp, 0), 150);
 }
