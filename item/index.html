@@ -15,70 +15,20 @@
     <link rel="icon" href="../img/icons/glass.png"/>
 </head>
 <body>
-<pre id="output" class="full_center minecraftTooltip" style="display: inline-block"></pre>
+<pre id="output" class="full_center minecraftTooltip" style="display: inline-block; text-shadow: 0.125rem 0.125rem 0 black;"></pre>
 
-<!-- TODO: minify all_items.js -->
 <script src="../src/data/small_stuff.js"></script>
 <script src="../src/data_manipulation/minecraft_html.js"></script>
 <script src="../src/data/code_dictionary.js"></script>
-<script src="../src/data/all_items.js"></script>
+<script src="../src/data/items.js"></script>
+<script src="../src/data/item_search.js"></script>
 <script src="../src/display/item_display.js"></script>
 <script src="../src/display/stat_display.js"></script>
-<script src="../lib/html2canvas.min.js"></script>
 <script src="../src/data/base_and_ids.js"></script>
 <script src="../src/control/script.js"></script>
 
-<script type="text/javascript">
-    window.addEventListener("load", function () {
-        const search = window.location.search.substring(1, window.location.search.length)
-          .replaceAll("%20", " ").replaceAll("_", " ").replaceAll("%27", "'").replaceAll("+", "'");
-        const item = items[search];
-        const display = document.getElementById("output");
+<script src="../lib/html2canvas.min.js"></script>
 
-        document.title = "WynnSearch: " + search;
-
-        display.innerHTML = getHoverHTMLForItem(item, "Invalid Item!")
-
-        html2canvas(display).then((canvas) => {
-            canvas.id = "canvas";
-            canvas.style.display = "none";
-            document.body.appendChild(canvas);
-        });
-
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "c") {
-                event.preventDefault();
-                copyImage();
-            }
-        });
-
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "s") {
-                event.preventDefault();
-                saveImage();
-            }
-        });
-
-
-    });
-
-    function saveImage() {
-        const canvas = document.getElementById("canvas");
-        const dataURL = canvas.toDataURL("image/png");
-
-        const link = document.createElement("a");
-        link.href = dataURL;
-        link.download = "canvas-image.png";
-
-        link.click();
-    }
-
-    function copyImage() {
-        const canvas = document.getElementById("canvas");
-        canvas.toBlob((blob) => {
-            navigator.clipboard.write([new ClipboardItem({"image/png": blob})]);
-        }, "image/png");
-    }
-</script>
+<script src="../src/control/event_listeners/item_event_listeners.js"></script>
 </body>
 </html>

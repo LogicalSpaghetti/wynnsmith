@@ -202,6 +202,17 @@ document.getElementById("ansi_tree").addEventListener("click", function () {
     copyTreeAsText();
 });
 
+document.getElementById("tree_img").addEventListener("click", function () {
+    const tree = document.getElementById("abilityTree");
+
+    html2canvas(tree, {backgroundColor: null}).then((canvas) => {
+        canvas.id = "canvas";
+        canvas.toBlob((blob) => {
+            navigator.clipboard.write([new ClipboardItem({"image/png": blob})]);
+        }, "image/png");
+    });
+});
+
 function resetLinkText() {
     // resets the buttons if they were clicked
     document.querySelectorAll(".copy_link").forEach((button) => {
