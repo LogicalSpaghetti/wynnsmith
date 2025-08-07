@@ -99,7 +99,7 @@ function addMajorIds(build, item) {
 function getItemByCluster(cluster) {
     if (!cluster) throw new Error(`cluster ${cluster} does not exist!`);
     const input = cluster.querySelector(".item_input");
-    if (!input) throw new Error(`cluster does not have an input!`);
+    if (!input) throw new Error(`cluster ${cluster} does not have an input!`);
 
     return getItemInGroup(cluster.dataset.slot, input.value);
 }
@@ -146,7 +146,7 @@ function addPowders(build, cluster) {
     for (let i = 0; i < powdersString.length / 2; i++) {
         const powderName = powdersString.substring(i * 2, i * 2 + 2);
         const powder = powders[powderName];
-        if (powder === undefined) continue;
+        if (powder == null) continue;
         destination.push(powderName);
     }
 }
@@ -157,7 +157,6 @@ function readTomes(build) {
 
     for (let tomeInputCluster of tomeInputClusters) {
         const input = tomeInputCluster.querySelector(".tome_input");
-        console.log(input);
         const item = getItemInGroup(tomeInputCluster.dataset.slot, input.value);
         if (!item) continue;
 

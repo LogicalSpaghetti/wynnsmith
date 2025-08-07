@@ -3,6 +3,8 @@ function calculateSupportiveStats(build) {
 
     addBasePlayerStats(build);
 
+    addPowderDefences(build);
+
     applyExternalBuffs(build);
     includeOtherGear(build);
 
@@ -19,6 +21,16 @@ function precomputations(build) {
 
 function addBasePlayerStats(build) {
     build.base["baseHealth"] = 535;
+}
+
+function addPowderDefences(build) {
+    for (let powder of build.powders.armour) {
+        const powderDefs = powders[powder].def;
+        for (let i in powderDefs) {
+            if (!powderDefs[i]) continue;
+            addBase(build, powderDefs[i], "base" + elementalNames[i] + "Defence");
+        }
+    }
 }
 
 function radiance(build) {

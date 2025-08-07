@@ -33,7 +33,7 @@ function displayBuild(build) {
 
     displayForDevelopment(build);
 
-    resetLinkText();
+    resetCopyText();
 }
 
 function roundForDisplay(number, addPeriod) {

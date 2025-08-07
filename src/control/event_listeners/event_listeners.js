@@ -79,6 +79,12 @@ function addEventListeners() {
         copyBuildLink(this, true);
     });
 
+    document.querySelectorAll(".copy_button").forEach((button) => {
+        button.addEventListener("click", function () {
+            button.textContent = "Copied!";
+        })
+    });
+
     document.getElementById("gif_input").addEventListener("change", (event) => {
         const file = event.target.files[0];
         // do something with the file
@@ -203,19 +209,12 @@ document.getElementById("ansi_tree").addEventListener("click", function () {
 });
 
 document.getElementById("tree_img").addEventListener("click", function () {
-    const tree = document.getElementById("abilityTree");
-
-    html2canvas(tree, {backgroundColor: null}).then((canvas) => {
-        canvas.id = "canvas";
-        canvas.toBlob((blob) => {
-            navigator.clipboard.write([new ClipboardItem({"image/png": blob})]);
-        }, "image/png");
-    });
+    copyImageById("abilityTree")
 });
 
-function resetLinkText() {
+function resetCopyText() {
     // resets the buttons if they were clicked
-    document.querySelectorAll(".copy_link").forEach((button) => {
+    document.querySelectorAll(".copy_button").forEach((button) => {
         button.textContent = button.dataset["default"];
     });
 }

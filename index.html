@@ -27,8 +27,9 @@
         <button id="clear_tree">Clear Tree</button>
         <button id="clear_reds">Clear Errors</button>
         <br>
-        <button id="ansi_tree">Copy ANSI Tree</button>
-        <button id="tree_img">Copy Tree as Image</button>
+        <button id="ansi_tree" class="copy_button" data-default="Copy ANSI Tree">Copy ANSI Tree</button>
+        <br>
+        <button id="tree_img" class="copy_button" data-default="Copy Tree as Image">Copy Tree as Image</button>
       </div>
     </section>
     <!-- Column -->
@@ -98,8 +99,8 @@
       </div>
       <br>
       <div class="copy_buttons">
-        <button id="copy_short" class="copy_link" data-default="Copy Short">Copy Short</button>
-        <button id="copy_long" class="copy_link" data-default="Copy Long">Copy Long</button>
+        <button id="copy_short" class="copy_button" data-default="Copy Short">Copy Short</button>
+        <button id="copy_long" class="copy_button" data-default="Copy Long">Copy Long</button>
       </div>
       <br>
       <table id="sp_section" class="small-font">
@@ -378,18 +379,18 @@
 <script src="src/data_manipulation/attack_calculations.js"></script>
 <script src="src/data_manipulation/stat_calculations.js"></script>
 <script src="src/data_manipulation/effect_overrides.js"></script>
-<script src="src/control/build_linking.js"></script>
+<script src="src/control/in_out/build_linking.js"></script>
 <script src="src/data_manipulation/item_input.js"></script>
 <script src="src/data_manipulation/apply_node_effects.js"></script>
 <script src="src/data/abilities.js"></script>
 <script src="src/data_manipulation/toggles.js"></script>
 <script src="src/data_manipulation/ability_tree.js"></script>
-<script src="src/control/event_listeners.js"></script>
+<script src="src/control/event_listeners/event_listeners.js"></script>
 
 <script src="src/display/item_display.js"></script>
 <script src="src/display/stat_display.js"></script>
 <script src="src/display/damage_display.js"></script>
-
+<script src="src/control/in_out/image_exporting.js"></script>
 <script src="src/control/settings.js"></script>
 
 <script src="lib/html2canvas.min.js"></script>

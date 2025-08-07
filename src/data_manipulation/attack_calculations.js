@@ -7,11 +7,8 @@ function calculateDamageConversions(build) {
     damagesToArrays(build);
 
     powderConversions(build);
-    addPowderBaseDamage(build);
-    addPowderDefences(build);
-    addArmourSpecials(build);
-
-    addSPMults(build);
+    addSkillPointPercents(build);
+    addWeaponSpecial(build);
 
     conversions(build);
 
@@ -32,31 +29,14 @@ function calculateDamageConversions(build) {
     applyStrDex(build);
 }
 
-function addPowderBaseDamage(build) {
-    // Add powder base damage:
-    for (let i = 0; i < build.powders.weapon.length; i++) {
-        const powder = powders[build.powders.weapon[i]];
-        addBase(build, powder.dmg, "base" + powder.element + "Damage");
-    }
-}
-
-function addPowderDefences(build) {
-    for (let i = 0; i < build.powders.armour.length; i++) {
-        const powder = powders[build.powders.armour[i]];
-        const powderDefs = powder.def;
-        for (let j = 0; j < powderDefs.length; j++) {
-            if (powderDefs[j] === 0) continue;
-            addBase(build, powderDefs[j], "base" + elementalNames[j + 1] + "Defence");
-        }
-    }
-}
-
 function addArmourSpecials(build) {
     // TODO
 }
 
 function addWeaponSpecial(build) {
     // TODO
+    // which special is detected elsewhere
+    // if it's replaced by a different special is done somewhere else
 }
 
 // TODO: Move elsewhere
@@ -206,12 +186,21 @@ function powderConversions(build) {
         const modPercent = Math.min(neutral, powder.conversion);
         neutral -= modPercent;
         modifierPercents[elementalIndex] += modPercent;
+    }
 
+    const oldNeutral = {min: base.min[0], max: base.max[0]};
 
+    base.min[0] *= neutral / 100;
+    base.max[0] *= neutral / 100;
+
+    for (let i in modifierPercents) {
+        const modifier = modifierPercents[i] / 100;
+        base.min[i] += modifier * oldNeutral.min;
+        base.max[i] += modifier * oldNeutral.max;
     }
 }
 
-function addSPMults(build) {
+function addSkillPointPercents(build) {
     for (let i = 0; i < 5; i++) {
         const mult = build.sp.mults[i] * 100;
 
@@ -379,7 +368,7 @@ function mergeAttackDamage(build) {
     });
 }
 
-// TODO: min, max, minc, and maxc are mid and I want a better system
+// TODO: min, max, minc, and maxc are stupid and I want a better system
 function applyStrDex(build) {
     const strMult = 1 + build.sp.mults[0];
     const dexMult = 1 + build.ids.criticalDamageBonus / 100;
@@ -390,7 +379,7 @@ function applyStrDex(build) {
         attack.minc = attack.min.slice(0);
         attack.maxc = attack.max.slice(0);
 
-        for (let i = 1; i < 6; i++) {
+        for (let i = 0; i < 6; i++) {
             // Crit
             attack.minc[i] *= dexMult + strMult;
             attack.maxc[i] *= dexMult + strMult;
