@@ -460,3 +460,13 @@ const base64Values = [
     "M", "N", "O", "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z", "_", "'",
 ];
+
+const costNames = ["1st", "2nd", "3rd", "4th"];
+const classSpellNames = {
+    archer: ["Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"],
+    assassin: ["Spin Attack", "Dash", "Multihit", "Smoke Bomb"],
+    mage: ["Heal", "Teleport", "Meteor", "Ice Snake"],
+    shaman: ["Totem", "Haul", "Aura", "Uproot"],
+    warrior: ["Bash", "Charge", "Uppercut", "War Scream"],
+
+}

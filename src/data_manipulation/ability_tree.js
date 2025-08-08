@@ -165,35 +165,6 @@ function mapHTML(tree, abilityTree, wynnClass) {
     }
 }
 
-function getHoverTextForAbility(abilityID, wynnClass) {
-    const abilities = punscake[wynnClass].abilities;
-    const ability = abilities[abilityID];
-
-    let result = `${ability.name}\n\n`;
-
-    result += `${ability.description}\n\n`;
-
-    if (ability.unlockingWillBlock.length) {
-        result += `§cUnlocking will block:\n`;
-        for (let id of ability.unlockingWillBlock)
-            result += `§c- §7${abilities[id]._plainname}\n`;
-        result += "\n";
-    }
-
-    if (ability.archetype !== "")
-        result += ability.archetype + "\n\n";
-
-    result += "§7Ability points: §f" + ability.pointsRequired;
-
-    if (ability.requires !== -1)
-        result += "\n§7Required Ability: §f" + abilities[ability.requires]._plainname;
-
-    if (ability.archetype !== "" && ability.archetypePointsRequired > 0)
-        result += `\n§7Min ${stripMinecraftFormatting(ability.archetype)} Archetype: §f${ability.archetypePointsRequired}`;
-
-    return minecraftToHTML(result);
-}
-
 // called any time the build changes but the class doesn't
 function addNodesToBuild(build) {
     const treeNodes = document.querySelectorAll(".ability_img");
@@ -457,24 +428,7 @@ function renderHighlights() {
     });
 }
 
-function stripMinecraftFormatting(text = "") {
-
-    let result = "";
-
-    const colorSplitArr = splitByColorFormats(text);
-
-    colorSplitArr.forEach(colorSplit => {
-        const formatSplitArr = splitByOtherFormats(colorSplit["content"]);
-
-        formatSplitArr.forEach(formatSplit => {
-            result += formatSplit["content"];
-        });
-    });
-
-    return result;
-}
-
-function copyTreeAsText() {
+function copyTreeAsANSIText() {
     const red = `[2;31m`;
     const green = "[2;32m";
     const yellow = "[2;33m";

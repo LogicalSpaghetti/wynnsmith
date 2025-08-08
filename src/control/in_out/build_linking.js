@@ -1,16 +1,25 @@
 `use strict`;
 
+const max_level = 106;
+
 /* Import: */
 
-function getInputDataWhichShouldReallyBeAStepInTheMainChain() {
+// todo: take from a build object instead of parsing from HTML, (that way stuff is more pre-formatted)
+function getInputData() {
     const inputData = {
+        version: 0,
+        level: 106,
         gear: [],
-        weapon: undefined,
-        tree: undefined,
-
+        powders: [],
+        modifiedSP: [],
+        aspects: [],
+        tomes: [],
+        tree: {},
     }
 
-    // for (let cluster of document.getElementById(""))
+    for (let cluster of document.getElementById("item_inputs").querySelectorAll('.input_cluster')) {
+
+    }
 }
 
 function encodeBuild(inputData) {

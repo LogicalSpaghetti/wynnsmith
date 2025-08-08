@@ -1,11 +1,9 @@
-const attackSection = document.getElementById("attack_display");
-
-function addDamageDisplays(build) {
+function addDamageDisplays(build, attackDisplayId = "attack_display") {
     let html = "";
 
     html += getNewAttackHTML(build);
 
-    attackSection.innerHTML = html;
+    document.getElementById(attackDisplayId).innerHTML = html;
 }
 
 function getNewAttackHTML(build) {

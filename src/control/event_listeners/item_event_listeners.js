@@ -18,4 +18,9 @@ document.addEventListener("keydown", function (event) {
         event.preventDefault();
         saveImageById("item_display");
     }
+
+    if (event.key === "l") {
+        event.preventDefault();
+        navigator.clipboard.writeText(window.location.toString());
+    }
 });

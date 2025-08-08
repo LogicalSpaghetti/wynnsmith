@@ -133,12 +133,13 @@ const emptyIdsString = JSON.stringify({
 
 const orderedBaseStats = [
     "baseHealth",
+    "",
     "baseEarthDefence",
-    "baseWaterDefence",
+    "baseThunderDefence",
     "baseFireDefence",
     "baseWaterDefence",
     "baseAirDefence",
-
+    "",
     "baseDamage",
     "baseEarthDamage",
     "baseThunderDamage",
@@ -151,7 +152,7 @@ const orderedSkillPointIds = ["rawStrength", "rawDexterity", "rawIntelligence", 
 
 const orderedRegularIds = [
     "rawAttackSpeed", // the single most important stat
-    // Most stuff
+    "",
     "rawHealth", // Health
     "healthRegenRaw",
     "healthRegen",
@@ -177,13 +178,15 @@ const orderedRegularIds = [
     "lootQuality",
     "xpBonus",
     "weakenEnemy", // enemy debuffs
-    "slowEnemy", // Ele-defs
+    "slowEnemy",
+    "", // Ele-defs
     "earthDefence",
     "thunderDefence",
     "waterDefence",
     "fireDefence",
     "airDefence",
     "elementalDefence",
+    "",
     // Damage
     "rawDamage",
     "rawMainAttackDamage",
@@ -234,7 +237,7 @@ const orderedRegularIds = [
     "airMainAttackDamage",
     "airSpellDamage",
     "criticalDamageBonus",
-    // Spell Costs
+    "", // Spell Costs
     "1stSpellCost",
     "2ndSpellCost",
     "3rdSpellCost",
@@ -245,13 +248,14 @@ const orderedRegularIds = [
     "raw4thSpellCost",
 ];
 
+// TODO: add colors and
 const base_stats = {
-    "baseHealth": {name: "§4Health"},
-    "baseEarthDefence": {name: "Earth Defence"},
-    "baseThunderDefence": {name: "Thunder Defence"},
-    "baseWaterDefence": {name: "Water Defence"},
-    "baseFireDefence": {name: "Fire Defence"},
-    "baseAirDefence": {name: "Air Defence"},
+    "baseHealth": {name: "§4⚔ Health"},
+    "baseEarthDefence": {name: "§2✤ Earth§7 Defence"},
+    "baseThunderDefence": {name: "§e✦ Thunder§7 Defence"},
+    "baseWaterDefence": {name: "§b❉ Water§7 Defence"},
+    "baseFireDefence": {name: "§c✹ Fire§7 Defence"},
+    "baseAirDefence": {name: "§f❋ Air§7 Defence"},
 
     "baseDamage": {name: "§6✣ Neutral§7 Damage"},
     "baseEarthDamage": {name: "§2✤ Earth§7 Damage"},

@@ -122,8 +122,21 @@ input,
     border: 1px solid var(--ls-background);
 }
 
-.item_input {
+.slot_input {
     width: 160px;
+}
+
+.level_input {
+    width: 10ch;
+
+    -webkit-appearance: none;
+    appearance: textfield;
+}
+
+/* Required for WebKit browsers, which still shows the spin buttons */
+.level_input::-webkit-outer-spin-button,
+.level_input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
 }
 
 #gif_holder {

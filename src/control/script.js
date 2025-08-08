@@ -12,7 +12,6 @@ function refreshBuild() {
 function readBuild(build) {
     readSkillPointMultipliers(build);
     readItems(build);
-    readTomes(build);
     readAbilities(build);
 }
 

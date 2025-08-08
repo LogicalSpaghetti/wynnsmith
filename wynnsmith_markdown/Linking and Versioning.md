@@ -16,82 +16,67 @@ keep outdated information stored in a place that's only sent to the client if th
 		only "'" and "_" get included when double-clicked
 			use for base_64
 
-?
-
-	version
-	-slots, 2 chars per slot.
-	-powders, * means the rest of an open slot is filled
-	-tree, binary representing selected nodes
-	-aspects, 5 slots, optional tiers appended with stars as filler
-	-oTomes, one character per slot
-	-k modified SP, cannot be negative, * added if it requires 2 digits to hold.
-
-?
-
-	v00.00
-	-WWHHCCLLBBRRRRBBNN
-	-pff*ff**f3fe
-	-tTTTTTTTTTTTTTTTT
-	-aAAAAA**23
-	-oOOOOOOOOOOOOOO
-	-kETWF*AA
-
-Have a bunch of optional ways to make the link values more explicit
-
-	?
-	type of link character
-		1ch
-		build is S, used if I want to encode other things
-	version
-		12 bits
-			if that's no longer enough
-				use a character not part of base 64 to extend it
-				or just change the link type character
-	player level
-		flag max level
-		dynamic
-	slot contents
-		WHCLBRRBN
-		dynamic length for each slot
-		0 is an empty slot
-		1 is a crafted item
-		2 is a custom item
-	powders 
-		base 8
-		0 for empty
-		1-5 for etwfa
-		6 for t3 of whatever's next
-		7 for tier next of next-next
-		length parsed based on the powder slots of the items(?)
-			ceil(slots/6)
-	aspects
-		flag aspects included?
-		1 bit for each aspect
-			there are at most 18 aspects per class
-		3 characters
-			4 if more Aspects are ever added
-	Tomes
-		flag tomes included
-		all tomes given an id in their category
-		32 or less tomes per category
-		9 characters to represent all slots
-	modified SP
-		flag unmodified SP
-		7 bits each, 
-		1 character per element
-		some symbol means that it requires 2 characters instead of 1
-	other nonsense
-		flag for if it has other nonsense
-		stuff like scroll buffs or whatever other insanity I want to add
-		4 bit identifier for each type
-	tree
-		just propagate down
-			add 1 each time a selected node is found
-			add 0 otherwise, and don't repropagate
+(a "flag" is one bit to mark for a boolean state used to simplify common cases down)
+###### link structure:
+1. Link type
+	- flag: is build
+	- if 0, don't interpret as a build
+		- ambiguous
+2. Version
+	- 12 bits
+		- 2048 possible versions
+			- if the first bit is 1, it means the versioning standard has changed
+	- used to ensure items and trees are read from that version of the database
+3. Player level
+	- flag: max level
+	- dynamic length by: max level
+4. Items
+	- for each slot
+		- dynamic length by: category.length + 2
+		- 0..0 is an empty slot
+		- 0..1 is a crafted/custom item
+			- flag: custom item
+5. Powders
+	 - for each non-zero item:
+		 - flag: item has powders:
+			 - per-powder encoding:
+				 - 000-100 = etwfa
+				 - 101 for tier 3 of next xxx
+				 - 110 for element xxx and tier \_\_\_xxx
+				 - 111 unused, might use later
+			 - flag: repeat powder
+				 - flag: end powders for item
+6. Modified SP
+	- flag: SP modified
+	- for each skill:
+		- dynamic length by:  max SP assignable to skill (100) 
+7. Aspects
+	- flag: has aspects
+	- for each aspect slot:
+		- dynamic length by: class_aspect_count + 1
+8. Tomes
+	- flag: has tomes
+		- flag: just guild tome
+	- for each tome slot:
+		- identical to item slot encoding
+			- including technically having room for custom tomes
+9. Tree
+	- dynamic length by: until the end of the build
+	- capped off with zeros so that the total length of everything is 0 mod 6
+	- propagate through the tree (~~up~~ down left right)
+		- when a selected node is encountered, append "1"
+			- re-propagate from here immediately
+				- this way it goes straight down the tree, and left/right branches break the tree less
+		- when an deselected node is encountered, append "0"
+	- when parsing, run using the old tree
+		- map to the new tree either using location, or node ID
+10. Section delimiter
+	- will likely use equals sign "="
+		- safer options: `-$.+!*(),`
+			- allowed in all URL standards
+			- not used for base_64
+			- not part of any URL standards as a special character
+	- separates different builds to be encoded within one link
 ### Crafted Encoding
+1. TODO
 
-1. Crafting type
-	- Implied in build linking
-2. ingredients
-	- different id system for each recipe type
-	- some ings have multiple ids to keep links shorter

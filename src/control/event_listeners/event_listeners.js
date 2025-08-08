@@ -205,7 +205,7 @@ function addAspectListeners() {
 }
 
 document.getElementById("ansi_tree").addEventListener("click", function () {
-    copyTreeAsText();
+    copyTreeAsANSIText();
 });
 
 document.getElementById("tree_img").addEventListener("click", function () {

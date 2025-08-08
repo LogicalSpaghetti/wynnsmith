@@ -1,9 +1,7 @@
 `use strict`;
 
-function getFormattedAttackSpeed(item) {
-    if (item.type !== "weapon") throw new Error(`Trying to Format Attack Speed for non-weapon: ${item.name}!`);
-
-    return item.attackSpeed.split('_').map(upperFirst).join(' ');
+function snakeToTitle(string) {
+    return string.split('_').map(upperFirst).join(' ');
 }
 
 function upperFirst(string) {
@@ -14,82 +12,12 @@ function isSpellCost(stat) {
     return stat.includes("SpellCost");
 }
 
-function getHoverHTMLForItem(item, invalidityText = "") {
-    if (!item) return invalidityText;
-
-    let sections = []
-    let section = ""
-
-    section += codeDictionaryRarityColor[item.rarity] + item.name + "\n";
-    if (item.type === "weapon")
-        section += `§7${getFormattedAttackSpeed(item)} Attack Speed\n`;
-
-    sections.push(section);
-    section = "";
-
-    if (item.base) {
-        for (let i in orderedBaseStats)
-            section += getFormattedBase(orderedBaseStats[i], item.base[orderedBaseStats[i]], base_stats, false);
-
-        if (item.type === "weapon")
-            section += `§8Average DPS: ${getAverageDPS(item)}\n`;
-    }
-
-    sections.push(section);
-    section = "";
-
-    const classReq = item.requirements.classRequirement;
-    if (classReq) {
-        section += `§7Class Req: ${upperFirst(classReq)}\n`;
-    }
-
-    const levelReq = item.requirements.level;
-    if (levelReq) {
-        section += `§4Combat Lv.§7 Min: ${levelReq}\n`;
-    }
-
-    skillPointNames.forEach((name) => {
-        const requirement = item.requirements[name];
-        if (requirement) {
-            section += `${codeDictionarySkillPointColor[name]}${upperFirst(name)} §7Min: ${requirement}\n`;
-        }
-    });
-
-    sections.push(section);
-    section = "";
-
-    for (let i in orderedSkillPointIds)
-        section += getFormattedSP(orderedSkillPointIds[i], item.identifications[orderedSkillPointIds[i]], identifications);
-
-    sections.push(section);
-    section = "";
-
-    for (let i in orderedRegularIds)
-        section += getFormattedId(orderedRegularIds[i], item.identifications[orderedRegularIds[i]], identifications);
-
-    sections.push(section);
-    section = "";
-
-    if (item.powderSlots > 0) {
-        section += `§7[0/${item.powderSlots}] Powder Slots []\n`;
-    }
-
-    section += `${codeDictionaryRarityColor[item.rarity]}${upperFirst(item.rarity)} ${upperFirst(item.subType)}\n`;
-
-    section += "§8" + formatLore(item);
-
-    sections.push(section);
-    section = "";
-
-    return minecraftToHTML(sections.filter(str => str !== "").join("\n"));
-}
-
 function getFormattedBase(name, value, source) {
     if (!value) return "";
     if (value.max) {
-        return `§7${source[name].name} ${value.min}${source[name].suffix ?? ""}§7-${value.max}${source[name].suffix ?? ""}\n`
+        return `§7${source[name].name} ${value.min}${source[name].suffix ?? ""}§7-${value.max}${source[name].suffix ?? ""}`;
     } else {
-        return `§7${source[name].name}§7: ${value}${source[name].suffix ?? ""}\n`
+        return `§7${source[name].name}§7: ${value}${source[name].suffix ?? ""}`;
     }
 }
 
@@ -97,19 +25,32 @@ function getFormattedSP(name, value, source) {
     if (!value) return "";
     const colorPrefix = codeDictionaryPositivityColors[isSpellCost(name) !== (value.max ?? value >= 0)];
     if (value.max) {
-        return `${colorPrefix}${value.min}${source[name].suffix ?? ""}§7 to ${colorPrefix}${value.max}${source[name].suffix ?? ""} §7${source[name].name}\n`
+        return `${colorPrefix}${value.min}${source[name].suffix ?? ""}§7 to ${colorPrefix}${value.max}${source[name].suffix ?? ""} §7${source[name].name}`;
     } else {
-        return `${colorPrefix}${value > 0 ? "+" : ""}${value}${source[name].suffix ?? ""} §7${source[name].name}\n`
+        return `${colorPrefix}${value > 0 ? "+" : ""}${value}${source[name].suffix ?? ""} §7${source[name].name}`;
     }
 }
 
-function getFormattedId(name, value, source, colorSign = true) {
+function getFormattedId(name, value, source, colorSign = true, wynnClass = "") {
     if (!value) return "";
-    const colorPrefix = colorSign ? codeDictionaryPositivityColors[isSpellCost(name) !== ((value.max ?? value) >= 0)] : "§7";
+    const color_prefix = colorSign ? codeDictionaryPositivityColors[isSpellCost(name) !== ((value.max ?? value) >= 0)] : "§7";
+    const suffix = source[name].suffix ?? "";
+    let nameOfId = source[name].name;
+    if (wynnClass && isSpellCost(name)) {
+        const spellNumber = Number(name.charAt(0)) - 1;
+        nameOfId = classSpellNames[wynnClass][spellNumber] + " Cost " + source[name].suffix
+    }
+
     if (value.max) {
-        return `${colorPrefix}${value.min}${source[name].suffix ?? ""}§7 to ${colorPrefix}${value.max}${source[name].suffix ?? ""} §7${source[name].name}\n`
+        return (
+            color_prefix + value.min + suffix +
+            "§7 to " +
+            color_prefix + value.max + suffix +
+            " §7" + nameOfId);
     } else {
-        return `${colorPrefix}${value}${source[name].suffix ?? ""} §7${source[name].name}\n`
+        return (
+            color_prefix + value + suffix +
+            " §7" + nameOfId);
     }
 }
 

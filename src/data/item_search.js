@@ -19,11 +19,11 @@ function getItemInGroup(groupName, itemName) {
     if (item.subType === groupName || item.type === groupName) return item;
 }
 
-function getAllSimilarItemsInCategory(search, category) {
-    return getAllSimilarItems(search).filter(item => item.type === category || item.subType === category);
+function searchForItemsInCategory(search, category) {
+    return searchForItems(search).filter(item => item.type === category || item.subType === category);
 }
 
-function getAllSimilarItems(search) {
+function searchForItems(search) {
     if (search == null) return [];
     const simplifiedSearch = simplifyString(search);
     return allItems.filter((item) => simplifyString(item.name).includes(simplifiedSearch));

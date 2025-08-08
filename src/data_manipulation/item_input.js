@@ -10,8 +10,7 @@ function readGear(build) {
     const gearClusters = itemInputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
 
     for (let cluster of gearClusters) {
-        const item = getItemByCluster(cluster);
-        addItem(build, cluster, item);
+        addItem(build, cluster);
     }
 }
 
@@ -28,27 +27,29 @@ function readWeapon(build) {
     const item = getItemInGroup("weapon", weaponInput.value);
     if (!item) return;
 
-    addItem(build, weaponCluster, item);
+    addItem(build, weaponCluster);
 
     build.wynnClass = item.requirements.classRequirement;
     addAttackSpeed(build, item);
 
     document.title = `${weaponInput.value} - WynnSmith`;
 
-    let link = document.querySelector("link[rel~='icon']");
-    if (!link) {
-        link = document.createElement("link");
-        link.rel = "icon";
-        document.head.appendChild(link);
+    let icon = document.querySelector("link[rel~='icon']");
+    if (!icon) {
+        icon = document.createElement("link");
+        icon.rel = "icon";
+        document.head.appendChild(icon);
     }
-    link.href = "img/icons/" + item.requirements.classRequirement + ".png";
+    icon.href = "img/icons/" + item.requirements.classRequirement + ".png";
 
     let weaponImg = weaponCluster.querySelector(".slot_img");
     weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png";
 
 }
 
-function addItem(build, cluster, item) {
+function addItem(build, cluster) {
+    const item = getItemByCluster(cluster);
+
     setPowderSlots(cluster, item);
 
     if (!item) return;
@@ -97,10 +98,7 @@ function addMajorIds(build, item) {
 }
 
 function getItemByCluster(cluster) {
-    if (!cluster) throw new Error(`cluster ${cluster} does not exist!`);
     const input = cluster.querySelector(".item_input");
-    if (!input) throw new Error(`cluster ${cluster} does not have an input!`);
-
     return getItemInGroup(cluster.dataset.slot, input.value);
 }
 
@@ -151,18 +149,6 @@ function addPowders(build, cluster) {
     }
 }
 
-function readTomes(build) {
-    const tomeInputClusters = document.getElementById("tomes_section")
-        .querySelectorAll(".input_cluster");
-
-    for (let tomeInputCluster of tomeInputClusters) {
-        const input = tomeInputCluster.querySelector(".tome_input");
-        const item = getItemInGroup(tomeInputCluster.dataset.slot, input.value);
-        if (!item) continue;
-
-        build.tomes.push(item);
-    }
-}
 
 // TODO: calculate mins given build
 function readSkillPointMultipliers(build) {

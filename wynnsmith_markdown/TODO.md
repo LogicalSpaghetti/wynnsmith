@@ -37,15 +37,26 @@
 
 ## Features
 
+- sort powders in order of elements appearing
+	- mention that powders get re-ordered with a little "i" hover note if it's relevant 
+- powder special
+	- tier = 
+- Add a question mark icon to `/item`, with hotkeys and any other info
+	- maybe also a settings gear
+	- maybe also a burger or kebab or something for extra doodads like roll chances
 - +Napalm applies after +Fallout
 - add spacing between id categories
 - hpr canceling guide
+	- hidden in a menu
+	- also dynamically generated for a build when the need and possibility is detected 
 - Clicking any item icon will generate a popup search/selector for that category
-  - Items ((advanced) item search)
-  - tomes (list)
-  - aspects (list, marks out already selected, clicking a selected swaps positions)
+	- ctrl+click opens item page link
+		- ctrl+shift+click opens `/search` with every param for that item pre-inputted
+	- Items ((advanced) item search)
+	- tomes (list)
+	- aspects (list, marks out already selected, clicking a selected swaps positions)
 - Separate input and display, minimize read/write from HTML
-- WynnBuilder link conversion, explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546)
+- WynnBuilder link conversion, explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546) ([GitHub](https://github.com/wynnbuilder/wynnbuilder.github.io/blob/master/ENCODING.md))
 - proper build linking
 - WynnAbility integration
     - Add aspect creator
@@ -133,6 +144,13 @@ for (let key in yourobject) {
 	- save between build refreshes
 - Use HTML templates?
 - mobile support
+## Post-release planned features
+- Extended information inclusion
+	- alternate tree options
+	- slot alternatives
+	- full builds (comparison mode)
+	- folders of builds
+	- author notes
 ## Settings
 - Re-arrange GUI
 - Change color theme

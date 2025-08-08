@@ -57,8 +57,11 @@ function includeOtherGear(build) {
 }
 
 function includeTomes(build) {
-    for (let i = 0; i < build.tomes.length; i++) {
-        addIds(build, build.tomes[i]);
+    const tomeClusters = document.getElementById("tomes_section")
+        .querySelectorAll(".input_cluster");
+
+    for (let cluster of tomeClusters) {
+        addItem(build, cluster);
     }
 }
 
@@ -139,8 +142,6 @@ function applyEHpDivider(build, section, checkName, div) {
     if (!build.has(section, checkName)) return;
     build.final.ehp /= div;
 }
-
-const costNames = ["1st", "2nd", "3rd", "4th"];
 
 function calculateSpellCosts(build) {
     addSpellNames(build);
