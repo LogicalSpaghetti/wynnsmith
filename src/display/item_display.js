@@ -1,6 +1,7 @@
 `use strict`;
 
 function snakeToTitle(string) {
+    console.log("snakeToTitle", string);
     return string.split('_').map(upperFirst).join(' ');
 }
 
@@ -63,21 +64,20 @@ function getAverageDPS(item) {
                 result += baseDamage.min + baseDamage.max;
             }
         }
-    return roundForDisplay(result / 2) * attackSpeedMultipliers[item.attackSpeed];
+    return roundForDisplay(attackSpeedMultipliers[item.attackSpeed] * result / 2);
 }
 
-function formatLore(item) {
-    const lore = item.lore;
 
-    if (!lore) return "";
+function wrapText(text) {
+    if (!text) return "";
 
-    const words = lore.split(" ");
+    const words = text.split(" ");
 
     let result = "";
 
     let subString = "";
     words.forEach((word) => {
-        if (subString.length + word.length >= 29) {
+        if (lengthWithoutFormatting(subString) + lengthWithoutFormatting(word) >= 29) {
             if (subString.length > 1)
                 result += subString + "\n";
             subString = word;
@@ -90,4 +90,8 @@ function formatLore(item) {
     result += subString;
 
     return result;
+}
+
+function lengthWithoutFormatting(word) {
+    return stripMinecraftFormatting(word).length
 }

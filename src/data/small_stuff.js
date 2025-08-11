@@ -277,24 +277,35 @@ const elementalPrefixes = ["neutral", "earth", "thunder", "water", "fire", "air"
 const elementalNames = ["Neutral", "Earth", "Thunder", "Water", "Fire", "Air"];
 
 const attackSpeedMultipliers = {
-    super_fast: 4.3,
-    very_fast: 3.1,
+    superFast: 4.3,
+    veryFast: 3.1,
     fast: 2.5,
     normal: 2.05,
     slow: 1.5,
-    very_slow: 0.83,
-    super_slow: 0.51,
+    verySlow: 0.83,
+    superSlow: 0.51,
 };
 
 const orderedAttackSpeed = [
-    "super_slow",
-    "very_slow",
+    "superSlow",
+    "verySlow",
     "slow",
     "normal",
     "fast",
-    "very_fast",
-    "super_fast",
+    "veryFast",
+    "superFast",
 ];
+
+// Fuck Wynncraft changing it from snake_case to camelCase
+const attackSpeedMap = {
+    superFast: "Super Fast",
+    veryFast: "Very Fast",
+    fast: "Fast",
+    normal: "Normal",
+    slow: "Slow",
+    verySlow: "Very Slow",
+    superSlow: "Super Slow",
+};
 
 const spMultipliers = [
     0,
@@ -468,5 +479,4 @@ const classSpellNames = {
     mage: ["Heal", "Teleport", "Meteor", "Ice Snake"],
     shaman: ["Totem", "Haul", "Aura", "Uproot"],
     warrior: ["Bash", "Charge", "Uppercut", "War Scream"],
-
-}
+};

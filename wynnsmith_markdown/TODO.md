@@ -1,46 +1,16 @@
 
 # Focus
 
-- Alternate between something computational, and something visual.
-
-1. Dynamic Weapon icon swapping 
-2. All Shaman Nodes
-	- Write detailed explanations of each node as I go
-3. Powder ele-defs
-4. Overhaul Aspect Selector
-5. Neutral Conversions
-	- not removing neutral?
-6. Powder Specials
-	- Weapon
-	- Armour
-	- MaId
-7. Build validation
-	- Equip Order
-		- Add Skill Points to Build
-	- Set exclusions
-8. Set Bonuses
-	- Find a good source for this
-9. Attack Display
-10. Weapon slot icon
-11. Full Id editor
-12. All (Shaman) Aspects
-13. Slider multipliers
-14. All nodes
-15. All Aspects
-16. Attack Speed id
-17. Item database
-	- Ensure items are removable
-18. Figure out why html2canvas can't parse punscake items
-19. hpr canceling guide
-
+1. Get tree effect creator functional.
 # Eventual
 
 ## Features
 
+- Add Major Id Effects to Ability Effect Editor
+- does Nature's Jolt combo with Frog Dance at all?
 - sort powders in order of elements appearing
 	- mention that powders get re-ordered with a little "i" hover note if it's relevant 
 - powder special
-	- tier = 
 - Add a question mark icon to `/item`, with hotkeys and any other info
 	- maybe also a settings gear
 	- maybe also a burger or kebab or something for extra doodads like roll chances

@@ -63,7 +63,6 @@ function changeAspects(build) {
 
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
-        tierOverlay.style.position = "absolute";
         tierOverlay.classList.add("Tier_" + (aspect.rarity === "legendary" ? decimalToRoman(4) : decimalToRoman(3)));
         tierOverlay.textContent = aspect.rarity === "legendary" ? decimalToRoman(4) : decimalToRoman(3);
         tierOverlay.dataset.tier = String(aspect.rarity === "legendary" ? 4 : 3);

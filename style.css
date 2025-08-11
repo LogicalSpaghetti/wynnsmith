@@ -39,11 +39,19 @@ body {
 
 input {
     caret-color: #ccc;
+
+    color: inherit;
+    background-color: var(--ls-background2);
+    border: 1px solid var(--ls-background);
+}
+
+label {
+    width: max-content;
+    text-align: center;
 }
 
 .color-bar-holder {
     height: fit-content;
-    /*line-height: 0;*/
     padding-bottom: 0.4rem;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -62,11 +70,6 @@ input {
     display: flex;
 }
 
-label {
-    width: max-content;
-    text-align: center;
-}
-
 #cursorTooltip {
     position: fixed;
     z-index: 40;
@@ -81,7 +84,7 @@ label {
     color: white;
     font-family: minecraft, mojangles, unifont, unifontEmoji, serif;
     text-shadow: 0.125rem 0.125rem 0 color-mix(in hsl, currentColor 24%, black);
-    min-height: 30px;
+    min-height: 1em;
     border-radius: 4px;
     word-spacing: 0.1rem;
     letter-spacing: 0.02rem;
@@ -115,15 +118,12 @@ label {
     display: inline-block;
 }
 
-input,
-.effect {
-    color: inherit;
-    background-color: var(--ls-background2);
-    border: 1px solid var(--ls-background);
+.slot_input {
+    width: 22ch;
 }
 
-.slot_input {
-    width: 160px;
+.tome_input {
+    width: 35ch;
 }
 
 .level_input {
@@ -151,7 +151,7 @@ input,
 }
 
 .powder_input {
-    width: 58px;
+    width: 8ch;
 }
 
 .effect:hover,
@@ -176,29 +176,6 @@ input:focus {
 .sp_input {
     width: 4ch;
     text-align: center;
-}
-
-/* Tomes */
-
-#tomes_section {
-    image-rendering: pixelated;
-}
-
-.tome {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    background-size: 16px;
-    background-repeat: no-repeat;
-    background-position: 1px, 1px;
-    border-left: 0;
-    margin: 0;
-    outline: none;
-    vertical-align: top;
-}
-
-.tome_input {
-    width: 35ch;
 }
 
 [data-rarity="common"] {
@@ -312,6 +289,7 @@ button {
     background-color: var(--ls-background2);
     border: 1px solid var(--ls-background);
 }
+
 button:hover {
     border: 1px solid var(--ls-trim-hover);
     outline: none;
@@ -414,10 +392,13 @@ td {
 }
 
 .aspect_tier {
-    translate: -4px -10px;
+    translate: 0 -10px;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    width: 32.4px;
+    /*width: 32.4px;*/
     text-align: center;
+
+    display: inline-block;
+    width: 100%;
 
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -449,12 +430,15 @@ td {
 .Tier_I {
     color: #666;
 }
+
 .Tier_II {
     color: #6d4d10;
 }
+
 .Tier_III {
     color: #c0c0c0;
 }
+
 .Tier_IV {
     color: #d4af37;
 }
@@ -478,6 +462,7 @@ td {
 .positive {
     color: #5e5;
 }
+
 .negative {
     color: #e55;
 }
@@ -513,6 +498,7 @@ td {
 aqua {
     color: var(--wy-legendary);
 }
+
 darkAqua {
     color: var(--wy-crafted);
 }

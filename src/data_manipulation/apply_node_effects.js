@@ -175,7 +175,7 @@ function applyMultipliers(build) {
     // Warrior
     applySectMult(build, 1.05, "Melee", "nodes", "spearProficiency");
     // Assassin
-    // TODO: WynnBuilder people said Assassin multi-hit is cooked
+    // TODO: Assassin multi-hit is cooked
     applySectMult(build, 1.05, "Melee", "nodes", "daggerProficiency");
 }
 

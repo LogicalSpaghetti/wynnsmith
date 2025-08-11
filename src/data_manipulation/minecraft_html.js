@@ -225,7 +225,7 @@ function getHoverHTMLForItem(item, invalidityText = "") {
     const sections = new Sections();
 
     const header = new Section(codeDictionaryRarityColor[item.rarity] + item.name);
-    if (item.type === "weapon") header.add(`§7${snakeToTitle(item.attackSpeed)} Attack Speed`);
+    if (item.type === "weapon") header.add(`§7${attackSpeedMap[item.attackSpeed]} Attack Speed`);
 
     sections.add(header);
 
@@ -246,16 +246,18 @@ function getHoverHTMLForItem(item, invalidityText = "") {
 
     const reqs = new Section();
 
+    const checkMark = codeDictionaryReqIndicators[false];
+
     const classReq = item.requirements.classRequirement;
-    if (classReq) reqs.add(`§7Class Req: ${snakeToTitle(classReq)}`);
+    if (classReq) reqs.add(`${checkMark} §7Class Req: ${snakeToTitle(classReq)}`);
 
     const levelReq = item.requirements.level;
-    if (levelReq) reqs.add(`§7Combat Lv. Min: ${levelReq}`);
+    if (levelReq) reqs.add(`${checkMark} §7Combat Lv. Min: ${levelReq}`);
 
     skillPointNames.forEach((name) => {
         const requirement = item.requirements[name];
         if (requirement) {
-            reqs.add(`§7${upperFirst(name)} Min§7: ${requirement}`);
+            reqs.add(`${checkMark} §7${upperFirst(name)} Min§7: ${requirement}`);
         }
     });
 
@@ -280,13 +282,21 @@ function getHoverHTMLForItem(item, invalidityText = "") {
         sections.add(idSection);
     }
 
+    if (item.majorIds) {
+        let section = new Section();
+        for (let name in item.majorIds) {
+            section.add(wrapText(`§b+${name}: §3${major_id_descriptions[name]}`));
+        }
+        sections.add(section);
+    }
+
     const footer = new Section();
 
     if (item.powderSlots > 0) footer.add(`§7[0/${item.powderSlots}] Powder Slots []`);
 
     if (item.rarity) footer.add(`${codeDictionaryRarityColor[item.rarity]}${upperFirst(item.rarity)} ${snakeToTitle(item.subType)}`);
 
-    footer.add(`§8${formatLore(item)}`);
+    footer.add(`§8${wrapText(item.lore)}`);
 
     sections.add(footer);
 

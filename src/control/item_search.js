@@ -1,11 +1,10 @@
 `use strict`;
 
 function getItemFromSearch(search) {
-    let cleanSearch = search.substring(1, search.length)
+    let cleanSearch = snakeToTitle(search.substring(1, search.length)
         .replaceAll("%20", " ")
-        .replaceAll("_", " ")
         .replaceAll("%27", "'")
-        .replaceAll("+", " ");
+        .replaceAll("+", " "));
     return getItem(cleanSearch) ?? getItem(search);
 }
 

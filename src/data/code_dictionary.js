@@ -92,6 +92,11 @@ const codeDictionaryRarityColor = {
     "crafted": "§3",
 };
 
+const codeDictionaryReqIndicators = {
+    "true": "§a✔",
+    "false": "§c✖",
+};
+
 const codeDictionarySkillPointColor = {
     "strength": "§2",
     "dexterity": "§e",
@@ -99,11 +104,6 @@ const codeDictionarySkillPointColor = {
     "defence": "§c",
     "agility": "§f"
 }
-
-const codeDictionaryItemRequirementMetIndicators = {
-    "true": "§a✔",
-    "false": "§c✖",
-};
 
 const codeDictionaryPositivityColors = {
     "true": "§a",
