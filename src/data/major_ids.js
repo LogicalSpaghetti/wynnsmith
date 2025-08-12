@@ -12,7 +12,7 @@ const major_id_descriptions = {
     "Displace": "§3Wind Slash deals massive knockback to enemies hit by Teleport.",
     "Divine Honor": "§3Increases the bonus from Radiance by 10%. Bash deals §2✤ -15% §3per hit.",
     "Earthen Splinter": "§3Quake channels nature energy into a powerful root, travelling underground and emerging under the nearest mob for §2✤ 1200%§3.",
-    "Efflorescence": "§3Jasmine Bloom deals §6✣ §310% and §2✤ §e✦ §b❉ §c✹ §f❋ §320% at the cost of 6 blocks of vertical range. Swan Dive with a maximum size Jasmine Bloom deals §6✣ §350% and §2✤ §e✦ §b❉ §c✹ §f❋ 50%§3.",
+    "Efflorescence": "§3Jasmine Bloom deals §6✣ 10%§3 and §2✤ §e✦ §b❉ §c✹ §f❋ §320% at the cost of 6 blocks of vertical range. Swan Dive with a maximum size Jasmine Bloom deals §6✣ 50% §3and §2✤ §e✦ §b❉ §c✹ §f❋ §350%.",
     "Entropy": "§3Meteor's speed is increased by 50%.",
     "Ergosphere": "§3Storm Dance instead lets your Totems pull enemies within their radius. Totem duration is decreased.",
     "Escape Route": "§3Frenzy and Time Dilation charge twice as fast, but to a halved maximum.",

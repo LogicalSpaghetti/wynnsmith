@@ -1,7 +1,6 @@
 `use strict`;
 
 function snakeToTitle(string) {
-    console.log("snakeToTitle", string);
     return string.split('_').map(upperFirst).join(' ');
 }
 
@@ -59,7 +58,7 @@ function getAverageDPS(item) {
     let result = 0;
     if (item.base)
         for (let i = 0; i < 6; i++) {
-            const baseDamage = item.base[`base${elementalNames[i]}Damage`];
+            const baseDamage = item.base[`base${i === 0 ? "" : elementalNames[i]}Damage`];
             if (baseDamage) {
                 result += baseDamage.min + baseDamage.max;
             }

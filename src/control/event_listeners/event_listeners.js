@@ -18,7 +18,7 @@ window.addEventListener("load", async function () {
 });
 
 function loadMiku() {
-    document.getElementById("miku").src = readString("miku");
+    document.getElementById("miku").src = loadString("miku");
 }
 
 function addEventListeners() {
@@ -94,7 +94,7 @@ function addEventListeners() {
             const src = reader.result;
             // display the image on the page
             document.getElementById("miku").src = src;
-            writeString("miku", src);
+            saveString("miku", src);
         };
     });
 
@@ -217,36 +217,4 @@ function resetCopyText() {
     document.querySelectorAll(".copy_button").forEach((button) => {
         button.textContent = button.dataset["default"];
     });
-}
-
-function addTooltipListener() {
-    //Attaches a div to a cursor, used to display content
-    document.addEventListener("mousemove", (e) => {
-        moveTooltip(e.clientX, e.clientY, true);
-    });
-
-    document.addEventListener("wheel", () => hideHoverAbilityTooltip());
-}
-
-function moveTooltip(X, Y, checkHidden = false) {
-    const cursorTooltip = document.getElementById("cursorTooltip");
-    if (checkHidden && cursorTooltip.hidden) return;
-
-    let scale = 1;
-    if (cursorTooltip.offsetWidth + 24 > window.innerWidth)
-        scale = (window.innerWidth - 24) / cursorTooltip.offsetWidth;
-    cursorTooltip.style.transform = `scale(${scale})`;
-
-    let leftOffset = (X + cursorTooltip.offsetWidth + 12) > window.innerWidth ? window.innerWidth - cursorTooltip.offsetWidth - 12 : X + 5;
-    leftOffset = Math.max(leftOffset, 12);
-
-    let upOffset = Y + 2;
-    if (Y > (window.innerHeight / 2)) {
-        upOffset = Y - cursorTooltip.offsetHeight - 2;
-        cursorTooltip.style.transformOrigin = `bottom left`;
-    } else
-        cursorTooltip.style.transformOrigin = `top left`;
-
-    cursorTooltip.style.top = `${upOffset}px`;
-    cursorTooltip.style.left = `${leftOffset}px`;
 }

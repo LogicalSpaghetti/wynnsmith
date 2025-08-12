@@ -54,7 +54,7 @@ function perAttackHTML(build, name) {
     html += "<br>";
 
     if (!(average <= 0 && build.spells["2nd"].name === name)) html += "Average: " + selvify(average) + "<br>";
-    if (getBoolean("detailed_damage")) {
+    if (loadBoolean("detailed_damage")) {
         if (!(average <= 0 && build.spells["2nd"].name === name) || normAverage < 0) html += "Non-Crit:<br>";
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
@@ -114,7 +114,7 @@ function getDamageColor(index) {
 const oneSelv = 80000;
 
 function selvify(num, addPeriod) {
-    return getBoolean("selvs") ? roundForDisplay(num / oneSelv, addPeriod) + ` ${new Date().getMonth() === 11 ? "santa" : "selv"}` : roundForDisplay(num, addPeriod);
+    return loadBoolean("selvs") ? roundForDisplay(num / oneSelv, addPeriod) + ` ${new Date().getMonth() === 11 ? "santa" : "selv"}` : roundForDisplay(num, addPeriod);
 }
 
 function getMana(cost) {

@@ -11,10 +11,9 @@
     <div style="display: flex;">
       <div style="width: 300px; padding: 1ch;">
         <h2>Import:</h2>
-        <label for="load_abilities">Import from JSON string:</label>
+        <label for="load_from_file">Import from JSON string:</label>
         <br>
-        <input type="file" id="load_abilities" accept=".json">
-        <button id="import_text">Load</button>
+        <input type="file" id="load_from_file" accept=".json">
         <br>
         <br>
         <label for="abilities_tree_selector">Generate new from tree:</label>
@@ -36,34 +35,30 @@
 
       <div style="padding: 1ch;">
         <h2>Effect Editor:</h2>
-        <div id="effect_editor" style="width: 300px">
-          <div class="warn">No effect selected!</div>
-          <label>Effect name:</label>
-          <input class="name_input">
-          <label>Effect type:</label>
-          <select class="effect_type">
-            <!-- TODO: start with an effect that adds an arbitrary equation at a given step -->
-            <!-- TODO: from there, just add abstractions of that -->
-            <option value="nothing">Nothing</option>
-            <option value="script">Java Script at Step</option>
-            <option value="spell">Casted Spell</option>
-            <option value="attack">Attack</option>
-            <option value="attack_mod">Attack Modifier</option>
-            <option value="attack_multi">Attack Multiplier</option>
-            <option value="attack">Attack Child</option>
-            <option value="heal">Heal</option>
-            <option value="heal">Heal Modifier</option>
-            <option value="cost_mod">Spell Cost Modifier</option>
-            <option value="mastery">Elemental Mastery</option>
-            <option value="mastery">Elemental Mastery</option>
-            <option value="blocker">Effect Blocker</option>
-            <option value="condition">Status Condition Source</option>
-            <option value="id_mod">Gear Identification Modifier</option>
-            <option value="id_to_id">Identification Intertwine</option>
-            <option value="">Fluid Healing?</option>
-            <option value="">Commander MA/Pupper?</option>
-            <option value="">Mana from Invig?</option>
-          </select>
+        <div id="effect_editor" style="width: 300px;">
+          <div class="warn" style="color: red;">No effect selected!</div>
+          <div class="editor">
+            <label>Effect name:</label>
+            <input class="name_input" placeholder="Unnamed effect"/>
+            <label>Effect type:</label>
+            <select class="effect_type">
+              <option value="">Nothing</option>
+              <option value="script">JavaScript at Step</option>
+              <option value="conv">Conversion</option>
+            </select>
+            <br>
+            <label>Parent requirement:</label>
+            <select class="requires_all_parents">
+              <option value="true">All Parents</option>
+              <option value="false">Any Parents</option>
+            </select>
+            <br>
+            <label>Parents:</label>
+            <button class="parents_show" data-show="false"></button>
+            <div class="parent_toggles" style="display: none;"></div>
+            <h3>Effect-specific settings:</h3>
+            <div class="effect-specific"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -82,247 +77,49 @@
     <script src="../../src/data/trees.js"></script>
     <script src="../../src/data_manipulation/minecraft_html.js"></script>
     <script src="../../src/data/code_dictionary.js"></script>
+    <script src="../../src/control/tooltip.js"></script>
+
+    <script src="../../src/control/effect_builder.js"></script>
 
     <script>
-        class Editor {
-            effect;
-            effect_editor;
-
-            constructor(effect_editor, name_input_class = "name_input", warn_input_class = "warn") {
-                this.effect_editor = effect_editor;
-                this.name_input = effect_editor.querySelector("." + name_input_class);
-                this.warn = effect_editor.querySelector("." + warn_input_class);
-                this.name_input.addEventListener("input", () => {
-                    this.setEffectName(this.name_input.value);
-                })
-            }
-
-            setEffect(effect) {
-                this.warn.textContent = "";
-                this.effect = effect;
-                this.name_input.value = effect.name;
-            }
-
-            setEffectName(name) {
-                if (this.effect) this.effect.setName(name);
-            }
-        }
-
-        class Tree {
-            abilities = {};
-            effects = {};
-
-            constructor(wynn_class, ability_holder_id = "ability_holder", effect_holder_id = "effect_holder", effect_editor_id = "effect_editor") {
-                // TODO: Aspects are needed too. (id = "a" + number)?
-                const abilities = punscake[wynn_class].abilities;
-                this.ability_holder = document.getElementById(ability_holder_id);
-                this.ability_holder.innerHTML = "";
-                this.effect_holder = document.getElementById(effect_holder_id);
-                this.effect_holder.innerHTML = "";
-
-                this.editor = new Editor(document.getElementById(effect_editor_id));
-
-                this.generateAbilities(abilities);
-            }
-
-            generateAbilities(abilities) {
-                for (let index in abilities) {
-                    const ability = new Ability(this, abilities[index]);
-                    this.addAbility(index, ability);
-                }
-            }
-
-            addAbility(index, ability) {
-                this.abilities[index] = (ability);
-                this.ability_holder.appendChild(ability.html);
-            }
-
-            addEffect(ability) {
-                const effect = new Effect(ability);
-
-                let index = -1;
-                for (let i in this.effects) {
-                    index = Math.max(index, i);
-                }
-                index++;
-
-                this.effects[index] = effect;
-                effect.setIndex(index);
-                this.effect_holder.appendChild(effect.html);
-
-                return effect;
-            }
-
-            removeEffect(index) {
-                const effect = this.effects[index];
-                effect.removeEffect();
-                delete this.effects[index];
-            }
-
-            editEffect(index) {
-                const effect = this.effects[index];
-                this.editor.setEffect(effect)
-                // TODO:
-            }
-        }
-
-        class Ability {
-            tree;
-            abilityData;
-            html;
-            effectIndexes = [];
-            effectsHolder;
-
-            constructor(tree, abilityData) {
-                this.tree = tree;
-                this.abilityData = abilityData;
-                this.createHTML();
-            }
-
-            createHTML() {
-                this.html = document.createElement("div");
-                this.html.classList.add("minecraftTooltip");
-
-                const top = this.html.appendChild(document.createElement("div"));
-                top.style.display = "flex";
-
-                const nameplate = top.appendChild(document.createElement("div"));
-                nameplate.classList.add("nameplate");
-                nameplate.innerHTML = minecraftToHTML(this.abilityData.name);
-                nameplate.style.flex = "1 1 auto";
-
-                const add = top.appendChild(document.createElement("button"));
-                add.textContent = "+";
-                add.addEventListener("click", () => {
-                    this.addEffect();
-                });
-
-                this.effectsHolder = this.html.appendChild(document.createElement("div"));
-                this.effectsHolder.style.paddingLeft = "20px";
-            }
-
-            addEffect() {
-                const effect = tree.addEffect(this);
-                this.effectIndexes.push(effect.index);
-                this.effectsHolder.appendChild(effect.addParentHTML());
-            }
-
-            removeEffect(index) {
-                this.effectIndexes = this.effectIndexes.filter(effect => effect.index !== index);
-                const i = this.effectIndexes.indexOf(index);
-                if (i > -1) this.effectIndexes.splice(i, 1);
-            }
-        }
-
-        class Effect {
-            tree;
-            parents = [];
-            parentHTMLs = [];
-            children = [];
-            require_all_parents = true;
-            html;
-            index = -1;
-
-            name = "";
-            nameDisplay;
-
-            constructor(parent) {
-                this.tree = parent.tree;
-                this.addParent(parent);
-                this.createHTML();
-                this.setName("")
-            }
-
-            createHTML() {
-                this.html = document.createElement("div");
-                this.html.classList.add("minecraftTooltip");
-
-                this.top = this.html.appendChild(document.createElement("div"));
-                this.top.style.display = "flex";
-
-                const parentNames = this.top.appendChild(document.createElement("div"));
-                parentNames.classList.add("nameplate");
-                parentNames.innerHTML = minecraftToHTML(
-                    this.parents.map(a => a.abilityData.name).join(this.require_all_parents ? " and " : " or "));
-                parentNames.style.flex = "1 1 auto";
-
-                const edit = this.top.appendChild(document.createElement("button"));
-                edit.textContent = "✒";
-                edit.addEventListener("click", () => {
-                    this.tree.editEffect(this.index);
-                })
-
-                const remove = this.top.appendChild(document.createElement("button"));
-                remove.textContent = "x";
-                remove.addEventListener("click", () => {
-                    this.tree.removeEffect(this.index);
-                });
-
-                this.nameDisplay = this.html.appendChild(document.createElement("div"));
-
-            }
-
-            addParent(parent) {
-                this.parents.push(parent);
-            }
-
-            addParentEffect(effect) {}
-
-            addParentHTML() {
-                const newHTML = document.createElement("div");
-
-                newHTML.textContent = this.name || "unnamed effect";
-
-                this.parentHTMLs.push(newHTML);
-
-                return newHTML;
-            }
-
-            setIndex(index) {
-                this.index = index;
-            }
-
-            removeEffect() {
-                this.html.remove();
-                for (let i in this.parents) {
-                    this.parents[i].removeEffect(this.index);
-                }
-                for (let i in this.parentHTMLs) {
-                    this.parentHTMLs[i].remove();
-                }
-            }
-
-            addChild(index) {
-                this.children.push(index);
-            }
-
-            removeChild(index) {
-                const i = this.children.indexOf(index);
-                if (i > -1) this.children.splice(index, 1);
-            }
-
-            setName(name) {
-                this.name = name;
-                this.nameDisplay.textContent = this.name || "unnamed effect";
-                for (let html of this.parentHTMLs) {
-                    html.textContent = name;
-                }
-            }
-        }
-    </script>
-
-    <script>
-        // TODO: Aspects btw
-        let tree = new Tree("archer");
+        let editor = new Editor(null);
+        let tree = new Tree("archer", editor);
 
         document.getElementById("generate_tree").addEventListener("click", () => {
             const treeName = document.getElementById("abilities_tree_selector").value;
             loadNewFromClass(treeName);
         });
 
+        document.getElementById("load_from_file").addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const content = e.target.result;
+                tree.changeTree(JSON.parse(String(content)));
+            };
+
+            reader.readAsText(file);
+
+
+            e.target.value = null;
+        })
+
+        document.getElementById("save_text").addEventListener("click", () => {
+            const content = JSON.stringify(tree);
+            let a = document.createElement("a");
+            let file = new Blob([content], {type: "text/plain"});
+            a.href = URL.createObjectURL(file);
+            a.download = tree.wynnClass + "_effects.json";
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
         function loadNewFromClass(wynn_class) {
-            tree = new Tree(wynn_class);
+            tree = new Tree(wynn_class, editor);
         }
+
+        addTooltipListener();
     </script>
   </body>
 </html>

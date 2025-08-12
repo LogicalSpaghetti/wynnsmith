@@ -1,5 +1,12 @@
 `use strict`;
 
+function minecraftAsHTML(text = "") {
+    const htmlText = minecraftToHTML(text);
+    const span = document.createElement("span");
+    span.innerHTML = htmlText;
+    return span;
+}
+
 function minecraftToHTML(text = "") {
 
     let result = "";
@@ -145,23 +152,6 @@ function splitByOtherFormats(string = "") {
 
 function sanitizeHTML(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-
-function renderHoverTooltip(innerHTML = "", containerId = "cursorTooltip") {
-    const container = document.getElementById(containerId);
-
-    if (innerHTML === "") return;
-
-    container.hidden = false;
-
-    container.innerHTML = innerHTML;
-}
-
-function hideHoverAbilityTooltip(containerId = "cursorTooltip") {
-    const container = document.getElementById(containerId);
-
-    container.hidden = true;
-    container.innerHTML = "";
 }
 
 function insertStringBeforeSelected(insertString) {

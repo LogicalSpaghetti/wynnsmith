@@ -68,7 +68,9 @@
             <img src="img/item/ring.png" alt="He" class="slot_img">
           </a>
           <input class="input item_input slot_input" placeholder="Ring"/>
-          <div id="gif_holder"><img id="miku" src="" alt=""/></div>
+          <div>
+            <div id="gif_holder"><img id="miku" src="" alt=""/></div>
+          </div>
         </div>
         <div class="input_cluster" data-slot="ring" data-group="gear">
           <a class="item_link" target="_blank" data-slot="ring">
@@ -365,15 +367,13 @@
   <div id="dev_output" class="output font-minecraft"></div>
 </div>
 
-<div class="minecraftTooltip" id="cursorTooltip" hidden></div>
-
 <script src="src/control/item_search.js"></script>
 
 <script src="src/data_manipulation/minecraft_html.js"></script>
 <script src="src/data/code_dictionary.js"></script>
 
 <script src="src/data/items.js"></script>
-<script src="src/data/data_class_trees.js"></script>
+<script src="src/data/class_trees_old.js"></script>
 <script src="src/data/trees.js"></script>
 <script src="src/data/base_and_ids.js"></script>
 <script src="src/data/small_stuff.js"></script>
@@ -381,6 +381,7 @@
 
 <script src="src/control/build.js"></script>
 <script src="src/control/script.js"></script>
+<script src="src/control/tooltip.js"></script>
 <script src="src/data_manipulation/attack_calculations.js"></script>
 <script src="src/data_manipulation/stat_calculations.js"></script>
 <script src="src/data_manipulation/effect_overrides.js"></script>

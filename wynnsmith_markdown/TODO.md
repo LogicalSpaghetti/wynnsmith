@@ -2,6 +2,15 @@
 # Focus
 
 1. Get tree effect creator functional.
+	1. Arbitrary equation + code location
+	2. Save/Load
+		1. On change save to local storage, on page load, load from local storage 
+	3. Effects as effect requirements
+	4. Parent management
+	5. Aspects
+		1. Major Ids
+	6. OR requirement option
+	7. Abstracted effect types
 # Eventual
 
 ## Features

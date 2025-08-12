@@ -152,12 +152,10 @@ function mapHTML(tree, abilityTree, wynnClass) {
             return false;
         };
         img.addEventListener("mouseover", () => {
-            this.renderHoverTooltip(
-                getHoverTextForAbility(ability.abilityID, wynnClass),
-            );
+            renderHoverTooltip(getHoverTextForAbility(ability.abilityID, wynnClass));
         });
         img.addEventListener("mouseout", () => {
-            this.hideHoverAbilityTooltip();
+            hideHoverAbilityTooltip();
         });
 
         cell.appendChild(img);

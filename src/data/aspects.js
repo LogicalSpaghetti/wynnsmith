@@ -1,4 +1,4 @@
-const aspects = {
+const aspect_descriptions = {
     "archer": [
         {
             "name": "Aspect of the Beastmaster",

@@ -31,18 +31,18 @@ document.getElementById("detailed_damage").addEventListener("click", function ()
     refreshBuild();
 });
 
-function getBoolean(id) {
+function loadBoolean(id) {
     return localStorage.getItem(id) === "true";
 }
 
 function toggleBoolean(id) {
-    localStorage.setItem(id, localStorage.getItem(id) !== "true");
+    localStorage.setItem(id, String(localStorage.getItem(id) !== "true"));
 }
 
-function writeString(location, string) {
+function saveString(location, string) {
     localStorage.setItem(location, string);
 }
 
-function readString(location) {
+function loadString(location) {
     return localStorage.getItem(location);
 }
