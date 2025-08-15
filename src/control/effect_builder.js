@@ -71,9 +71,9 @@ class Editor {
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.dataset.id = ability.id;
-            checkbox.checked = effect.hasParent("ability", ability.id);
+            checkbox.checked = effect.hasParent("abilities", ability.id);
             checkbox.addEventListener("change", () => {
-                effect.toggleParent("ability", ability.id);
+                effect.toggleParent("abilities", ability.id);
             });
             toggles.appendChild(checkbox);
 
@@ -89,9 +89,9 @@ class Editor {
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.dataset.id = parentEffect.id;
-            checkbox.checked = effect.hasParent("effect", parentEffect.id);
+            checkbox.checked = effect.hasParent("effects", parentEffect.id);
             checkbox.addEventListener("change", () => {
-                effect.toggleParent("effect", parentEffect.id);
+                effect.toggleParent("effects", parentEffect.id);
             });
             toggles.appendChild(checkbox);
             const label = document.createElement("label");
@@ -151,7 +151,7 @@ class Tree {
             id++;
         }
 
-        const effect = new Effect(tree, id);
+        const effect = new EffectBuilder(tree, id);
 
         this.effects[id] = effect;
         this.effect_holder.appendChild(effect.html);
@@ -173,10 +173,11 @@ class Tree {
     }
 
     getHolderByType(type) {
+        console.log(type)
         switch (type) {
-            case "ability":
+            case "abilities":
                 return this.abilities;
-            case "effect":
+            case "effects":
                 return this.effects;
             default:
                 return null;
@@ -189,24 +190,24 @@ class Tree {
         this.editor.setEffect(effect);
     }
 
-    changeTree(object) {
-        this.wynnClass = object.wynnClass;
+    changeTree(input) {
+        this.wynnClass = input.wynnClass;
         this.updateAbilities();
 
         this.effect_holder.innerHTML = "";
 
-        for (let id in object.effects) {
+        for (let id in input.effects) {
             this.addEffect(id); // done first to ensure all effects exist before adding parents
         }
 
-        for (let id in object.effects) {
-            const effectData = object.effects[id];
-            const effect = this.getChild("effect", id);
+        for (let id in input.effects) {
+            const effectData = input.effects[id];
+            const effect = this.getChild("effects", id);
             effect.setName(effectData.name);
             const parents = effectData.parents;
             for (let i in parents) {
                 const parent = parents[i];
-                effect.addParent(parent.type, parent.id);
+                effect.addParent(parent.group, parent.id);
             }
             effect.effect = new EffectType(effectData.effect.type, effectData.effect.data);
         }
@@ -264,7 +265,7 @@ class Ability {
     }
 
     addEffect(effect) {
-        effect.addParent("ability", this.id);
+        effect.addParent("abilities", this.id);
     }
 
     addChild(child) {
@@ -276,15 +277,20 @@ class Ability {
     removeChild(id) {
         this.children = this.children.filter(effect => effect.id !== id);
     }
+
+    // noinspection JSUnusedGlobalSymbols
+    toJSON() {
+        return this.children.map(child => child.id);
+    }
 }
 
-class Effect {
+class EffectBuilder {
     tree;
 
     parents = [];
     children = []; // {id: Integer, html: Element}
 
-    id = -1;
+    id;
 
     html;
     nameDisplay;
@@ -358,13 +364,13 @@ class Effect {
     }
 
     removeParent(type, id) {
-        const parent = this.parents.find(parent => (parent.type === type) && (parent.id === id));
+        const parent = this.parents.find(parent => (parent.group === type) && (parent.id === id));
         if (!parent) return;
 
         parent.childName.remove();
         parent.parentName.remove();
 
-        this.tree.getChild(parent.type, parent.id).removeChild(this.id);
+        this.tree.getChild(parent.group, parent.id).removeChild(this.id);
 
         this.parents.splice(this.parents.indexOf(parent), 1);
 
@@ -382,7 +388,7 @@ class Effect {
     hasParent(type, id) {
         for (let i in this.parents) {
             const parent = this.parents[i];
-            if (parent.type === type && parent.id === id) return true;
+            if (parent.group === type && parent.id === id) return true;
         }
         return false;
     }
@@ -391,7 +397,7 @@ class Effect {
         this.html.remove();
         for (let i in this.parents) {
             const parent = this.parents[i];
-            this.removeParent(parent.type, parent.id);
+            this.removeParent(parent.group, parent.id);
         }
     }
 
@@ -431,13 +437,13 @@ class Effect {
 }
 
 class ParentData {
-    type;
+    group;
     id;
     childName;
     parentName;
 
-    constructor(type, id, childName, parentName) {
-        this.type = type;
+    constructor(group, id, childName, parentName) {
+        this.group = group;
         this.id = id;
         this.childName = childName;
         this.parentName = parentName;
@@ -566,18 +572,17 @@ class EffectType {
         a.style.width = "5ch";
         a.addEventListener("change", () => setData(this));
 
-        holder.appendChild(document.createTextNode("Hit count: "));
-        const hits = holder.appendChild(document.createElement("input"));
-        hits.type = "number";
-        hits.value = this.data.hitCount || "1";
-        hits.addEventListener("change", () => setData(this));
-
+        // holder.appendChild(document.createTextNode("Hit count: "));
+        // const hits = holder.appendChild(document.createElement("input"));
+        // hits.type = "number";
+        // hits.value = this.data.hitCount || "1";
+        // hits.addEventListener("change", () => setData(this));
 
         function setData(self) {
             self.data = {
                 type: convType.value,
                 conversion: [n.value || 0, e.value || 0, t.value || 0, w.value || 0, f.value || 0, a.value || 0],
-                hitCount: (hits.value || 1),
+                // hitCount: (hits.value || 1),
             };
         }
 
@@ -586,7 +591,6 @@ class EffectType {
 
     // noinspection JSUnusedGlobalSymbols
     toJSON() {
-        // TODO
         return {type: this.type, data: this.data};
     }
 }

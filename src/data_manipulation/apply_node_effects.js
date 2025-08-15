@@ -98,13 +98,13 @@ function addORConv(build, name, conv, req1, sect1, req2, sect2, replace = false)
 }
 
 function addANYConv(build, name, conv, replace = false) {
-    if (build.convs[name] === undefined || replace) {
-        build.convs[name] = conv.slice(0);
+    if (build.conversions[name] === undefined || replace) {
+        build.conversions[name] = conv.slice(0);
         return;
     }
 
-    for (let i = 0; i < build.convs[name].length; i++) {
-        build.convs[name][i] += conv[i];
+    for (let i = 0; i < build.conversions[name].length; i++) {
+        build.conversions[name][i] += conv[i];
     }
 }
 

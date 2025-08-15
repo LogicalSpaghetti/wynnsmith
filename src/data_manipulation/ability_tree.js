@@ -1,5 +1,9 @@
 `use strict`;
 
+function readOldClass(build) {
+    build.previousClass = document.getElementById("ability_tree").dataset.class;
+}
+
 function treeClicked(event) {
     const target = event.target;
     if (target.dataset.type !== "ability") return;
@@ -9,9 +13,8 @@ function treeClicked(event) {
 
 function readAbilities(build) {
     if (build.wynnClass === "") return;
-    const abilityTree = document.getElementById("abilityTree");
 
-    if (abilityTree.dataset.class === build.wynnClass) {
+    if (build.previousClass === build.wynnClass) {
         addNodesToBuild(build);
         addAspectsToBuild(build);
     } else {
@@ -21,14 +24,17 @@ function readAbilities(build) {
 }
 
 function changeAbilityTree(build) {
-    const abilityTree = document.getElementById("abilityTree");
+    const abilityTree = document.getElementById("ability_tree");
+    abilityTree.innerHTML = "";
 
-    abilityTree.removeAttribute("hidden");
-
-    abilityTree.dataset.class = build.wynnClass
+    abilityTree.dataset.class = build.wynnClass || abilityTree.dataset.class;
 
     const tree = punscake[build.wynnClass];
-    abilityTree.innerHTML = "";
+
+    abilityTree.hidden = !tree;
+
+    if (!tree) return;
+
     mapHTML(tree, abilityTree, build.wynnClass);
 
     document.querySelectorAll(".node_img").forEach((img) => {
@@ -39,8 +45,7 @@ function changeAbilityTree(build) {
 }
 
 function changeAspects(build) {
-    const aspects = classes[build.wynnClass].aspects;
-    const aspectNames = Object.keys(aspects);
+    const aspects = aspect_descriptions[build.wynnClass];
 
     const activeHolder = document.getElementById("active_aspects");
     const inactiveHolder = document.getElementById("inactive_aspects");
@@ -48,14 +53,15 @@ function changeAspects(build) {
     activeHolder.innerHTML = "";
     inactiveHolder.innerHTML = "";
 
-    for (let i = 0; i < aspectNames.length; i++) {
-        const aspect = aspects[aspectNames[i]];
+    aspects.forEach(aspect => {
+        const name = aspect.name;
+        const rarity = aspect.rarity;
 
         const aspectDiv = document.createElement("div");
         aspectDiv.classList.add("aspect");
-        aspectDiv.classList.add(aspect.rarity);
-        aspectDiv.dataset.aspect = aspectNames[i];
-        aspectDiv.title = aspectNames[i];
+        aspectDiv.classList.add(rarity);
+        aspectDiv.dataset.aspect = name;
+        aspectDiv.title = name;
 
         const aspectImage = document.createElement("span");
         aspectImage.classList.add("aspect_image");
@@ -63,9 +69,9 @@ function changeAspects(build) {
 
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
-        tierOverlay.classList.add("Tier_" + (aspect.rarity === "legendary" ? decimalToRoman(4) : decimalToRoman(3)));
-        tierOverlay.textContent = aspect.rarity === "legendary" ? decimalToRoman(4) : decimalToRoman(3);
-        tierOverlay.dataset.tier = String(aspect.rarity === "legendary" ? 4 : 3);
+        tierOverlay.classList.add("Tier_" + (rarity === "legendary" ? decimalToRoman(4) : decimalToRoman(3)));
+        tierOverlay.textContent = rarity === "legendary" ? decimalToRoman(4) : decimalToRoman(3);
+        tierOverlay.dataset.tier = String(rarity === "legendary" ? 4 : 3);
         tierOverlay.style.display = "none";
 
         const upButton = document.createElement("button");
@@ -81,7 +87,7 @@ function changeAspects(build) {
         aspectDiv.appendChild(tierOverlay);
         aspectDiv.appendChild(aspectImage);
         inactiveHolder.appendChild(aspectDiv);
-    }
+    });
 }
 
 function toggleNode(img) {
@@ -143,7 +149,7 @@ function mapHTML(tree, abilityTree, wynnClass) {
         img.style.width = "100%";
         img.style.cursor = "pointer";
         img.dataset.type = "ability";
-        img.dataset.name = abilities[ability.abilityID]._plainname;
+        img.dataset.id = ability.abilityID;
         img.classList.add("ability_img");
         img.onload = function () {
             img.style.scale = (100 * img.naturalHeight) / 18 + "%";
@@ -165,9 +171,9 @@ function mapHTML(tree, abilityTree, wynnClass) {
 // called any time the build changes but the class doesn't
 function addNodesToBuild(build) {
     const treeNodes = document.querySelectorAll(".ability_img");
-    treeNodes.forEach((node) => {
-        if (node.parentElement.dataset.selected === "true") {
-            build.nodes.push(node.dataset.name);
+    treeNodes.forEach((imgNode) => {
+        if (imgNode.parentElement.dataset.selected === "true") {
+            build.nodes.push(imgNode.dataset.id);
         }
     });
 }
@@ -180,14 +186,16 @@ function addAspectsToBuild(build) {
     });
 }
 
-function renderTree(build) {
-    validateTree(build.wynnClass);
+function renderTree() {
+    validateTree();
     renderHighlights();
 }
 
-function validateTree(wynnClass) {
-
-    const treeHTML = document.getElementById("abilityTree");
+function validateTree() {
+    const treeHTML = document.getElementById("ability_tree");
+    const wynnClass = treeHTML.dataset.class
+    const tree = punscake[treeHTML.dataset.class];
+    if (!tree) return;
 
     // reset tree highlights
     treeHTML.querySelectorAll(".tree_cell")
@@ -200,12 +208,10 @@ function validateTree(wynnClass) {
     const unselectedIDs = [];
 
     // initialize archetype points
-    for (let i = 0; i < punscake[wynnClass].archetypes.length; i++) {
-        archetypePoints[punscake[wynnClass].archetypes[i]] = 0;
-    }
+    for (let archetype of tree.archetypes) archetypePoints[archetype] = 0;
 
     // gather all nodes
-    Object.keys(punscake[wynnClass].abilities).forEach(abilityID => {
+    Object.keys(tree.abilities).forEach(abilityID => {
         const treeNode = getElementFromAbilityID(abilityID);
 
         nodes[abilityID] = {
@@ -213,18 +219,17 @@ function validateTree(wynnClass) {
             selected: treeNode.dataset.selected === "true",
             mapID: parseInt(treeNode.dataset.map_id),
             element: treeNode,
-            ability: punscake[wynnClass].abilities[abilityID]
+            ability: tree.abilities[abilityID],
         };
 
-        if (abilityID === punscake[wynnClass].startingAbilityID)
-            nodes[abilityID].reachable = true;
+        if (abilityID === tree.startingAbilityID) nodes[abilityID].reachable = true;
 
         unvalidatedIDs.push(abilityID);
     });
 
     // loop over all nodes in its exclusion list, returning whether any block it
     const blockedByExclusive = function (abilityID) {
-        const exclusives = punscake[wynnClass].abilities[abilityID].unlockingWillBlock;
+        const exclusives = tree.abilities[abilityID].unlockingWillBlock;
         for (let i = 0; i < exclusives.length; i++) {
             if (nodes[exclusives[i]].selected) {
                 return true;
@@ -234,47 +239,47 @@ function validateTree(wynnClass) {
     };
 
     // loop over a "list" of all nodes
-    for (let i = 0; i < unvalidatedIDs.length; i++) {
+    for (let i = 0; i < unvalidatedIDs.length;) {
         const unvalidatedID = unvalidatedIDs[i];
         const node = nodes[unvalidatedID];
-        const ability = punscake[wynnClass].abilities[unvalidatedID];
+        const ability = tree.abilities[unvalidatedID];
 
         if (!node.selected) {
             unvalidatedIDs.splice(i, 1);
             unselectedIDs.push(unvalidatedID);
-            i = -1;
-        } else if ((ability.requires !== -1 && !nodes[ability.requires].selected) ||
-            blockedByExclusive(unvalidatedID)) {
+            i = 0;
+        } else if ((ability.requires !== -1 && !nodes[ability.requires].selected) || blockedByExclusive(unvalidatedID)) {
             // if node is definitely not valid
             node.red = true;
             if (blockedByExclusive(unvalidatedID)) node.locked = true;
             unvalidatedIDs.splice(i, 1);
-            i = -1;
-        } else if (node.reachable &&
-            (ability.archetypePointsRequired <= 0 ||
-                ability.archetypePointsRequired <= archetypePoints[ability.archetype])) {
+            i = 0;
+        } else if (node.reachable && (ability.archetypePointsRequired <= 0 || ability.archetypePointsRequired <= archetypePoints[ability.archetype])) {
             // node is reachable and has met its archetype req.
             node.valid = true;
-            propagateHighlightFrom(nodes, wynnClass, node.mapID);
+            propagateHighlightFrom(nodes, tree, node.mapID);
             if (ability.archetype !== "") archetypePoints[ability.archetype] += 1;
             unvalidatedIDs.splice(i, 1);
-            i = -1;
+            i = 0;
             usedAP += ability.pointsRequired;
+        } else {
+            // node hasn't met its archetype req. yet
+            i++;
         }
-        // node hasn't met its archetype req. yet
     }
 
-    displayAP(usedAP, punscake[wynnClass].properties.maxAbilityPoints);
+    unvalidatedIDs.forEach((id) => nodes[id].red = true);
+
+    const maxAP = tree.properties.maxAbilityPoints
+    displayAP(usedAP, maxAP);
 
     for (let nodeID in nodes) {
         const node = nodes[nodeID];
-        if (!node.selected)
-        if (punscake[wynnClass].properties.maxAbilityPoints < usedAP + node.ability.pointsRequired)
-            node.unavailable = true;
+        if (!node.selected && maxAP < usedAP + node.ability.pointsRequired) node.unavailable = true;
     }
 
     for (let id of unselectedIDs) {
-        const ability = punscake[wynnClass].abilities[id];
+        const ability = tree.abilities[id];
         const node = nodes[id];
 
         if (blockedByExclusive(id)) node.locked = true;
@@ -282,121 +287,102 @@ function validateTree(wynnClass) {
         if (ability.archetypePointsRequired > archetypePoints[ability.archetype]) node.unavailable = true;
     }
 
-    unvalidatedIDs.forEach((id) =>
-        nodes[id].red = true);
 
-    Object.keys(nodes).forEach(abilityID =>
-        changeNodeImg(nodes, abilityID, wynnClass));
+
+        for (let nodeID in nodes) changeNodeImage(nodes[nodeID], wynnClass);
+
+
 }
 
 function displayAP(usedAP, maxAP) {
-    const apDisplay = document.getElementById("ap_assigned");
+    const apDisplay = document.getElementById("assigned_ap_display");
+    const maxAPDisplay = document.getElementById("max_ap_display");
     const apColor = usedAP > maxAP ? codeDictionaryPositivityColors.false : "";
     apDisplay.innerHTML = minecraftToHTML(apColor + usedAP);
+    maxAPDisplay.innerHTML = maxAP;
 }
 
-function changeNodeImg(nodes, abilityID, wynnClass) {
-    const node = nodes[abilityID];
-
+function changeNodeImage(node, wynnClass) {
     const img = node.element.querySelector("img");
 
-    let suffix;
-    if (node.red) {
-        suffix = "_error";
-    } else if (node.valid) {
-        suffix = "_active";
-    } else if (node.locked) {
-        suffix = "_blocked";
-    } else if (node.unavailable) {
-        suffix = "";
-    } else if (node.reachable) {
-        suffix = "_open";
-    } else {
-        suffix = "";
-    }
+    let suffix =
+        node.red ? "_error" :
+            node.valid ? "_active" :
+                node.locked ? "_blocked" :
+                    node.unavailable ? "" :
+                        node.reachable ? "_open" : "";
 
-    let abilityType = punscake[wynnClass].abilities[abilityID].type;
+    let abilityType = node.ability.type;
     if (abilityType === "skill") abilityType = wynnClass;
     img.src = "img/node/" + abilityType + suffix + ".png";
     img.style.scale = (100 * img.naturalHeight) / 18 + "%";
 }
 
 function getElementFromMapIndex(index) {
-    return document.getElementById("abilityTree")
+    return document.getElementById("ability_tree")
         .querySelector("td[data-map_id='" + index + "']");
 }
 
 function getElementFromAbilityID(index) {
-    return document.getElementById("abilityTree")
+    return document.getElementById("ability_tree")
         .querySelector("td[data-ability_id='" + index + "']");
 }
 
 const dirs = ["up", "down", "left", "right"];
 
 const dirOffsets = {
-    up: -9,
-    down: 9,
-    left: -1,
-    right: 1,
+    up: -9, down: 9, left: -1, right: 1,
 };
 
 const inverseDirs = {
-    up: "down",
-    down: "up",
-    left: "right",
-    right: "left",
+    up: "down", down: "up", left: "right", right: "left",
 };
 
 const dirIndexes = {
-    up: 0,
-    down: 1,
-    left: 2,
-    right: 3,
+    up: 0, down: 1, left: 2, right: 3,
 };
 
-function propagateHighlightTo(nodes, wynnClass, destIndex, sourceDir) {
-    const cell = punscake[wynnClass].cellMap[destIndex];
+function propagateHighlightTo(nodes, tree, destIndex, sourceDir) {
+    const cell = tree.cellMap[destIndex];
     const node = nodes[cell.abilityID];
     if (node) {
         node.reachable = true;
         return node.selected;
-    } else
-        return propagateHighlightFrom(nodes, wynnClass, destIndex, sourceDir);
+    } else return propagateHighlightFrom(nodes, tree, destIndex, sourceDir);
 }
 
-function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
-    const sourceCell = punscake[wynnClass].cellMap[sourceIndex];
+function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
+    const sourceCell = tree.cellMap[sourceIndex];
     const element = getElementFromMapIndex(sourceIndex);
     const highlights = Array.from(element.dataset.highlights);
 
     dirs.forEach(newDir => {
         // if the node is going up
-        if (!punscake[wynnClass].bTravesableUp && newDir === "up") return;
+        if (!tree.bTravesableUp && newDir === "up") return;
         // if the cell doesn't go in this direction
         if (sourceCell.travelNode[newDir] === 0) return;
         // if this is the same direction it came from
         if (inverseDirs[sourceDir] === newDir) return;
 
         // left on left edge or right on right edge
-        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 1 && newDir === "left") return;
-        if (!punscake[wynnClass].loopTree && sourceIndex % 9 === 0 && newDir === "right") return;
+        if (!tree.loopTree && sourceIndex % 9 === 1 && newDir === "left") return;
+        if (!tree.loopTree && sourceIndex % 9 === 0 && newDir === "right") return;
 
         let destIndex = sourceIndex + dirOffsets[newDir];
-        if (punscake[wynnClass].loopTree) {
+        if (tree.loopTree) {
             if (newDir === "left") destIndex += 9;
             if (newDir === "right") destIndex -= 9;
         }
 
-        const destCell = punscake[wynnClass].cellMap[destIndex];
+        const destCell = tree.cellMap[destIndex];
 
-        // if it's not a used cell
-        if (destCell === undefined) return;
+        // if it's not an occupied cell
+        if (destCell == null) return;
         // if dest doesn't connect to this
         if (destCell.travelNode[inverseDirs[newDir]] === 0) return;
 
-
         // if it finds a selected node:
-        if (propagateHighlightTo(nodes, wynnClass, destIndex, newDir)) {
+        if (propagateHighlightTo(nodes, tree, destIndex, newDir)) {
             highlights[dirIndexes[newDir]] = 2;
             highlights[dirIndexes[inverseDirs[sourceDir]]] = 2;
         }
@@ -409,129 +395,36 @@ function propagateHighlightFrom(nodes, wynnClass, sourceIndex, sourceDir) {
 }
 
 function renderHighlights() {
-    document.getElementById("abilityTree").querySelectorAll(".tree_cell[data-type='connector']").forEach(connector => {
+    document.getElementById("ability_tree").querySelectorAll(".tree_cell[data-type='connector']").forEach(connector => {
         connector.innerHTML = "";
         if (connector.dataset.highlights === "0000") return;
 
-        const img = document.createElement("img");
+        const img = connector.appendChild(document.createElement("img"));
 
         img.src = "img/branch/" + connector.dataset.highlights + ".png";
         img.style.display = "block";
-        img.ondragstart = function () {
+        img.ondragstart = () => {
             return false;
         };
-
-        connector.appendChild(img);
     });
 }
 
-function copyTreeAsANSIText() {
-    const red = `[2;31m`;
-    const green = "[2;32m";
-    const yellow = "[2;33m";
-    const blue = `[2;34m`;
-    const purple = `[2;35m`;
-    const white = "[2;37m";
-
-    const grey = "[2;30m";
-    const teal = "[2;36m";
-
-    const bold = "[1;2m"
-    const foot = `[0m`;
-
-    const tree = document.getElementById("abilityTree");
-    const trs = tree.childNodes;
-
-    let output = "```ansi";
-
-    let rowCounter = 0;
-    trs.forEach((tr) => {
-        rowCounter++;
-        if (rowCounter % 6 === 1 && rowCounter !== 1) return;
-        output += "\n";
-        tr.childNodes.forEach((td) => {
-            if (!td.classList.contains("tree_cell")) {
-                output += " ";
-                return;
-            }
-
-            if (td.dataset.type === "node") {
-                if (td.dataset.selected !== "true") {
-                    output += grey;
-
-                } else
-                    switch (td.dataset.color) {
-                        case "red":
-                            output += red;
-                            break;
-                        case "skill":
-                            output += green;
-                            break;
-                        case "blue":
-                            output += blue;
-                            break;
-                        case "purple":
-                            output += purple;
-                            break;
-                        case "yellow":
-                            output += yellow;
-                            break;
-                        case "white":
-                            output += white;
-                            break;
-                        default:
-                            output += "?";
-                    }
-                output += "♦" + foot;
-            } else if (td.dataset.type === "connector") {
-                if (td.dataset.highlights === "0000") {
-                    output += " ";
-                    return;
-                }
-                output += teal;
-                switch (td.dataset.highlights) {
-                    case "0220":
-                        output += "┐";
-                        break;
-                    case "0202":
-                        output += "┌";
-                        break;
-                    case "0222":
-                        output += "┬";
-                        break;
-                    case "0022":
-                        output += "─";
-                        break;
-                    case "2200":
-                        output += "│";
-                        break;
-                    case "2220":
-                        output += "┤";
-                        break;
-                    case "2020":
-                        output += "┘";
-                        break;
-                    case "2002":
-                        output += "└";
-                        break;
-                    case "2202":
-                        output += "├";
-                        break;
-                    case "2222":
-                        output += "┼";
-                        break;
-                    case "2022":
-                        output += "┴";
-                        break;
-                    default:
-                        output += "?";
-                }
-                output += foot;
-            }
-        });
-    });
-
-    output += "```";
-
-    navigator.clipboard.writeText(output);
+function readEffects(build) {
+    // const effects = classEffects[build.wynnClass].effects;
+    // const unvalidatedEffectIds = Object.keys(effects);
+    //
+    // for (let i = 0; i < unvalidatedEffectIds.length;) {
+    //     const id = unvalidatedEffectIds[i];
+    //     const effect = effects[id];
+    //     let allAbilities = true;
+    //     for (let parent of effect.parents) {
+    //         if (build[parent.type].includes(parent.id)) {}
+    //
+    //     }
+    //
+    //     // if effect has all parents, add to build
+    //
+    //     // else
+    //     i++
+    // }
 }

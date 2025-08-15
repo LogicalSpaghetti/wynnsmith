@@ -57,7 +57,7 @@ function includeOtherGear(build) {
 }
 
 function includeTomes(build) {
-    const tomeClusters = document.getElementById("tomes_section")
+    const tomeClusters = document.getElementById("tome_inputs")
         .querySelectorAll(".input_cluster");
 
     for (let cluster of tomeClusters) {

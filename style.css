@@ -308,7 +308,7 @@ td {
     width: 18px;
 }
 
-#abilityTree {
+#ability_tree {
     image-rendering: pixelated;
     background-color: var(--ls-ability_background);
     border: #4f5466 2px solid;

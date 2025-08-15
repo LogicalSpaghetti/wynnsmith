@@ -4,15 +4,16 @@ function refreshBuild() {
     const build = new Build();
 
     readBuild(build);
-    if (build.wynnClass === "") return;
     permuteBuild(build);
     displayBuild(build);
 }
 
 function readBuild(build) {
-    readSkillPointMultipliers(build);
+    readOldClass(build);
     readItems(build);
+    readSkillPointMultipliers(build);
     readAbilities(build);
+    readEffects(build);
 }
 
 function permuteBuild(build) {
@@ -123,9 +124,12 @@ const colorHeaders = {
 };
 
 function getHeaderForIcon(color, elementEmoji) {
-    // TODO: (doesn't work because it cuts off at the end instead of letting the color continue on)
+    // TODO: replace with codeDictionary
     // return minecraftToHTML(`${codeDictionaryGenericSymbols[color]} `)
-    return `<span class=\"${color}\"><b class=\"font-minecraft\" style=\"display: inline-block; width: 1ch\">${elementEmoji}</b> `;
+    return `<span class=\"${color}\">` +
+        `<b class=\"font-minecraft\" style=\"display: inline-block; width: 1ch\">` +
+        `${elementEmoji}` +
+        `</b> `;
 }
 
 function getHeaderForColor(color) {

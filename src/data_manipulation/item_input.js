@@ -16,7 +16,7 @@ function readGear(build) {
 
 function readWeapons(build) {
     readWeapon(build);
-    // todo: off-hands, requires restructuring it so that we read, then loop through weapons adding.
+    // todo: off-hands
 }
 
 function readWeapon(build) {

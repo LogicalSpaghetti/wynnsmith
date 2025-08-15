@@ -44,20 +44,19 @@ function addEventListeners() {
         });
     });
 
+    const treeElement = document.getElementById("ability_tree")
     // Ability Tree
-    document.getElementById("abilityTree").addEventListener("click", (event) => {
+    treeElement.addEventListener("click", (event) => {
         treeClicked(event);
     });
     document.getElementById("clear_tree").addEventListener("click", () => {
-        document.getElementById("abilityTree")
-            .querySelectorAll("td[data-selected='true']").forEach((td) => {
+        treeElement.querySelectorAll("td[data-selected='true']").forEach((td) => {
             td.dataset.selected = "false";
         });
         refreshBuild();
     });
     document.getElementById("clear_reds").addEventListener("click", () => {
-        document.getElementById("abilityTree")
-            .querySelectorAll("td[data-red='true']").forEach((td) => {
+        treeElement.querySelectorAll("td[data-red='true']").forEach((td) => {
             td.removeAttribute("data-red");
             td.dataset.selected = "false";
         });
@@ -209,7 +208,7 @@ document.getElementById("ansi_tree").addEventListener("click", function () {
 });
 
 document.getElementById("tree_img").addEventListener("click", function () {
-    copyImageById("abilityTree")
+    copyImageById("ability_tree")
 });
 
 function resetCopyText() {

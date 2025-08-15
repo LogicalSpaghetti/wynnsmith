@@ -6,6 +6,7 @@ function calculateDamageConversions(build) {
     splitMergedIds(build);
     damagesToArrays(build);
 
+    sortPowders(build);
     powderConversions(build);
     addSkillPointPercents(build);
     addWeaponSpecial(build);
@@ -27,16 +28,6 @@ function calculateDamageConversions(build) {
     zeroNegatives(build);
 
     applyStrDex(build);
-}
-
-function addArmourSpecials(build) {
-    // TODO
-}
-
-function addWeaponSpecial(build) {
-    // TODO
-    // which special is detected elsewhere
-    // if it's replaced by a different special is done somewhere else
 }
 
 // TODO: Move elsewhere
@@ -165,7 +156,35 @@ function damagesToArrays(build) {
     delete final.airSpellDamage;
 }
 
-// TODO: not finished!
+function sortPowders(build) {
+    sortPowderGroup(build.powders.weapon);
+    build.powders.armour
+}
+
+function sortPowderGroup(group) {
+    const order = []
+    group.forEach((powder) => {
+        if (order.indexOf(powder[0]) === -1) order.push(powder[0]);
+    });
+    group.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+}
+
+function addWeaponSpecial(build) {
+    const tiered = build.powders.weapon.filter(powder => powder[1] > 3)
+    let first = tiered[0];
+    for (let i = 1; i < tiered.length; i++) {
+        if (tiered[i][0] === first[0]) {
+            build.specials.weapon = first[0] + (parseInt(tiered[i][1]) + parseInt(first[1]) - 7);
+            return;
+        }
+        first = tiered[i];
+    }
+}
+
+function addArmourSpecials(build) {
+    // TODO
+}
+
 function powderConversions(build) {
     const base = build.base;
 
@@ -217,7 +236,7 @@ function conversions(build) {
 
 function convertBase(build) {
     build.base.attacks = {};
-    Object.keys(build.convs).forEach((convName) => {
+    Object.keys(build.conversions).forEach((convName) => {
         // [a, b, c, d, e, f]
         build.base.attacks[convName] = {};
         const conv = build.base.attacks[convName];
@@ -226,12 +245,12 @@ function convertBase(build) {
 
         // elemental conversions
         for (let i = 1; i < 6; i++) {
-            conv.min[i] = (build.convs[convName][i] / 100) * build.base.min.reduce((a, b) => a + b);
-            conv.max[i] = (build.convs[convName][i] / 100) * build.base.max.reduce((a, b) => a + b);
+            conv.min[i] = (build.conversions[convName][i] / 100) * build.base.min.reduce((a, b) => a + b);
+            conv.max[i] = (build.conversions[convName][i] / 100) * build.base.max.reduce((a, b) => a + b);
         }
 
         // neutral conversion
-        const neutralConversion = build.convs[convName][0] / 100;
+        const neutralConversion = build.conversions[convName][0] / 100;
         for (let i = 0; i < 6; i++) {
             conv.min[i] += build.base.min[i] * neutralConversion;
             conv.max[i] += build.base.max[i] * neutralConversion;
@@ -241,8 +260,8 @@ function convertBase(build) {
 
 function convertRaw(build) {
     const rawAttacks = (build.rawAttacks = {});
-    Object.keys(build.convs).forEach((convName) => {
-        const conv = build.convs[convName];
+    Object.keys(build.conversions).forEach((convName) => {
+        const conv = build.conversions[convName];
         const convMult = conv.reduce((partialSum, a) => partialSum + a, 0);
 
         const baseConvMin = build.base.attacks[convName].min;
@@ -355,7 +374,7 @@ function applyPercents(build) {
 
 function mergeAttackDamage(build) {
     // TODO
-    Object.keys(build.convs).forEach((attackName) => {
+    Object.keys(build.conversions).forEach((attackName) => {
         const baseAttack = build.base.attacks[attackName];
         const rawAttack = build.rawAttacks[attackName];
 

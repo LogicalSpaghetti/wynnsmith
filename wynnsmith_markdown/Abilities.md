@@ -13,3 +13,6 @@ https://anseki.github.io/leader-line/
 		- (makes searching and identifying effects easier)
 	- Type
 	- Children
+
+
+ability.selected is all that matters for an effect being allowed

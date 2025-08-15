@@ -4,138 +4,202 @@ const aspect_descriptions = {
             "name": "Aspect of the Beastmaster",
         }, {
             "name": "Aspect of Battlement Fortification",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Inexhaustible Quiver",
         }, {
             "name": "Aspect of the North Wind",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Undercrank",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Clinging Lichen",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Bullet Hell",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Fragmentation Rounds",
+            "rarity": "fabled",
         }, {
             "name": "Trapper's Embodiment of Persistence Predation",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of Further Horizons",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Extreme Firepower",
+            "rarity": "legendary",
         }, {
             "name": "Sharpshooter's Embodiment of Laser Precision",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of the Poltergeist",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Great Escape",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Steadying Hand",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of a Thunderbolt",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Chaotic Demolition",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Illegal Explosives",
+            "rarity": "legendary",
         }, {
             "name": "Boltslinger's Embodiment of Rended Skies",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of Extreme Current",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Dynamic Entry",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Iron String",
+            "rarity": "fabled",
         }],
     "assassin": [
         {
             "name": "Aspect of the Disappearing Act",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of False Coercing",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Visual Distortion",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Redoublement",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Flamboyance",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Shadow Armor",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Fog Machine",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Enduring Illusions",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Chain Knife",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Calling Card",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Unstoppable Force",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Dagger's Silhouette",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Agile Blade",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Stellar Flurry",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Pernicious Prankster",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Sleight-Of-Hand",
+            "rarity": "fabled",
         }, {
             "name": "Trickster's Embodiment of Malevolent Mischief",
+            "rarity": "mythic",
         }, {
             "name": "Acrobat's Embodiment of Gravity Defiance",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of Seeking Stars",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Unyielding Fate",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Athlethicism",
+            "rarity": "legendary",
         }, {
             "name": "Shadestepper's Embodiment of Unseen Execution",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of the Pinwheel",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Clouded Vision",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Airborne",
+            "rarity": "fabled",
         }],
     "mage": [
         {
             "name": "Aspect of Mystic Transfer",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Savior",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Comet",
+            "rarity": "legendary",
         }, {
             "name": "Light Bender's Embodiment of Celestial Brilliance",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of Runic Extravagance",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of a Scorching Sun",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Manaflux",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of a Thousand Hours",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Apprentice's Bolt",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Shining Status",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Wind Walking",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Dimension's Door",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Ray of Frost",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Magic Missile",
+            "rarity": "legendary",
         }, {
             "name": "Riftwalker's Embodiment of Chronal Control",
+            "rarity": "mythic",
         }, {
             "name": "Arcanist's Embodiment of Total Obliteration",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of Burning Providence",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Flickering Transmission",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Fatal Fulguration",
+            "rarity": "fabled",
         }],
     "shaman": [
         {
@@ -154,7 +218,7 @@ const aspect_descriptions = {
                 "§7§nBullwhip§7 gains §f+9%§7 Damage Bonus to §bSummons§7.",
                 "§7§nBullwhip§7 gains §f+12%§7 Damage Bonus to §bSummons§7.",
                 "§7§nBullwhip§7 gains §f+15%§7 Damage Bonus to §bSummons§7.",
-            ]
+            ],
         }, {
             "name": "Summoner's Embodiment of the Omnipotent Overseer",
             "rarity": "mythic",
@@ -171,7 +235,7 @@ const aspect_descriptions = {
                 "Your §bHummingbirds§7 attack enemies for §f+6s§7.",
                 "Your §bHummingbirds§7 attack enemies for §f+8.5s§7.",
                 "Your §bHummingbirds§7 attack enemies for §f+10s§7.",
-            ]
+            ],
         }, {
             "name": "Aspect of Incineration",
             "rarity": "legendary",
@@ -180,7 +244,7 @@ const aspect_descriptions = {
                 "§7§nFriendly Fire§7 reduces§b Puppet§7 duration by §f-0.6s§7.",
                 "§7§nFriendly Fire§7 reduces§b Puppet§7 duration by §f-0.8s§7.",
                 "§7§nFriendly Fire§7 reduces§b Puppet§7 duration by §f-1s§7.",
-            ]
+            ],
         }, {
             "name": "Acolyte's Embodiment of Unwavering Adherence",
             "rarity": "mythic",
@@ -205,7 +269,7 @@ const aspect_descriptions = {
                 "§7§nFlaming Tongue§7 gains §f+2§7 hits, and doubles in speed.\n\n§c⚔ §7Total Damage: §c-23% §8(of your DPS)\n   §8(§6✣ §8Damage: -17%)\n   §8(§e✦ §8Thunder: -2%)\n   §8(§c✹ §8Fire: -4%)",
                 "§7§nFlaming Tongue§7 gains §f+3§7 hits, and doubles in speed.\n\n§c⚔ §7Total Damage: §c-29% §8(of your DPS)\n   §8(§6✣ §8Damage: -20%)\n   §8(§e✦ §8Thunder: -3%)\n   §8(§c✹ §8Fire: -6%)",
                 "§7§nFlaming Tongue§7 gains §f+4§7 hits, and doubles in speed.\n\n§c⚔ §7Total Damage: §c-34% §8(of your DPS)\n   §8(§6✣ §8Damage: -22%)\n   §8(§e✦ §8Thunder: -4%)\n   §8(§c✹ §8Fire: -8%)",
-            ]
+            ],
         }, {
             "name": "Aspect of Reverberation",
             "rarity": "legendary",
@@ -214,7 +278,7 @@ const aspect_descriptions = {
                 "§7§nTotemic Smash§7 gains §f+2.25 §3☀ §7Area of Effect.",
                 "§7§nTotemic Smash§7 gains §f+3 §3☀ §7Area of Effect.",
                 "§7§nTotemic Smash§7 gains §f+4 §3☀ §7Area of Effect.",
-            ]
+            ],
         }, {
             "name": "Aspect of Exsanguination",
             "rarity": "fabled",
@@ -231,7 +295,7 @@ const aspect_descriptions = {
                 "Your §bPuppets§7 and §bEffigies§7 move §f15%§7 faster.",
                 "Your §bPuppets§7 and §bEffigies§7 move §f20%§7 faster.",
                 "Your §bPuppets§7 and §bEffigies§7 move §f25%§7 faster.",
-            ]
+            ],
         }, {
             "name": "Aspect of the Channeler",
             "rarity": "fabled",
@@ -292,7 +356,7 @@ const aspect_descriptions = {
                 "§7§nTwisted Tether§7 requires §f-0.3%§7 Health loss to activate.",
                 "§7§nTwisted Tether§7 requires §f-0.4%§7 Health loss to activate.",
                 "§7§nTwisted Tether§7 requires §f-0.5%§7 Health loss to activate.",
-            ]
+            ],
         }, {
             "name": "Aspect of the Beckoned Legion",
             "rarity": "fabled",
@@ -314,55 +378,73 @@ const aspect_descriptions = {
             "rarity": "legendary",
             "descriptions": [
                 "§7Increase §nStorm Dance§7's pull strength by §f10%§7.",
-                "§7Increase §nStorm Dance§7's pull strength by §f10%§7.",
-                "§7Increase §nStorm Dance§7's pull strength by §f10%§7.",
+                "§7Increase §nStorm Dance§7's pull strength by §f15%§7.",
+                "§7Increase §nStorm Dance§7's pull strength by §f20%§7.",
                 "§7Increase §nStorm Dance§7's pull strength by §f25%§7.",
             ],
-        }],
+        },
+    ],
     "warrior": [
         {
-            "name": "Aspect of Steel Chords",
-        }, {
-            "name": "Aspect of Empowering Fantasy",
-        }, {
             "name": "Aspect of Earthshaking",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Bovine Inspiration",
+            "rarity": "legendary",
         }, {
             "name": "Battle Monk's Embodiment of Complete Synchrony",
+            "rarity": "mythic",
         }, {
             "name": "Fallen's Embodiment of Blind Fury",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of Seeing Stars",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Maniacal Frisson",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Overflowing Hope",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Unquenching Flames",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Tightrope Walk",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Rekindling",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Rallying Fervor",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of the Anvil Drop",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of Deafening Echoes",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Berserker",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Turbulence",
+            "rarity": "legendary",
         }, {
             "name": "Paladin's Embodiment of Undying Determination",
+            "rarity": "mythic",
         }, {
             "name": "Aspect of Hyper-Perception",
+            "rarity": "fabled",
         }, {
             "name": "Aspect of Skyward Strikes",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Returning Javelin",
+            "rarity": "legendary",
         }, {
             "name": "Aspect of the Megaphone",
-        }],
+            "rarity": "legendary",
+        },
+    ],
 };
