@@ -37,8 +37,8 @@ function getFormattedId(name, value, source, colorSign = true, wynnClass = "") {
     const suffix = source[name].suffix ?? "";
     let nameOfId = source[name].name;
     if (wynnClass && isSpellCost(name)) {
-        const spellNumber = Number(name.charAt(0)) - 1;
-        nameOfId = classSpellNames[wynnClass][spellNumber] + " Cost " + source[name].suffix
+        const spellNumber = parseInt(name.replace(/\D/g, '')) - 1;
+        nameOfId = classSpellNames[wynnClass][spellNumber] + " Cost " + (source[name].suffix ?? "");
     }
 
     if (value.max) {

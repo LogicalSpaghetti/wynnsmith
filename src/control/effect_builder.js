@@ -168,13 +168,14 @@ class Tree {
         if (this.editedEffectId === id) this.editEffect(-1);
     }
 
-    getChild(type, id) {
-        return this.getHolderByType(type)[id];
+    getChild(section, id) {
+        console.log(section, id);
+        return this.getHolderBySection(section)[id];
     }
 
-    getHolderByType(type) {
-        console.log(type)
-        switch (type) {
+    getHolderBySection(section) {
+        console.log(section);
+        switch (section) {
             case "abilities":
                 return this.abilities;
             case "effects":
@@ -207,9 +208,10 @@ class Tree {
             const parents = effectData.parents;
             for (let i in parents) {
                 const parent = parents[i];
-                effect.addParent(parent.group, parent.id);
+                effect.addParent(parent.section, parent.id);
             }
             effect.effect = new EffectType(effectData.effect.type, effectData.effect.data);
+            effect.require_all_parents = effectData.requires_all;
         }
         this.editEffect(-1);
     }
@@ -350,45 +352,45 @@ class EffectBuilder {
         this.effectsHolder.style.paddingLeft = "2ch";
     }
 
-    addParent(type, id) {
+    addParent(section, id) {
         const childName = document.createElement("div");
         const parentName = this.parentNames.appendChild(document.createElement("div"));
 
         const child = new ChildData(this.id, childName, parentName);
-        this.parents.push(new ParentData(type, id, childName, parentName));
+        this.parents.push(new ParentData(section, id, childName, parentName));
 
-        this.tree.getChild(type, id).addChild(child);
+        this.tree.getChild(section, id).addChild(child);
         this.setName(this.name);
 
         this.fixLabels();
     }
 
-    removeParent(type, id) {
-        const parent = this.parents.find(parent => (parent.group === type) && (parent.id === id));
+    removeParent(section, id) {
+        const parent = this.parents.find(parent => (parent.section === section) && (parent.id === id));
         if (!parent) return;
 
         parent.childName.remove();
         parent.parentName.remove();
 
-        this.tree.getChild(parent.group, parent.id).removeChild(this.id);
+        this.tree.getChild(parent.section, parent.id).removeChild(this.id);
 
         this.parents.splice(this.parents.indexOf(parent), 1);
 
         this.fixLabels();
     }
 
-    toggleParent(type, id) {
-        if (this.hasParent(type, id)) {
-            this.removeParent(type, id);
+    toggleParent(section, id) {
+        if (this.hasParent(section, id)) {
+            this.removeParent(section, id);
         } else {
-            this.addParent(type, id);
+            this.addParent(section, id);
         }
     }
 
-    hasParent(type, id) {
+    hasParent(section, id) {
         for (let i in this.parents) {
             const parent = this.parents[i];
-            if (parent.group === type && parent.id === id) return true;
+            if (parent.section === section && parent.id === id) return true;
         }
         return false;
     }
@@ -397,7 +399,7 @@ class EffectBuilder {
         this.html.remove();
         for (let i in this.parents) {
             const parent = this.parents[i];
-            this.removeParent(parent.group, parent.id);
+            this.removeParent(parent.section, parent.id);
         }
     }
 
@@ -437,13 +439,13 @@ class EffectBuilder {
 }
 
 class ParentData {
-    group;
+    section;
     id;
     childName;
     parentName;
 
-    constructor(group, id, childName, parentName) {
-        this.group = group;
+    constructor(section, id, childName, parentName) {
+        this.section = section;
         this.id = id;
         this.childName = childName;
         this.parentName = parentName;
@@ -451,7 +453,7 @@ class ParentData {
 
     // noinspection JSUnusedGlobalSymbols
     toJSON() {
-        return {type: this.type, id: this.id};
+        return {section: this.section, id: this.id};
     }
 }
 
@@ -490,7 +492,7 @@ class EffectType {
     }
 
     emptyConfig() {
-        return document.createTextNode("No configuration options for this effect type!");
+        return document.createTextNode("No configuration options for this effect type.");
     }
 
     setupScriptConfig() {

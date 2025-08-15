@@ -193,7 +193,7 @@ function renderTree() {
 
 function validateTree() {
     const treeHTML = document.getElementById("ability_tree");
-    const wynnClass = treeHTML.dataset.class
+    const wynnClass = treeHTML.dataset.class;
     const tree = punscake[treeHTML.dataset.class];
     if (!tree) return;
 
@@ -270,7 +270,7 @@ function validateTree() {
 
     unvalidatedIDs.forEach((id) => nodes[id].red = true);
 
-    const maxAP = tree.properties.maxAbilityPoints
+    const maxAP = tree.properties.maxAbilityPoints;
     displayAP(usedAP, maxAP);
 
     for (let nodeID in nodes) {
@@ -287,11 +287,7 @@ function validateTree() {
         if (ability.archetypePointsRequired > archetypePoints[ability.archetype]) node.unavailable = true;
     }
 
-
-
-        for (let nodeID in nodes) changeNodeImage(nodes[nodeID], wynnClass);
-
-
+    for (let nodeID in nodes) changeNodeImage(nodes[nodeID], wynnClass);
 }
 
 function displayAP(usedAP, maxAP) {
