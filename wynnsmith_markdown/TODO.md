@@ -1,6 +1,16 @@
 # Focus
-1. Get basic conversions working with the effect builder.
+1. Fix powder get logic (see TODO in item_input)
+2. Fix powder neutral conversions applying early(?)
+	1. check `./reference/damage_equations` for details
+3. Move `./reference` into markdowns
+4. Get basic conversions working with the effect builder.
+	1. After detecting all effects, first go through, merging them into proper effects, i.e. adding up conversions
+5. Effect Application order
+	1. (within category)
+6. Persistent effects
 # General
+### Feat
+1. Switch to a functional model instead of using `build` for everything
 ### Fix
 1. Cursor tooltip overflowing screen.
 ### Visual
@@ -11,54 +21,55 @@
     4. Customization
 # Smith
 ### Feat
-1. powder specials
-2. +Napalm applies after +Fallout
-3. Embed Search in a popup
+1. only add validly selected nodes to build
+2. powder specials
+3. +Napalm applies after +Fallout
+4. Embed Search in a popup
 	1. Clicking the icon next to a slot opens the search
 		1. Ctrl+Click or a button in that popup both link to the `/item` page
-4. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
-5. WynnBuilder link conversion
+5. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
+6. WynnBuilder link conversion
 	1. explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546) ([GitHub](https://github.com/wynnbuilder/wynnbuilder.github.io/blob/master/ENCODING.md))
-6. Build Linking
-7. WynnMana
+7. Build Linking
+8. WynnMana
 	1. Wynn-Cycle
-8. Offhand weapons
-9. Consumables
-10. Charms :>
-11. Trinkets
+9. Offhand weapons
+10. Consumables
+11. Charms :>
+12. Trinkets
 	1. Well of Power, etc.
-12. Raid buffs
-13. Lootrun Boons
-14. Id Modifier
+13. Raid buffs
+14. Lootrun Boons
+15. Id Modifier
 	1. notes range available given the build
-15. Attack details
-16. Attack grouping
-17. Sub-attacks
-18. Str/Dex auto-balance button
-19. Crafted Items
-20. Custom Items
+16. Attack details
+17. Attack grouping
+18. Sub-attacks
+19. Str/Dex auto-balance button
+20. Crafted Items
+21. Custom Items
 	1. Modified items
-21. Advanced export
+22. Advanced export
 	1. select specific sections to save
 	2. Save to/read from file or local storage
-22. Menu to import section of another build
-23. Tome short-hands
-24. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
+23. Menu to import section of another build
+24. Tome short-hands
+25. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
     1. [hpr is complicated](https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/)
     1. Outdated values confirmed by author
         1. remaining Mana and remaining hp likely both have an effect.
-25. Over-Health
+26. Over-Health
     1. Blood Sorrow
         1. Lifestream affecting Over-Health gain
     2. Paladin
     3. Trickster
-26. "Healing" that ignores hef vs respects it
+27. "Healing" that ignores hef vs respects it
     1. Sacrificial Shrine -hp
-27.  Use build.evaluate() for complex abstractions
+28.  Use build.evaluate() for complex abstractions
     1. try to make it allow user input without being a security flaw for equation sharing.
-28. Modified SP amount display+indication
+29. Modified SP amount display+indication
     1. save between build refreshes
-29. Make external toggles a collapsed tab, and include many more effects.
+30. Make external toggles a collapsed tab, and include many more effects.
 ### Fix
 1. use Object.freeze() on all database objects
 2. Data isn't saved if a tab gets unloaded

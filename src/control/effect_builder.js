@@ -65,15 +65,15 @@ class Editor {
     setupParentSelectors(effect) {
         const toggles = this.parent_toggles;
         toggles.textContent = "";
-        for (let id in this.tree.abilities) {
-            const ability = this.tree.abilities[id];
+        for (let id in this.tree.nodes) {
+            const ability = this.tree.nodes[id];
 
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
             checkbox.dataset.id = ability.id;
-            checkbox.checked = effect.hasParent("abilities", ability.id);
+            checkbox.checked = effect.hasParent("nodes", ability.id);
             checkbox.addEventListener("change", () => {
-                effect.toggleParent("abilities", ability.id);
+                effect.toggleParent("nodes", ability.id);
             });
             toggles.appendChild(checkbox);
 
@@ -107,7 +107,7 @@ class Editor {
 }
 
 class Tree {
-    abilities = {};
+    nodes = {};
     effects = {};
 
     constructor(wynn_class, editor, ability_holder_id = "ability_holder", effect_holder_id = "effect_holder") {
@@ -125,20 +125,20 @@ class Tree {
     }
 
     updateAbilities() {
-        this.generateAbilities(punscake[this.wynnClass].abilities);
+        this.generateNodes(punscake[this.wynnClass].abilities);
     }
 
-    generateAbilities(abilities) {
-        this.abilities = {};
+    generateNodes(nodes) {
+        this.nodes = {};
         this.ability_holder.innerHTML = "";
-        for (let index in abilities) {
-            const ability = new Ability(this, index, abilities[index]);
+        for (let index in nodes) {
+            const ability = new Ability(this, index, nodes[index]);
             this.addAbility(index, ability);
         }
     }
 
     addAbility(index, ability) {
-        this.abilities[index] = (ability);
+        this.nodes[index] = (ability);
         this.ability_holder.appendChild(ability.html);
     }
 
@@ -176,8 +176,8 @@ class Tree {
     getHolderBySection(section) {
         console.log(section);
         switch (section) {
-            case "abilities":
-                return this.abilities;
+            case "nodes":
+                return this.nodes;
             case "effects":
                 return this.effects;
             default:
@@ -267,7 +267,7 @@ class Ability {
     }
 
     addEffect(effect) {
-        effect.addParent("abilities", this.id);
+        effect.addParent("nodes", this.id);
     }
 
     addChild(child) {
@@ -522,12 +522,17 @@ class EffectType {
     setupConversionConfig() {
         const holder = document.createElement("div");
 
+        holder.appendChild(document.createTextNode("Conversion Name: "));
+        const nameInput = holder.appendChild(document.createElement("input"));
+        nameInput.value = this.data.name ?? "";
+        holder.appendChild(document.createElement("br"));
+
         holder.appendChild(document.createTextNode("Conversion Type: "));
         const convType = holder.appendChild(document.createElement("select"));
-        convType.innerHTML = "<option value='spell'>Spell</option><option value='melee'>Melee</option>";
+        convType.innerHTML = "<option value='Spell'>Spell</option><option value='MainAttack'>Melee</option>";
         holder.appendChild(document.createElement("br"));
         holder.appendChild(document.createElement("br"));
-        convType.value = this.data.type ?? "spell";
+        convType.value = this.data.type ?? "Spell";
         convType.addEventListener("change", () => setData(this));
 
         const conversionHolder = holder.appendChild(document.createElement("div"));
@@ -582,9 +587,9 @@ class EffectType {
 
         function setData(self) {
             self.data = {
+                name: nameInput.value,
                 type: convType.value,
-                conversion: [n.value || 0, e.value || 0, t.value || 0, w.value || 0, f.value || 0, a.value || 0],
-                // hitCount: (hits.value || 1),
+                conversion: [n, e, t, w, f, a].map(input => parseInt(input.value) || 0),
             };
         }
 

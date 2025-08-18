@@ -2,11 +2,6 @@
 
 // TODO: remove all non-damage sections to a separate function
 function calculateDamageConversions(build) {
-
-    splitMergedIds(build);
-    damagesToArrays(build);
-
-    sortPowders(build);
     powderConversions(build);
     addSkillPointPercents(build);
     addWeaponSpecial(build);
@@ -30,147 +25,8 @@ function calculateDamageConversions(build) {
     applyStrDex(build);
 }
 
-// TODO: Move elsewhere
-function splitMergedIds(build) {
-    const ids = build.ids;
-    const final = build.final;
-
-    // % Damages:
-    elementalPrefixes.forEach((type) => {
-        const typedDamage = ids.damage + ids[type + "Damage"] + (type === "neutral" ? 0 : ids.elementalDamage);
-
-        final[type + "MainAttackDamage"] =
-            ids[type + "MainAttackDamage"] +
-            ids.mainAttackDamage +
-            typedDamage +
-            (type === "neutral" ? 0 : ids["elementalMainAttackDamage"]);
-        final[type + "SpellDamage"] =
-            ids[type + "SpellDamage"] +
-            ids.spellDamage +
-            typedDamage +
-            (type === "neutral" ? 0 : ids["elementalSpellDamage"]);
-    });
-
-    // raw Damages
-    elementalNames.forEach((type) => {
-        const typedDamage = ids["raw" + type + "Damage"];
-
-        final["raw" + type + "MainAttackDamage"] = ids["raw" + type + "MainAttackDamage"] + typedDamage;
-        final["raw" + type + "SpellDamage"] = ids["raw" + type + "SpellDamage"] + typedDamage;
-    });
-
-    // split eleDef
-    elementalPrefixes.filter((prefix) => prefix !== "neutral")
-        .forEach((prefix) => {
-            ids[prefix + "Defence"] += ids.elementalDefence;
-        });
-}
-
-// TODO: refactor and move to a different file
-function damagesToArrays(build) {
-    const final = build.final;
-    const base = build.base;
-
-    // base
-    base.min = [
-        base.baseDamage.min,
-        base.baseEarthDamage.min,
-        base.baseThunderDamage.min,
-        base.baseWaterDamage.min,
-        base.baseFireDamage.min,
-        base.baseAirDamage.min,
-    ];
-    base.max = [
-        base.baseDamage.max,
-        base.baseEarthDamage.max,
-        base.baseThunderDamage.max,
-        base.baseWaterDamage.max,
-        base.baseFireDamage.max,
-        base.baseAirDamage.max,
-    ];
-
-    // raw
-    final.splitRawMainAttackDamage = [
-        final.rawNeutralMainAttackDamage,
-        final.rawEarthMainAttackDamage,
-        final.rawThunderMainAttackDamage,
-        final.rawWaterMainAttackDamage,
-        final.rawFireMainAttackDamage,
-        final.rawAirMainAttackDamage,
-    ];
-
-    delete final.rawNeutralMainAttackDamage;
-    delete final.rawEarthMainAttackDamage;
-    delete final.rawThunderMainAttackDamage;
-    delete final.rawWaterMainAttackDamage;
-    delete final.rawFireMainAttackDamage;
-    delete final.rawAirMainAttackDamage;
-
-    final.splitRawSpellDamage = [
-        final.rawNeutralSpellDamage,
-        final.rawEarthSpellDamage,
-        final.rawThunderSpellDamage,
-        final.rawWaterSpellDamage,
-        final.rawFireSpellDamage,
-        final.rawAirSpellDamage,
-    ];
-
-    delete final.rawNeutralSpellDamage;
-    delete final.rawEarthSpellDamage;
-    delete final.rawThunderSpellDamage;
-    delete final.rawWaterSpellDamage;
-    delete final.rawFireSpellDamage;
-    delete final.rawAirSpellDamage;
-
-    // percent
-    final.mainAttackDamage = [
-        final.neutralMainAttackDamage,
-        final.earthMainAttackDamage,
-        final.thunderMainAttackDamage,
-        final.waterMainAttackDamage,
-        final.fireMainAttackDamage,
-        final.airMainAttackDamage,
-    ];
-
-    delete final.neutralMainAttackDamage;
-    delete final.earthMainAttackDamage;
-    delete final.thunderMainAttackDamage;
-    delete final.waterMainAttackDamage;
-    delete final.fireMainAttackDamage;
-    delete final.airMainAttackDamage;
-
-    final.spellDamage = [
-        final.neutralSpellDamage,
-        final.earthSpellDamage,
-        final.thunderSpellDamage,
-        final.waterSpellDamage,
-        final.fireSpellDamage,
-        final.airSpellDamage,
-    ];
-
-    delete final.neutralSpellDamage;
-    delete final.earthSpellDamage;
-    delete final.thunderSpellDamage;
-    delete final.waterSpellDamage;
-    delete final.fireSpellDamage;
-    delete final.airSpellDamage;
-}
-
-function sortPowders(build) {
-    sortPowderGroup(build.powders.weapon);
-    build.powders.armour
-}
-
-function sortPowderGroup(group) {
-    const order = []
-    group.forEach((powder) => {
-        if (order.indexOf(powder[0]) === -1) order.push(powder[0]);
-    });
-    group.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
-}
-
 function addWeaponSpecial(build) {
-    const tiered = build.powders.weapon.filter(powder => powder[1] > 3)
+    const tiered = build.powders.weapon.filter(powder => powder[1] > 3);
     let first = tiered[0];
     for (let i = 1; i < tiered.length; i++) {
         if (tiered[i][0] === first[0]) {
@@ -185,6 +41,7 @@ function addArmourSpecials(build) {
     // TODO
 }
 
+// TODO: neutral conversion happens after raw is calculated (?)
 function powderConversions(build) {
     const base = build.base;
 
@@ -235,31 +92,88 @@ function conversions(build) {
 }
 
 function convertBase(build) {
+    // new
+    Object.keys(build.attacks).forEach((attackName) => {
+        const attack = build.attacks[attackName];
+
+        const neutralConversion = attack.conversion[0] / 100;
+
+        for (let extremeIndex in attack.base) {
+            const extremeTotal = build.base.damage[extremeIndex].reduce((a, b) => a + b);
+
+            for (let i in attack.base[extremeIndex]) attack.base[extremeIndex][i] +=
+                build.base.damage[extremeIndex][i] * neutralConversion +
+                (parseInt(i) !== neutral_index ? (attack.conversion[i] / 100) * extremeTotal : 0);
+        }
+    });
+
+    // old
     build.base.attacks = {};
     Object.keys(build.conversions).forEach((convName) => {
         // [a, b, c, d, e, f]
         build.base.attacks[convName] = {};
-        const conv = build.base.attacks[convName];
-        conv.min = [0, 0, 0, 0, 0, 0];
-        conv.max = [0, 0, 0, 0, 0, 0];
+        const attack = build.base.attacks[convName];
+        attack.min = [0, 0, 0, 0, 0, 0];
+        attack.max = [0, 0, 0, 0, 0, 0];
 
         // elemental conversions
         for (let i = 1; i < 6; i++) {
-            conv.min[i] = (build.conversions[convName][i] / 100) * build.base.min.reduce((a, b) => a + b);
-            conv.max[i] = (build.conversions[convName][i] / 100) * build.base.max.reduce((a, b) => a + b);
+            attack.min[i] = (build.conversions[convName][i] / 100) * build.base.min.reduce((a, b) => a + b);
+            attack.max[i] = (build.conversions[convName][i] / 100) * build.base.max.reduce((a, b) => a + b);
         }
 
         // neutral conversion
         const neutralConversion = build.conversions[convName][0] / 100;
         for (let i = 0; i < 6; i++) {
-            conv.min[i] += build.base.min[i] * neutralConversion;
-            conv.max[i] += build.base.max[i] * neutralConversion;
+            attack.min[i] += build.base.min[i] * neutralConversion;
+            attack.max[i] += build.base.max[i] * neutralConversion;
         }
     });
+
+    console.log("after base: ", JSON.stringify(build.attacks));
 }
 
 function convertRaw(build) {
-    const rawAttacks = (build.rawAttacks = {});
+    // new
+    Object.keys(build.attacks).forEach((attackName) => {
+        const attack = build.attacks[attackName];
+
+        const conversionTotal =
+            attack.conversion.reduce((sum, a) => sum + parseInt(a), 0) / 100;
+        const baseTotals =
+            attack.base.map(extreme => extreme.reduce((partialSum, a) => partialSum + a));
+        const baseElemTotals =
+            attack.base.map(extreme => extreme.reduce((partialSum, a) => partialSum + a, -extreme[0]));
+
+        for (let extremeIndex in attack.raw) {
+            const extreme = attack.raw[extremeIndex];
+            for (let i in extreme) {
+                if (attack.base[DamageExtremes.MAX][i] === 0) continue;
+
+                const percentage = attack.base[extremeIndex][i] / baseTotals[extremeIndex];
+                const elemPercentage = attack.base[extremeIndex][i] / baseElemTotals[extremeIndex];
+
+                // NETWFA
+                extreme[i] = build.final["raw" + attack.type + "Damages"][i];
+                // damage
+                extreme[i] += (attack.base[extremeIndex][i] / baseTotals[extremeIndex]) * build.ids.rawDamage;
+                // ElementalDamage
+                if (i !== neutral_index) {
+                    extreme[i] +=
+                        (elemPercentage) *
+                        (build.ids[`rawElemental${attack.type}Damage`]);
+                }
+                // main/spell
+                extreme[i] += percentage * build.ids[`raw${attack.type}Damage`];
+                extreme[i] *= conversionTotal;
+            }
+        }
+    });
+
+    console.log("after raw: ", JSON.stringify(build.attacks));
+
+    // old
+    const rawAttacks = build.rawAttacks = {};
     Object.keys(build.conversions).forEach((convName) => {
         const conv = build.conversions[convName];
         const convMult = conv.reduce((partialSum, a) => partialSum + a, 0);
@@ -290,13 +204,13 @@ function convertRaw(build) {
 
             // min
             // NETWFA
-            rawAttacks[convName].min[i] = build.final["splitRaw" + type + "Damage"][i];
+            rawAttacks[convName].min[i] = build.final["raw" + type + "Damages"][i];
             // damage
             rawAttacks[convName].min[i] += percentage * build.ids.rawDamage;
             // elemental damage
             if (i > 0) {
                 rawAttacks[convName].min[i] +=
-                    percentage * (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
+                    percentage * (build.ids["rawElemental" + type + "Damage"]);
             }
             // main/spell
             rawAttacks[convName].min[i] += percentage * build.ids["raw" + type + "Damage"];
@@ -305,14 +219,14 @@ function convertRaw(build) {
 
             // max
             // NETWFA
-            rawAttacks[convName].max[i] = build.final["splitRaw" + type + "Damage"][i];
+            rawAttacks[convName].max[i] = build.final["raw" + type + "Damages"][i];
             // damage
             rawAttacks[convName].max[i] += percentage * build.ids.rawDamage;
             // elemental damage
             if (i > 0) {
                 rawAttacks[convName].max[i] +=
                     (baseMax[i] / baseElemMaxTotal) *
-                    (build.ids.rawElementalDamage + build.ids["rawElemental" + type + "Damage"]);
+                    (build.ids["rawElemental" + type + "Damage"]);
             }
             // main/spell
             rawAttacks[convName].max[i] += percentage * build.ids["raw" + type + "Damage"];
@@ -378,11 +292,11 @@ function mergeAttackDamage(build) {
         const baseAttack = build.base.attacks[attackName];
         const rawAttack = build.rawAttacks[attackName];
 
-        build.attacks[attackName] = {min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0]};
+        build.old_attacks[attackName] = {min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0]};
 
         for (let i = 0; i < 6; i++) {
-            build.attacks[attackName].min[i] = baseAttack.min[i] + rawAttack.min[i];
-            build.attacks[attackName].max[i] = baseAttack.max[i] + rawAttack.max[i];
+            build.old_attacks[attackName].min[i] = baseAttack.min[i] + rawAttack.min[i];
+            build.old_attacks[attackName].max[i] = baseAttack.max[i] + rawAttack.max[i];
         }
     });
 }
@@ -392,8 +306,8 @@ function applyStrDex(build) {
     const strMult = 1 + build.sp.mults[0];
     const dexMult = 1 + build.ids.criticalDamageBonus / 100;
 
-    Object.keys(build.attacks).forEach((attackName) => {
-        const attack = build.attacks[attackName];
+    Object.keys(build.old_attacks).forEach((attackName) => {
+        const attack = build.old_attacks[attackName];
 
         attack.minc = attack.min.slice(0);
         attack.maxc = attack.max.slice(0);
@@ -411,8 +325,8 @@ function applyStrDex(build) {
 }
 
 function zeroNegatives(build) {
-    Object.keys(build.attacks).forEach((attackName) => {
-        const attack = build.attacks[attackName];
+    Object.keys(build.old_attacks).forEach((attackName) => {
+        const attack = build.old_attacks[attackName];
         for (let i = 0; i < 6; i++) {
             if (attack.min[i] < 0) attack.min[i] = 0;
             if (attack.max[i] < 0) attack.max[i] = 0;

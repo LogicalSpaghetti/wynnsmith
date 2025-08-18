@@ -13,16 +13,18 @@ function readBuild(build) {
     readItems(build);
     readSkillPointMultipliers(build);
     readAbilities(build);
-    readEffects(build);
 }
 
 function permuteBuild(build) {
+    parseEffects(build);
     reconfigureOptionals(build);
     readToggles(build);
 
     removeOverriddenEffects(build);
 
     calculateSupportiveStats(build);
+
+    refactorIdentifications(build);
     calculateDamageConversions(build);
 }
 

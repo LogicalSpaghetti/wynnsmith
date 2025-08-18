@@ -135,22 +135,38 @@ function setLink(cluster, item) {
         .href = "./item/?" + item.name ?? "";
 }
 
+// TODO: get powders, sort them, get special from that, then add both to build, no need to separate into armour subobjects
 function addPowders(build, cluster) {
     const powderInput = cluster.querySelector(".powder_input");
     if (!powderInput) return;
 
     const powdersString = powderInput.value.length % 2 === 0 ? powderInput.value : powderInput.value.substring(0, powderInput.value.length - 1);
-    const destination = cluster.dataset.slot === "weapon" ? build.powders.weapon : build.powders.armour;
+    if (cluster.dataset.slot !== "weapon" && !build.powders.armour[cluster.dataset.slot])
+        build.powders.armour[cluster.dataset.slot] = [];
+
     for (let i = 0; i < powdersString.length / 2; i++) {
         const powderName = powdersString.substring(i * 2, i * 2 + 2);
         const powder = powders[powderName];
         if (powder == null) continue;
-        destination.push(powderName);
+        (cluster.dataset.slot === "weapon" ? build.powders.weapon :
+            build.powders.armour[cluster.dataset.slot])
+            .push(powderName);
     }
+
+    sortPowderGroup(cluster.dataset.slot === "weapon" ? build.powders.weapon :
+        build.powders.armour[cluster.dataset.slot]);
+}
+
+function sortPowderGroup(group) {
+    const order = [];
+    group.forEach((powder) => {
+        if (order.indexOf(powder[0]) === -1) order.push(powder[0]);
+    });
+    group.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
 }
 
 
-// TODO: calculate mins given build
+// TODO: calculate SP reqs. given build
 function readSkillPointMultipliers(build) {
     const spInputs = document.getElementById("sp_section").querySelectorAll(".sp_input");
     for (let i = 0; i < 5; i++) {

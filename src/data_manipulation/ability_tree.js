@@ -14,13 +14,19 @@ function treeClicked(event) {
 function readAbilities(build) {
     if (build.wynnClass === "") return;
 
-    if (build.previousClass === build.wynnClass) {
-        addNodesToBuild(build);
-        addAspectsToBuild(build);
-    } else {
+    if (build.previousClass !== build.wynnClass) {
         changeAbilityTree(build);
         changeAspects(build);
     }
+
+    validateTree();
+    renderHighlights();
+
+    if (build.previousClass === build.wynnClass) {
+        addNodesToBuild(build);
+        addAspectsToBuild(build);
+    }
+    addEffectsToBuild(build);
 }
 
 function changeAbilityTree(build) {
@@ -101,15 +107,10 @@ function mapHTML(tree, abilityTree, wynnClass) {
     abilityTree.innerHTML = "";
     // add spacing
     const treeArray = [];
-    for (let key in cellMap) {
-        const index = parseInt(key);
-        const node = cellMap[key];
 
-        while (treeArray.length < index) {
-            treeArray.push(undefined);
-        }
-        treeArray[index - 1] = node;
-    }
+
+    for (let i = 0; i < (9 * tree.properties.pages * tree.properties.rowsPerPage); i++)
+        treeArray.push(cellMap[i + 1]);
 
     let row = undefined;
     for (let i = 0; i < treeArray.length; i++) {
@@ -187,8 +188,7 @@ function addAspectsToBuild(build) {
 }
 
 function renderTree() {
-    validateTree();
-    renderHighlights();
+
 }
 
 function validateTree() {
@@ -405,22 +405,27 @@ function renderHighlights() {
     });
 }
 
-function readEffects(build) {
-    // const effects = classEffects[build.wynnClass].effects;
-    // const unvalidatedEffectIds = Object.keys(effects);
-    //
-    // for (let i = 0; i < unvalidatedEffectIds.length;) {
-    //     const id = unvalidatedEffectIds[i];
-    //     const effect = effects[id];
-    //     let allAbilities = true;
-    //     for (let parent of effect.parents) {
-    //         if (build[parent.type].includes(parent.id)) {}
-    //
-    //     }
-    //
-    //     // if effect has all parents, add to build
-    //
-    //     // else
-    //     i++
-    // }
+function addEffectsToBuild(build) {
+    const effects = classEffects[build.wynnClass].effects;
+    if (!effects) return; // TODO: remove once all effects have been added
+    const unvalidatedEffectIds = Object.keys(effects);
+
+    for (let i = 0; i < unvalidatedEffectIds.length;) {
+        const id = unvalidatedEffectIds[i];
+        const effect = effects[id];
+        let hasAllParents = true;
+        let hasAnyParents = false;
+        for (let parent of effect.parents)
+            if (build.has(parent.section, parent.id)) {
+                hasAnyParents = true;
+            } else {
+                hasAllParents = false;
+            }
+        if ((hasAnyParents && !effect.requires_all) || hasAllParents) {
+            build.effects.push(id);
+            unvalidatedEffectIds.splice(i, 1);
+            i = 0;
+        } else i++;
+    }
 }
+

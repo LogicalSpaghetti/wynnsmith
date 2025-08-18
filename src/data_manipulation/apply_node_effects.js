@@ -114,11 +114,6 @@ function addAspectConv(build, aspectName, nodeReq, convName, convs) {
     addConv(build, nodeReq, convs[aspectTier - 1], convName);
 }
 
-function addMaIdConv(build, maId, nodeReq, conv, name, replace = false) {
-    if (!build.has("maIds", maId)) return;
-    addConv(build, nodeReq, conv, name);
-}
-
 function applyMultipliers(build) {
     // Shaman
     applySectMult(build, 1.05, "Melee", "nodes", "relikProficiency");
@@ -201,12 +196,10 @@ function findHighestBuffs(build) {
 function applyHighestBuffs(build) {
     Object.keys(build.mults).forEach((multName) => {
         const mult = build.mults[multName];
-        Object.keys(build.attacks).forEach((attackName) => {
-            const attack = build.attacks[attackName];
-            for (let i = 0; i < 6; i++) {
-                attack.min[i] *= mult;
-                attack.max[i] *= mult;
-            }
+        Object.keys(build.old_attacks).forEach((attackName) => {
+            const attack = build.old_attacks[attackName];
+            attack.min = attack.min.map(a => a * mult);
+            attack.max = attack.max.map(a => a * mult);
         });
     });
 }
@@ -229,15 +222,15 @@ function applySectMult(build, mult, attackName, section, checkName) {
 
 function applyMult(build, mult, attackName) {
     if (attackName === "all") {
-        Object.keys(build.attacks).forEach((aName) => {
+        Object.keys(build.old_attacks).forEach((aName) => {
             applyMult(build, mult, aName);
         });
         return;
     }
-    if (build.attacks[attackName] === undefined) return;
+    if (build.old_attacks[attackName] === undefined) return;
     for (let i = 0; i < 6; i++) {
-        build.attacks[attackName].min[i] *= mult;
-        build.attacks[attackName].max[i] *= mult;
+        build.old_attacks[attackName].min[i] *= mult;
+        build.old_attacks[attackName].max[i] *= mult;
     }
 }
 
@@ -350,12 +343,12 @@ function addMeleeDPS(build, meleeName) {
 }
 
 function addAttackVariant(build, rootName, variantId, variantSource, variantName, variantMult) {
-    const root = build.attacks[rootName];
+    const root = build.old_attacks[rootName];
     if (root === undefined) return;
     if (variantSource !== true && !build[variantSource].includes(variantId)) return;
-    if (build.attacks[variantName] === undefined)
-        build.attacks[variantName] = { min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0] };
-    const variant = build.attacks[variantName];
+    if (build.old_attacks[variantName] === undefined)
+        build.old_attacks[variantName] = {min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0]};
+    const variant = build.old_attacks[variantName];
     for (let i = 0; i < 6; i++) {
         variant.min[i] = root.min[i] * variantMult;
         variant.max[i] = root.max[i] * variantMult;

@@ -7,12 +7,13 @@ class Build {
     maIds = [];
     nodes = [];
     effects = [];
+    effectGroups = {};
     aspects = [];
     aspectTiers = [];
     toggles = [];
     sliders = {};
     powders = {
-        armour: [],
+        armour: {},
         weapon: [],
     };
     specials = {
@@ -22,6 +23,7 @@ class Build {
     final = {};
     conversions = {};
     attacks = {};
+    old_attacks = {};
     heals = {};
     sp = {
         mults: [],

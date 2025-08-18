@@ -24,13 +24,12 @@ function addBasePlayerStats(build) {
 }
 
 function addPowderDefences(build) {
-    for (let powder of build.powders.armour) {
-        const powderDefs = powders[powder].def;
-        for (let i in powderDefs) {
-            if (!powderDefs[i]) continue;
-            addBase(build, powderDefs[i], "base" + elementalNames[i] + "Defence");
-        }
-    }
+    for (let groupName of Object.keys(build.powders.armour))
+        for (let powder of build.powders.armour[groupName])
+            for (let i in powders[powder].def) {
+                const def = powders[powder].def[i];
+                if (def) addBase(build, def, "base" + elementalNames[i] + "Defence");
+            }
 }
 
 function radiance(build) {

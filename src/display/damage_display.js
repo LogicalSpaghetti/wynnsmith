@@ -19,12 +19,12 @@ function getNewAttackHTML(build) {
 }
 
 function perAttackHTML(build, name) {
-    if (!build.has("attacks", name)) return "";
+    if (!build.has("old_attacks", name)) return "";
 
     let html = "";
     html += "<div class='attack-holder'>";
 
-    const attack = build.attacks[name];
+    const attack = build.old_attacks[name];
 
     html += name + " ";
 
