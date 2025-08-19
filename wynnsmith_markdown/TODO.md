@@ -76,6 +76,26 @@
 	2. Speed II (Windy Feet)
 	3. Speed III(?) (Stormy Feet)
 	4. Affects bps
+33. Toggle for duration factoring for buffs
+	1. For overriding
+		1. loop through the buffs from highest to lowest
+			1. multiply the damage by the multiplier and its up-time, and the percent of up-time remaining, (starts at 100%).
+			2. divide the remaining up-time by the up-time of this multiplier.
+		2. example:
+			1. state:
+				1. (Fortitude AB and VS)
+					1. 40% damage buff with 66% up-time
+					2. 30% damage buff with 50% up-time
+					3. 20% damage buff with 100% up-time
+				2. 100 damage attack
+			2. calculation:
+				1. new_damage += 100\*(1 + 40%)\*66%\*remaining_time
+				2. remaining_time \*= 1 - 66%
+				3. new_damage += 100\*(1 + 30%)\*50%\*remaining_time
+				4. remaining_time \*= 1 - 50%
+				5. new_damage += 100\*(1 + 20%)\*100%\*remaining_time
+				6. remaining_time \*= 1 - 100%
+					1. new_damage = 135
 ### Fix
 1. use Object.freeze() on all database objects
 2. Data isn't saved if a tab gets unloaded

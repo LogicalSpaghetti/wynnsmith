@@ -16,11 +16,13 @@ function calculateDamageConversions(build) {
 
     mergeAttackDamage(build);
 
-    // old
-    createHealing(build);
+    createHealing(build); // old
 
-    applyMultipliers(build);
-    applyOverridingDamageBuffs(build);
+    applyMultipliers(build); // old
+    applyOverridingDamageBuffs(build); // old
+
+    applyPersonalDamageMultipliers(build);
+    applyOverridingDamageMultipliers(build);
     applyStrDex(build);
 
     addAttackVariants(build);
@@ -211,12 +213,11 @@ function powderNeutralConversions(build) {
         const convertedDamages = attack.base.map(extreme =>
             extreme.map((element, i) => extreme[neutral_index] * modifierPercents[i] / 100));
 
-        for (let extremeIndex in attack.base)
-            for (let i = 0; i < damage_type_count; i++)
-                if (i === neutral_index)
-                    attack.base[extremeIndex][i] *= neutral / 100;
-                else
-                    attack.base[extremeIndex][i] += convertedDamages[extremeIndex][i];
+        for (let extremeIndex in attack.base) for (let i = 0; i < damage_type_count; i++)
+            if (i === neutral_index)
+                attack.base[extremeIndex][i] *= neutral / 100;
+            else
+                attack.base[extremeIndex][i] += convertedDamages[extremeIndex][i];
     });
 }
 
@@ -225,9 +226,8 @@ function applySpellAttackSpeed(build) {
     // new
     build.attacks.forEach(attack => {
         if (attack.is_melee) return;
-        for (let i = 0; i < damage_type_count; i++)
-            for (let extreme in attack.base)
-                attack.base[extreme][i] *= attackSpeedMultiplier;
+        for (let extreme of attack.base) for (let i in extreme)
+            extreme[i] *= attackSpeedMultiplier;
     });
 
     // old
@@ -287,9 +287,8 @@ function applyPercents(build) {
     // new
     build.attacks.forEach(attack => {
         const mults = build.final[`percent${attack.type}Damages`];
-        for (let i in mults)
-            for (const extreme in attack.base)
-                attack.base[extreme][i] *= mults[i] / 100 + 1;
+        for (let i in mults) for (const extreme in attack.base)
+            attack.base[extreme][i] *= mults[i] / 100 + 1;
     });
 
     // old
@@ -307,11 +306,10 @@ function applyPercents(build) {
 function mergeAttackDamage(build) {
     // new
     build.attacks.forEach(attack => {
-        for (let extremeIndex in attack.damage)
-            for (let i = 0; i < damage_type_count; i++)
-                attack.damage[extremeIndex][i] =
-                    attack.base[extremeIndex][i] +
-                    attack.raw[extremeIndex][i];
+        for (let extremeIndex in attack.damage) for (let i = 0; i < damage_type_count; i++)
+            attack.damage[extremeIndex][i] =
+                attack.base[extremeIndex][i] +
+                attack.raw[extremeIndex][i];
     });
 
     // old
@@ -328,10 +326,44 @@ function mergeAttackDamage(build) {
     });
 }
 
-function applyStrDex(build) {
-    const strMult = 1 + build.sp.mults[0];
-    const dexMult = 1 + build.ids.criticalDamageBonus / 100;
+function applyPersonalDamageMultipliers(build) {
+    for (let effect of build.personal_multipliers) for (let attack of build.attacks)
+        if (effect.target === "all" || effect.target === attack.internal_name)
+            for (let extreme of attack.damage) for (let i in extreme)
+                extreme[i] *= effect.multiplier;
+}
 
+function applyOverridingDamageMultipliers(build) {
+    let dmgUp = 1;
+    let vuln = 1;
+    for (let effect of build.team_multipliers) {
+        if (effect.type === "damage-boost")
+            dmgUp = Math.max(dmgUp, effect.multiplier);
+        else if (effect.type === "vulnerability")
+            vuln = Math.max(vuln, effect.multiplier);
+        else throw new Error("invalid overriding effect type: " + effect.type);
+    }
+    for (let attack of build.attacks) for (let extreme of attack.damage) for (let i in extreme)
+        extreme[i] *= dmgUp * vuln;
+}
+
+function applyStrDex(build) {
+    const strength = 1 + build.sp.mults[0];
+    const dexterity = 1 + build.ids.criticalDamageBonus / 100;
+
+    // new
+    for (const attack of build.attacks) {
+        const damage = attack.damage = attack.damage.concat(newMinMax());
+
+        for (let i = 0; i < damage_type_count; i++) {
+            damage[DamageExtremes.MIN][i] *= dexterity;
+            damage[DamageExtremes.MAX][i] *= dexterity;
+            damage[DamageExtremes.MINC][i] *= dexterity + strength;
+            damage[DamageExtremes.MAXC][i] *= dexterity + strength;
+        }
+    }
+
+    // old
     Object.keys(build.old_attacks).forEach((attackName) => {
         const attack = build.old_attacks[attackName];
 
@@ -340,12 +372,12 @@ function applyStrDex(build) {
 
         for (let i = 0; i < damage_type_count; i++) {
             // Crit
-            attack.minc[i] *= dexMult + strMult;
-            attack.maxc[i] *= dexMult + strMult;
+            attack.minc[i] *= dexterity + strength;
+            attack.maxc[i] *= dexterity + strength;
 
             // Strength
-            attack.min[i] *= strMult;
-            attack.max[i] *= strMult;
+            attack.min[i] *= strength;
+            attack.max[i] *= strength;
         }
     });
 }

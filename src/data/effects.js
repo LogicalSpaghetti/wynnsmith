@@ -30,6 +30,20 @@ const classEffects = {
                 "type": "heal",
                 "data": {"internal_name": "heal_mc_heal", "heal": 25},
             },
+            "4": {
+                "name": "Coursing Restraints",
+                "parents": [{"section": "nodes", "id": "64"}],
+                "requires_all": true,
+                "type": "team-multiplier",
+                "data": {"internal_name": "coursing_restraints", "multiplier": 1.15, "type": "vulnerability"},
+            },
+            "5": {
+                "name": "",
+                "parents": [{"section": "nodes", "id": "2"}],
+                "requires_all": true,
+                "type": "personal-multiplier",
+                "data": {"internal_name": "proficiency", "multiplier": 1.05, "target": "melee"},
+            },
         }
     },
     assassin: {},

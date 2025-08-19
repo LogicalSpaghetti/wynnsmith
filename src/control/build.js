@@ -7,7 +7,6 @@ class Build {
     maIds = [];
     nodes = [];
     effects = [];
-    effectGroups = {};
     aspects = [];
     aspectTiers = [];
     toggles = [];
@@ -25,6 +24,9 @@ class Build {
     attacks = [];
     masteries = [];
     heals = [];
+    resistances = [];
+    personal_multipliers = [];
+    team_multipliers = [];
     old_attacks = {};
     old_heals = {};
     sp = {

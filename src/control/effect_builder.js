@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 class Editor {
     effect;
     element;
@@ -496,6 +498,12 @@ class EffectType {
                 return this.setupMasteryConfig();
             case "heal":
                 return this.setupHealConfig();
+            case "resistance":
+                return this.setupResistanceConfig();
+            case "team-multiplier":
+                return this.setupTeamDamageMultiplierConfig();
+            case "personal-multiplier":
+                return this.setupPersonalDamageMultiplierConfig();
             default:
                 return this.emptyConfig();
         }
@@ -694,6 +702,102 @@ class EffectType {
                 internal_name: internalName.value,
                 heal: parseInt(healInput.value),
             };
+        }
+
+        return holder;
+    }
+
+    setupResistanceConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Internal Name: "));
+        const nameInput = holder.appendChild(document.createElement("input"));
+        nameInput.value = this.data.internal_name ?? "";
+        nameInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Multiplier: "));
+        const numberInput = holder.appendChild(document.createElement("input"));
+        numberInput.value = this.data.multiplier ?? "0";
+        numberInput.addEventListener("change", () => setData(this));
+
+        function setData(self) {
+            self.data = {
+                internal_name: nameInput.value,
+                multiplier: parseInt(numberInput.value),
+            };
+        }
+
+        return holder;
+    }
+
+    setupPersonalDamageMultiplierConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Internal Name: "));
+        const nameInput = holder.appendChild(document.createElement("input"));
+        nameInput.value = this.data.internal_name ?? "";
+        nameInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Multiplier: "));
+        const numberInput = holder.appendChild(document.createElement("input"));
+        numberInput.value = this.data.multiplier ?? "1";
+        numberInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Target Ability: "));
+        const targetInput = holder.appendChild(document.createElement("input"));
+        targetInput.placeholder = "\"all\" for global multiplier";
+        targetInput.value = this.data.target ?? "";
+        targetInput.addEventListener("change", () => setData(this));
+
+        function setData(self) {
+            self.data = {
+                internal_name: nameInput.value,
+                multiplier: parseFloat(numberInput.value),
+            };
+            if (targetInput.value) self.data.target = targetInput.value;
+        }
+
+        return holder;
+    }
+
+    setupTeamDamageMultiplierConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Internal Name: "));
+        const nameInput = holder.appendChild(document.createElement("input"));
+        nameInput.value = this.data.internal_name ?? "";
+        nameInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Multiplier: "));
+        const numberInput = holder.appendChild(document.createElement("input"));
+        numberInput.value = this.data.multiplier ?? "1";
+        numberInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Type: "));
+        const typeSelect = holder.appendChild(document.createElement("select"));
+        typeSelect.innerHTML =
+            "<option value=''>-select-</option>" +
+            "<option value='damage-boost'>Damage Boost</option>" +
+            "<option value='vulnerability'>Vulnerability</option>";
+        typeSelect.value = this.data.type ?? "damage-boost";
+        typeSelect.addEventListener("change", () => setData(this));
+
+        function setData(self) {
+            self.data = {
+                internal_name: nameInput.value,
+                multiplier: parseFloat(numberInput.value),
+            };
+            if (typeSelect.value) self.data.type = typeSelect.value;
         }
 
         return holder;
