@@ -68,6 +68,8 @@ function includeCharms(build) {
     // TODO
 }
 
+const player_bps = 5.612;
+
 function statCalculations(build) {
     const ids = build.ids;
     const base = build.base;
@@ -81,7 +83,6 @@ function statCalculations(build) {
     const maxManaMod = build.sp.mults[2] * 100 + (ids.rawMaxMana === undefined ? 0 : ids.rawMaxMana);
     if (maxManaMod !== 0) final.maxMana = 100 + maxManaMod;
     if (final.maxMana > 400) final.maxMana = 400;
-    if (maxManaMod === 0) final.maxMana = undefined;
 
     final.trueManaRegen = ids.manaRegen + 25;
     final.manaPerHit = Math.round(ids.manaSteal / 3 / attackSpeedMultipliers[build.attackSpeed]);
@@ -96,8 +97,7 @@ function statCalculations(build) {
     if (build.has("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
     if (build.has("toggles", "cowardMemory")) ids.slowEnemy += 30;
 
-    const baseWS = 5.612;
-    if (ids.walkSpeed !== undefined) final.effectiveWS = baseWS * (ids.walkSpeed / 100 + 1);
+    if (ids.walkSpeed !== undefined) final.effectiveWS = player_bps * (ids.walkSpeed / 100 + 1);
 }
 
 function calculateEHp(build) {

@@ -1,4 +1,5 @@
 function createConversions(build) {
+    // old
     switch (build.wynnClass) {
         case "shaman":
             createShamanConversions(build);
@@ -160,7 +161,7 @@ function applyMultipliers(build) {
         "nodes",
         "sharpHealing",
         "First Wave Heal",
-        1 + Math.min(75, build.ids.waterDamage * 0.3) / 100
+        1 + Math.min(75, build.ids.waterDamage * 0.3) / 100,
     );
 
     // Archer
@@ -271,7 +272,7 @@ function addShamanAttackVariants(build) {
         "eldritchCall",
         "nodes",
         "Eldritch Call Total",
-        4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0)
+        4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0),
     );
     addAttackVariant(
         build,
@@ -279,7 +280,7 @@ function addShamanAttackVariants(build) {
         "eldritchCall",
         "nodes",
         "Eldritch Call Group Total",
-        4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0)
+        4 + (build.aspects["Acolyte's Embodiment of Unwavering Adherence"] > 1 ? 1 : 0),
     );
 
     const lanceMult =
@@ -298,7 +299,7 @@ function addShamanAttackVariants(build) {
         "hummingbirds",
         "nodes",
         "Hummingbirds",
-        4 * (build.maIds["Summoner's Embodiment of the Omnipotent Overseer"] > 1 ? 3 : 2)
+        4 * (build.maIds["Summoner's Embodiment of the Omnipotent Overseer"] > 1 ? 3 : 2),
     );
 
     const frogDanceAspect = build.aspects["Aspect of the Amphibian"];
@@ -309,7 +310,7 @@ function addShamanAttackVariants(build) {
             "hymnOfFreedom",
             "nodes",
             "Frog Dance Total Damage",
-            3 + (1 + (frogDanceAspect ?? -1))
+            3 + (1 + (frogDanceAspect ?? -1)),
         );
 
     const totemHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
@@ -344,14 +345,21 @@ function addMeleeDPS(build, meleeName) {
 
 function addAttackVariant(build, rootName, variantId, variantSource, variantName, variantMult) {
     const root = build.old_attacks[rootName];
-    if (root === undefined) return;
+    if (!root) return;
     if (variantSource !== true && !build[variantSource].includes(variantId)) return;
     if (build.old_attacks[variantName] === undefined)
-        build.old_attacks[variantName] = {min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0]};
+        build.old_attacks[variantName] = {
+            min: [0, 0, 0, 0, 0, 0],
+            max: [0, 0, 0, 0, 0, 0],
+            minc: [0, 0, 0, 0, 0, 0],
+            maxc: [0, 0, 0, 0, 0, 0],
+        };
     const variant = build.old_attacks[variantName];
     for (let i = 0; i < 6; i++) {
         variant.min[i] = root.min[i] * variantMult;
         variant.max[i] = root.max[i] * variantMult;
+        variant.minc[i] = root.minc[i] * variantMult;
+        variant.maxc[i] = root.maxc[i] * variantMult;
     }
 }
 
@@ -363,6 +371,6 @@ function addSliderVariant(build, rootName, variantId, variantName, variantSource
         variantId,
         variantName,
         variantSource,
-        build.sliders[slider] * (additionalMult === undefined ? 1 : additionalMult)
+        build.sliders[slider] * (additionalMult === undefined ? 1 : additionalMult),
     );
 }

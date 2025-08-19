@@ -529,16 +529,25 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Conversion Type: "));
         const convType = holder.appendChild(document.createElement("select"));
-        convType.innerHTML = "<option value='Spell'>Spell</option><option value='MainAttack'>Melee</option>";
-        holder.appendChild(document.createElement("br"));
-        holder.appendChild(document.createElement("br"));
+        convType.innerHTML = "<option value='Spell'>Spell</option><option value='MainAttack'>Main Attack</option>";
         convType.value = this.data.type ?? "Spell";
         convType.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Is Left Click: "));
+        const isMelee = holder.appendChild(document.createElement("select"));
+        isMelee.innerHTML = "<option value='true'>True</option><option value='false'>False</option>";
+        isMelee.value = this.data.isMelee ?? "false";
+        isMelee.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+        holder.appendChild(document.createElement("br"));
 
         const conversionHolder = holder.appendChild(document.createElement("div"));
         conversionHolder.appendChild(document.createTextNode("Conversion: "));
         conversionHolder.appendChild(document.createElement("br"));
-
         const conv = (this.data.conversion ?? [0, 0, 0, 0, 0, 0]);
 
         conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["neutral"]));
@@ -589,6 +598,7 @@ class EffectType {
             self.data = {
                 name: nameInput.value,
                 type: convType.value,
+                isMelee: isMelee.value,
                 conversion: [n, e, t, w, f, a].map(input => parseInt(input.value) || 0),
             };
         }

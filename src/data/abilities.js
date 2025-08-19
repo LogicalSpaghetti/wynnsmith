@@ -157,8 +157,7 @@ const oddities = {
     },
 };
 
-const majorIds = {};
-
+// TODO: remove
 const meleeAttacks = ["concentration", "Melee"];
 
 const aspects = {

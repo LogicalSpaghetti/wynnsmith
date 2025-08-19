@@ -6,9 +6,9 @@ function displayBuildStats(build) {
 }
 
 function removeAllZeros(build) {
-    deleteAllZerosFromObject(build.ids);
-    deleteAllZerosFromObject(build.base);
-    deleteAllZerosFromObject(build.final);
+    // deleteAllZerosFromObject(build.ids);
+    // deleteAllZerosFromObject(build.base);
+    // deleteAllZerosFromObject(build.final);
 }
 
 function displayStats(build) {
@@ -16,7 +16,7 @@ function displayStats(build) {
     const final = build.final;
 
     // simple check for whether the build has a weapon, TODO: replace with better hide logic
-    if (build.attackSpeed === undefined) {
+    if (build.wynnClass === undefined) {
         support.style.display = "none";
         return;
     } else {
@@ -25,8 +25,8 @@ function displayStats(build) {
 
     support.innerHTML =
         getStatDisplay("health", true, "Health", final.health) +
-        getStatDisplay("health", false, "Effective Hp", final.ehp, "", false, true) +
-        getStatDisplay("health", false, "EHp (no Agi)", final.ehp, "", false, true) +
+        getStatDisplay("health", false, "Effective Hp", final.ehp, "", true, true) +
+        getStatDisplay("health", false, "EHp (no Agi)", final.ehp, "", true, true) +
         getStatDisplay("health", true, "Health Regen", final.healthRegen, "/4s") +
         getStatDisplay("earth", true, "Earth Defence", final["totalEarthDefence"]) +
         getStatDisplay("thunder", true, "Thunder Defence", final["totalThunderDefence"]) +
@@ -35,18 +35,18 @@ function displayStats(build) {
         getStatDisplay("air", true, "Air Defence", final["totalAirDefence"]) +
         "<hr>" +
         getStatDisplay("water", true, "Mana Regen", ids.manaRegen, "/5s") +
-        getStatDisplay("water", false, "True Mana Regen", final.trueManaRegen, "/5s", false, true) +
+        getStatDisplay("water", false, "True Mana Regen", final.trueManaRegen, "/5s", true, true) +
         getStatDisplay("water", true, "Mana Steal", ids.manaSteal, "/3s") +
-        getStatDisplay("water", false, "Mana per Hit", final.manaPerHit, "", false, true) +
-        getStatDisplay("water", true, "Total Max Mana", final.maxMana) +
+        getStatDisplay("water", false, "Mana per Hit", final.manaPerHit, "", true, true) +
+        getStatDisplay("water", true, "Total Max Mana", final.maxMana, "", true, false, 100) +
         getStatDisplay("health", true, "Life Steal", ids.lifeSteal, "/3s") +
-        getStatDisplay("health", false, "Life per Hit", final.lifePerHit, "", false, true) +
+        getStatDisplay("health", false, "Life per Hit", final.lifePerHit, "", true, true) +
         getStatDisplay("earth", false, "Poison", ids.poison, "/3s") +
         getStatDisplay("earth", false, "Thorns", ids.thorns, "%") +
         getStatDisplay("thunder", false, "Reflection", ids.reflection, "%") +
         getStatDisplay("fire", false, "Exploding Chance", ids.exploding, "%") +
         getStatDisplay("air", false, "Walk Speed", ids.walkSpeed, "%") +
-        getStatDisplay("air", false, "Sprint Speed", final.effectiveWS, "m/s", true, true) +
+        getStatDisplay("air", false, "Sprint Speed", final.effectiveWS, "m/s", false, true, player_bps) +
         getStatDisplay("air", false, "Sprint Duration", ids.sprint, "%") +
         getStatDisplay("air", false, "Sprint Regen", ids.sprintRegen, "%") +
         getStatDisplay("air", false, "Jump Height", ids.jumpHeight) +
@@ -62,18 +62,22 @@ function displayStats(build) {
         getStatDisplay("air", false, "XP Bonus", ids.xpBonus, "%");
 }
 
-function getStatDisplay(colorClass, includeSymbol, label, stat, post, noColor, isSub) {
+function getStatDisplay(colorClass, includeSymbol, label, stat, post = "", color = true, indent = false, statOrigin = 0) {
     if (stat === undefined || isNaN(stat)) return "";
+
+    const displayStat = roundForDisplay(stat);
+    if (displayStat === roundForDisplay(statOrigin)) return "";
+
     return (
         "<div class=\"stat_row\">" +
-        "<div class=\"left" + (isSub ? " sub" : "") + "\">" +
+        "<div class=\"left" + (indent ? " sub" : "") + "\">" +
         (includeSymbol ? iconHeaders[colorClass] : colorHeaders[colorClass]) +
-        (isSub ? "→ " : "") +
+        (indent ? "→ " : "") +
         label +
         ":</span>" +
         "</div>" +
-        "<div class=\"right " + (noColor ? "" : Math.sign(stat) === 1 ? "positive" : "negative") + "\">" +
-        roundForDisplay(stat) + (post ? post : "") +
+        "<div class=\"right " + (color ? (displayStat > 0 ? "positive" : "negative") : "") + "\">" +
+        displayStat + post +
         "</div>" +
         "</div>"
     );

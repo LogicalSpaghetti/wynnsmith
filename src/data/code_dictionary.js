@@ -2,6 +2,7 @@
 
 const codeDictionaryGenericSymbols = {
     "mana": "§b✺",
+    "health": "§4⚔",
 
     "damage": "§c⚔",
     "neutral": "§6✣",
@@ -20,6 +21,7 @@ const codeDictionaryGenericSymbols = {
     "blindness": "§c⬣",
     "slowness": "§c⬤",
 };
+
 const codeDictionaryClassSymbols = {
     "focus": "§e➽",
 
@@ -119,3 +121,25 @@ const codeDictionaryStyle = {
 
 const minecraftDelimiters = {"§": true, "&": true};
 const preferredDelimiter = "§";
+
+const codeDictionaryNamedColors = {
+    "mana": "§b",
+    "health": "§4",
+
+    "damage": "§c",
+    "neutral": "§6",
+    "earth": "§2",
+    "thunder": "§e",
+    "water": "§b",
+    "fire": "§c",
+    "air": "§f",
+
+    "effect": "§e",
+    "duration": "§d",
+    "AoE": "§3",
+    "range": "§a",
+    "cooldown": "§3",
+    "heal": "§d",
+    "blindness": "§c",
+    "slowness": "§c",
+};

@@ -1,6 +1,6 @@
 `use strict`;
 
-// TODO: remove all "final", fuck final, worst thing I've ever done to this project
+// TODO: remove all "build.final", fuck final, worst thing I've ever done to this project
 function refactorIdentifications(build) {
     // TODO: these two should be mostly combined, and the arrays they create should go somewhere other than "final"
     splitMergedIds(build);
@@ -106,7 +106,7 @@ function damagesToArrays(build) {
     delete final.rawAirSpellDamage;
 
     // percent
-    final.mainAttackDamage = [
+    final.mainAttackDamages = [
         final.neutralMainAttackDamage,
         final.earthMainAttackDamage,
         final.thunderMainAttackDamage,
@@ -122,7 +122,7 @@ function damagesToArrays(build) {
     delete final.fireMainAttackDamage;
     delete final.airMainAttackDamage;
 
-    final.spellDamage = [
+    final.spellDamages = [
         final.neutralSpellDamage,
         final.earthSpellDamage,
         final.thunderSpellDamage,

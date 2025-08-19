@@ -70,6 +70,13 @@
 29. Modified SP amount display+indication
     1. save between build refreshes
 30. Make external toggles a collapsed tab, and include many more effects.
+31. Indirect damage
+	1. Ignoring armour powders, strength/dexterity, and all multipliers
+32. Speed
+	1. Speed I (Trinkets)
+	2. Speed II (Windy Feet)
+	3. Speed III(?) (Stormy Feet)
+	4. Affects bps
 ### Fix
 1. use Object.freeze() on all database objects
 2. Data isn't saved if a tab gets unloaded
@@ -93,6 +100,7 @@
 8. Investigate Discord rich embeds
     1. `oEmbed`?
     2. `OpenGraph`?
+    3. Consult father
 9. Use HTML templates?
 10. background images are kinda mid
 11. Ability Tree shrinks a bit if the screen isn't wide enough
@@ -102,6 +110,8 @@
 3. Shaman -1 melee damage per attack?
 4. Verify that Damage Bonus and Vuln don't self-stack
 5. Verify that def modifiers stack
+6. Is Twisted Tether affected by Vengeful Spirit, Lunatic, or any other buffs?
+7. Is raw damage affected by attack speed?
 # Settings
 1. Ability to re-arrange GUI
 2. Change color theme

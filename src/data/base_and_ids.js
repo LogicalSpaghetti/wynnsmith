@@ -248,21 +248,21 @@ const orderedRegularIds = [
     "raw4thSpellCost",
 ];
 
-// TODO: add colors and
+// TODO: remove the symbols from the name, (while keeping the color split between ex. "Neutral" and "Damage")
 const base_stats = {
-    "baseHealth": {name: "§4⚔ Health"},
-    "baseEarthDefence": {name: "§2✤ Earth§7 Defence"},
-    "baseThunderDefence": {name: "§e✦ Thunder§7 Defence"},
-    "baseWaterDefence": {name: "§b❉ Water§7 Defence"},
-    "baseFireDefence": {name: "§c✹ Fire§7 Defence"},
-    "baseAirDefence": {name: "§f❋ Air§7 Defence"},
+    "baseHealth": {name: "§4⚔ Health", color:"health", symbol: "health"},
+    "baseEarthDefence": {name: "§2✤ Earth§7 Defence", color:"earth", symbol: "earth"},
+    "baseThunderDefence": {name: "§e✦ Thunder§7 Defence", color:"thunder", symbol: "thunder"},
+    "baseWaterDefence": {name: "§b❉ Water§7 Defence", color:"water", symbol: "water"},
+    "baseFireDefence": {name: "§c✹ Fire§7 Defence", color:"fire", symbol: "fire"},
+    "baseAirDefence": {name: "§f❋ Air§7 Defence", color:"air", symbol: "air"},
 
-    "baseDamage": {name: "§6✣ Neutral§7 Damage"},
-    "baseEarthDamage": {name: "§2✤ Earth§7 Damage"},
-    "baseThunderDamage": {name: "§e✦ Thunder§7 Damage"},
-    "baseWaterDamage": {name: "§b❉ Water§7 Damage"},
-    "baseFireDamage": {name: "§c✹ Fire§7 Damage"},
-    "baseAirDamage": {name: "§f❋ Air§7 Damage"},
+    "baseDamage": {name: "§6✣ Neutral§7 Damage", color:"neutral", symbol: "neutral"},
+    "baseEarthDamage": {name: "§2✤ Earth§7 Damage", color:"earth", symbol: "earth"},
+    "baseThunderDamage": {name: "§e✦ Thunder§7 Damage", color:"thunder", symbol: "thunder"},
+    "baseWaterDamage": {name: "§b❉ Water§7 Damage", color:"water", symbol: "water"},
+    "baseFireDamage": {name: "§c✹ Fire§7 Damage", color:"fire", symbol: "fire"},
+    "baseAirDamage": {name: "§f❋ Air§7 Damage", color:"air", symbol: "air"},
 };
 
 const identifications = {

@@ -1,5 +1,7 @@
 `use strict`;
 
+const abilityTreeColumns = 9;
+
 function readOldClass(build) {
     build.previousClass = document.getElementById("ability_tree").dataset.class;
 }
@@ -109,13 +111,13 @@ function mapHTML(tree, abilityTree, wynnClass) {
     const treeArray = [];
 
 
-    for (let i = 0; i < (9 * tree.properties.pages * tree.properties.rowsPerPage); i++)
+    for (let i = 0; i < (abilityTreeColumns * tree.properties.pages * tree.properties.rowsPerPage); i++)
         treeArray.push(cellMap[i + 1]);
 
     let row = undefined;
     for (let i = 0; i < treeArray.length; i++) {
         const ability = treeArray[i];
-        if (i % 9 === 0) {
+        if (i % abilityTreeColumns === 0) {
             const tr = document.createElement("tr");
             abilityTree.appendChild(tr);
             row = tr;
@@ -327,7 +329,7 @@ function getElementFromAbilityID(index) {
 const dirs = ["up", "down", "left", "right"];
 
 const dirOffsets = {
-    up: -9, down: 9, left: -1, right: 1,
+    up: -abilityTreeColumns, down: abilityTreeColumns, left: -1, right: 1,
 };
 
 const inverseDirs = {
@@ -361,13 +363,13 @@ function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
         if (inverseDirs[sourceDir] === newDir) return;
 
         // left on left edge or right on right edge
-        if (!tree.loopTree && sourceIndex % 9 === 1 && newDir === "left") return;
-        if (!tree.loopTree && sourceIndex % 9 === 0 && newDir === "right") return;
+        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 1 && newDir === "left") return;
+        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 0 && newDir === "right") return;
 
         let destIndex = sourceIndex + dirOffsets[newDir];
         if (tree.loopTree) {
-            if (newDir === "left") destIndex += 9;
-            if (newDir === "right") destIndex -= 9;
+            if (newDir === "left") destIndex += abilityTreeColumns;
+            if (newDir === "right") destIndex -= abilityTreeColumns;
         }
 
         const destCell = tree.cellMap[destIndex];

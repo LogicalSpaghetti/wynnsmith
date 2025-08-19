@@ -2,93 +2,55 @@
 
 // TODO: remove all non-damage sections to a separate function
 function calculateDamageConversions(build) {
-    powderConversions(build);
     addSkillPointPercents(build);
-    addWeaponSpecial(build);
 
-    conversions(build);
+    addPowderBase(build);
 
-    applyMasteries(build);
-
-    applySpellAttackSpeed(build);
+    createConversions(build);
+    convertBase(build);
+    convertRaw(build);
+    powderNeutralConversions(build);
 
     applyPercents(build);
+    applyMasteries(build);
+    applySpellAttackSpeed(build);
 
     mergeAttackDamage(build);
+
     createHealing(build);
 
     applyMultipliers(build);
     applyOverridingDamageBuffs(build);
+    applyStrDex(build);
+
     addAttackVariants(build);
     zeroNegatives(build);
-
-    applyStrDex(build);
-}
-
-function addWeaponSpecial(build) {
-    const tiered = build.powders.weapon.filter(powder => powder[1] > 3);
-    let first = tiered[0];
-    for (let i = 1; i < tiered.length; i++) {
-        if (tiered[i][0] === first[0]) {
-            build.specials.weapon = first[0] + (parseInt(tiered[i][1]) + parseInt(first[1]) - 7);
-            return;
-        }
-        first = tiered[i];
-    }
-}
-
-function addArmourSpecials(build) {
-    // TODO
 }
 
 // TODO: neutral conversion happens after raw is calculated (?)
-function powderConversions(build) {
-    const base = build.base;
+function addPowderBase(build) {
 
-    const weaponPowders = build.powders.weapon;
-
-    let neutral = 100;
-    let modifierPercents = [0, 0, 0, 0, 0, 0];
-
-    for (let i in weaponPowders) {
-        const powder = powders[weaponPowders[i]];
+    build.powders.weapon.forEach(powder => {
         const elementalIndex = elementalNames.indexOf(powder.element);
 
-        base.min[elementalIndex] += powder.dmg.min;
-        base.max[elementalIndex] += powder.dmg.max;
+        // new
+        build.base.damage[DamageExtremes.MIN][elementalIndex] += powder.dmg.min;
+        build.base.damage[DamageExtremes.MAX][elementalIndex] += powder.dmg.max;
 
-        if (neutral < 1) continue;
-
-        const modPercent = Math.min(neutral, powder.conversion);
-        neutral -= modPercent;
-        modifierPercents[elementalIndex] += modPercent;
-    }
-
-    const oldNeutral = {min: base.min[0], max: base.max[0]};
-
-    base.min[0] *= neutral / 100;
-    base.max[0] *= neutral / 100;
-
-    for (let i in modifierPercents) {
-        const modifier = modifierPercents[i] / 100;
-        base.min[i] += modifier * oldNeutral.min;
-        base.max[i] += modifier * oldNeutral.max;
-    }
+        // old
+        build.base.min[elementalIndex] += powder.dmg.min;
+        build.base.max[elementalIndex] += powder.dmg.max;
+    });
 }
 
+// TODO: once final is reworked, move to stat_calculations.js or something
 function addSkillPointPercents(build) {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < build.sp.mults; i++) {
         const mult = build.sp.mults[i] * 100;
 
         build.final.mainAttackDamage[i + 1] += mult;
         build.final.spellDamage[i + 1] += mult;
     }
-}
-
-function conversions(build) {
-    createConversions(build);
-    convertBase(build);
-    convertRaw(build);
 }
 
 function convertBase(build) {
@@ -178,9 +140,6 @@ function convertRaw(build) {
         const conv = build.conversions[convName];
         const convMult = conv.reduce((partialSum, a) => partialSum + a, 0);
 
-        const baseConvMin = build.base.attacks[convName].min;
-        const baseConvMax = build.base.attacks[convName].max;
-
         const baseMin = build.base.attacks[convName].min;
         const baseMax = build.base.attacks[convName].max;
 
@@ -199,7 +158,7 @@ function convertRaw(build) {
         const type = isMelee ? "MainAttack" : "Spell";
 
         for (let i = 0; i < 6; i++) {
-            if (baseConvMax[i] === 0) continue;
+            if (build.base.attacks[convName].max[i] === 0) continue;
             const percentage = (baseMin[i] + baseMax[i]) / baseSumTotal;
 
             // min
@@ -210,7 +169,8 @@ function convertRaw(build) {
             // elemental damage
             if (i > 0) {
                 rawAttacks[convName].min[i] +=
-                    percentage * (build.ids["rawElemental" + type + "Damage"]);
+                    (baseMin[i] / baseElemMinTotal) *
+                    (build.ids["rawElemental" + type + "Damage"]);
             }
             // main/spell
             rawAttacks[convName].min[i] += percentage * build.ids["raw" + type + "Damage"];
@@ -233,6 +193,37 @@ function convertRaw(build) {
             rawAttacks[convName].max[i] *= convMult / 100;
         }
     });
+}
+
+function powderNeutralConversions(build) {
+    const base = build.base;
+
+    const weaponPowders = build.powders.weapon;
+
+    let neutral = 100;
+    let modifierPercents = [0, 0, 0, 0, 0, 0];
+
+    for (let i in weaponPowders) {
+        const powder = powders[weaponPowders[i]];
+        const elementalIndex = elementalNames.indexOf(powder.element);
+
+        if (neutral < 1) continue;
+
+        const modPercent = Math.min(neutral, powder.conversion);
+        neutral -= modPercent;
+        modifierPercents[elementalIndex] += modPercent;
+    }
+
+    const oldNeutral = {min: base.min[0], max: base.max[0]};
+
+    base.min[0] *= neutral / 100;
+    base.max[0] *= neutral / 100;
+
+    for (let i in modifierPercents) {
+        const modifier = modifierPercents[i] / 100;
+        base.min[i] += modifier * oldNeutral.min;
+        base.max[i] += modifier * oldNeutral.max;
+    }
 }
 
 function applySpellAttackSpeed(build) {
@@ -278,7 +269,7 @@ function applyPercents(build) {
     const baseAttacks = build.base.attacks;
     Object.keys(baseAttacks).forEach((attackName) => {
         const attack = baseAttacks[attackName];
-        const mults = build.final[meleeAttacks.includes(attackName) ? "mainAttackDamage" : "spellDamage"];
+        const mults = build.final[meleeAttacks.includes(attackName) ? "mainAttackDamages" : "spellDamages"];
         for (let i = 0; i < 6; i++) {
             attack.min[i] *= mults[i] / 100 + 1;
             attack.max[i] *= mults[i] / 100 + 1;
