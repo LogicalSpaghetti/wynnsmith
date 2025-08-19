@@ -48,6 +48,7 @@ function sumConversions(conversionA, conversionB) {
 }
 
 const neutral_index = 0;
+const damage_type_count = 6; // TODO: rename
 
 // enum
 const DamageExtremes = Object.freeze({

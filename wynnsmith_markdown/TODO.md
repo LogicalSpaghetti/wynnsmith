@@ -23,6 +23,7 @@
 ### Feat
 1. only add validly selected nodes to build
 2. powder specials
+	1. Armour powder specials don't apply to indirect damage
 3. +Napalm applies after +Fallout
 4. Embed Search in a popup
 	1. Clicking the icon next to a slot opens the search
