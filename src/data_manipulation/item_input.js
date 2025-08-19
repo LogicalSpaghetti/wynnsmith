@@ -86,6 +86,7 @@ function addBases(build, item) {
 }
 
 function addBase(build, id, idName) {
+    if (!id) return;
     if (Number.isInteger(id)) {
         build.base[idName] += id;
     } else {
@@ -135,38 +136,55 @@ function setLink(cluster, item) {
         .href = "./item/?" + item.name ?? "";
 }
 
-// TODO: get powders, sort them, get special from that, then add both to build, no need to separate into armour subobjects
 function addPowders(build, cluster) {
     const powderInput = cluster.querySelector(".powder_input");
     if (!powderInput) return;
 
     const powdersString = powderInput.value.length % 2 === 0 ? powderInput.value : powderInput.value.substring(0, powderInput.value.length - 1);
-    if (cluster.dataset.slot !== "weapon" && !build.powders.armour[cluster.dataset.slot])
-        build.powders.armour[cluster.dataset.slot] = [];
+
+    const slotPowders = [];
 
     for (let i = 0; i < powdersString.length / 2; i++) {
         const powderName = powdersString.substring(i * 2, i * 2 + 2);
         const powder = powders[powderName];
         if (powder == null) continue;
-        (cluster.dataset.slot === "weapon" ? build.powders.weapon :
-            build.powders.armour[cluster.dataset.slot])
-            .push(powderName);
+        slotPowders.push(powderName);
     }
 
-    sortPowderGroup(cluster.dataset.slot === "weapon" ? build.powders.weapon :
-        build.powders.armour[cluster.dataset.slot]);
+    sortPowderArray(slotPowders);
+
+    const special = getPowderSpecial(slotPowders);
+
+    if (cluster.dataset.slot === "weapon") {
+        build.powders.weapon = slotPowders;
+        build.specials.weapon = special;
+    } else {
+        build.powders.armour = build.powders.armour.concat(slotPowders);
+        build.specials.armour.push(special);
+    }
 }
 
-function sortPowderGroup(group) {
+function sortPowderArray(powderArray) {
     const order = [];
-    group.forEach((powder) => {
+    powderArray.forEach((powder) => {
         if (order.indexOf(powder[0]) === -1) order.push(powder[0]);
     });
-    group.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+
+    powderArray.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
 }
 
+function getPowderSpecial(powderArray) {
+    const tiered = powderArray.filter(powder => powder[1] > 3);
+    let first = tiered[0];
+    for (let i = 1; i < tiered.length; i++) {
+        if (tiered[i][0] === first[0]) {
+            return {type: first[0], tier: (parseInt(tiered[i][1]) + parseInt(first[1]) - 7)};
+        }
+        first = tiered[i];
+    }
+}
 
-// TODO: calculate SP reqs. given build
+// TODO: calculate SP reqs.
 function readSkillPointMultipliers(build) {
     const spInputs = document.getElementById("sp_section").querySelectorAll(".sp_input");
     for (let i = 0; i < 5; i++) {

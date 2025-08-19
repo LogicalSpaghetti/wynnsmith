@@ -2,18 +2,6 @@ EffectTypes = Object.freeze({
     CONVERSION: "conv",
 });
 
-function detectWeaponSpecial(build) {
-    const tiered = build.powders.weapon.filter(powder => powder[1] > 3);
-    let first = tiered[0];
-    for (let i = 1; i < tiered.length; i++) {
-        if (tiered[i][0] === first[0]) {
-            build.specials.weapon = first[0] + (parseInt(tiered[i][1]) + parseInt(first[1]) - 7);
-            return;
-        }
-        first = tiered[i];
-    }
-}
-
 function parseEffects(build) {
     parseConversions(build);
 }
@@ -26,7 +14,7 @@ function parseConversions(build) {
         .map(effectId => effectData[effectId]);
 
     for (let effect of conversionEffects) {
-        const attack = getOrCreateAttack(build, effect.data.internal_name);
+        const attack = getOrCreateAttack(build.attacks, effect.data.internal_name);
         attack.name = effect.data.display_name ?? attack.name;
         attack.type = effect.data.type ?? attack.type;
         attack.conversion = sumConversions(attack.conversion, effect.data.conversion);
@@ -36,9 +24,14 @@ function parseConversions(build) {
     }
 }
 
-function getOrCreateAttack(build, internal_name) {
-    if (!build.attacks[internal_name]) build.attacks[internal_name] = {};
-    return build.attacks[internal_name];
+function getOrCreateAttack(attacks, internal_name) {
+    const found = attacks.find(attack => attack.internal_name === internal_name);
+    if (!found) {
+        const result = {internal_name: internal_name};
+        attacks.push(result);
+        return result;
+    }
+    return found;
 }
 
 function sumConversions(conversionA, conversionB) {

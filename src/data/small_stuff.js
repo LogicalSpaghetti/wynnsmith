@@ -273,8 +273,8 @@ const powders = {
 
 const skillPointNames = ["strength", "dexterity", "intelligence", "defence", "agility"];
 
-const elementalPrefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
-const elementalNames = ["Neutral", "Earth", "Thunder", "Water", "Fire", "Air"];
+const damageTypePrefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
+const damageTypeNames = ["Neutral", "Earth", "Thunder", "Water", "Fire", "Air"];
 
 const attackSpeedMultipliers = {
     superFast: 4.3,

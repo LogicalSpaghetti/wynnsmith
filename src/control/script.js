@@ -16,7 +16,6 @@ function readBuild(build) {
 }
 
 function permuteBuild(build) {
-    detectWeaponSpecial(build);
     parseEffects(build);
     reconfigureOptionals(build);
     readToggles(build);

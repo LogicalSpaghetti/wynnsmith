@@ -13,7 +13,7 @@ class Build {
     toggles = [];
     sliders = {};
     powders = {
-        armour: {},
+        armour: [],
         weapon: [],
     };
     specials = {
@@ -22,7 +22,7 @@ class Build {
     }
     final = {};
     conversions = {};
-    attacks = {};
+    attacks = [];
     old_attacks = {};
     heals = {};
     sp = {

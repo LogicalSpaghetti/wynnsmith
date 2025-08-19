@@ -30,7 +30,7 @@ function addPowderBase(build) {
 
     build.powders.weapon.forEach(powderName => {
         const powder = powders[powderName];
-        const elementalIndex = elementalNames.indexOf(powder.element);
+        const elementalIndex = damageTypeNames.indexOf(powder.element);
 
         // new
         build.base.damage[DamageExtremes.MIN][elementalIndex] += powder.dmg.min;
@@ -54,9 +54,7 @@ function addSkillPointPercents(build) {
 
 function convertBase(build) {
     // new
-    Object.keys(build.attacks).forEach((attackName) => {
-        const attack = build.attacks[attackName];
-
+    build.attacks.forEach((attack) => {
         const neutralConversion = attack.conversion[0] / 100;
 
         for (let extremeIndex in attack.base) {
@@ -94,8 +92,7 @@ function convertBase(build) {
 
 function convertRaw(build) {
     // new
-    Object.keys(build.attacks).forEach((attackName) => {
-        const attack = build.attacks[attackName];
+    build.attacks.forEach((attack) => {
 
         const conversionTotal =
             attack.conversion.reduce((sum, a) => sum + parseInt(a), 0) / 100;
@@ -113,7 +110,7 @@ function convertRaw(build) {
                 const elemPercentage = attack.base[extremeIndex][i] / baseElemTotals[extremeIndex];
 
                 // NETWFA
-                extreme[i] = build.final["raw" + attack.type + "Damages"][i];
+                extreme[i] = build.final[`raw${attack.type}Damages`][i];
                 // damage
                 extreme[i] += (attack.base[extremeIndex][i] / baseTotals[extremeIndex]) * build.ids.rawDamage;
                 // ElementalDamage
@@ -199,7 +196,7 @@ function powderNeutralConversions(build) {
     for (let i in weaponPowders) {
         const powder = powders[weaponPowders[i]];
 
-        const elementalIndex = elementalNames.indexOf(powder.element);
+        const elementalIndex = damageTypeNames.indexOf(powder.element);
         const modPercent = Math.min(neutral, powder.conversion);
 
         neutral -= modPercent;
@@ -208,8 +205,7 @@ function powderNeutralConversions(build) {
         if (neutral < 1) break;
     }
 
-    for (let attackName of Object.keys(build.attacks)) {
-        const attack = build.attacks[attackName];
+    build.attacks.forEach(attack => {
 
         const convertedDamages = attack.base.map(extreme =>
             extreme.map((element, i) => extreme[neutral_index] * modifierPercents[i] / 100));
@@ -220,7 +216,7 @@ function powderNeutralConversions(build) {
                     attack.base[extremeIndex][i] *= neutral / 100;
                 else
                     attack.base[extremeIndex][i] += convertedDamages[extremeIndex][i];
-    }
+    });
 }
 
 function applySpellAttackSpeed(build) {
@@ -240,14 +236,14 @@ function applyMasteries(build) {
         const attack = build.base.attacks[attackName];
         const min = attack.min;
         const max = attack.max;
-        for (let i = 1; i < elementalPrefixes.length; i++) {
+        for (let i = 1; i < damageTypePrefixes.length; i++) {
             // skip any zeros
             if (attack.max[i] === 0) continue;
 
             // ensure the node has been taken
-            if (!build.nodes.includes(build.wynnClass + elementalNames[i] + "Path")) continue;
+            if (!build.nodes.includes(build.wynnClass + damageTypeNames[i] + "Path")) continue;
 
-            const prefix = elementalPrefixes[i];
+            const prefix = damageTypePrefixes[i];
             const mastery = masteries[build.wynnClass][prefix + "Mastery"];
 
             // Masteries Node base values are added to any non-zero damage values.
@@ -263,10 +259,19 @@ function applyMasteries(build) {
 }
 
 function applyPercents(build) {
+    // new
+    build.attacks.forEach(attack => {
+        const mults = build.final[`percent${attack.type}Damages`];
+        for (let i in mults)
+            for (const extreme in attack.base)
+                attack.base[extreme][i] *= mults[i] / 100 + 1;
+    });
+
+    // old
     const baseAttacks = build.base.attacks;
     Object.keys(baseAttacks).forEach((attackName) => {
         const attack = baseAttacks[attackName];
-        const mults = build.final[meleeAttacks.includes(attackName) ? "mainAttackDamages" : "spellDamages"];
+        const mults = build.final["percent" + (meleeAttacks.includes(attackName) ? "MainAttack" : "Spell") + "Damages"];
         for (let i = 0; i < damage_type_count; i++) {
             attack.min[i] *= mults[i] / 100 + 1;
             attack.max[i] *= mults[i] / 100 + 1;
@@ -275,7 +280,6 @@ function applyPercents(build) {
 }
 
 function mergeAttackDamage(build) {
-    // TODO
     Object.keys(build.conversions).forEach((attackName) => {
         const baseAttack = build.base.attacks[attackName];
         const rawAttack = build.rawAttacks[attackName];
@@ -289,7 +293,6 @@ function mergeAttackDamage(build) {
     });
 }
 
-// TODO: min, max, minc, and maxc are stupid and I want a better system
 function applyStrDex(build) {
     const strMult = 1 + build.sp.mults[0];
     const dexMult = 1 + build.ids.criticalDamageBonus / 100;
@@ -324,9 +327,9 @@ function zeroNegatives(build) {
 
 function mergeElementalDefences(build) {
     for (let i = 1; i < 6; i++) {
-        build.final["total" + elementalNames[i] + "Defence"] =
-            build.base["base" + elementalNames[i] + "Defence"] *
-            (Math.sign(build.base["base" + elementalNames[i] + "Defence"]) * (build.ids[elementalPrefixes[i] + "Defence"] / 100) +
+        build.final["total" + damageTypeNames[i] + "Defence"] =
+            build.base["base" + damageTypeNames[i] + "Defence"] *
+            (Math.sign(build.base["base" + damageTypeNames[i] + "Defence"]) * (build.ids[damageTypePrefixes[i] + "Defence"] / 100) +
                 1);
     }
 }

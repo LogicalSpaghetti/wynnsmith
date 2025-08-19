@@ -24,14 +24,12 @@ function addBasePlayerStats(build) {
 }
 
 function addPowderDefences(build) {
-    for (let groupName of Object.keys(build.powders.armour))
-        for (let powder of build.powders.armour[groupName])
-            for (let i in powders[powder].def) {
-                const def = powders[powder].def[i];
-                if (def) addBase(build, def, "base" + elementalNames[i] + "Defence");
-            }
+    for (let powder of build.powders.armour)
+        for (let i in powders[powder].def)
+            addBase(build, powders[powder].def[i], "base" + damageTypeNames[i] + "Defence");
 }
 
+// TODO: turn into an effect
 function radiance(build) {
     if (!build.toggles.includes("radiance")) return;
     const radiance = oddities.warrior.radiance;

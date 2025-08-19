@@ -59,7 +59,7 @@ function perAttackHTML(build, name) {
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             html +=
-                iconHeaders[elementalPrefixes[i]] +
+                iconHeaders[damageTypePrefixes[i]] +
                 selvify(attack.min[i], true) +
                 " – " +
                 selvify(attack.max[i], true) +
@@ -69,7 +69,7 @@ function perAttackHTML(build, name) {
         for (let i = 0; i < 6; i++) {
             if (attack.max[i] <= 0) continue;
             html +=
-                iconHeaders[elementalPrefixes[i]] +
+                iconHeaders[damageTypePrefixes[i]] +
                 selvify(attack.minc[i], true) +
                 " – " +
                 selvify(attack.maxc[i], true) +

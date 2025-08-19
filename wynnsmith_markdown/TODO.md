@@ -1,13 +1,11 @@
 # Focus
-1. Fix powder get logic (see TODO in item_input)
-2. Fix powder neutral conversions applying early(?)
-	1. check `./reference/damage_equations` for details
-3. Move `./reference` into markdowns
-4. Get basic conversions working with the effect builder.
+1. Get basic conversions working with the effect builder.
 	1. After detecting all effects, first go through, merging them into proper effects, i.e. adding up conversions
-5. Effect Application order
+2. Effect Application order
 	1. (within category)
-6. Persistent effects
+3. Once new conversion structure is done, get offhand computation working
+	1. have an array where each entry is the data for a given weapon
+		1. for display, just do grab `[0]` for now
 # General
 ### Feat
 1. Switch to a functional model instead of using `build` for everything
@@ -84,6 +82,7 @@
 	1. use `sessionStorage`
 3. Toggle order isn't consistent
 4. Handle items removed from database
+5. Tree propagation is wrong, once it's gone down, it can't go left or right
 ### Visual
 1. make elements look clickable or not
     1. pointer-events: none/initial;
@@ -138,6 +137,7 @@
 4. Dynamic Search that works within the context of a build.
 	1. grey out useless aspects given tree
 5. `html2canvas` can't handle the dynamically colored item text shadows
+6. untradable
 # Effect Builder
 ### Feat
 1. Aspects

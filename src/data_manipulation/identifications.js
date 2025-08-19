@@ -12,7 +12,7 @@ function splitMergedIds(build) {
     const final = build.final;
 
     // % Damages:
-    elementalPrefixes.forEach((type) => {
+    damageTypePrefixes.forEach((type) => {
         const typedDamage = ids.damage + ids[type + "Damage"] + (type === "neutral" ? 0 : ids.elementalDamage);
 
         final[type + "MainAttackDamage"] =
@@ -28,7 +28,7 @@ function splitMergedIds(build) {
     });
 
     // raw Damages
-    elementalNames.forEach((type) => {
+    damageTypeNames.forEach((type) => {
         const typedDamage = ids["raw" + type + "Damage"];
 
         final["raw" + type + "MainAttackDamage"] = ids["raw" + type + "MainAttackDamage"] + typedDamage;
@@ -36,7 +36,7 @@ function splitMergedIds(build) {
     });
 
     // split eleDef
-    elementalPrefixes.filter((prefix) => prefix !== "neutral")
+    damageTypePrefixes.filter((prefix) => prefix !== "neutral")
         .forEach((prefix) => {
             ids[prefix + "Defence"] += ids.elementalDefence;
         });
@@ -50,6 +50,7 @@ function damagesToArrays(build) {
     const base = build.base;
 
     // base
+    // old
     base.min = [
         base.baseDamage.min,
         base.baseEarthDamage.min,
@@ -66,7 +67,7 @@ function damagesToArrays(build) {
         base.baseFireDamage.max,
         base.baseAirDamage.max,
     ];
-
+    // new
     base.damage = [
         base.min,
         base.max,
@@ -106,7 +107,7 @@ function damagesToArrays(build) {
     delete final.rawAirSpellDamage;
 
     // percent
-    final.mainAttackDamages = [
+    final.percentMainAttackDamages = [
         final.neutralMainAttackDamage,
         final.earthMainAttackDamage,
         final.thunderMainAttackDamage,
@@ -122,7 +123,7 @@ function damagesToArrays(build) {
     delete final.fireMainAttackDamage;
     delete final.airMainAttackDamage;
 
-    final.spellDamages = [
+    final.percentSpellDamages = [
         final.neutralSpellDamage,
         final.earthSpellDamage,
         final.thunderSpellDamage,

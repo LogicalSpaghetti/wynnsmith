@@ -58,7 +58,7 @@ function getAverageDPS(item) {
     let result = 0;
     if (item.base)
         for (let i = 0; i < 6; i++) {
-            const baseDamage = item.base[`base${i === 0 ? "" : elementalNames[i]}Damage`];
+            const baseDamage = item.base[`base${i === 0 ? "" : damageTypeNames[i]}Damage`];
             if (baseDamage) {
                 result += baseDamage.min + baseDamage.max;
             }
