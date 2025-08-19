@@ -22,6 +22,7 @@ function parseConversions(build) {
 
         attack.base = newMinMax();
         attack.raw = newMinMax();
+        attack.damage = newMinMax();
     }
 
     const masteryEffects = build.effects

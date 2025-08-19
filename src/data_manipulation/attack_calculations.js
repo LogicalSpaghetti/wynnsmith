@@ -220,8 +220,6 @@ function powderNeutralConversions(build) {
 }
 
 function applySpellAttackSpeed(build) {
-    console.log(JSON.stringify(build.attacks));
-
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
     // new
     build.attacks.forEach(attack => {
@@ -230,7 +228,6 @@ function applySpellAttackSpeed(build) {
             for (let extreme in attack.base)
                 attack.base[extreme][i] *= attackSpeedMultiplier;
     });
-    console.log(JSON.stringify(build.attacks));
 
     // old
     Object.keys(build.base.attacks).forEach((convName) => {
@@ -307,6 +304,14 @@ function applyPercents(build) {
 }
 
 function mergeAttackDamage(build) {
+    build.attacks.forEach(attack => {
+        for (let extremeIndex in attack.damage)
+            for (let i = 0; i < damage_type_count; i++)
+                attack.damage[extremeIndex][i] =
+                    attack.base[extremeIndex][i] +
+                    attack.raw[extremeIndex][i];
+    });
+
     Object.keys(build.conversions).forEach((attackName) => {
         const baseAttack = build.base.attacks[attackName];
         const rawAttack = build.rawAttacks[attackName];
