@@ -78,6 +78,11 @@ function addId(build, id, idName) {
     build.ids[idName] += id;
 }
 
+function getAsMax(possibleInt) {
+    if (Number.isInteger(possibleInt)) return possibleInt;
+    return possibleInt.max;
+}
+
 function addBases(build, item) {
     const ids = item.base;
     if (!ids) return;

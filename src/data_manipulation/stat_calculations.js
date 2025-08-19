@@ -98,6 +98,15 @@ function statCalculations(build) {
     if (ids.walkSpeed !== undefined) final.effectiveWS = player_bps * (ids.walkSpeed / 100 + 1);
 }
 
+function mergeElementalDefences(build) {
+    for (let i = 1; i < 6; i++) {
+        build.final["total" + damageTypeNames[i] + "Defence"] =
+            build.base["base" + damageTypeNames[i] + "Defence"] *
+            (Math.sign(build.base["base" + damageTypeNames[i] + "Defence"]) * (build.ids[damageTypePrefixes[i] + "Defence"] / 100) +
+                1);
+    }
+}
+
 function calculateEHp(build) {
     const final = build.final;
     final.ehp = final.health;

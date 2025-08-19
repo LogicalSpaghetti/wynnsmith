@@ -220,7 +220,19 @@ function powderNeutralConversions(build) {
 }
 
 function applySpellAttackSpeed(build) {
+    console.log(JSON.stringify(build.attacks));
+
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
+    // new
+    build.attacks.forEach(attack => {
+        if (attack.is_melee) return;
+        for (let i = 0; i < damage_type_count; i++)
+            for (let extreme in attack.base)
+                attack.base[extreme][i] *= attackSpeedMultiplier;
+    });
+    console.log(JSON.stringify(build.attacks));
+
+    // old
     Object.keys(build.base.attacks).forEach((convName) => {
         if (meleeAttacks.includes(convName)) return;
         const conv = build.base.attacks[convName];
@@ -338,27 +350,4 @@ function zeroNegatives(build) {
             if (attack.max[i] < 0) attack.max[i] = 0;
         }
     });
-}
-
-function mergeElementalDefences(build) {
-    for (let i = 1; i < 6; i++) {
-        build.final["total" + damageTypeNames[i] + "Defence"] =
-            build.base["base" + damageTypeNames[i] + "Defence"] *
-            (Math.sign(build.base["base" + damageTypeNames[i] + "Defence"]) * (build.ids[damageTypePrefixes[i] + "Defence"] / 100) +
-                1);
-    }
-}
-
-function deleteAllZerosFromObject(source) {
-    const keys = Object.keys(source);
-    for (let i = 0; i < keys.length; i++) {
-        if (source[keys[i]] === 0) {
-            delete source[keys[i]];
-        }
-    }
-}
-
-function getAsMax(possibleInt) {
-    if (Number.isInteger(possibleInt)) return possibleInt;
-    return possibleInt.max;
 }

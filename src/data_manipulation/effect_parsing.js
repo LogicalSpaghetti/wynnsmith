@@ -17,7 +17,7 @@ function parseConversions(build) {
     for (let effect of conversionEffects) {
         const attack = getOrCreateAttack(build.attacks, effect.data.internal_name);
         attack.type = effect.data.type ?? attack.type;
-        attack.is_melee = effect.data.type ?? attack.is_melee;
+        attack.is_melee = effect.data.is_melee ?? attack.is_melee;
         attack.conversion = sumConversions(attack.conversion, effect.data.conversion);
 
         attack.base = newMinMax();
