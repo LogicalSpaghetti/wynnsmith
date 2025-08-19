@@ -232,6 +232,21 @@ function applySpellAttackSpeed(build) {
 }
 
 function applyMasteries(build) {
+    // new
+    build.masteries.forEach(mastery => {
+        const elementIndex = damageTypeNames.indexOf(mastery.element);
+
+        build.attacks.forEach(attack => {
+            for (let extremeIndex in attack.base) {
+                if (attack.base[DamageExtremes.MAX][elementIndex] === 0) continue;
+                attack.base[extremeIndex][elementIndex] += mastery.base[extremeIndex];
+                attack.base[extremeIndex][elementIndex] *= 1 + (mastery.pct / 100);
+            }
+        });
+
+    });
+
+    // old
     Object.keys(build.base.attacks).forEach((attackName) => {
         const attack = build.base.attacks[attackName];
         const min = attack.min;

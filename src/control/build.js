@@ -23,6 +23,7 @@ class Build {
     final = {};
     conversions = {};
     attacks = [];
+    masteries = [];
     old_attacks = {};
     heals = {};
     sp = {

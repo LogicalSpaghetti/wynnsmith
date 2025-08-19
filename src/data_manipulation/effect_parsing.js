@@ -1,5 +1,6 @@
 EffectTypes = Object.freeze({
     CONVERSION: "conv",
+    MASTERY: "mastery",
 });
 
 function parseEffects(build) {
@@ -9,18 +10,29 @@ function parseEffects(build) {
 function parseConversions(build) {
     if (build.wynnClass === "") return;
     const effectData = classEffects[build.wynnClass].effects;
+
     const conversionEffects = build.effects
         .filter((effectId) => effectData[effectId].type === EffectTypes.CONVERSION)
         .map(effectId => effectData[effectId]);
-
     for (let effect of conversionEffects) {
         const attack = getOrCreateAttack(build.attacks, effect.data.internal_name);
-        attack.name = effect.data.display_name ?? attack.name;
         attack.type = effect.data.type ?? attack.type;
+        attack.is_melee = effect.data.type ?? attack.is_melee;
         attack.conversion = sumConversions(attack.conversion, effect.data.conversion);
 
         attack.base = newMinMax();
         attack.raw = newMinMax();
+    }
+
+    const masteryEffects = build.effects
+        .filter((effectId) => effectData[effectId].type === EffectTypes.MASTERY)
+        .map(effectId => effectData[effectId]);
+    for (let effect of masteryEffects) {
+        build.masteries.push({
+            element: effect.data.element,
+            base: effect.data.base,
+            pct: effect.data.pct,
+        });
     }
 }
 

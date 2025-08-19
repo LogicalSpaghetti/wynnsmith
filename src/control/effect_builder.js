@@ -41,13 +41,13 @@ class Editor {
     }
 
     changeEffectType(effect_type) {
-        this.effect.effect = new EffectType(effect_type);
+        this.effect.data = new EffectType(effect_type);
         this.readEffectType();
     }
 
     readEffectType() {
         this.effect_specific_holder.innerHTML = "";
-        this.effect_specific_holder.appendChild(this.effect.effect.configHTML);
+        this.effect_specific_holder.appendChild(this.effect.data.configHTML);
     }
 
     setEffect(effect) {
@@ -58,7 +58,7 @@ class Editor {
         this.name_input.value = effect.name;
         this.parent_requirement.value = effect.require_all_parents;
         this.setupParentSelectors(effect);
-        this.effect_type.value = effect.effect.type;
+        this.effect_type.value = effect.data.type;
         this.readEffectType();
     }
 
@@ -210,7 +210,7 @@ class Tree {
                 const parent = parents[i];
                 effect.addParent(parent.section, parent.id);
             }
-            effect.effect = new EffectType(effectData.effect.type, effectData.effect.data);
+            effect.data = new EffectType(effectData.type, effectData.data);
             effect.require_all_parents = effectData.requires_all;
         }
         this.editEffect(-1);
@@ -296,7 +296,7 @@ class EffectBuilder {
 
     html;
     nameDisplay;
-    effect = new EffectType("");
+    data = new EffectType("");
     effectTypeDisplay;
 
     require_all_parents = true;
@@ -434,7 +434,13 @@ class EffectBuilder {
 
     // noinspection JSUnusedGlobalSymbols
     toJSON() {
-        return {name: this.name, parents: this.parents, requires_all: this.require_all_parents, effect: this.effect};
+        return {
+            name: this.name,
+            parents: this.parents,
+            requires_all: this.require_all_parents,
+            type: this.data.type,
+            data: this.data.data,
+        };
     }
 }
 
@@ -486,6 +492,8 @@ class EffectType {
                 return this.setupScriptConfig();
             case "conv":
                 return this.setupConversionConfig();
+            case "mastery":
+                return this.setupMasteryConfig();
             default:
                 return this.emptyConfig();
         }
@@ -522,15 +530,16 @@ class EffectType {
     setupConversionConfig() {
         const holder = document.createElement("div");
 
-        holder.appendChild(document.createTextNode("Conversion Name: "));
+        holder.appendChild(document.createTextNode("Internal Name: "));
         const nameInput = holder.appendChild(document.createElement("input"));
-        nameInput.value = this.data.name ?? "";
+        nameInput.value = this.data.internal_name ?? "";
         holder.appendChild(document.createElement("br"));
+        nameInput.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createTextNode("Conversion Type: "));
         const convType = holder.appendChild(document.createElement("select"));
-        convType.innerHTML = "<option value='Spell'>Spell</option><option value='MainAttack'>Main Attack</option>";
-        convType.value = this.data.type ?? "Spell";
+        convType.innerHTML = "<option value=''>-select-</option><option value='Spell'>Spell</option><option value='MainAttack'>Main Attack</option>";
+        convType.value = this.data.type ?? "";
         convType.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
@@ -538,8 +547,8 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Is Left Click: "));
         const isMelee = holder.appendChild(document.createElement("select"));
-        isMelee.innerHTML = "<option value='true'>True</option><option value='false'>False</option>";
-        isMelee.value = this.data.isMelee ?? "false";
+        isMelee.innerHTML = "<option value=''>False</option><option value='true'>True</option>";
+        isMelee.value = this.data.is_melee ?? "";
         isMelee.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
@@ -595,19 +604,72 @@ class EffectType {
         // hits.addEventListener("change", () => setData(this));
 
         function setData(self) {
-            self.data = {
-                name: nameInput.value,
-                type: convType.value,
-                isMelee: isMelee.value,
-                conversion: [n, e, t, w, f, a].map(input => parseInt(input.value) || 0),
-            };
+            const result = {};
+
+            if (nameInput.value) result.internal_name = nameInput.value;
+            if (convType.value) result.type = convType.value;
+            if (isMelee.value) result.is_melee = isMelee.value;
+            result.conversion = [n, e, t, w, f, a].map(input => parseInt(input.value) || 0);
+
+            self.data = result;
         }
 
         return holder;
     }
 
-    // noinspection JSUnusedGlobalSymbols
-    toJSON() {
-        return {type: this.type, data: this.data};
+    setupMasteryConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Element: "));
+        const elementSelect = holder.appendChild(document.createElement("select"));
+        elementSelect.innerHTML =
+            "<option value='Earth'>Earth</option>" +
+            "<option value='Thunder'>Thunder</option>" +
+            "<option value='Water'>Water</option>" +
+            "<option value='Fire'>Fire</option>" +
+            "<option value='Air'>Air</option>";
+        elementSelect.value = this.data.element ?? "Earth";
+        elementSelect.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Base Damage: "));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Min: "));
+        const minInput = holder.appendChild(document.createElement("input"));
+        if (this.data.base) minInput.value = this.data.base[0] ?? "0";
+        minInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Max: "));
+        const maxInput = holder.appendChild(document.createElement("input"));
+        if (this.data.base) maxInput.value = this.data.base[1] ?? "0";
+        maxInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Percent: "));
+        const pctInput = holder.appendChild(document.createElement("input"));
+        pctInput.value = this.data.pct ?? "0";
+        pctInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+
+        function setData(self) {
+            self.data = {
+                element: elementSelect.value,
+                base: [
+                    parseInt(minInput.value),
+                    parseInt(maxInput.value),
+                ],
+                pct: parseInt(pctInput.value),
+            };
+        }
+
+        return holder;
     }
 }
