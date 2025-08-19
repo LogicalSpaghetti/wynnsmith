@@ -494,6 +494,8 @@ class EffectType {
                 return this.setupConversionConfig();
             case "mastery":
                 return this.setupMasteryConfig();
+            case "heal":
+                return this.setupHealConfig();
             default:
                 return this.emptyConfig();
         }
@@ -667,6 +669,30 @@ class EffectType {
                     parseInt(maxInput.value),
                 ],
                 pct: parseInt(pctInput.value),
+            };
+        }
+
+        return holder;
+    }
+
+    setupHealConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Internal Name: "));
+        const internalName = holder.appendChild(document.createElement("input"));
+        internalName.value = this.data.internal_name ?? "";
+        holder.appendChild(document.createElement("br"));
+        internalName.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createTextNode("Heal Percent: "));
+        const healInput = holder.appendChild(document.createElement("input"));
+        healInput.value = this.data.heal ?? "0";
+        healInput.addEventListener("change", () => setData(this));
+
+        function setData(self) {
+            self.data = {
+                internal_name: internalName.value,
+                heal: parseInt(healInput.value),
             };
         }
 

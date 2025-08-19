@@ -212,7 +212,7 @@ function createHealing(build) {
 
 function addHeal(build, sect, checkName, healName, healAmount) {
     if (build[sect].includes(checkName)) {
-        build.heals[healName] = healAmount;
+        build.old_heals[healName] = healAmount;
     }
 }
 
@@ -236,7 +236,7 @@ function applyMult(build, mult, attackName) {
 }
 
 function applyHealMult(build, section, checkName, healName, mult) {
-    if (build[section].includes(checkName)) build.heals[healName] *= mult;
+    if (build[section].includes(checkName)) build.old_heals[healName] *= mult;
 }
 
 function addAttackVariants(build) {
@@ -315,18 +315,18 @@ function addShamanAttackVariants(build) {
 
     const totemHealMult = hasDouble ? (hasTriple ? (hasQuad ? 0.45 : 0.5) : 0.6) : 1;
     const auraHealMult = build.has("maIds", "Geocentrism") ? 1 : totemHealMult;
-    if (build.has("heals", "Regeneration Tick")) {
-        build.heals["Regeneration Tick"] *= totemHealMult;
-        build.heals["Total Regeneration Per Second"] = build.heals["Regeneration Tick"] * 2.5 * totemCount;
+    if (build.has("old_heals", "Regeneration Tick")) {
+        build.old_heals["Regeneration Tick"] *= totemHealMult;
+        build.old_heals["Total Regeneration Per Second"] = build.old_heals["Regeneration Tick"] * 2.5 * totemCount;
         if (build.has("nodes", "totemicShatter")) {
-            build.heals["Shatter Healing"] =
-                build.heals["Regeneration Tick"] * 20 * (build.has("maIds", "Sublimation") ? 0.75 : 0.5);
+            build.old_heals["Shatter Healing"] =
+                build.old_heals["Regeneration Tick"] * 20 * (build.has("maIds", "Sublimation") ? 0.75 : 0.5);
         }
     }
-    if (build.has("heals", "First Wave Heal")) {
-        build.heals["First Wave Heal"] *= auraHealMult * auraCount;
-        if (auraCount > 1) build.heals["Per Totem First Wave Heal"] = build.heals["First Wave Heal"] / auraCount;
-        if (build.nodes.includes("rebound")) build.heals["Total Rebound Heal"] = 2 * build.heals["First Wave Heal"];
+    if (build.has("old_heals", "First Wave Heal")) {
+        build.old_heals["First Wave Heal"] *= auraHealMult * auraCount;
+        if (auraCount > 1) build.old_heals["Per Totem First Wave Heal"] = build.old_heals["First Wave Heal"] / auraCount;
+        if (build.nodes.includes("rebound")) build.old_heals["Total Rebound Heal"] = 2 * build.old_heals["First Wave Heal"];
     }
 }
 

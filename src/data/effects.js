@@ -23,6 +23,13 @@ const classEffects = {
                 "type": "mastery",
                 "data": {"element": "Air", "base": [3, 4], "pct": 15},
             },
+            "3": {
+                "name": "Heal",
+                "parents": [],
+                "requires_all": false,
+                "type": "heal",
+                "data": {"internal_name": "heal_mc_heal", "heal": 25},
+            },
         }
     },
     assassin: {},

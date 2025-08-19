@@ -24,8 +24,9 @@ class Build {
     conversions = {};
     attacks = [];
     masteries = [];
+    heals = [];
     old_attacks = {};
-    heals = {};
+    old_heals = {};
     sp = {
         mults: [],
     };

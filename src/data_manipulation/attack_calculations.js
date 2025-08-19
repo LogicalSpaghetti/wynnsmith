@@ -16,6 +16,7 @@ function calculateDamageConversions(build) {
 
     mergeAttackDamage(build);
 
+    // old
     createHealing(build);
 
     applyMultipliers(build);
@@ -304,6 +305,7 @@ function applyPercents(build) {
 }
 
 function mergeAttackDamage(build) {
+    // new
     build.attacks.forEach(attack => {
         for (let extremeIndex in attack.damage)
             for (let i = 0; i < damage_type_count; i++)
@@ -312,6 +314,7 @@ function mergeAttackDamage(build) {
                     attack.raw[extremeIndex][i];
     });
 
+    // old
     Object.keys(build.conversions).forEach((attackName) => {
         const baseAttack = build.base.attacks[attackName];
         const rawAttack = build.rawAttacks[attackName];
