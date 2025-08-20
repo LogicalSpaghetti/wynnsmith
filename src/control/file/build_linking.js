@@ -2,35 +2,17 @@
 
 /* Import: */
 
-// todo: take from a build object instead of parsing from HTML, (that way stuff is more pre-formatted)
-function getInputData() {
-    const inputData = {
-        version: 0,
-        level: 106,
-        gear: [],
-        powders: [],
-        modifiedSP: [],
-        aspects: [],
-        tomes: [],
-        tree: {},
-    }
-
-    for (let cluster of document.getElementById("item_inputs").querySelectorAll('.input_cluster')) {
-
-    }
-}
-
 function encodeBuild(inputData) {
-
+    // TODO
 }
 
 /* Export: */
 
 function copyBuildLink(button, long) {
-    navigator.clipboard.writeText(getBuildLink(long));
+    navigator.clipboard.writeText(getBuildLinkText(long));
 }
 
-function getBuildLink(isLong) {
+function getBuildLinkText(isLong) {
     let text = location.href.replace(location.search, "") + "?";
     let appendedText = "";
     const inputs = document.getElementById("item_inputs")
@@ -42,6 +24,8 @@ function getBuildLink(isLong) {
         if (text.charAt(text.length - 1) !== "?") text += "&";
         text += cluster.dataset["slot"] + "=" + item.name.replaceAll(" ", "_");
         if (isLong) appendedText += "\n> " + item.name;
+        if (isLong && cluster.dataset["slot"] === "weapon")
+            appendedText += " [" + cluster.querySelector(".powder_input").value + "]";
     }
     return text + appendedText + "\n";
 }

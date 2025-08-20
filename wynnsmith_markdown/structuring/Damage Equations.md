@@ -26,7 +26,7 @@ Attack damage calculation:
 11. raw Damage is added to base damage
 12. Damage multipliers
 	1. Does not apply to  Nightcloak Knife, Violent Vortex, Twisted Tether, Arrow Bomb Recoil Damage, Exploding, Thorns, Reflection, and Pet Damage.
-		- Not Even affected by Str/Dex 
+		- Not Even affected by Str/Dex?
 	2. Melee DPS specifically is multiplied by attack speed
 	3. Strength/Dexterity+Crit Bonus
 	4. Proficiencies

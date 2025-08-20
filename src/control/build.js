@@ -45,12 +45,6 @@ class Build {
         dmg: 1,
     };
 
-    // TODO: use?
-    evaluate(str) {
-        const build = this; // used so that "build" exists within the context of the str
-        return eval(str);
-    }
-
     has(section, name) {
         const sect = this[section];
         return sect.constructor === Array ? sect.includes(name) : sect[name] !== undefined;

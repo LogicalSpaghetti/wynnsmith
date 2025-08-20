@@ -1,9 +1,11 @@
 # Focus
+### Small
+1. Make indirect damage ignore multipliers
+2.  Add more than just abilities to the effect builder
+3. Add basic display effects
+### Major
 1. Get basic conversions working with the effect builder.
-	1. After detecting all effects, first go through, merging them into proper effects, i.e. adding up conversions
-2. Effect Application order
-	1. (within category)
-3. Once new conversion structure is done, get offhand computation working
+2. Once new conversion structure is done, get offhand computation working
 	1. have an array where each entry is the data for a given weapon
 		1. for display, just do grab `[0]` for now
 # General
@@ -19,64 +21,57 @@
     4. Customization
 # Smith
 ### Feat
-1. only add validly selected nodes to build
-2. powder specials
+1. Versioning
+	1. Build updating
+2. to hell with build.final, burn every mention to that accursed object
+3. only add validly selected nodes to build
+4. powder specials
 	1. Armour powder specials don't apply to indirect damage
-3. +Napalm applies after +Fallout
-4. Embed Search in a popup
+5. Embed Search in a popup
 	1. Clicking the icon next to a slot opens the search
 		1. Ctrl+Click or a button in that popup both link to the `/item` page
-5. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
-6. WynnBuilder link conversion
+6. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
+7. WynnBuilder link conversion
 	1. explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546) ([GitHub](https://github.com/wynnbuilder/wynnbuilder.github.io/blob/master/ENCODING.md))
-7. Build Linking
-8. WynnMana
+8. Build Linking
+9. WynnMana
 	1. Wynn-Cycle
-9. Offhand weapons
-10. Consumables
-11. Charms :>
-12. Trinkets
+10. Offhand weapons
+11. Consumables
+12. Charms :>
+13. Trinkets
 	1. Well of Power, etc.
-13. Raid buffs
-14. Lootrun Boons
-15. Id Modifier
+14. Raid buffs
+15. Lootrun Boons
+16. Id Modifier
 	1. notes range available given the build
-16. Attack details
-17. Attack grouping
-18. Sub-attacks
-19. Str/Dex auto-balance button
-20. Crafted Items
-21. Custom Items
+17. Attack details
+18. Attack grouping
+19. Sub-attacks
+20. Str/Dex auto-balance button
+21. Crafted Items
+22. Custom Items
 	1. Modified items
-22. Advanced export
+23. Advanced export
 	1. select specific sections to save
 	2. Save to/read from file or local storage
-23. Menu to import section of another build
-24. Tome short-hands
-25. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
+24. Menu to import section of another build
+25. Tome short-hands
+26. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
     1. [hpr is complicated](https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/)
     1. Outdated values confirmed by author
         1. remaining Mana and remaining hp likely both have an effect.
-26. Over-Health
-    1. Blood Sorrow
-        1. Lifestream affecting Over-Health gain
-    2. Paladin
-    3. Trickster
-27. "Healing" that ignores hef vs respects it
-    1. Sacrificial Shrine -hp
-28.  Use build.evaluate() for complex abstractions
+27.  Use build.evaluate() for complex abstractions
     1. try to make it allow user input without being a security flaw for equation sharing.
-29. Modified SP amount display+indication
+28. Modified SP amount display+indication
     1. save between build refreshes
-30. Make external toggles a collapsed tab, and include many more effects.
-31. Indirect damage
-	1. Ignoring armour powders, strength/dexterity, and all multipliers
-32. Speed
+29. Make external toggles a collapsed tab, and include many more effects.
+30. Speed
 	1. Speed I (Trinkets)
 	2. Speed II (Windy Feet)
 	3. Speed III(?) (Stormy Feet)
 	4. Affects bps
-33. Toggle for duration factoring for buffs
+31. Toggle for duration factoring for buffs
 	1. For overriding
 		1. loop through the buffs from highest to lowest
 			1. multiply the damage by the multiplier and its up-time, and the percent of up-time remaining, (starts at 100%).
@@ -130,8 +125,12 @@
 3. Shaman -1 melee damage per attack?
 4. Verify that Damage Bonus and Vuln don't self-stack
 5. Verify that def modifiers stack
-6. Is Twisted Tether affected by Vengeful Spirit, Lunatic, or any other buffs?
+6. Verify that "indirect damage" isn't affected by ***any*** multipliers
+	1. Is Twisted Tether affected by Vengeful Spirit, Mask of the Lunatic, Eldritch Call, Str/Dex, or Skill Point %s?
 7. Is raw damage affected by attack speed?
+8. +Napalm applies after +Fallout
+9. Trickster: Confused enemies taking 30% more thunder damage?
+	1. Other similar effects, hopefully just ele%s
 # Settings
 1. Ability to re-arrange GUI
 2. Change color theme
@@ -160,11 +159,41 @@
 6. untradable
 # Effect Builder
 ### Feat
-1. Aspects
-2. Major Ids
-3. Powder Specials
-4. NOT requires
-	1. i.e. Haunting Memory toggles when Flaming Tongue is taken.
+1. Effect parents
+	1. Aspects
+	2. Major Ids
+	3. Powder Specials
+2. Effect types
+	1. Blockers
+		1. order should never matter
+	2. Damage variants
+		1. mostly automatically generated, i.e. multi-hits and DPS
+		2. multipliers
+		3. sums of multiple attacks
+	3. Damage Displays
+		1. points to a set of variants, and optionally a spell cost and/or healing.
+			1. one variant and optionally one healing is given display priority
+			2. a variant can be the sum of some number of attacks, or generated based on.
+	4. label type effect
+		1. holds display name and priority display entries, (the ones that are shown without expanding), that way they can override each other without side-effects.
+	5. Radiance
+	6. E-Hp modifiers
+	7. Toggles
+	8. Sliders
+	9. Attack variants
+	10. Indirect damage
+	11. Cost modifiers
+	12. Self-damage
+		1. Sacrificial Shrine health drain
+	13. Over-health?
+### Effect Examples:
+1. `Haunting Memory`
+	1. Blocks `Uproot`'s conversion when taken
+	2. Only blocks the conversions, display and such. The effect Flaming Tongue has with it still applies.
+2. `Arrow Hurricane`
+	1. just a 3 times damage multiplier variant
+3. `Backstab`
+	1. A new conversion which blocks `Multihit`
 # Notes (move)
 1. ways to iterate over object:
     1. also: https://stackoverflow.com/questions/14379274/how-to-iterate-over-a-javascript-object

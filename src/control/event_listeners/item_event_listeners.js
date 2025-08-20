@@ -1,6 +1,5 @@
 `use strict`;
 
-// TODO: not abstract enough at all
 window.addEventListener("load", function () {
     const item = getItemFromSearch(window.location.search);
     document.title = `WynnSearch - ${item ? item.name : "Invalid Item!"}`;

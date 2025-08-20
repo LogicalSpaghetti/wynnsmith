@@ -537,14 +537,16 @@ class EffectType {
         return holder;
     }
 
+    // TODO: add attack duration and frequency
     setupConversionConfig() {
         const holder = document.createElement("div");
 
         holder.appendChild(document.createTextNode("Internal Name: "));
         const nameInput = holder.appendChild(document.createElement("input"));
         nameInput.value = this.data.internal_name ?? "";
-        holder.appendChild(document.createElement("br"));
         nameInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
 
         holder.appendChild(document.createTextNode("Conversion Type: "));
         const convType = holder.appendChild(document.createElement("select"));
@@ -552,7 +554,6 @@ class EffectType {
         convType.value = this.data.type ?? "";
         convType.addEventListener("change", () => setData(this));
 
-        holder.appendChild(document.createElement("br"));
         holder.appendChild(document.createElement("br"));
 
         holder.appendChild(document.createTextNode("Is Left Click: "));
@@ -562,12 +563,28 @@ class EffectType {
         isMelee.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Is Indirect Damage: "));
+        const isIndirect = holder.appendChild(document.createElement("select"));
+        isIndirect.innerHTML = "<option value=''>False</option><option value='true'>True</option>";
+        isIndirect.value = this.data.is_indirect ?? "";
+        isIndirect.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+        holder.appendChild(document.createTextNode("Extra Hits: "));
+        const extraHits = holder.appendChild(document.createElement("input"));
+        extraHits.placeholder = "0";
+        extraHits.value = this.data.extra_hits ?? "";
+        extraHits.addEventListener("change", () => setData(this));
+
+
         holder.appendChild(document.createElement("br"));
 
         const conversionHolder = holder.appendChild(document.createElement("div"));
         conversionHolder.appendChild(document.createTextNode("Conversion: "));
-        conversionHolder.appendChild(document.createElement("br"));
         const conv = (this.data.conversion ?? [0, 0, 0, 0, 0, 0]);
+
+        conversionHolder.appendChild(document.createElement("br"));
 
         conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["neutral"]));
         const n = conversionHolder.appendChild(document.createElement("input"));
@@ -607,18 +624,14 @@ class EffectType {
         a.style.width = "5ch";
         a.addEventListener("change", () => setData(this));
 
-        // holder.appendChild(document.createTextNode("Hit count: "));
-        // const hits = holder.appendChild(document.createElement("input"));
-        // hits.type = "number";
-        // hits.value = this.data.hitCount || "1";
-        // hits.addEventListener("change", () => setData(this));
-
         function setData(self) {
             const result = {};
 
             if (nameInput.value) result.internal_name = nameInput.value;
             if (convType.value) result.type = convType.value;
-            if (isMelee.value) result.is_melee = isMelee.value;
+            if (isMelee.value) result.is_melee = isMelee.value === "true";
+            if (isIndirect.value) result.is_indirect = isIndirect.value === "true";
+            if (extraHits.value && extraHits.value !== "0") result.extra_hits = extraHits.value;
             result.conversion = [n, e, t, w, f, a].map(input => parseInt(input.value) || 0);
 
             self.data = result;

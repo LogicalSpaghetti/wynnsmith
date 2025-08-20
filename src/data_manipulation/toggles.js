@@ -1,7 +1,6 @@
 const addedTogglesHolder = document.getElementById("added_toggles");
 const addedSlidersHolder = document.getElementById("added_sliders");
 
-// TODO: decide the proper logic structure where this modifying the html isn't out of line, or extracting it makes sense
 function reconfigureOptionals(build) {
     setUpToggles(build);
     setUpSliders(build);

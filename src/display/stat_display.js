@@ -12,16 +12,15 @@ function removeAllZeros(build) {
 }
 
 function displayStats(build) {
-    const ids = build.ids;
-    const final = build.final;
-
-    // simple check for whether the build has a weapon, TODO: replace with better hide logic
-    if (build.wynnClass === undefined) {
+    if (!build.wynnClass) {
         support.style.display = "none";
         return;
     } else {
         support.style.display = "inline-block";
     }
+
+    const ids = build.ids;
+    const final = build.final;
 
     support.innerHTML =
         getStatDisplay("health", true, "Health", final.health) +

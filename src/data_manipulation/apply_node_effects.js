@@ -63,23 +63,19 @@ function createShamanConversions(build) {
 
 function createArcherConversions(build) {
     addMeleeConversion(build);
-    // TODO
 }
 
 function createMageConversions(build) {
     addMeleeConversion(build);
     addConv(build, "Meteor", [330, 70, 0, 0, 0, 0], "meteor");
-    // TODO
 }
 
 function createAssassinConversions(build) {
     addMeleeConversion(build);
-    // TODO
 }
 
 function createWarriorConversions(build) {
     addMeleeConversion(build);
-    // TODO
 }
 
 function addMeleeConversion(build, conv = 100) {
@@ -171,7 +167,6 @@ function applyMultipliers(build) {
     // Warrior
     applySectMult(build, 1.05, "Melee", "nodes", "spearProficiency");
     // Assassin
-    // TODO: Assassin multi-hit is cooked
     applySectMult(build, 1.05, "Melee", "nodes", "daggerProficiency");
 }
 

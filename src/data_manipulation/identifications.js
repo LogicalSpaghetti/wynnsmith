@@ -1,8 +1,6 @@
 `use strict`;
 
-// TODO: remove all "build.final", fuck final, worst thing I've ever done to this project
 function refactorIdentifications(build) {
-    // TODO: these two should be mostly combined, and the arrays they create should go somewhere other than "final"
     splitMergedIds(build);
     damagesToArrays(build);
 }
