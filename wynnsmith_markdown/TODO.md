@@ -94,6 +94,7 @@
 				6. remaining_time \*= 1 - 100%
 					1. new_damage = 135
 32. Changelog
+33. Blockers that kill children properly
 ### Fix
 1. use Object.freeze() on all database objects
 2. Data isn't saved if a tab gets unloaded
@@ -167,36 +168,35 @@
 	2. Major Ids
 	3. Powder Specials
 2. Effect types
-	1. Blockers
-		1. order should never matter
-	2. Damage variants
+	1. Damage variants
 		1. mostly automatically generated, i.e. multi-hits and DPS
 		2. multipliers
 		3. sums of multiple attacks
-	3. Damage Displays
+	2. Damage Displays
 		1. points to a set of variants, and optionally a spell cost and/or healing.
 			1. one variant and optionally one healing is given display priority
 			2. a variant can be the sum of some number of attacks, or generated based on.
-	4. label type effect
+	3. label type effect
 		1. holds display name and priority display entries, (the ones that are shown without expanding), that way they can override each other without side-effects.
-	5. Radiance
-	6. E-Hp modifiers
-	7. Toggles
-	8. Sliders
-	9. Attack variants
-	10. Indirect damage
-	11. Cost modifiers
-	12. Self-damage
+	4. Radiance
+	5. Toggles
+	6. Sliders
+	7. Attack variants
+	8. Indirect damage
+	9. Cost modifiers
+	10. Self-damage
 		1. Sacrificial Shrine health drain
-	13. Over-health?
+	11. Over-health?
 ### Effect Examples:
 1. `Haunting Memory`
 	1. Blocks `Uproot`'s conversion when taken
 	2. Only blocks the conversions, display and such. The effect Flaming Tongue has with it still applies.
 2. `Arrow Hurricane`
-	1. just a 3 times damage multiplier variant
+	1. a "variant" of `Arrow Storm`, tripling its damage
 3. `Backstab`
-	1. A new conversion which blocks `Multihit`
+	1. a new "conversion" which blocks `Multihit`
+4. `Commander` scaling melee damage with `Puppet` count slider
+	1. a 3% "slider multiplier" targeting `Melee` named "puppet slider"
 # Notes (move)
 1. ways to iterate over object:
     1. also: https://stackoverflow.com/questions/14379274/how-to-iterate-over-a-javascript-object

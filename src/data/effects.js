@@ -16,7 +16,7 @@ const classEffects = {
                 }
             },
             "1": {
-                "name": "Arrow Bomb",
+                "name": "Arrow Bomb Attack",
                 "parents": [{"section": "nodes", "id": "1"}],
                 "blocks": [],
                 "requires_all": false,
@@ -29,7 +29,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "cost",
-                "data": {"spell_number": 2, "cost": 45, "is_base_spell": true}
+                "data": {"spell_number": 2, "cost": 45, "is_base_spell": false}
             },
             "3": {
                 "name": "Cheaper Arrow Bomb I",
@@ -38,6 +38,14 @@ const classEffects = {
                 "requires_all": true,
                 "type": "cost",
                 "data": {"spell_number": 2, "cost": -10, "is_base_spell": false}
+            },
+            "4": {
+                "name": "Arrow Shield Resistance",
+                "parents": [{"section": "nodes", "id": "10"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "resistance",
+                "data": {"internal_name": "arrow_shield", "multiplier": 0.2}
             }
         }
     },

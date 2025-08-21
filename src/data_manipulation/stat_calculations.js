@@ -120,9 +120,23 @@ function calculateEHp(build) {
                     ? 2 - 0.8
                     : 1;
 
+    // new
+    final.ehp *= getEHpModifier(build);
+
+    // old
     applyEHpModifiers(build);
 
     //hp/((1-def%)(1-agi%)+0.1(agi%)(1-counter%))
+}
+
+function getEHpModifier(build) {
+    let factor = 1;
+
+    build.resistances.forEach((resistance) => {
+        factor *= 1 - resistance.multiplier;
+    });
+
+    return 1 / factor;
 }
 
 function applyEHpModifiers(build) {

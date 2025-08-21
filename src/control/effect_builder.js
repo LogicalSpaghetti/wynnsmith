@@ -799,7 +799,7 @@ class EffectType {
 
         holder.appendChild(document.createElement("br"));
 
-        holder.appendChild(document.createTextNode("Multiplier: "));
+        holder.appendChild(document.createTextNode("Resistance %: "));
         const numberInput = holder.appendChild(document.createElement("input"));
         numberInput.value = this.data.multiplier ?? "0";
         numberInput.addEventListener("change", () => setData(this));
@@ -807,7 +807,7 @@ class EffectType {
         function setData(self) {
             self.data = {
                 internal_name: nameInput.value,
-                multiplier: parseInt(numberInput.value)
+                multiplier: parseFloat(numberInput.value)
             };
         }
 
