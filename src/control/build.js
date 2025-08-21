@@ -27,6 +27,9 @@ class Build {
     resistances = [];
     personal_multipliers = [];
     team_multipliers = [];
+    spell_costs = [0, 0, 0, 0];
+    spell_cost_modifiers = [0, 0, 0, 0];
+    spell_cost_multipliers = [];
     old_attacks = {};
     old_heals = {};
     sp = {

@@ -1,4 +1,4 @@
-Attack damage calculation:
+# Attack damage:
 1. Weapon and armour ids are added together
 2. Radiance multiplies most ids by 1.2
 3. Other buffs are added
@@ -31,3 +31,13 @@ Attack damage calculation:
 	3. Strength/Dexterity+Crit Bonus
 	4. Proficiencies
 	5. Vulnerability, Damage Bonus, and all other damage multipliers.
+# Spell Cost:
+1. Take the base cost of the spell
+2. Multiply by the Intelligence Spell Cost modifier
+	1. 1 - ( 0.5 \* ( `intelligenceMultiplier` / `maxSPMultiplier` ) )
+3. Add the raw spell cost identification
+4. Multiply by the percent spell cost identification
+	1. 1 + x%
+5. Add tree cost modifiers
+6. Set to the max of itself and 1
+7. Apply Mask multipliers

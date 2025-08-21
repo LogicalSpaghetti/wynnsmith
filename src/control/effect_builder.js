@@ -482,7 +482,7 @@ class EffectBuilder {
             blocks: this.blockIds,
             requires_all: this.require_all_parents,
             type: this.data.type,
-            data: this.data.data,
+            data: this.data.data
         };
     }
 }
@@ -545,6 +545,10 @@ class EffectType {
                 return this.setupTeamDamageMultiplierConfig();
             case "personal-multiplier":
                 return this.setupPersonalDamageMultiplierConfig();
+            case "cost":
+                return this.setupSpellCostConfig();
+            case "cost-multiplier":
+                return this.setupSpellCostMultiplierConfig();
             default:
                 return this.emptyConfig();
         }
@@ -575,10 +579,10 @@ class EffectType {
             self.data = {location: locationInput.value, script: scriptInput.value};
         }
 
+        setData(this);
         return holder;
     }
 
-    // TODO: add attack duration and frequency
     setupConversionConfig() {
         const holder = document.createElement("div");
 
@@ -699,6 +703,7 @@ class EffectType {
             self.data = result;
         }
 
+        setData(this);
         return holder;
     }
 
@@ -749,12 +754,13 @@ class EffectType {
                 element: elementSelect.value,
                 base: [
                     parseInt(minInput.value),
-                    parseInt(maxInput.value),
+                    parseInt(maxInput.value)
                 ],
-                pct: parseInt(pctInput.value),
+                pct: parseInt(pctInput.value)
             };
         }
 
+        setData(this);
         return holder;
     }
 
@@ -775,10 +781,11 @@ class EffectType {
         function setData(self) {
             self.data = {
                 internal_name: internalName.value,
-                heal: parseInt(healInput.value),
+                heal: parseInt(healInput.value)
             };
         }
 
+        setData(this);
         return holder;
     }
 
@@ -800,10 +807,11 @@ class EffectType {
         function setData(self) {
             self.data = {
                 internal_name: nameInput.value,
-                multiplier: parseInt(numberInput.value),
+                multiplier: parseInt(numberInput.value)
             };
         }
 
+        setData(this);
         return holder;
     }
 
@@ -833,11 +841,12 @@ class EffectType {
         function setData(self) {
             self.data = {
                 internal_name: nameInput.value,
-                multiplier: parseFloat(numberInput.value),
+                multiplier: parseFloat(numberInput.value)
             };
             if (targetInput.value) self.data.target = targetInput.value;
         }
 
+        setData(this);
         return holder;
     }
 
@@ -870,11 +879,84 @@ class EffectType {
         function setData(self) {
             self.data = {
                 internal_name: nameInput.value,
-                multiplier: parseFloat(numberInput.value),
+                multiplier: parseFloat(numberInput.value)
             };
             if (typeSelect.value) self.data.type = typeSelect.value;
         }
 
+        setData(this);
+        return holder;
+    }
+
+    setupSpellCostConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Spell: "));
+        const typeSelect = holder.appendChild(document.createElement("select"));
+        typeSelect.innerHTML =
+            "<option value='0'>1st Spell, (R-L-R)/(L-R-L)</option>" +
+            "<option value='1'>2nd Spell, (R-R-R)/(L-L-L)</option>" +
+            "<option value='2'>3rd Spell, (R-L-L)/(L-R-R)</option>" +
+            "<option value='3'>4th Spell, (R-R-L)/(L-L-R)</option>";
+        typeSelect.value = this.data.spell_number ?? "0";
+        typeSelect.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Spell Cost: "));
+        const costInput = holder.appendChild(document.createElement("input"));
+        costInput.value = this.data.cost ?? "0";
+        costInput.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Is Base Spell: "));
+        const isBase = holder.appendChild(document.createElement("select"));
+        isBase.innerHTML = "<option value=''>False</option><option value='true'>True</option>";
+        isBase.value = this.data.is_melee ?? "";
+        isBase.addEventListener("change", () => setData(this));
+
+
+        function setData(self) {
+            self.data = {
+                spell_number: parseInt(typeSelect.value),
+                cost: parseInt(costInput.value),
+                is_base_spell: isBase.value === "true"
+            };
+        }
+
+        setData(this);
+        return holder;
+    }
+
+    setupSpellCostMultiplierConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Spell: "));
+        const typeSelect = holder.appendChild(document.createElement("select"));
+        typeSelect.innerHTML =
+            "<option value='0'>1st Spell, (R-L-R)/(L-R-L)</option>" +
+            "<option value='1'>2nd Spell, (R-R-R)/(L-L-L)</option>" +
+            "<option value='2'>3rd Spell, (R-L-L)/(L-R-R)</option>" +
+            "<option value='3'>4th Spell, (R-R-L)/(L-L-R)</option>";
+        typeSelect.value = this.data.spell_number ?? "0";
+        typeSelect.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Spell Cost Multiplier: "));
+        const costInput = holder.appendChild(document.createElement("input"));
+        costInput.value = this.data.cost_multiplier ?? "0";
+        costInput.addEventListener("change", () => setData(this));
+
+        function setData(self) {
+            self.data = {
+                spell_number: parseInt(typeSelect.value),
+                cost_multiplier: parseFloat(costInput.value),
+            };
+        }
+
+        setData(this);
         return holder;
     }
 }

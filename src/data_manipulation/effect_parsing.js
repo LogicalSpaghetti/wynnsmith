@@ -1,21 +1,21 @@
 `use strict`;
 
 const neutral_index = 0;
-const damage_type_count = 6; // TODO: rename/remove
+const damage_type_count = 6;
 
 // enum
 const DamageExtremes = Object.freeze({
     MIN: 0,
     MAX: 1,
     MINC: 2,
-    MAXC: 3,
+    MAXC: 3
 });
 
 
 function newMinMax() {
     return [
         [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
     ];
 }
 
@@ -27,6 +27,8 @@ EffectTypes = Object.freeze({
     RESISTANCE: "resistance",
     PERSONAL_MULTIPLIER: "personal-multiplier",
     TEAM_MULTIPLIER: "team-multiplier",
+    COST: "cost",
+    COST_MULTIPLIER: "cost-multiplier"
 });
 
 function parseEffects(build) {
@@ -61,6 +63,12 @@ function applyEffects(build) {
             case EffectTypes.PERSONAL_MULTIPLIER:
                 parsePersonalDamageMultiplierEffect(build, effect);
                 break;
+            case EffectTypes.COST:
+                parseSpellCostEffect(build, effect);
+                break;
+            case EffectTypes.COST_MULTIPLIER:
+                parseSpellCostMultiplierEffect(build, effect);
+                break;
             default:
                 throw new Error("Unknown effect type: " + effect.type + ", id: " + effectId);
         }
@@ -72,6 +80,10 @@ function parseConversionEffect(build, effect) {
     attack.type = effect.data.type ?? attack.type;
     attack.is_melee = effect.data.is_melee ?? attack.is_melee;
     attack.conversion = sumConversions(attack.conversion, effect.data.conversion);
+
+    if (effect.data.extra_hits) attack.extra_hits = (attack.extra_hits ?? 0) + effect.data.extra_hits;
+    if (effect.data.frequency) attack.frequency = (attack.frequency ?? 1) * effect.data.frequency;
+    if (effect.data.duration) attack.duration = (attack.duration ?? 0) + effect.data.duration;
 
     attack.base = newMinMax();
     attack.raw = newMinMax();
@@ -89,7 +101,7 @@ function parseMasteryEffect(build, effect) {
         {
             element: effect.data.element,
             base: effect.data.base,
-            pct: effect.data.pct,
+            pct: effect.data.pct
         });
 }
 
@@ -115,6 +127,18 @@ function parsePersonalDamageMultiplierEffect(build, effect) {
     personalMultiplier.target = effect.data.target ?? personalMultiplier.target;
 }
 
+function parseSpellCostEffect(build, effect) {
+    if (effect.data.is_base_spell) {
+        build.spell_costs[effect.data.spell_number] += effect.data.cost;
+    } else {
+        build.spell_cost_modifiers[effect.data.spell_number] += effect.data.cost;
+    }
+}
+
+function parseSpellCostMultiplierEffect(build, effect) {
+    createUnnamedEffect(build.spell_cost_multipliers, effect.data);
+}
+
 function getOrCreateNamedEffect(effectArray, internal_name) {
     const found = effectArray.find(effect => effect.internal_name === internal_name);
     if (!found) {
@@ -130,7 +154,6 @@ function createUnnamedEffect(effectArray, data) {
 }
 
 function removeBlockedEffects(build) {
-    console.log(JSON.stringify(build.effects));
     const blockedIndexes = [];
 
     build.effects.forEach(effectId => {
@@ -139,12 +162,9 @@ function removeBlockedEffects(build) {
             blockedIndexes.push(blockId);
         });
     });
-    console.log(blockedIndexes);
 
     blockedIndexes.forEach(effectId => {
         if (build.effects.indexOf(String(effectId)) !== -1)
             build.effects.splice(build.effects.indexOf(String(effectId)), 1);
-    })
-
-    console.log(JSON.stringify(build.effects));
+    });
 }

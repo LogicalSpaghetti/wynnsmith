@@ -131,13 +131,13 @@ function applyEHpModifiers(build) {
         build,
         "toggles",
         "maskOfTheFanatic",
-        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0),
+        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0)
     );
     applyEHpDivider(
         build,
         "toggles",
         "maskOfTheAwakened",
-        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0),
+        1 - 0.35 - ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).fanatic ?? 0)
     );
     applyEHpDivider(build, "toggles", "lunaticMemory", 1 - 0.15);
     applyEHpDivider(build, "toggles", "warScream", 1 - 0.2);
@@ -150,6 +150,29 @@ function applyEHpDivider(build, section, checkName, div) {
 }
 
 function calculateSpellCosts(build) {
+    // new
+    for (let i in build.spell_costs) {
+        const costName = costNames[i];
+
+        let cost = build.spell_costs[i];
+
+        cost *= 1 - (0.5 * (build.sp.mults[2] / spMultipliers[150]));
+
+        cost += build.ids["raw" + costName + "SpellCost"];
+        cost *= 1 + build.ids[costName + "SpellCost"] / 100;
+
+        cost += build.spell_cost_modifiers[i];
+
+        cost = Math.max(cost, 1);
+
+        build.spell_costs[i] = cost;
+    }
+
+    build.spell_cost_multipliers.forEach(data => {
+        build.spell_costs[data.spell_number] *= data.cost_multiplier;
+    });
+
+    // old
     addSpellNames(build);
     sumCostModNodes(build);
 

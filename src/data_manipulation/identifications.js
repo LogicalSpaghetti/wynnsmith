@@ -1,5 +1,7 @@
 `use strict`;
 
+// TODO: move to directly after Radiance applies
+// TODO: after ^^, add more arrays such as spell costs
 function refactorIdentifications(build) {
     splitMergedIds(build);
     damagesToArrays(build);

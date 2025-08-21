@@ -8,7 +8,12 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": false,
                 "type": "conv",
-                "data": {"internal_name": "melee", "type": "MainAttack", "conversion": [100, 0, 0, 0, 0, 0], "is_melee": true}
+                "data": {
+                    "internal_name": "melee",
+                    "type": "MainAttack",
+                    "is_melee": true,
+                    "conversion": [100, 0, 0, 0, 0, 0]
+                }
             },
             "1": {
                 "name": "Arrow Bomb",
@@ -19,25 +24,25 @@ const classEffects = {
                 "data": {"internal_name": "arrow_bomb", "type": "Spell", "conversion": [140, 0, 0, 0, 20, 0]}
             },
             "2": {
-                "name": "Bomby",
+                "name": "Arrow Bomb Cost",
                 "parents": [{"section": "nodes", "id": "1"}],
                 "blocks": [],
                 "requires_all": true,
-                "type": "",
-                "data": {},
+                "type": "cost",
+                "data": {"spell_number": 2, "cost": 45, "is_base_spell": true}
             },
             "3": {
-                "name": "",
-                "parents": [{"section": "nodes", "id": "5"}],
-                "blocks": [2],
+                "name": "Cheaper Arrow Bomb I",
+                "parents": [{"section": "nodes", "id": "3"}],
+                "blocks": [],
                 "requires_all": true,
-                "type": "",
-                "data": {},
-            },
+                "type": "cost",
+                "data": {"spell_number": 2, "cost": -10, "is_base_spell": false}
+            }
         }
     },
     assassin: {},
     mage: {},
     shaman: {},
-    warrior: {},
+    warrior: {}
 };
