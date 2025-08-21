@@ -20,7 +20,6 @@ function permuteBuild(build) {
     reconfigureOptionals(build);
     readToggles(build);
 
-    removeOverriddenEffects(build);
 
     calculateSupportiveStats(build);
 

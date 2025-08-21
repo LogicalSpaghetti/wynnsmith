@@ -1,4 +1,26 @@
+`use strict`;
+
+const neutral_index = 0;
+const damage_type_count = 6; // TODO: rename/remove
+
+// enum
+const DamageExtremes = Object.freeze({
+    MIN: 0,
+    MAX: 1,
+    MINC: 2,
+    MAXC: 3,
+});
+
+
+function newMinMax() {
+    return [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+    ];
+}
+
 EffectTypes = Object.freeze({
+    EMPTY: "",
     CONVERSION: "conv",
     MASTERY: "mastery",
     HEAL: "heal",
@@ -8,16 +30,19 @@ EffectTypes = Object.freeze({
 });
 
 function parseEffects(build) {
-    parseConversions(build);
+    removeBlockedEffects(build);
+    applyEffects(build);
 }
 
-function parseConversions(build) {
+function applyEffects(build) {
     if (build.wynnClass === "") return;
     const effectData = classEffects[build.wynnClass].effects;
 
     build.effects.forEach(effectId => {
         const effect = effectData[effectId];
         switch (effect.type) {
+            case EffectTypes.EMPTY:
+                break;
             case EffectTypes.CONVERSION:
                 parseConversionEffect(build, effect);
                 break;
@@ -104,21 +129,22 @@ function createUnnamedEffect(effectArray, data) {
     effectArray.push(data);
 }
 
-const neutral_index = 0;
-const damage_type_count = 6; // TODO: rename/remove
+function removeBlockedEffects(build) {
+    console.log(JSON.stringify(build.effects));
+    const blockedIndexes = [];
 
-// enum
-const DamageExtremes = Object.freeze({
-    MIN: 0,
-    MAX: 1,
-    MINC: 2,
-    MAXC: 3,
-});
+    build.effects.forEach(effectId => {
+        const effect = classEffects[build.wynnClass].effects[effectId];
+        effect.blocks.forEach(blockId => {
+            blockedIndexes.push(blockId);
+        });
+    });
+    console.log(blockedIndexes);
 
+    blockedIndexes.forEach(effectId => {
+        if (build.effects.indexOf(String(effectId)) !== -1)
+            build.effects.splice(build.effects.indexOf(String(effectId)), 1);
+    })
 
-function newMinMax() {
-    return [
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-    ];
+    console.log(JSON.stringify(build.effects));
 }

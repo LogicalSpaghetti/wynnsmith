@@ -1,8 +1,10 @@
 # Focus
 ### Small
-1. Make indirect damage ignore multipliers
-2.  Add more than just abilities to the effect builder
-3. Add basic display effects
+1. make the effect builder allow for selecting attack ids instead of manually typing them in
+	1. loop over all effects, looking for conversions and adding their internal_name to an array
+2. Make indirect damage ignore multipliers
+3.  Add more than just abilities to the effect builder
+4. Add basic display effects
 ### Major
 1. Get basic conversions working with the effect builder.
 2. Once new conversion structure is done, get offhand computation working
@@ -91,6 +93,7 @@
 				5. new_damage += 100\*(1 + 20%)\*100%\*remaining_time
 				6. remaining_time \*= 1 - 100%
 					1. new_damage = 135
+32. Changelog
 ### Fix
 1. use Object.freeze() on all database objects
 2. Data isn't saved if a tab gets unloaded

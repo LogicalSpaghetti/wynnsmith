@@ -4,7 +4,7 @@ class Editor {
     effect;
     element;
 
-    constructor(tree, effect_editor_id = "effect_editor", name_input_class = "name_input", warn_input_class = "warn", parents_show_button_class = "parents_show", parents_toggles_class = "parent_toggles", editor_class = "editor", parent_req_class = "requires_all_parents", effect_type_class = "effect_type", effect_specific_class = "effect-specific") {
+    constructor(tree, effect_editor_id = "effect_editor", name_input_class = "name_input", warn_input_class = "warn", parents_show_button_class = "parents_show", parent_toggles_class = "parent_toggles", blocks_show_button_class = "blocks_show", block_toggles_class = "block_toggles", editor_class = "editor", parent_req_class = "requires_all_parents", effect_type_class = "effect_type", effect_specific_class = "effect-specific") {
         this.tree = tree;
         this.element = document.getElementById(effect_editor_id);
         this.editor = this.element.querySelector("." + editor_class);
@@ -17,7 +17,9 @@ class Editor {
         });
 
         this.parents_show = this.element.querySelector("." + parents_show_button_class);
-        this.parent_toggles = this.element.querySelector("." + parents_toggles_class);
+        this.parent_toggles = this.element.querySelector("." + parent_toggles_class);
+        this.blocks_show = this.element.querySelector("." + blocks_show_button_class);
+        this.block_toggles = this.element.querySelector("." + block_toggles_class);
 
         this.parents_show.textContent = "⮜";
         this.parents_show.addEventListener("click", () => {
@@ -25,6 +27,14 @@ class Editor {
             this.parents_show.dataset.show = String(toggle);
             this.parents_show.textContent = toggle ? "⮟" : "⮜";
             this.parent_toggles.style.display = toggle ? "block" : "none";
+        });
+
+        this.blocks_show.textContent = "⮜";
+        this.blocks_show.addEventListener("click", () => {
+            const toggle = this.blocks_show.dataset.show !== "true";
+            this.blocks_show.dataset.show = String(toggle);
+            this.blocks_show.textContent = toggle ? "⮟" : "⮜";
+            this.block_toggles.style.display = toggle ? "block" : "none";
         });
 
         this.parent_requirement = this.element.querySelector("." + parent_req_class);
@@ -60,6 +70,7 @@ class Editor {
         this.name_input.value = effect.name;
         this.parent_requirement.value = effect.require_all_parents;
         this.setupParentSelectors(effect);
+        this.setupBlockSelectors(effect);
         this.effect_type.value = effect.data.type;
         this.readEffectType();
     }
@@ -99,6 +110,27 @@ class Editor {
             const label = document.createElement("label");
             label.textContent = parentEffect.name;
             toggles.appendChild(label);
+            toggles.appendChild(document.createElement("br"));
+        }
+    }
+
+    setupBlockSelectors(effect) {
+        const toggles = this.block_toggles;
+        toggles.textContent = "";
+
+        for (let id in this.tree.effects) {
+            const blockableEffect = this.tree.effects[id];
+            if (blockableEffect === effect) continue;
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.dataset.id = blockableEffect.id;
+            checkbox.checked = effect.blocksEffectId(blockableEffect.id);
+            checkbox.addEventListener("change", () => {
+                effect.toggleBlock(blockableEffect.id);
+            });
+            toggles.appendChild(checkbox);
+            toggles.appendChild(document.createTextNode(blockableEffect.name));
             toggles.appendChild(document.createElement("br"));
         }
     }
@@ -292,7 +324,8 @@ class EffectBuilder {
     tree;
 
     parents = [];
-    children = []; // {id: Integer, html: Element}
+    children = [];
+    blockIds = [];
 
     id;
 
@@ -390,11 +423,18 @@ class EffectBuilder {
     }
 
     hasParent(section, id) {
-        for (let i in this.parents) {
-            const parent = this.parents[i];
-            if (parent.section === section && parent.id === id) return true;
-        }
-        return false;
+        return undefined !== this.parents.find(parent => parent.section === section && parent.id === id);
+    }
+
+    toggleBlock(id) {
+        if (this.blockIds.includes(id))
+            this.blockIds.splice(this.blockIds.indexOf(id), 1);
+        else
+            this.blockIds.push(id);
+    }
+
+    blocksEffectId(id) {
+        return undefined !== this.blockIds.find(effectId => effectId === id);
     }
 
     deleteEffect() {
@@ -439,6 +479,7 @@ class EffectBuilder {
         return {
             name: this.name,
             parents: this.parents,
+            blocks: this.blockIds,
             requires_all: this.require_all_parents,
             type: this.data.type,
             data: this.data.data,
@@ -550,7 +591,7 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Conversion Type: "));
         const convType = holder.appendChild(document.createElement("select"));
-        convType.innerHTML = "<option value=''>-select-</option><option value='Spell'>Spell</option><option value='MainAttack'>Main Attack</option>";
+        convType.innerHTML = "<option value=''>Inherited</option><option value='Spell'>Spell</option><option value='MainAttack'>Main Attack</option>";
         convType.value = this.data.type ?? "";
         convType.addEventListener("change", () => setData(this));
 
@@ -558,7 +599,7 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Is Left Click: "));
         const isMelee = holder.appendChild(document.createElement("select"));
-        isMelee.innerHTML = "<option value=''>False</option><option value='true'>True</option>";
+        isMelee.innerHTML = "<option value=''>Inherited</option><option value=''>False</option><option value='true'>True</option>";
         isMelee.value = this.data.is_melee ?? "";
         isMelee.addEventListener("change", () => setData(this));
 
@@ -566,17 +607,33 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Is Indirect Damage: "));
         const isIndirect = holder.appendChild(document.createElement("select"));
-        isIndirect.innerHTML = "<option value=''>False</option><option value='true'>True</option>";
+        isIndirect.innerHTML = "<option value=''>Inherited</option><option value=''>False</option><option value='true'>True</option>";
         isIndirect.value = this.data.is_indirect ?? "";
         isIndirect.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
+
         holder.appendChild(document.createTextNode("Extra Hits: "));
         const extraHits = holder.appendChild(document.createElement("input"));
         extraHits.placeholder = "0";
         extraHits.value = this.data.extra_hits ?? "";
         extraHits.addEventListener("change", () => setData(this));
 
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Frequency: "));
+        const frequency = holder.appendChild(document.createElement("input"));
+        frequency.placeholder = "N/A";
+        frequency.value = this.data.extra_hits ?? "";
+        frequency.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Duration: "));
+        const duration = holder.appendChild(document.createElement("input"));
+        duration.placeholder = "N/A";
+        duration.value = this.data.extra_hits ?? "";
+        duration.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
 
@@ -624,15 +681,20 @@ class EffectType {
         a.style.width = "5ch";
         a.addEventListener("change", () => setData(this));
 
+        const conversionInputs = [n, e, t, w, f, a];
+
         function setData(self) {
             const result = {};
 
-            if (nameInput.value) result.internal_name = nameInput.value;
+            result.internal_name = nameInput.value;
             if (convType.value) result.type = convType.value;
             if (isMelee.value) result.is_melee = isMelee.value === "true";
             if (isIndirect.value) result.is_indirect = isIndirect.value === "true";
-            if (extraHits.value && extraHits.value !== "0") result.extra_hits = extraHits.value;
-            result.conversion = [n, e, t, w, f, a].map(input => parseInt(input.value) || 0);
+            if (extraHits.value) result.extra_hits = parseInt(extraHits.value);
+            if (duration.value) result.duration = parseFloat(duration.value);
+            if (frequency.value) result.frequency = parseFloat(frequency.value);
+            if (conversionInputs.find(input => input.value !== "" && input.value !== "0"))
+                result.conversion = conversionInputs.map(input => parseInt(input.value) || 0);
 
             self.data = result;
         }
