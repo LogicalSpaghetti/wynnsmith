@@ -1,141 +1,70 @@
 `use strict`;
 
-// TODO: move to directly after Radiance applies
-// TODO: after ^^, add more arrays such as spell costs
-function refactorIdentifications(build) {
-    splitMergedIds(build);
-    damagesToArrays(build);
+function computeIdentifications(build) {
+    radiance(build);
+    addOtherIdSources(build);
 }
 
-function splitMergedIds(build) {
-    const ids = build.ids;
-    const final = build.final;
-
-    // % Damages:
-    damageTypePrefixes.forEach((type) => {
-        const typedDamage = ids.damage + ids[type + "Damage"] + (type === "neutral" ? 0 : ids.elementalDamage);
-
-        final[type + "MainAttackDamage"] =
-            ids[type + "MainAttackDamage"] +
-            ids.mainAttackDamage +
-            typedDamage +
-            (type === "neutral" ? 0 : ids["elementalMainAttackDamage"]);
-        final[type + "SpellDamage"] =
-            ids[type + "SpellDamage"] +
-            ids.spellDamage +
-            typedDamage +
-            (type === "neutral" ? 0 : ids["elementalSpellDamage"]);
-    });
-
-    // raw Damages
-    damageTypeNames.forEach((type) => {
-        const typedDamage = ids["raw" + type + "Damage"];
-
-        final["raw" + type + "MainAttackDamage"] = ids["raw" + type + "MainAttackDamage"] + typedDamage;
-        final["raw" + type + "SpellDamage"] = ids["raw" + type + "SpellDamage"] + typedDamage;
-    });
-
-    // split eleDef
-    damageTypePrefixes.filter((prefix) => prefix !== "neutral")
-        .forEach((prefix) => {
-            ids[prefix + "Defence"] += ids.elementalDefence;
-        });
-
-    build.ids.rawElementalSpellDamage += build.ids.rawElementalDamage;
-    build.ids.rawElementalMainAttackDamage += build.ids.rawElementalDamage;
+// TODO: turn into an effect
+function radiance(build) {
+    // if (!build.toggles.includes("radiance")) return;
+    // const radiance = oddities.warrior.radiance;
+    // Object.keys(build.ids).forEach((idName) => {
+    //     if (radiance.excludedIds.includes(idName)) return;
+    //     if (build.ids[idName] <= 0) return;
+    //     build.ids[idName] = Math.floor(build.ids[idName] * (radiance.multiplier + Number.EPSILON));
+    // });
 }
 
-function damagesToArrays(build) {
-    const final = build.final;
-    const base = build.base;
+function addOtherIdSources(build) {
+    addBasePlayerStats(build);
 
-    // base
-    // old
-    base.min = [
-        base.baseDamage.min,
-        base.baseEarthDamage.min,
-        base.baseThunderDamage.min,
-        base.baseWaterDamage.min,
-        base.baseFireDamage.min,
-        base.baseAirDamage.min,
-    ];
-    base.max = [
-        base.baseDamage.max,
-        base.baseEarthDamage.max,
-        base.baseThunderDamage.max,
-        base.baseWaterDamage.max,
-        base.baseFireDamage.max,
-        base.baseAirDamage.max,
-    ];
-    // new
-    base.damage = [
-        base.min,
-        base.max,
-    ];
+    addPowderDefences(build);
 
-    // raw
-    final.rawMainAttackDamages = [
-        final.rawNeutralMainAttackDamage,
-        final.rawEarthMainAttackDamage,
-        final.rawThunderMainAttackDamage,
-        final.rawWaterMainAttackDamage,
-        final.rawFireMainAttackDamage,
-        final.rawAirMainAttackDamage,
-    ];
+    applyExternalBuffs(build);
 
-    delete final.rawNeutralMainAttackDamage;
-    delete final.rawEarthMainAttackDamage;
-    delete final.rawThunderMainAttackDamage;
-    delete final.rawWaterMainAttackDamage;
-    delete final.rawFireMainAttackDamage;
-    delete final.rawAirMainAttackDamage;
+    includeTomes(build);
+    includeCharms(build);
 
-    final.rawSpellDamages = [
-        final.rawNeutralSpellDamage,
-        final.rawEarthSpellDamage,
-        final.rawThunderSpellDamage,
-        final.rawWaterSpellDamage,
-        final.rawFireSpellDamage,
-        final.rawAirSpellDamage,
-    ];
+    addSkillPointPercents(build);
+}
 
-    delete final.rawNeutralSpellDamage;
-    delete final.rawEarthSpellDamage;
-    delete final.rawThunderSpellDamage;
-    delete final.rawWaterSpellDamage;
-    delete final.rawFireSpellDamage;
-    delete final.rawAirSpellDamage;
+function addBasePlayerStats(build) {
+    build.base.baseHealth += 5 + build.level * 5;
+}
 
-    // percent
-    final.percentMainAttackDamages = [
-        final.neutralMainAttackDamage,
-        final.earthMainAttackDamage,
-        final.thunderMainAttackDamage,
-        final.waterMainAttackDamage,
-        final.fireMainAttackDamage,
-        final.airMainAttackDamage,
-    ];
+function addPowderDefences(build) {
+    for (let powder of build.powders.armour)
+        for (let i in powders[powder].def)
+            addBase(build, powders[powder].def[i], "base" + damageTypeNames[i] + "Defence");
+}
 
-    delete final.neutralMainAttackDamage;
-    delete final.earthMainAttackDamage;
-    delete final.thunderMainAttackDamage;
-    delete final.waterMainAttackDamage;
-    delete final.fireMainAttackDamage;
-    delete final.airMainAttackDamage;
+function applyExternalBuffs(build) {
+    // TODO
+    // Consumables
+    // LR boons
+    // Raid Buffs
+    // etc.
+}
 
-    final.percentSpellDamages = [
-        final.neutralSpellDamage,
-        final.earthSpellDamage,
-        final.thunderSpellDamage,
-        final.waterSpellDamage,
-        final.fireSpellDamage,
-        final.airSpellDamage,
-    ];
+function includeTomes(build) {
+    const tomeClusters = document.getElementById("tome_inputs")
+        .querySelectorAll(".input_cluster");
 
-    delete final.neutralSpellDamage;
-    delete final.earthSpellDamage;
-    delete final.thunderSpellDamage;
-    delete final.waterSpellDamage;
-    delete final.fireSpellDamage;
-    delete final.airSpellDamage;
+    for (let cluster of tomeClusters) {
+        addItem(build, cluster);
+    }
+}
+
+function includeCharms(build) {
+    // TODO
+}
+
+function addSkillPointPercents(build) {
+    for (let i = 0; i < build.sp_multipliers.length; i++) {
+        const multiplier = build.sp_multipliers[i] * 100;
+
+        build.ids[damageTypePrefixes[i + 1] + "MainAttackDamage"] += multiplier;
+        build.ids[damageTypePrefixes[i + 1] + "SpellDamage"] += multiplier;
+    }
 }

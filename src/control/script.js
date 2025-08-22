@@ -8,22 +8,12 @@ function refreshBuild() {
     displayBuild(build);
 }
 
-function readBuild(build) {
-    readOldClass(build);
-    readItems(build);
-    readSkillPointMultipliers(build);
-    readAbilities(build);
-}
-
 function permuteBuild(build) {
     parseEffects(build);
-    reconfigureOptionals(build);
-    readToggles(build);
 
+    computeIdentifications(build);
 
-    calculateSupportiveStats(build);
-
-    refactorIdentifications(build);
+    calculateSustainStats(build);
     calculateDamageConversions(build);
 }
 

@@ -23,57 +23,61 @@
     4. Customization
 # Smith
 ### Feat
-1. Versioning
+1. Move all data files into `notWynnData`
+	1. in `WynnSmith` they should be minified.
+		1. All should be accessed from a unified database object
+			1. i.e. `database.items`, `database.indexes.aspects`, `database.effects.major_ids`, `database.trees.shaman.abilities`, `database.powders.f6`, `database.indexes.items.helmet`, `database.player.max_level`
+2. Versioning
 	1. Build updating
-2. to hell with build.final, burn every mention to that accursed object
-3. only add validly selected nodes to build
-4. powder specials
+3. to hell with build.final, burn every mention to that accursed object
+4. only add validly selected nodes to build
+5. powder specials
 	1. Armour powder specials don't apply to indirect damage
-5. Embed Search in a popup
+6. Embed Search in a popup
 	1. Clicking the icon next to a slot opens the search
 		1. Ctrl+Click or a button in that popup both link to the `/item` page
-6. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
-7. WynnBuilder link conversion
+7. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
+8. WynnBuilder link conversion
 	1. explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546) ([GitHub](https://github.com/wynnbuilder/wynnbuilder.github.io/blob/master/ENCODING.md))
-8. Build Linking
-9. WynnMana
+9. Build Linking
+10. WynnMana
 	1. Wynn-Cycle
-10. Offhand weapons
-11. Consumables
-12. Charms :>
-13. Trinkets
+11. Offhand weapons
+12. Consumables
+13. Charms :>
+14. Trinkets
 	1. Well of Power, etc.
-14. Raid buffs
-15. Lootrun Boons
-16. Id Modifier
+15. Raid buffs
+16. Lootrun Boons
+17. Id Modifier
 	1. notes range available given the build
-17. Attack details
-18. Attack grouping
-19. Sub-attacks
-20. Str/Dex auto-balance button
-21. Crafted Items
-22. Custom Items
+18. Attack details
+19. Attack grouping
+20. Sub-attacks
+21. Str/Dex auto-balance button
+22. Crafted Items
+23. Custom Items
 	1. Modified items
-23. Advanced export
+24. Advanced export
 	1. select specific sections to save
 	2. Save to/read from file or local storage
-24. Menu to import section of another build
-25. Tome short-hands
-26. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
+25. Menu to import section of another build
+26. Tome short-hands
+27. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
     1. [hpr is complicated](https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/)
     1. Outdated values confirmed by author
         1. remaining Mana and remaining hp likely both have an effect.
-27.  Use build.evaluate() for complex abstractions
+28.  Use build.evaluate() for complex abstractions
     1. try to make it allow user input without being a security flaw for equation sharing.
-28. Modified SP amount display+indication
+29. Modified SP amount display+indication
     1. save between build refreshes
-29. Make external toggles a collapsed tab, and include many more effects.
-30. Speed
+30. Make external toggles a collapsed tab, and include many more effects.
+31. Speed
 	1. Speed I (Trinkets)
 	2. Speed II (Windy Feet)
 	3. Speed III(?) (Stormy Feet)
 	4. Affects bps
-31. Toggle for duration factoring for buffs
+32. Toggle for duration factoring for buffs
 	1. For overriding
 		1. loop through the buffs from highest to lowest
 			1. multiply the damage by the multiplier and its up-time, and the percent of up-time remaining, (starts at 100%).
@@ -93,8 +97,8 @@
 				5. new_damage += 100\*(1 + 20%)\*100%\*remaining_time
 				6. remaining_time \*= 1 - 100%
 					1. new_damage = 135
-32. Changelog
-33. Blockers that kill children properly
+33. Changelog
+34. Blockers that kill children properly
 ### Fix
 1. use Object.freeze() on all database objects
 2. Data isn't saved if a tab gets unloaded
@@ -135,6 +139,7 @@
 8. +Napalm applies after +Fallout
 9. Trickster: Confused enemies taking 30% more thunder damage?
 	1. Other similar effects, hopefully just ele%s
+10. Does Finality increase the damage of the first hit?
 # Settings
 1. Ability to re-arrange GUI
 2. Change color theme

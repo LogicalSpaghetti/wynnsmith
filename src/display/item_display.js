@@ -1,5 +1,13 @@
 `use strict`;
 
+const classSpellNames = {
+    archer: ["Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"],
+    assassin: ["Spin Attack", "Dash", "Multihit", "Smoke Bomb"],
+    mage: ["Heal", "Teleport", "Meteor", "Ice Snake"],
+    shaman: ["Totem", "Haul", "Aura", "Uproot"],
+    warrior: ["Bash", "Charge", "Uppercut", "War Scream"],
+};
+
 function snakeToTitle(string) {
     return string.split('_').map(upperFirst).join(' ');
 }

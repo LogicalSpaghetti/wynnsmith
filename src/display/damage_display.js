@@ -1,25 +1,13 @@
 function addDamageDisplays(build, attackDisplayId = "attack_display") {
     let html = "";
 
-    html += getNewAttackHTML(build);
+    html += JSON.stringify(build.attacks)
 
     document.getElementById(attackDisplayId).innerHTML = html;
 }
 
-function getNewAttackHTML(build) {
-    let html = "";
-
-    // doing this explicitly until I can abstract away child attack types
-    html += perAttackHTML(build, "Melee DPS");
-    html += perAttackHTML(build, "Melee Total");
-    html += perAttackHTML(build, "Melee");
-    html += perAttackHTML(build, "Totem");
-
-    return html;
-}
-
 function perAttackHTML(build, name) {
-    if (!build.has("old_attacks", name)) return "";
+    // if (!build.has("old_attacks", name)) return "";
 
     let html = "";
     html += "<div class='attack-holder'>";
@@ -42,14 +30,14 @@ function perAttackHTML(build, name) {
         normAverage += attack.min[i] + attack.max[i];
         critAverage += attack.minc[i] + attack.maxc[i];
         elementalAverages[i] +=
-            ((attack.min[i] + attack.max[i]) * (1 - build.sp.mults[1]) +
-                (attack.minc[i] + attack.maxc[i]) * build.sp.mults[1]) /
+            ((attack.min[i] + attack.max[i]) * (1 - build.sp_multipliers[SkillPointIndexes.Dexterity]) +
+                (attack.minc[i] + attack.maxc[i]) * build.sp_multipliers[SkillPointIndexes.Dexterity]) /
             2;
     }
     normAverage /= 2;
     critAverage /= 2;
 
-    const average = normAverage * (1 - build.sp.mults[1]) + critAverage * build.sp.mults[1];
+    const average = normAverage * (1 - build.sp_multipliers[SkillPointIndexes.Dexterity]) + critAverage * build.sp_multipliers[1];
 
     html += "<br>";
 

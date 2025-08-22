@@ -41,3 +41,10 @@
 5. Add tree cost modifiers
 6. Set to the max of itself and 1
 7. Apply Mask multipliers
+
+
+
+- [ ] Thing 1
+- [ ] Thing 2
+- [ ] ...
+- [ ] Thing 100

@@ -86,7 +86,7 @@ function parseConversionEffect(build, effect) {
     if (effect.data.duration) attack.duration = (attack.duration ?? 0) + effect.data.duration;
 
     attack.base = newMinMax();
-    attack.raw = newMinMax();
+    attack.raw = [0, 0, 0, 0, 0, 0];
     attack.damage = newMinMax();
 }
 

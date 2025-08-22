@@ -1,17 +1,6 @@
 const support = document.getElementById("support_display");
 
 function displayBuildStats(build) {
-    removeAllZeros(build);
-    displayStats(build);
-}
-
-function removeAllZeros(build) {
-    // deleteAllZerosFromObject(build.ids);
-    // deleteAllZerosFromObject(build.base);
-    // deleteAllZerosFromObject(build.final);
-}
-
-function displayStats(build) {
     if (!build.wynnClass) {
         support.style.display = "none";
         return;
@@ -20,32 +9,32 @@ function displayStats(build) {
     }
 
     const ids = build.ids;
-    const final = build.final;
+    const stats = build.stats;
 
     support.innerHTML =
-        getStatDisplay("health", true, "Health", final.health) +
-        getStatDisplay("health", false, "Effective Hp", final.ehp, "", true, true) +
-        getStatDisplay("health", false, "EHp (no Agi)", final.ehp, "", true, true) +
-        getStatDisplay("health", true, "Health Regen", final.healthRegen, "/4s") +
-        getStatDisplay("earth", true, "Earth Defence", final["totalEarthDefence"]) +
-        getStatDisplay("thunder", true, "Thunder Defence", final["totalThunderDefence"]) +
-        getStatDisplay("water", true, "Water Defence", final["totalWaterDefence"]) +
-        getStatDisplay("fire", true, "Fire Defence", final["totalFireDefence"]) +
-        getStatDisplay("air", true, "Air Defence", final["totalAirDefence"]) +
+        getStatDisplay("health", true, "Health", stats.health) +
+        getStatDisplay("health", false, "Effective Hp", stats.ehp, "", true, true) +
+        getStatDisplay("health", false, "EHp (no Agi)", stats.ehp, "", true, true) +
+        getStatDisplay("health", true, "Health Regen", stats.healthRegen, "/4s") +
+        getStatDisplay("earth", true, "Earth Defence", stats["totalEarthDefence"]) +
+        getStatDisplay("thunder", true, "Thunder Defence", stats["totalThunderDefence"]) +
+        getStatDisplay("water", true, "Water Defence", stats["totalWaterDefence"]) +
+        getStatDisplay("fire", true, "Fire Defence", stats["totalFireDefence"]) +
+        getStatDisplay("air", true, "Air Defence", stats["totalAirDefence"]) +
         "<hr>" +
         getStatDisplay("water", true, "Mana Regen", ids.manaRegen, "/5s") +
-        getStatDisplay("water", false, "True Mana Regen", final.trueManaRegen, "/5s", true, true) +
+        getStatDisplay("water", false, "True Mana Regen", stats.trueManaRegen, "/5s", true, true) +
         getStatDisplay("water", true, "Mana Steal", ids.manaSteal, "/3s") +
-        getStatDisplay("water", false, "Mana per Hit", final.manaPerHit, "", true, true) +
-        getStatDisplay("water", true, "Total Max Mana", final.maxMana, "", true, false, 100) +
+        getStatDisplay("water", false, "Mana per Hit", stats.manaPerHit, "", true, true) +
+        getStatDisplay("water", true, "Total Max Mana", stats.maxMana, "", true, false, 100) +
         getStatDisplay("health", true, "Life Steal", ids.lifeSteal, "/3s") +
-        getStatDisplay("health", false, "Life per Hit", final.lifePerHit, "", true, true) +
+        getStatDisplay("health", false, "Life per Hit", stats.lifePerHit, "", true, true) +
         getStatDisplay("earth", false, "Poison", ids.poison, "/3s") +
         getStatDisplay("earth", false, "Thorns", ids.thorns, "%") +
         getStatDisplay("thunder", false, "Reflection", ids.reflection, "%") +
         getStatDisplay("fire", false, "Exploding Chance", ids.exploding, "%") +
         getStatDisplay("air", false, "Walk Speed", ids.walkSpeed, "%") +
-        getStatDisplay("air", false, "Sprint Speed", final.effectiveWS, "m/s", false, true, player_bps) +
+        getStatDisplay("air", false, "Sprint Speed", stats.effectiveWS, "m/s", false, true, player_bps) +
         getStatDisplay("air", false, "Sprint Duration", ids.sprint, "%") +
         getStatDisplay("air", false, "Sprint Regen", ids.sprintRegen, "%") +
         getStatDisplay("air", false, "Jump Height", ids.jumpHeight) +
@@ -83,24 +72,6 @@ function getStatDisplay(colorClass, includeSymbol, label, stat, post = "", color
 }
 
 function displayForDevelopment(build) {
-    roundAllForDisplay(build);
-
-    const devOutput = document.getElementById(`dev_output`);
-    devOutput.textContent = JSON.stringify(build, undefined, 1);
-}
-
-function roundAllForDisplay(build) {
-    const base = build.base;
-    Object.keys(base).forEach((baseName) => {
-        if (!Number.isInteger(base[baseName])) return;
-        base[baseName] = roundForDisplay(base[baseName]);
-    });
-    const ids = build.ids;
-    Object.keys(ids).forEach((idName) => {
-        ids[idName] = roundForDisplay(ids[idName]);
-    });
-    const final = build.final;
-    Object.keys(final).forEach((idName) => {
-        final[idName] = roundForDisplay(final[idName]);
-    });
+    document.getElementById(`dev_output`).textContent =
+        JSON.stringify(build, undefined, 1);
 }

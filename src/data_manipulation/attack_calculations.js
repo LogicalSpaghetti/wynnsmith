@@ -1,11 +1,10 @@
 `use strict`;
 
 function calculateDamageConversions(build) {
-    addSkillPointPercents(build);
+    damageIdsToArrays(build);
 
     addPowderBase(build);
 
-    createConversions(build);
     convertBase(build);
     convertRaw(build);
     powderNeutralConversions(build);
@@ -16,47 +15,89 @@ function calculateDamageConversions(build) {
 
     mergeAttackDamage(build);
 
-    createHealing(build); // old
-
-    applyMultipliers(build); // old
-    applyOverridingDamageBuffs(build); // old
-
     applyPersonalDamageMultipliers(build);
     applyOverridingDamageMultipliers(build);
     applyStrDex(build);
 
-    addAttackVariants(build);
+    // TODO: addAttackVariants();
     zeroNegatives(build);
 }
 
-function addPowderBase(build) {
+function damageIdsToArrays(build) {
+    const statArrays = build.statArrays;
+    const base = build.base;
+    const ids = build.ids;
 
-    build.powders.weapon.forEach(powderName => {
-        const powder = powders[powderName];
-        const elementalIndex = damageTypeNames.indexOf(powder.element);
+    base.damage = [
+        [
+            base.baseDamage.min,
+            base.baseEarthDamage.min,
+            base.baseThunderDamage.min,
+            base.baseWaterDamage.min,
+            base.baseFireDamage.min,
+            base.baseAirDamage.min
+        ],
+        [
+            base.baseDamage.max,
+            base.baseEarthDamage.max,
+            base.baseThunderDamage.max,
+            base.baseWaterDamage.max,
+            base.baseFireDamage.max,
+            base.baseAirDamage.max
+        ]
+    ];
 
-        // new
-        build.base.damage[DamageExtremes.MIN][elementalIndex] += powder.dmg.min;
-        build.base.damage[DamageExtremes.MAX][elementalIndex] += powder.dmg.max;
+    statArrays.rawDamages = {
+        MainAttack: [],
+        Spell: []
+    };
 
-        // old
-        build.base.min[elementalIndex] += powder.dmg.min;
-        build.base.max[elementalIndex] += powder.dmg.max;
+    for (let i in damageTypeNames) {
+        const type = damageTypeNames[i];
+        for (let category in statArrays.rawDamages)
+            statArrays.rawDamages[category][i] =
+                ids[`raw${type}${category}Damage`] + ids[`raw${type}Damage`];
+    }
+
+    ids.rawElementalSpellDamage += ids.rawElementalDamage;
+    ids.rawElementalMainAttackDamage += ids.rawElementalDamage;
+
+    statArrays.percentDamages = {
+        MainAttack: [],
+        Spell: []
+    };
+
+    damageTypePrefixes.forEach((prefix, i) => {
+        const type = damageTypePrefixes[i];
+        const typedDamage =
+            ids.damage + ids[type + "Damage"] + (i === neutral_index ? 0 : ids.elementalDamage);
+
+        statArrays.percentDamages.MainAttack[i] =
+            ids[type + "MainAttackDamage"] +
+            ids.mainAttackDamage +
+            typedDamage +
+            (i === neutral_index ? 0 : ids["elementalMainAttackDamage"]);
+
+        statArrays.percentDamages.Spell[i] =
+            ids[type + "SpellDamage"] +
+            ids.spellDamage +
+            typedDamage +
+            (i === neutral_index ? 0 : ids["elementalSpellDamage"]);
+
     });
 }
 
-// TODO: once final is reworked, move to stat_calculations.js or something
-function addSkillPointPercents(build) {
-    for (let i = 0; i < build.sp.mults; i++) {
-        const mult = build.sp.mults[i] * 100;
+function addPowderBase(build) {
+    for (let powderName of build.powders.weapon) {
+        const powder = powders[powderName];
+        const i = damageTypeNames.indexOf(powder.element);
 
-        build.final.mainAttackDamage[i + 1] += mult;
-        build.final.spellDamage[i + 1] += mult;
+        build.base.damage[DamageExtremes.MIN][i] += powder.dmg.min;
+        build.base.damage[DamageExtremes.MAX][i] += powder.dmg.max;
     }
 }
 
 function convertBase(build) {
-    // new
     build.attacks.forEach((attack) => {
         const neutralConversion = attack.conversion[0] / 100;
 
@@ -68,124 +109,39 @@ function convertBase(build) {
                 (parseInt(i) !== neutral_index ? (attack.conversion[i] / 100) * extremeTotal : 0);
         }
     });
-
-    // old
-    build.base.attacks = {};
-    Object.keys(build.conversions).forEach((convName) => {
-        // [a, b, c, d, e, f]
-        build.base.attacks[convName] = {};
-        const attack = build.base.attacks[convName];
-        attack.min = [0, 0, 0, 0, 0, 0];
-        attack.max = [0, 0, 0, 0, 0, 0];
-
-        // elemental conversions
-        for (let i = 1; i < 6; i++) {
-            attack.min[i] = (build.conversions[convName][i] / 100) * build.base.min.reduce((a, b) => a + b);
-            attack.max[i] = (build.conversions[convName][i] / 100) * build.base.max.reduce((a, b) => a + b);
-        }
-
-        // neutral conversion
-        const neutralConversion = build.conversions[convName][0] / 100;
-        for (let i = 0; i < damage_type_count; i++) {
-            attack.min[i] += build.base.min[i] * neutralConversion;
-            attack.max[i] += build.base.max[i] * neutralConversion;
-        }
-    });
 }
 
 function convertRaw(build) {
-    // new
     build.attacks.forEach((attack) => {
+        const raw = attack.raw;
 
         const conversionTotal =
             attack.conversion.reduce((sum, a) => sum + parseInt(a), 0) / 100;
-        const baseTotals =
-            attack.base.map(extreme => extreme.reduce((partialSum, a) => partialSum + a));
-        const baseElemTotals =
-            attack.base.map(extreme => extreme.reduce((partialSum, a) => partialSum + a, -extreme[0]));
 
-        for (let extremeIndex in attack.raw) {
-            const extreme = attack.raw[extremeIndex];
-            for (let i in extreme) {
-                if (attack.base[DamageExtremes.MAX][i] === 0) continue;
+        const baseTotal = attack.base.map(extreme =>
+            extreme.reduce((a, b) => a + b))
+            .reduce((a, b) => a + b);
 
-                const percentage = attack.base[extremeIndex][i] / baseTotals[extremeIndex];
-                const elemPercentage = attack.base[extremeIndex][i] / baseElemTotals[extremeIndex];
+        const baseElementalTotal = attack.base.map(extreme =>
+            extreme.reduce((a, b, i) => a + (i === neutral_index ? 0 : b), 0))
+            .reduce((a, b) => a + b);
 
-                // NETWFA
-                extreme[i] = build.final[`raw${attack.type}Damages`][i];
-                // damage
-                extreme[i] += (attack.base[extremeIndex][i] / baseTotals[extremeIndex]) * build.ids.rawDamage;
-                // ElementalDamage
-                if (i !== neutral_index) {
-                    extreme[i] +=
-                        (elemPercentage) *
-                        (build.ids[`rawElemental${attack.type}Damage`]);
-                }
-                // main/spell
-                extreme[i] += percentage * build.ids[`raw${attack.type}Damage`];
-                extreme[i] *= conversionTotal;
-            }
-        }
-    });
+        const ratios = attack.base[0].map((e, i) => (e + attack.base[1][i]));
 
-    // old
-    const rawAttacks = build.rawAttacks = {};
-    Object.keys(build.conversions).forEach((convName) => {
-        const conv = build.conversions[convName];
-        const convMult = conv.reduce((partialSum, a) => partialSum + a, 0);
+        for (let i in raw) {
+            if (attack.base[DamageExtremes.MAX][i] === 0) continue;
 
-        const baseMin = build.base.attacks[convName].min;
-        const baseMax = build.base.attacks[convName].max;
-
-        const baseMinTotal = baseMin.reduce((partialSum, a) => partialSum + a, 0);
-        const baseMaxTotal = baseMax.reduce((partialSum, a) => partialSum + a, 0);
-        const baseSumTotal = baseMinTotal + baseMaxTotal;
-
-        const baseElemMinTotal = baseMin.reduce((partialSum, a) => partialSum + a, 0) - baseMin[0];
-        const baseElemMaxTotal = baseMax.reduce((partialSum, a) => partialSum + a, 0) - baseMax[0];
-
-        rawAttacks[convName] = {};
-        rawAttacks[convName].min = [0, 0, 0, 0, 0, 0];
-        rawAttacks[convName].max = [0, 0, 0, 0, 0, 0];
-
-        const isMelee = meleeAttacks.includes(convName);
-        const type = isMelee ? "MainAttack" : "Spell";
-
-        for (let i = 0; i < damage_type_count; i++) {
-            if (build.base.attacks[convName].max[i] === 0) continue;
-            const percentage = (baseMin[i] + baseMax[i]) / baseSumTotal;
-
-            // min
             // NETWFA
-            rawAttacks[convName].min[i] = build.final["raw" + type + "Damages"][i];
+            raw[i] = build.statArrays.rawDamages[attack.type][i];
             // damage
-            rawAttacks[convName].min[i] += percentage * build.ids.rawDamage;
-            // elemental damage
-            if (i > 0) {
-                rawAttacks[convName].min[i] +=
-                    (baseMin[i] / baseElemMinTotal) *
-                    (build.ids["rawElemental" + type + "Damage"]);
-            }
+            raw[i] += build.ids.rawDamage * (ratios[i] / baseTotal);
+            // ElementalDamage
+            if (i !== neutral_index) raw[i] +=
+                build.ids[`rawElemental${attack.type}Damage`] *
+                (ratios[i] / baseElementalTotal);
             // main/spell
-            rawAttacks[convName].min[i] += percentage * build.ids["raw" + type + "Damage"];
-
-            rawAttacks[convName].min[i] *= convMult / 100;
-
-            // max
-            // NETWFA
-            rawAttacks[convName].max[i] = build.final["raw" + type + "Damages"][i];
-            // damage
-            rawAttacks[convName].max[i] += percentage * build.ids.rawDamage;
-            // elemental damage
-            if (i > 0) {
-                rawAttacks[convName].max[i] +=
-                    (baseMax[i] / baseElemMaxTotal) *
-                    (build.ids["rawElemental" + type + "Damage"]);
-            }
-            // main/spell
-            rawAttacks[convName].max[i] += percentage * build.ids["raw" + type + "Damage"];
-            rawAttacks[convName].max[i] *= convMult / 100;
+            raw[i] += (ratios[i] / baseTotal) * build.ids[`raw${attack.type}Damage`];
+            raw[i] *= conversionTotal;
         }
     });
 }
@@ -223,26 +179,15 @@ function powderNeutralConversions(build) {
 
 function applySpellAttackSpeed(build) {
     const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
-    // new
+
     build.attacks.forEach(attack => {
         if (attack.is_melee) return;
         for (let extreme of attack.base) for (let i in extreme)
             extreme[i] *= attackSpeedMultiplier;
     });
-
-    // old
-    Object.keys(build.base.attacks).forEach((convName) => {
-        if (meleeAttacks.includes(convName)) return;
-        const conv = build.base.attacks[convName];
-        for (let i = 0; i < damage_type_count; i++) {
-            conv.min[i] *= attackSpeedMultiplier;
-            conv.max[i] *= attackSpeedMultiplier;
-        }
-    });
 }
 
 function applyMasteries(build) {
-    // new
     build.masteries.forEach(mastery => {
         const elementIndex = damageTypeNames.indexOf(mastery.element);
 
@@ -255,74 +200,22 @@ function applyMasteries(build) {
         });
 
     });
-
-    // old
-    Object.keys(build.base.attacks).forEach((attackName) => {
-        const attack = build.base.attacks[attackName];
-        const min = attack.min;
-        const max = attack.max;
-        for (let i = 1; i < damageTypePrefixes.length; i++) {
-            // skip any zeros
-            if (attack.max[i] === 0) continue;
-
-            // ensure the node has been taken
-            if (!build.nodes.includes(build.wynnClass + damageTypeNames[i] + "Path")) continue;
-
-            const prefix = damageTypePrefixes[i];
-            const mastery = masteries[build.wynnClass][prefix + "Mastery"];
-
-            // Masteries Node base values are added to any non-zero damage values.
-            // add mastery.min/max
-            min[i] += mastery.base.min;
-            max[i] += mastery.base.max;
-
-            // Mastery multipliers are applied to the base conversions.
-            min[i] *= mastery.mult;
-            max[i] *= mastery.mult;
-        }
-    });
 }
 
 function applyPercents(build) {
-    // new
     build.attacks.forEach(attack => {
-        const mults = build.final[`percent${attack.type}Damages`];
+        const mults = build.statArrays.percentDamages[attack.type];
         for (let i in mults) for (const extreme in attack.base)
             attack.base[extreme][i] *= mults[i] / 100 + 1;
-    });
-
-    // old
-    const baseAttacks = build.base.attacks;
-    Object.keys(baseAttacks).forEach((attackName) => {
-        const attack = baseAttacks[attackName];
-        const mults = build.final["percent" + (meleeAttacks.includes(attackName) ? "MainAttack" : "Spell") + "Damages"];
-        for (let i = 0; i < damage_type_count; i++) {
-            attack.min[i] *= mults[i] / 100 + 1;
-            attack.max[i] *= mults[i] / 100 + 1;
-        }
     });
 }
 
 function mergeAttackDamage(build) {
-    // new
     build.attacks.forEach(attack => {
         for (let extremeIndex in attack.damage) for (let i = 0; i < damage_type_count; i++)
             attack.damage[extremeIndex][i] =
                 attack.base[extremeIndex][i] +
-                attack.raw[extremeIndex][i];
-    });
-
-    // old
-    Object.keys(build.conversions).forEach((attackName) => {
-        const baseAttack = build.base.attacks[attackName];
-        const rawAttack = build.rawAttacks[attackName];
-
-        build.old_attacks[attackName] = {min: [0, 0, 0, 0, 0, 0], max: [0, 0, 0, 0, 0, 0]};
-
-        for (let i = 0; i < damage_type_count; i++) {
-            build.old_attacks[attackName].min[i] = baseAttack.min[i] + rawAttack.min[i];
-            build.old_attacks[attackName].max[i] = baseAttack.max[i] + rawAttack.max[i];
-        }
+                attack.raw[i];
     });
 }
 
@@ -348,46 +241,22 @@ function applyOverridingDamageMultipliers(build) {
 }
 
 function applyStrDex(build) {
-    const strength = 1 + build.sp.mults[0];
+    const strength = 1 + build.sp_multipliers[SkillPointIndexes.Strength];
     const dexterity = 1 + build.ids.criticalDamageBonus / 100;
 
-    // new
     for (const attack of build.attacks) {
         const damage = attack.damage = attack.damage.concat(newMinMax());
 
         for (let i = 0; i < damage_type_count; i++) {
-            damage[DamageExtremes.MIN][i] *= dexterity;
-            damage[DamageExtremes.MAX][i] *= dexterity;
-            damage[DamageExtremes.MINC][i] *= dexterity + strength;
-            damage[DamageExtremes.MAXC][i] *= dexterity + strength;
+            damage[DamageExtremes.MINC][i] = damage[DamageExtremes.MIN][i] * (dexterity + strength);
+            damage[DamageExtremes.MAXC][i] = damage[DamageExtremes.MAX][i] * (dexterity + strength);
+            damage[DamageExtremes.MIN][i] *= strength;
+            damage[DamageExtremes.MAX][i] *= strength;
         }
     }
-
-    // old
-    Object.keys(build.old_attacks).forEach((attackName) => {
-        const attack = build.old_attacks[attackName];
-
-        attack.minc = attack.min.slice(0);
-        attack.maxc = attack.max.slice(0);
-
-        for (let i = 0; i < damage_type_count; i++) {
-            // Crit
-            attack.minc[i] *= dexterity + strength;
-            attack.maxc[i] *= dexterity + strength;
-
-            // Strength
-            attack.min[i] *= strength;
-            attack.max[i] *= strength;
-        }
-    });
 }
 
 function zeroNegatives(build) {
-    Object.keys(build.old_attacks).forEach((attackName) => {
-        const attack = build.old_attacks[attackName];
-        for (let i = 0; i < damage_type_count; i++) {
-            if (attack.min[i] < 0) attack.min[i] = 0;
-            if (attack.max[i] < 0) attack.max[i] = 0;
-        }
-    });
+    for (let attack of build.attacks) for (let extreme of attack.damage) for (let i in extreme)
+        if (extreme[i] < 0) extreme[i] = 0;
 }

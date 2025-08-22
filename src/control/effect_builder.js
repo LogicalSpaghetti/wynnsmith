@@ -203,12 +203,10 @@ class Tree {
     }
 
     getChild(section, id) {
-        console.log(section, id);
         return this.getHolderBySection(section)[id];
     }
 
     getHolderBySection(section) {
-        console.log(section);
         switch (section) {
             case "nodes":
                 return this.nodes;

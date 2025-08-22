@@ -196,7 +196,7 @@ function readSkillPointMultipliers(build) {
         let value = parseInt(spInputs[i].value);
         spInputs[i].value = isNaN(value) ? 0 : value;
 
-        build.sp.mults[i] = getSkillPointMultiplier(value, i);
+        build.sp_multipliers[i] = getSkillPointMultiplier(value, i);
     }
 }
 

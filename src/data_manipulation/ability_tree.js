@@ -2,10 +2,6 @@
 
 const abilityTreeColumns = 9;
 
-function readOldClass(build) {
-    build.previousClass = document.getElementById("ability_tree").dataset.class;
-}
-
 function treeClicked(event) {
     const target = event.target;
     if (target.dataset.type !== "ability") return;
@@ -21,7 +17,7 @@ function readAbilities(build) {
         changeAspects(build);
     }
 
-    validateTree();
+    validateTree(build.level);
     renderHighlights();
 
     if (build.previousClass === build.wynnClass) {
@@ -184,8 +180,10 @@ function addNodesToBuild(build) {
 function addAspectsToBuild(build) {
     const aspects = document.getElementById("active_aspects").querySelectorAll(".aspect");
     aspects.forEach((aspect) => {
-        build.aspects.push(aspect.dataset.aspect);
-        build.aspectTiers.push(Number(aspect.childNodes[2].dataset.tier));
+        build.aspects.push({
+            name: aspect.dataset.aspect,
+            tier: parseInt(aspect.childNodes[2].dataset.tier)
+        });
     });
 }
 
@@ -193,7 +191,7 @@ function renderTree() {
 
 }
 
-function validateTree() {
+function validateTree(level = maxPlayerLevel) {
     const treeHTML = document.getElementById("ability_tree");
     const wynnClass = treeHTML.dataset.class;
     const tree = punscake[treeHTML.dataset.class];
@@ -272,7 +270,7 @@ function validateTree() {
 
     unvalidatedIDs.forEach((id) => nodes[id].red = true);
 
-    const maxAP = tree.properties.maxAbilityPoints;
+    const maxAP = abilityPointsAtLevel[level] ?? tree.properties.maxAbilityPoints;
     displayAP(usedAP, maxAP);
 
     for (let nodeID in nodes) {
@@ -418,7 +416,7 @@ function addEffectsToBuild(build) {
         let hasAllParents = true;
         let hasAnyParents = false;
         for (let parent of effect.parents)
-            if (build.has(parent.section, parent.id)) {
+            if (build[parent.section].includes(parent.id)) {
                 hasAnyParents = true;
             } else {
                 hasAllParents = false;

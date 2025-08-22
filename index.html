@@ -179,8 +179,10 @@
             <button>Balance Str/Dex</button>
             <br>
             <br>
-            <div id="effect_toggles" style="width: 32ch; padding-left: 1ch; padding-right: 1ch">
-                <div style="text-align: center">Active Boosts:</div>
+            <div style="text-align: center">
+                <label for="effect_toggles">Active Boosts:</label>
+            </div>
+            <div id="effect_toggles">
                 <button class="effect radiance" data-modifier="radiance">Radiance</button>
                 <button class="effect vengefulspirit" data-modifier="vengefulspirit">
                     Vengeful Spirit
@@ -372,6 +374,7 @@
 </div>
 
 <script src="src/control/item_search.js"></script>
+<script src="src/read/state_from_html.js"></script>
 
 <script src="src/data_manipulation/minecraft_html.js"></script>
 <script src="src/data/code_dictionary.js"></script>
@@ -390,11 +393,9 @@
 <script src="src/data_manipulation/stat_calculations.js"></script>
 <script src="src/control/file/build_linking.js"></script>
 <script src="src/data_manipulation/item_input.js"></script>
-<script src="src/data_manipulation/apply_node_effects.js"></script>
 <script src="src/data/abilities.js"></script>
 <script src="src/data/aspects.js"></script>
 <script src="src/data/major_ids.js"></script>
-<script src="src/data_manipulation/toggles.js"></script>
 <script src="src/data_manipulation/ability_tree.js"></script>
 <script src="src/data_manipulation/effect_parsing.js"></script>
 <script src="src/data_manipulation/identifications.js"></script>

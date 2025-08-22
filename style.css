@@ -211,6 +211,12 @@ input:focus {
 
 /* Effect Selectors */
 
+#effect_toggles {
+    width: 32ch;
+    padding-left: 1ch;
+    padding-right: 1ch;
+}
+
 .toggleOn {
     background-color: rgb(20, 80, 80) !important;
 }
@@ -330,6 +336,7 @@ td {
 #attack_display {
     text-align: center;
     line-height: 150%;
+    width: 0; // TODO: remove once testing complete
 }
 
 .attack-holder {
