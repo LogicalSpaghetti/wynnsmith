@@ -491,7 +491,7 @@ class EffectBuilder {
     toJSON() {
         return {
             name: this.name,
-            toggle: this.toggle_name,
+            toggle_name: this.toggle_name,
             parents: this.parents,
             blocks: this.blockIds,
             requires_all: this.require_all_parents,

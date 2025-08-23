@@ -153,7 +153,7 @@ label {
     width: 8ch;
 }
 
-.effect:hover,
+.toggle:hover,
 input:hover {
     border: 1px solid var(--ls-trim-hover);
     background-color: var(--ls-background-hover);
@@ -499,14 +499,6 @@ td {
 
 .health {
     color: #dd0000;
-}
-
-aqua {
-    color: var(--wy-legendary);
-}
-
-darkAqua {
-    color: var(--wy-crafted);
 }
 
 .m1 {

@@ -2,12 +2,9 @@
 
 // called when the page finishes loading
 window.addEventListener("load", function () {
-    // loadBuildFromLink();
-    // loadFullBuildFromLink();
+    loadMiku();
 
     refreshBuild();
-
-    loadMiku();
 
     // added after everything has loaded to prevent premature reloads
     addEventListeners();
@@ -64,10 +61,8 @@ function addEventListeners() {
     });
 
     // Effect Toggles
+
     document.getElementById("effect_toggles").addEventListener("click", (event) => {
-        toggleEffectToggle(event);
-    });
-    document.getElementById("added_toggles").addEventListener("click", (event) => {
         toggleEffectToggle(event);
     });
 
@@ -104,17 +99,18 @@ function addEventListeners() {
 }
 
 function toggleEffectToggle(event) {
-    let effect = event.target.closest("button");
-    if (!effect || !effect.classList.contains("effect")) return;
-    effect.classList.toggle("toggleOn");
+    let toggle = event.target.closest("button");
+    if (!toggle || !toggle.classList.contains("toggle")) return;
+    toggle.classList.toggle("toggleOn");
 
-    if (effect.dataset.blockers !== undefined) {
-        const blockedNodes = effect.dataset.blockers.split(" ");
-        document.querySelectorAll(".effect").forEach((effectElement) => {
+    if (toggle.dataset.blockers !== undefined) {
+        const blockedNodes = toggle.dataset.blockers.split(" ");
+        document.querySelectorAll(".toggle").forEach((effectElement) => {
             if (blockedNodes.includes(effectElement.dataset.modifier) && effectElement.classList.contains("toggleOn"))
                 effectElement.classList.toggle("toggleOn");
         });
     }
+    console.log(toggle);
 
     refreshBuild();
 }

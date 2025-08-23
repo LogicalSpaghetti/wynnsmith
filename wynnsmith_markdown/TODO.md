@@ -127,6 +127,7 @@
 9. Use HTML templates?
 10. background images are kinda mid
 11. Ability Tree shrinks a bit if the screen isn't wide enough
+12. Effect Toggle suffixes like this: ![[Active Boosts Example.png]]
 ### Test
 1. Does Frog Dance proc Nature's Jolt?
 2. Does -hpr proc Twisted Tether?
@@ -192,6 +193,9 @@
 	10. Self-damage
 		1. Sacrificial Shrine health drain
 	11. Over-health?
+3. Effect toggles disabling each other.
+4. External toggles
+	1. Take from other trees
 ### Effect Examples:
 1. `Haunting Memory`
 	1. Blocks `Uproot`'s conversion when taken

@@ -1,6 +1,7 @@
 `use strict`;
 
 function refreshBuild() {
+    console.log("Begin build refresh:")
     const build = new Build();
 
     readBuild(build);
@@ -21,6 +22,7 @@ function displayBuild(build) {
     addDamageDisplays(build);
     displayBuildStats(build);
     renderTree(build);
+    setToggles(build);
 
     displayForDevelopment(build);
 
