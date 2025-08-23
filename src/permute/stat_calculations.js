@@ -23,7 +23,7 @@ function calculateEHp(build) {
 
 function getEHpFactor(build) {
     return getClassEHp(build) *
-        build.resistances.reduce((a, b) => a * (1 - b), 1);
+        build.resistances.reduce((a, b) => a * (1 - b) / 100, 1);
 }
 
 function getClassEHp(build) {

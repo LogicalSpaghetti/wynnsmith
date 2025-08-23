@@ -10,10 +10,16 @@ class Editor {
         this.editor = this.element.querySelector("." + editor_class);
         this.name_input = this.element.querySelector("." + name_input_class);
         this.warn = this.element.querySelector("." + warn_input_class);
+        this.toggle_name = this.element.querySelector(".toggle_name")
 
         this.name_input.value = "";
         this.name_input.addEventListener("input", () => {
             this.setEffectName(this.name_input.value);
+        });
+
+        this.name_input.value = "";
+        this.name_input.addEventListener("input", () => {
+            this.setToggleName(this.toggle_name.value);
         });
 
         this.parents_show = this.element.querySelector("." + parents_show_button_class);
@@ -137,6 +143,9 @@ class Editor {
 
     setEffectName(name) {
         if (this.effect) this.effect.setName(name);
+    }
+    setToggleName(name) {
+        if (this.effect) this.effect.setToggle(name);
     }
 }
 
@@ -335,6 +344,7 @@ class EffectBuilder {
     require_all_parents = true;
 
     name = "";
+    toggle_name = "";
 
     constructor(tree, id) {
         this.tree = tree;
@@ -472,10 +482,15 @@ class EffectBuilder {
         }
     }
 
+    setToggle(name) {
+        this.toggle_name = name;
+    }
+
     // noinspection JSUnusedGlobalSymbols
     toJSON() {
         return {
             name: this.name,
+            toggle: this.toggle_name,
             parents: this.parents,
             blocks: this.blockIds,
             requires_all: this.require_all_parents,
@@ -950,7 +965,7 @@ class EffectType {
         function setData(self) {
             self.data = {
                 spell_number: parseInt(typeSelect.value),
-                cost_multiplier: parseFloat(costInput.value),
+                cost_multiplier: parseFloat(costInput.value)
             };
         }
 

@@ -42,6 +42,12 @@ function applyEffects(build) {
 
     build.effects.forEach(effectId => {
         const effect = effectData[effectId];
+
+        if (effect.toggle !== "") {
+            // TODO: get the currently selected effects somewhere
+            if (!build.toggles.includes(effect.toggle)) return;
+        }
+
         switch (effect.type) {
             case EffectTypes.EMPTY:
                 break;
