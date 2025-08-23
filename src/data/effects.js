@@ -4,6 +4,7 @@ const classEffects = {
         "effects": {
             "0": {
                 "name": "Archer Melee",
+                "toggle_name": "",
                 "parents": [],
                 "blocks": [],
                 "requires_all": false,
@@ -17,6 +18,7 @@ const classEffects = {
             },
             "1": {
                 "name": "Arrow Bomb Attack",
+                "toggle_name": "",
                 "parents": [{"section": "nodes", "id": "1"}],
                 "blocks": [],
                 "requires_all": false,
@@ -25,6 +27,7 @@ const classEffects = {
             },
             "2": {
                 "name": "Arrow Bomb Cost",
+                "toggle_name": "",
                 "parents": [{"section": "nodes", "id": "1"}],
                 "blocks": [],
                 "requires_all": true,
@@ -33,6 +36,7 @@ const classEffects = {
             },
             "3": {
                 "name": "Cheaper Arrow Bomb I",
+                "toggle_name": "",
                 "parents": [{"section": "nodes", "id": "3"}],
                 "blocks": [],
                 "requires_all": true,
@@ -41,6 +45,7 @@ const classEffects = {
             },
             "4": {
                 "name": "Arrow Shield Resistance",
+                "toggle_name": "Arrow Shield",
                 "parents": [{"section": "nodes", "id": "10"}],
                 "blocks": [],
                 "requires_all": true,

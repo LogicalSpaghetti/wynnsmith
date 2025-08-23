@@ -187,10 +187,6 @@ function addAspectsToBuild(build) {
     });
 }
 
-function renderTree() {
-
-}
-
 function validateTree(level = maxPlayerLevel) {
     const treeHTML = document.getElementById("ability_tree");
     const wynnClass = treeHTML.dataset.class;

@@ -1,6 +1,7 @@
 `use strict`;
 
 function refreshBuild() {
+    console.log("Begin build refresh:")
     const build = new Build();
 
     readBuild(build);
@@ -15,16 +16,6 @@ function permuteBuild(build) {
 
     calculateSustainStats(build);
     calculateDamageConversions(build);
-}
-
-function displayBuild(build) {
-    addDamageDisplays(build);
-    displayBuildStats(build);
-    renderTree(build);
-
-    displayForDevelopment(build);
-
-    resetCopyText();
 }
 
 function roundForDisplay(number, addPeriod) {

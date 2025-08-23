@@ -1,15 +1,12 @@
 # Focus
 ### Small
-1. make the effect builder allow for selecting attack ids instead of manually typing them in
-	1. loop over all effects, looking for conversions and adding their internal_name to an array
-2. Make indirect damage ignore multipliers
-3.  Add more than just abilities to the effect builder
-4. Add basic display effects
+1. Add basic display effects
+	1. Variant
+	2. Display
+2.  Add more than just abilities to the effect builder
 ### Major
-1. Get basic conversions working with the effect builder.
-2. Once new conversion structure is done, get offhand computation working
-	1. have an array where each entry is the data for a given weapon
-		1. for display, just do grab `[0]` for now
+1. Effects
+2. Offhands
 # General
 ### Feat
 1. Switch to a functional model instead of using `build` for everything
@@ -103,9 +100,8 @@
 1. use Object.freeze() on all database objects
 2. Data isn't saved if a tab gets unloaded
 	1. use `sessionStorage`
-3. Toggle order isn't consistent
-4. Handle items removed from database
-5. Tree propagation is wrong, once it's gone down, it can't go left or right
+3. Handle items removed from database
+4. Tree propagation is wrong, once it's gone down, it can't go left or right
 ### Visual
 1. make elements look clickable or not
     1. pointer-events: none/initial;
@@ -127,6 +123,7 @@
 9. Use HTML templates?
 10. background images are kinda mid
 11. Ability Tree shrinks a bit if the screen isn't wide enough
+12. Effect Toggle suffixes like this: ![[Active Boosts Example.png]]
 ### Test
 1. Does Frog Dance proc Nature's Jolt?
 2. Does -hpr proc Twisted Tether?
@@ -173,25 +170,24 @@
 	2. Major Ids
 	3. Powder Specials
 2. Effect types
-	1. Damage variants
+	1. Attack variants
 		1. mostly automatically generated, i.e. multi-hits and DPS
 		2. multipliers
 		3. sums of multiple attacks
-	2. Damage Displays
+	2. Attack Displays
 		1. points to a set of variants, and optionally a spell cost and/or healing.
 			1. one variant and optionally one healing is given display priority
 			2. a variant can be the sum of some number of attacks, or generated based on.
-	3. label type effect
-		1. holds display name and priority display entries, (the ones that are shown without expanding), that way they can override each other without side-effects.
-	4. Radiance
-	5. Toggles
-	6. Sliders
-	7. Attack variants
-	8. Indirect damage
-	9. Cost modifiers
-	10. Self-damage
+	3. Radiance
+	4. Sliders
+	5. Cost modifiers
+	6. Self-damage
 		1. Sacrificial Shrine health drain
-	11. Over-health?
+	7. Over-health?
+3. Effect toggles disabling each other.
+4. External toggles
+	1. Take from other trees
+5. allow for selecting attack ids instead of manually typing them in
 ### Effect Examples:
 1. `Haunting Memory`
 	1. Blocks `Uproot`'s conversion when taken
