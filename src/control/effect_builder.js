@@ -253,6 +253,7 @@ class Tree {
             }
             effect.data = new EffectType(effectData.type, effectData.data);
             effect.require_all_parents = effectData.requires_all;
+            effect.setToggle(effectData.toggle_name);
         }
         this.editEffect(-1);
     }
@@ -812,7 +813,7 @@ class EffectType {
 
         holder.appendChild(document.createElement("br"));
 
-        holder.appendChild(document.createTextNode("Resistance %: "));
+        holder.appendChild(document.createTextNode("Resistance Modifier: "));
         const numberInput = holder.appendChild(document.createElement("input"));
         numberInput.value = this.data.multiplier ?? "0";
         numberInput.addEventListener("change", () => setData(this));

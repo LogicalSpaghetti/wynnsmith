@@ -43,7 +43,7 @@ function applyEffects(build) {
     build.effects.forEach(effectId => {
         const effect = effectData[effectId];
 
-        if (effect.toggle !== "") {
+        if (effect.toggle !== "" && effect.toggle !== undefined) {
             // TODO: get the currently selected effects somewhere
             if (!build.toggles.includes(effect.toggle)) return;
         }
