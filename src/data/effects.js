@@ -1,7 +1,6 @@
 const classEffects = {
     archer: {
-        "wynnClass": "archer",
-        "effects": {
+        "wynnClass": "archer", "effects": {
             "0": {
                 "name": "Archer Melee",
                 "toggle_name": "",
@@ -51,10 +50,69 @@ const classEffects = {
                 "requires_all": true,
                 "type": "resistance",
                 "data": {"internal_name": "arrow_shield", "multiplier": 0.2}
+            },
+            "5": {
+                "name": "Melee DPS",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "dps", "internal_name": "melee", "attack": "melee"}
             }
         }
     },
-    assassin: {},
+    assassin: {
+        "wynnClass": "assassin",
+        "effects": {
+            "0": {
+                "name": "Multihit Total",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "6"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "multi", "internal_name": "multihit_total", "attack": "multihit"}
+            },
+            "1": {
+                "name": "Finality",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "81"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "conv",
+                "data": {
+                    "internal_name": "finality",
+                    "type": "Spell",
+                    "extra_hits": 7,
+                    "conversion": [4, 0, 0, 0, 0, 2]
+                }
+            },
+            "2": {
+                "name": "Multihit Attack",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "6"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "conv",
+                "data": {
+                    "internal_name": "multihit",
+                    "type": "Spell",
+                    "extra_hits": 7,
+                    "conversion": [30, 0, 0, 10, 0, 0]
+                }
+            },
+            "3": {
+                "name": "Finality Total",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "81"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "scaling-multi", "internal_name": "finality", "attack": "finality"}
+            }
+        }
+    },
     mage: {},
     shaman: {},
     warrior: {}

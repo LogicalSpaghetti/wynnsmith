@@ -1,5 +1,13 @@
 `use strict`;
 
+// enum
+const DamageExtremes = Object.freeze({
+    MIN: 0,
+    MAX: 1,
+    MINC: 2,
+    MAXC: 3
+});
+
 function calculateDamageConversions(build) {
     damageIdsToArrays(build);
 
@@ -19,7 +27,7 @@ function calculateDamageConversions(build) {
     applyOverridingDamageMultipliers(build);
     applyStrDex(build);
 
-    // TODO: addAttackVariants();
+    addAttackVariants(build);
     zeroNegatives(build);
 }
 
@@ -178,13 +186,12 @@ function powderNeutralConversions(build) {
 }
 
 function applySpellAttackSpeed(build) {
-    const attackSpeedMultiplier = attackSpeedMultipliers[build.attackSpeed];
+    const attackSpeedMultiplier = attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
 
-    build.attacks.forEach(attack => {
-        if (attack.is_melee) return;
-        for (let extreme of attack.base) for (let i in extreme)
-            extreme[i] *= attackSpeedMultiplier;
-    });
+    for (let attack of build.attacks)
+        if (attack.type === "Spell")
+            for (let extreme of attack.base) for (let i in extreme)
+                extreme[i] *= attackSpeedMultiplier;
 }
 
 function applyMasteries(build) {
@@ -254,6 +261,57 @@ function applyStrDex(build) {
             damage[DamageExtremes.MAX][i] *= strength;
         }
     }
+}
+
+function addAttackVariants(build) {
+    for (let i in build.variants) {
+        const variant = build.variants[i];
+
+        const attack = build.attacks.find(attack => attack.internal_name === variant.attack);
+
+        if (!attack) {
+            build.variants.splice(build.variants.indexOf(variant), 1);
+            continue;
+        }
+
+        variant.damage = getVariantConversion(variant.type, attack, build.stats.attackSpeed);
+    }
+}
+
+function getVariantConversion(variantType, attack, attack_speed) {
+    switch (variantType) {
+        case "basic":
+            return attack.damage;
+        case "multi":
+            return multiplyDamageByHits(attack.damage, attack.extra_hits);
+        case "dps":
+            return multiplyDamageByDPS(attack.damage, attack, attack_speed);
+        case "scaling-multi":
+            return multiplyScalingDamageByHits(attack.damage, attack.extra_hits);
+        default:
+            throw new Error(`invalid variant type: ${variantType}`);
+    }
+}
+
+function multiplyDamageByHits(damage, extra_hits) {
+    console.log(JSON.stringify(damage));
+    return damage.map(extreme => extreme.map(x => x * (1 + (extra_hits ?? 0))));
+}
+
+function multiplyScalingDamageByHits(damage, extra_hits) {
+    const hits = 1 + (extra_hits ?? 0);
+    if (hits === 1) return damage;
+    const multiplier = ((hits - 1) * hits) / 2; // == Σ(n - 1)
+    console.log(multiplier);
+
+    return damage.map(extreme => extreme.map(x => x * multiplier));
+}
+
+function multiplyDamageByDPS(damage, attack, attack_speed) {
+    console.log(attackSpeedMultipliers[orderedAttackSpeed[attack_speed]]);
+    return multiplyDamageByHits(damage, attack.extra_hits).map(extreme => extreme.map(x =>
+        x * ((attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[attack_speed]] : (attack.duration / attack.frequency))
+    ));
 }
 
 function zeroNegatives(build) {

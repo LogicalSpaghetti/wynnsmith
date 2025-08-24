@@ -66,8 +66,9 @@ function statCalculations(build) {
     build.stats.maxMana = 100 + maxManaMod;
 
     build.stats.trueManaRegen = ids.manaRegen + 25;
-    build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[build.attackSpeed];
-    build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[build.attackSpeed];
+
+    build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[build.stats.attackSpeed];
+    build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[build.stats.attackSpeed];
 
     // TODO: effect stat modifiers
     // if (build.has("toggles", "maskOfTheCoward"))

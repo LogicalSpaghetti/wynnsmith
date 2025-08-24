@@ -3,15 +3,6 @@
 const neutral_index = 0;
 const damage_type_count = 6;
 
-// enum
-const DamageExtremes = Object.freeze({
-    MIN: 0,
-    MAX: 1,
-    MINC: 2,
-    MAXC: 3
-});
-
-
 function newMinMax() {
     return [
         [0, 0, 0, 0, 0, 0],
@@ -28,7 +19,8 @@ EffectTypes = Object.freeze({
     PERSONAL_MULTIPLIER: "personal-multiplier",
     TEAM_MULTIPLIER: "team-multiplier",
     COST: "cost",
-    COST_MULTIPLIER: "cost-multiplier"
+    COST_MULTIPLIER: "cost-multiplier",
+    VARIANT: "variant"
 });
 
 function parseEffects(build) {
@@ -43,16 +35,17 @@ function applyEffects(build) {
     build.effects.forEach(effectId => {
         const effect = effectData[effectId];
 
-        if (effect.toggle_name !== "" && effect.toggle_name !== undefined) {
-            // TODO: get the currently selected effects somewhere
+        if (effect.toggle_name !== "" && effect.toggle_name !== undefined)
             if (!build.toggles.includes(effect.toggle_name)) return;
-        }
 
         switch (effect.type) {
             case EffectTypes.EMPTY:
                 break;
             case EffectTypes.CONVERSION:
                 parseConversionEffect(build, effect);
+                break;
+            case EffectTypes.VARIANT:
+                parseVariantEffect(build, effect);
                 break;
             case EffectTypes.MASTERY:
                 parseMasteryEffect(build, effect);
@@ -100,6 +93,12 @@ function sumConversions(conversionA, conversionB) {
     if (!conversionA) return conversionB;
     if (!conversionB) return conversionA;
     return conversionA.map((a, i) => a + conversionB[i]);
+}
+
+function parseVariantEffect(build, effect) {
+    const variant = getOrCreateNamedEffect(build.variants, effect.data.internal_name);
+    variant.type = effect.data.type;
+    variant.attack = effect.data.attack;
 }
 
 function parseMasteryEffect(build, effect) {

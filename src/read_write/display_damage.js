@@ -1,7 +1,7 @@
 function addDamageDisplays(build, attackDisplayId = "attack_display") {
     let html = "";
 
-    html += JSON.stringify(build.attacks)
+    html += JSON.stringify(build.variants);
 
     document.getElementById(attackDisplayId).innerHTML = html;
 }

@@ -10,15 +10,15 @@ class Editor {
         this.editor = this.element.querySelector("." + editor_class);
         this.name_input = this.element.querySelector("." + name_input_class);
         this.warn = this.element.querySelector("." + warn_input_class);
-        this.toggle_name = this.element.querySelector(".toggle_name")
+        this.toggle_name = this.element.querySelector(".toggle_name");
 
         this.name_input.value = "";
         this.name_input.addEventListener("input", () => {
             this.setEffectName(this.name_input.value);
         });
 
-        this.name_input.value = "";
-        this.name_input.addEventListener("input", () => {
+        this.toggle_name.value = "";
+        this.toggle_name.addEventListener("input", () => {
             this.setToggleName(this.toggle_name.value);
         });
 
@@ -74,6 +74,7 @@ class Editor {
         this.editor.style.display = effect ? "block" : "none";
         if (!effect) return;
         this.name_input.value = effect.name;
+        this.toggle_name.value = effect.toggle_name;
         this.parent_requirement.value = effect.require_all_parents;
         this.setupParentSelectors(effect);
         this.setupBlockSelectors(effect);
@@ -144,6 +145,7 @@ class Editor {
     setEffectName(name) {
         if (this.effect) this.effect.setName(name);
     }
+
     setToggleName(name) {
         if (this.effect) this.effect.setToggle(name);
     }
@@ -484,7 +486,7 @@ class EffectBuilder {
     }
 
     setToggle(name) {
-        this.toggle_name = name;
+        this.toggle_name = name ?? "";
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -549,6 +551,8 @@ class EffectType {
                 return this.setupScriptConfig();
             case "conv":
                 return this.setupConversionConfig();
+            case "variant":
+                return this.setupVariantConfig();
             case "mastery":
                 return this.setupMasteryConfig();
             case "heal":
@@ -617,7 +621,7 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Is Left Click: "));
         const isMelee = holder.appendChild(document.createElement("select"));
-        isMelee.innerHTML = "<option value=''>Inherited</option><option value=''>False</option><option value='true'>True</option>";
+        isMelee.innerHTML = "<option value=''>Inherited/False</option><option value='true'>True</option>";
         isMelee.value = this.data.is_melee ?? "";
         isMelee.addEventListener("change", () => setData(this));
 
@@ -625,7 +629,7 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Is Indirect Damage: "));
         const isIndirect = holder.appendChild(document.createElement("select"));
-        isIndirect.innerHTML = "<option value=''>Inherited</option><option value=''>False</option><option value='true'>True</option>";
+        isIndirect.innerHTML = "<option value=''>Inherited/False</option><option value='true'>True</option>";
         isIndirect.value = this.data.is_indirect ?? "";
         isIndirect.addEventListener("change", () => setData(this));
 
@@ -642,7 +646,7 @@ class EffectType {
         holder.appendChild(document.createTextNode("Frequency: "));
         const frequency = holder.appendChild(document.createElement("input"));
         frequency.placeholder = "N/A";
-        frequency.value = this.data.extra_hits ?? "";
+        frequency.value = this.data.frequency ?? "";
         frequency.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
@@ -650,7 +654,7 @@ class EffectType {
         holder.appendChild(document.createTextNode("Duration: "));
         const duration = holder.appendChild(document.createElement("input"));
         duration.placeholder = "N/A";
-        duration.value = this.data.extra_hits ?? "";
+        duration.value = this.data.duration ?? "";
         duration.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
@@ -715,6 +719,47 @@ class EffectType {
                 result.conversion = conversionInputs.map(input => parseInt(input.value) || 0);
 
             self.data = result;
+        }
+
+        setData(this);
+        return holder;
+    }
+
+    setupVariantConfig() {
+        const holder = document.createElement("div");
+
+        holder.appendChild(document.createTextNode("Internal Name: "));
+        const variantName = holder.appendChild(document.createElement("input"));
+        variantName.value = this.data.internal_name ?? "";
+        variantName.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Variant Type: "));
+        const variantSelect = holder.appendChild(document.createElement("select"));
+        variantSelect.innerHTML =
+            "<option value='basic'>Single</option>" +
+            "<option value='multi'>Multi-hit Total</option>" +
+            "<option value='dps'>DPS</option>" +
+            "<option value='scaling-multi'>Scaling Multi-hit</option>";// +
+            // "<option value='scaling-dps'>Scaling Multi-tick</option>";
+        variantSelect.value = this.data.variant ?? "basic";
+        variantSelect.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Attack Name: "));
+        const attack = holder.appendChild(document.createElement("input"));
+        attack.placeholder = "internal name";
+        attack.value = this.data.attack ?? "";
+        attack.addEventListener("change", () => setData(this));
+
+        function setData(self) {
+            self.data = {
+                type: variantSelect.value,
+                internal_name: variantName.value,
+                attack: attack.value
+            };
         }
 
         setData(this);

@@ -64,7 +64,7 @@ function addItem(build, cluster) {
 }
 
 function addAttackSpeed(build, item) {
-    build.attackSpeed = item.attackSpeed;
+    build.base.attackSpeed = item.attackSpeed;
 }
 
 function addIds(build, item) {

@@ -29,6 +29,7 @@ class Build {
     stats = {};
     sp_multipliers = [];
     toggles = [];
+    variants = [];
 
     base = JSON.parse(emptyBaseString);
     ids = JSON.parse(emptyIdsString);

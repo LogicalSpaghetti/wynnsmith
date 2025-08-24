@@ -3,6 +3,8 @@
 function computeIdentifications(build) {
     radiance(build);
     addOtherIdSources(build);
+
+    fixAttackSpeed(build);
 }
 
 // TODO: turn into an effect
@@ -67,4 +69,11 @@ function addSkillPointPercents(build) {
         build.ids[damageTypePrefixes[i + 1] + "MainAttackDamage"] += multiplier;
         build.ids[damageTypePrefixes[i + 1] + "SpellDamage"] += multiplier;
     }
+}
+
+function fixAttackSpeed(build) {
+    build.stats.attackSpeed =
+        Math.max(1, Math.min(orderedAttackSpeed.indexOf(build.base.attackSpeed) + build.ids.rawAttackSpeed,
+            Object.keys(attackSpeedMultipliers).length - 1));
+    console.log(build.stats.attackSpeed);
 }

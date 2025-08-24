@@ -1,8 +1,6 @@
 # Focus
 ### Small
 1. Add basic display effects
-	1. Variant
-	2. Display
 2.  Add more than just abilities to the effect builder
 ### Major
 1. Effects
