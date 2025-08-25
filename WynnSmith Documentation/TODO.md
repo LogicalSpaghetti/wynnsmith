@@ -6,10 +6,14 @@
 	3. Heals
 2. Heals
 	1. Heal display
-3.  Add more than just abilities to the effect builder
+3. Sliders
+4. Finish writing Aspect descriptions
+	1. Powder special descriptions
+5.  Add more than just abilities to the effect builder
 ### Major
 1. Effects
 2. Off-hands
+3. SP Auto-calculation
 # General
 ### Feat
 1. Switch to a functional model instead of using `build` for everything
@@ -207,15 +211,6 @@
 	1. a new "conversion" which blocks `Multihit`
 4. `Commander` scaling melee damage with `Puppet` count slider
 	1. a 3% "slider multiplier" targeting `Melee` named "puppet slider"
-# Notes (move)
-1. ways to iterate over object:
-    1. also: https://stackoverflow.com/questions/14379274/how-to-iterate-over-a-javascript-object
-```javascript
-for (let key in yourobject) {/*...*/}
-for (let [key, value] of Object.entries(yourobject)) {/*...*/}
-// necessity of if statement unknown, investigate.
-for (let key in yourobject) {if (yourobject.hasOwnProperty(key)) {/*...*/}}
-```
 # Post-release planned features
 1. Extended information inclusion
     1. alternate tree options

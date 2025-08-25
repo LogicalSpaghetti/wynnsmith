@@ -1,6 +1,6 @@
 `use strict`;
 
-function minecraftAsHTML(text = "") {
+function minecraftAsElement(text = "") {
     const htmlText = minecraftToHTML(text);
     const span = document.createElement("span");
     span.innerHTML = htmlText;

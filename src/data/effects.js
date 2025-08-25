@@ -122,7 +122,34 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"name":"Multihit", "variants": ["multihit_total", "finality"]}
+                "data": {"name": "Multihit", "variants": ["multihit_total", "finality"], "spell": "2"}
+            },
+            "5": {
+                "name": "Multihit Cost",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "6"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "cost",
+                "data": {"spell_number": 2, "cost": 40, "is_base_spell": true}
+            },
+            "6": {
+                "name": "Cheaper Multihit",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "30"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "cost",
+                "data": {"spell_number": 2, "cost": -5, "is_base_spell": false}
+            },
+            "7": {
+                "name": "Cheaper Multihit",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "51"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "cost",
+                "data": {"spell_number": 2, "cost": -5, "is_base_spell": false}
             }
         }
     },

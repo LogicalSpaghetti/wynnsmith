@@ -667,19 +667,19 @@ class EffectType {
 
         conversionHolder.appendChild(document.createElement("br"));
 
-        conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["neutral"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["neutral"]));
         const n = conversionHolder.appendChild(document.createElement("input"));
         n.value = String(conv[0]);
         n.style.width = "5ch";
         n.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["earth"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["earth"]));
         const e = conversionHolder.appendChild(document.createElement("input"));
         e.value = String(conv[1]);
         e.style.width = "5ch";
         e.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["thunder"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["thunder"]));
         const t = conversionHolder.appendChild(document.createElement("input"));
         t.value = String(conv[2]);
         t.style.width = "5ch";
@@ -687,19 +687,19 @@ class EffectType {
 
         conversionHolder.appendChild(document.createElement("br"));
 
-        conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["water"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["water"]));
         const w = conversionHolder.appendChild(document.createElement("input"));
         w.value = String(conv[3]);
         w.style.width = "5ch";
         w.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["fire"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["fire"]));
         const f = conversionHolder.appendChild(document.createElement("input"));
         f.value = String(conv[4]);
         f.style.width = "5ch";
         f.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsHTML(codeDictionaryGenericSymbols["air"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["air"]));
         const a = conversionHolder.appendChild(document.createElement("input"));
         a.value = String(conv[5]);
         a.style.width = "5ch";
@@ -746,7 +746,7 @@ class EffectType {
             "<option value='dps'>DPS</option>" +
             "<option value='scaling-multi'>Scaling Multi-hit</option>" +
             "<option value='hit-modifier'>Per-hit Modifier</option>";
-        variantSelect.value = this.data.variant ?? "hit";
+        variantSelect.value = this.data.type ?? "hit";
         variantSelect.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
@@ -797,6 +797,20 @@ class EffectType {
 
         holder.appendChild(document.createElement("br"));
 
+        holder.appendChild(document.createTextNode("Spell Cast: "));
+        const spellSelect = holder.appendChild(document.createElement("select"));
+        spellSelect.innerHTML =
+            "<option value=''>-none-</option>" +
+            "<option value='0'>1st Spell</option>" +
+            "<option value='1'>2nd Spell</option>" +
+            "<option value='2'>3rd Spell</option>" +
+            "<option value='3'>4th Spell</option>";
+        spellSelect.value = this.data.spell ?? "";
+        spellSelect.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
+
         holder.appendChild(document.createTextNode("Variant Names (csv): "));
         const variants = holder.appendChild(document.createElement("input"));
         variants.placeholder = "internal_name,internal_name2";
@@ -809,6 +823,8 @@ class EffectType {
                 name: displayName.value,
                 variants: variants.value.split(",").map(word => word.trim())
             };
+
+            if (spellSelect.value !== "") self.data.spell = spellSelect.value;
         }
 
         setData(this);
