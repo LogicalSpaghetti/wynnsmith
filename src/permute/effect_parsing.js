@@ -20,7 +20,8 @@ EffectTypes = Object.freeze({
     TEAM_MULTIPLIER: "team-multiplier",
     COST: "cost",
     COST_MULTIPLIER: "cost-multiplier",
-    VARIANT: "variant"
+    VARIANT: "variant",
+    DISPLAY: "display"
 });
 
 function parseEffects(build) {
@@ -46,6 +47,9 @@ function applyEffects(build) {
                 break;
             case EffectTypes.VARIANT:
                 parseVariantEffect(build, effect);
+                break;
+            case EffectTypes.DISPLAY:
+                parseDisplayEffect(build, effect);
                 break;
             case EffectTypes.MASTERY:
                 parseMasteryEffect(build, effect);
@@ -100,6 +104,10 @@ function parseVariantEffect(build, effect) {
     variant.type = effect.data.type;
     variant.attack = effect.data.attack;
     if (effect.data.second_attack) variant.second_attack = effect.data.second_attack;
+}
+
+function parseDisplayEffect(build, effect) {
+    createUnnamedEffect(build.displays, effect.data);
 }
 
 function parseMasteryEffect(build, effect) {

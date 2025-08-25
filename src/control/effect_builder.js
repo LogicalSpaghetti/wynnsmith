@@ -788,17 +788,25 @@ class EffectType {
     setupDisplayConfig() {
         const holder = document.createElement("div");
 
-        // name, (modifiable?)
+
+        holder.appendChild(document.createTextNode("Display Name: "));
+        const displayName = holder.appendChild(document.createElement("input"));
+        displayName.placeholder = "Name";
+        displayName.value = this.data.name ?? "";
+        displayName.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
 
         holder.appendChild(document.createTextNode("Variant Names (csv): "));
         const variants = holder.appendChild(document.createElement("input"));
         variants.placeholder = "internal_name,internal_name2";
-        variants.value = this.data.attack ?? "";
+        variants.value = this.data.variants ?? "";
         variants.addEventListener("change", () => setData(this));
 
 
         function setData(self) {
             self.data = {
+                name: displayName.value,
                 variants: variants.value.split(",").map(word => word.trim())
             };
         }

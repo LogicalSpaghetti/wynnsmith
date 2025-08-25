@@ -1,9 +1,12 @@
 # Focus
 ### Small
 1. display:
-	1. Parse displays
-	2. Render displays
-2.  Add more than just abilities to the effect builder
+	1. Spell
+	2. Attack Speed
+	3. Heals
+2. Heals
+	1. Heal display
+3.  Add more than just abilities to the effect builder
 ### Major
 1. Effects
 2. Off-hands
@@ -138,6 +141,7 @@
 9. Trickster: Confused enemies taking 30% more thunder damage?
 	1. Other similar effects, hopefully just ele%s
 10. Does Finality increase the damage of the first hit?
+11. Verify that the Finality equation is working
 # Settings
 1. Ability to re-arrange GUI
 2. Change color theme

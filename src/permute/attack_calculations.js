@@ -277,7 +277,9 @@ function addAttackVariants(build) {
 }
 
 function getVariantConversion(build, variant, attack) {
-    const secondAttack = build.attacks.find(attack => attack.internal_name === variant.second_attack);
+    const secondAttack = build.attacks.find(attack => attack.internal_name === variant.second_attack) ?? {extra_hits: -1};
+    // TODO: secondAttack.extraHits should never be called if secondAttack doesn't exist. pass build and get second attack in the next function?
+    // (will matter greatly for Winded)
     switch (variant.type) {
         case "hit":
             return attack.damage;
@@ -286,7 +288,7 @@ function getVariantConversion(build, variant, attack) {
         case "dps":
             return multiplyDamageByDPS(build, attack);
         case "scaling-multi":
-            return multiplyScalingDamageByHits(attack.damage, attack.extra_hits);
+            return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack.extra_hits);
         case "hit-modifier":
             return multiplyDamageByHits(attack.damage, secondAttack.extra_hits);
         default:
@@ -298,9 +300,12 @@ function multiplyDamageByHits(damage, extra_hits) {
     return damage.map(extreme => extreme.map(x => x * (1 + (extra_hits ?? 0))));
 }
 
-function multiplyScalingDamageByHits(damage, extra_hits) {
-    const hits = 1 + (extra_hits ?? 0);
-    const multiplier = ((hits - 1) * hits) / 2; // == Σ(n - 1)
+function multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
+    const total_hits = 1 + (extra_hits ?? 0);
+    let multiplier = 0;
+    for (let n = 1; n < total_hits - 1; n++) {
+        multiplier += Math.min(n, scaling_cap);
+    }
 
     return damage.map(extreme => extreme.map(x => x * multiplier));
 }
@@ -314,4 +319,8 @@ function multiplyDamageByDPS(build, attack) {
 function zeroNegatives(build) {
     for (let attack of build.attacks) for (let extreme of attack.damage) for (let i in extreme)
         if (extreme[i] < 0) extreme[i] = 0;
+}
+
+function sumDamages(damageA, damageB) {
+    return damageA.map((extreme, i) => extreme.map((x, j) => x + damageB[i][j]));
 }

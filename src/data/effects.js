@@ -122,7 +122,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"variants": ["multihit_total", "finality"]}
+                "data": {"name":"Multihit", "variants": ["multihit_total", "finality"]}
             }
         }
     },

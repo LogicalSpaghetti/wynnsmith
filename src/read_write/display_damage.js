@@ -1,9 +1,40 @@
 function addDamageDisplays(build, attackDisplayId = "attack_display") {
-    let html = "";
+    const attackDisplay = document.getElementById(attackDisplayId);
+    attackDisplay.innerHTML = "";
 
-    html += JSON.stringify(build.variants);
+    for (let display of build.displays) {
+        const variants =
+            display.variants.map(variantName => build.variants.find(variant => variant.internal_name === variantName));
+        const hasDefined = variants.find((v) => v != null);
+        if (!hasDefined) continue;
 
-    document.getElementById(attackDisplayId).innerHTML = html;
+        const damage = variants.reduce((damage, variant) => variant ? sumDamages(damage, variant.damage) : damage, newMinMax().concat(newMinMax()));
+        attackDisplay.appendChild(getDamageElement(build, damage, display));
+    }
+}
+
+function getDamageElement(build, damage, display) {
+    const holder = document.createElement("div");
+    holder.classList.add("attack-holder");
+
+    holder.appendChild(document.createTextNode(`${display.name}` /* TODO: spell cost */));
+
+    holder.appendChild(document.createElement("br"));
+
+    const averages = [];
+    for (let i = 0; i < damage.length; i++) {
+        averages[i] = damage[i].reduce((a, b) => a + b);
+        if (i < DamageExtremes.MINC) {
+            averages[i] *= 1 - build.sp_multipliers[SkillPointIndexes.Dexterity];
+        } else {
+            averages[i] *= build.sp_multipliers[SkillPointIndexes.Dexterity];
+        }
+    }
+
+    const average = averages.reduce((x, y) => x + y) / 2;
+    holder.appendChild(document.createTextNode(selvify(average, true)));
+
+    return holder;
 }
 
 function perAttackHTML(build, name) {

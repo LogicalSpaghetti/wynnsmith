@@ -23,7 +23,7 @@ function displayBuildStats(build) {
         getStatDisplay("air", true, "Air Defence", stats["totalAirDefence"]) +
         "<hr>" +
         getStatDisplay("water", true, "Mana Regen", ids.manaRegen, "/5s") +
-        getStatDisplay("water", false, "True Mana Regen", stats.trueManaRegen, "/5s", true, true) +
+        getStatDisplay("water", false, "True Mana Regen", stats.trueManaRegen, "/5s", true, true, 25) +
         getStatDisplay("water", true, "Mana Steal", ids.manaSteal, "/3s") +
         getStatDisplay("water", false, "Mana per Hit", stats.manaPerHit, "", true, true) +
         getStatDisplay("water", true, "Total Max Mana", stats.maxMana, "", true, false, 100) +
