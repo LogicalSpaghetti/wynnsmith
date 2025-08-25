@@ -3,272 +3,272 @@ const powders = {
         element: "Earth",
         dmg: {
             min: 3,
-            max: 6,
+            max: 6
         },
         conversion: 17,
-        def: [0, 2, 0, 0, 0, -1],
+        def: [0, 2, 0, 0, 0, -1]
     },
     e2: {
         element: "Earth",
         dmg: {
             min: 5,
-            max: 8,
+            max: 8
         },
         conversion: 21,
-        def: [0, 4, 0, 0, 0, -2],
+        def: [0, 4, 0, 0, 0, -2]
     },
     e3: {
         element: "Earth",
         dmg: {
             min: 6,
-            max: 10,
+            max: 10
         },
         conversion: 25,
-        def: [0, 8, 0, 0, 0, -3],
+        def: [0, 8, 0, 0, 0, -3]
     },
     e4: {
         element: "Earth",
         dmg: {
             min: 7,
-            max: 10,
+            max: 10
         },
         conversion: 31,
-        def: [0, 14, 0, 0, 0, -5],
+        def: [0, 14, 0, 0, 0, -5]
     },
     e5: {
         element: "Earth",
         dmg: {
             min: 9,
-            max: 11,
+            max: 11
         },
         conversion: 38,
-        def: [0, 22, 0, 0, 0, -9],
+        def: [0, 22, 0, 0, 0, -9]
     },
     e6: {
         element: "Earth",
         dmg: {
             min: 11,
-            max: 13,
+            max: 13
         },
         conversion: 46,
-        def: [0, 30, 0, 0, 0, -13],
+        def: [0, 30, 0, 0, 0, -13]
     },
     t1: {
         element: "Thunder",
         dmg: {
             min: 1,
-            max: 8,
+            max: 8
         },
         conversion: 9,
-        def: [0, -1, 3, 0, 0, 0],
+        def: [0, -1, 3, 0, 0, 0]
     },
     t2: {
         element: "Thunder",
         dmg: {
             min: 1,
-            max: 12,
+            max: 12
         },
         conversion: 11,
-        def: [0, -1, 5, 0, 0, 0],
+        def: [0, -1, 5, 0, 0, 0]
     },
     t3: {
         element: "Thunder",
         dmg: {
             min: 2,
-            max: 15,
+            max: 15
         },
         conversion: 13,
-        def: [0, -2, 9, 0, 0, 0],
+        def: [0, -2, 9, 0, 0, 0]
     },
     t4: {
         element: "Thunder",
         dmg: {
             min: 3,
-            max: 15,
+            max: 15
         },
         conversion: 17,
-        def: [0, -4, 14, 0, 0, 0],
+        def: [0, -4, 14, 0, 0, 0]
     },
     t5: {
         element: "Thunder",
         dmg: {
             min: 4,
-            max: 17,
+            max: 17
         },
         conversion: 22,
-        def: [0, -7, 20, 0, 0, 0],
+        def: [0, -7, 20, 0, 0, 0]
     },
     t6: {
         element: "Thunder",
         dmg: {
             min: 5,
-            max: 20,
+            max: 20
         },
         conversion: 28,
-        def: [0, -10, 28, 0, 0, 0],
+        def: [0, -10, 28, 0, 0, 0]
     },
     w1: {
         element: "Water",
         dmg: {
             min: 3,
-            max: 4,
+            max: 4
         },
         conversion: 9,
-        def: [0, 0, -1, 3, 0, 0],
+        def: [0, 0, -1, 3, 0, 0]
     },
     w2: {
         element: "Water",
         dmg: {
             min: 4,
-            max: 6,
+            max: 6
         },
         conversion: 13,
-        def: [0, 0, -1, 6, 0, 0],
+        def: [0, 0, -1, 6, 0, 0]
     },
     w3: {
         element: "Water",
         dmg: {
             min: 5,
-            max: 8,
+            max: 8
         },
         conversion: 15,
-        def: [0, 0, -2, 11, 0, 0],
+        def: [0, 0, -2, 11, 0, 0]
     },
     w4: {
         element: "Water",
         dmg: {
             min: 6,
-            max: 8,
+            max: 8
         },
         conversion: 21,
-        def: [0, 0, -4, 18, 0, 0],
+        def: [0, 0, -4, 18, 0, 0]
     },
     w5: {
         element: "Water",
         dmg: {
             min: 7,
-            max: 10,
+            max: 10
         },
         conversion: 26,
-        def: [0, 0, -7, 28, 0, 0],
+        def: [0, 0, -7, 28, 0, 0]
     },
     w6: {
         element: "Water",
         dmg: {
             min: 9,
-            max: 11,
+            max: 11
         },
         conversion: 32,
-        def: [0, 0, -10, 40, 0, 0],
+        def: [0, 0, -10, 40, 0, 0]
     },
     f1: {
         element: "Fire",
         dmg: {
             min: 2,
-            max: 5,
+            max: 5
         },
         conversion: 14,
-        def: [0, 0, 0, -1, 3, 0],
+        def: [0, 0, 0, -1, 3, 0]
     },
     f2: {
         element: "Fire",
         dmg: {
             min: 4,
-            max: 8,
+            max: 8
         },
         conversion: 16,
-        def: [0, 0, 0, -2, 5, 0],
+        def: [0, 0, 0, -2, 5, 0]
     },
     f3: {
         element: "Fire",
         dmg: {
             min: 5,
-            max: 9,
+            max: 9
         },
         conversion: 19,
-        def: [0, 0, 0, -3, 9, 0],
+        def: [0, 0, 0, -3, 9, 0]
     },
     f4: {
         element: "Fire",
         dmg: {
             min: 6,
-            max: 9,
+            max: 9
         },
         conversion: 24,
-        def: [0, 0, 0, -5, 16, 0],
+        def: [0, 0, 0, -5, 16, 0]
     },
     f5: {
         element: "Fire",
         dmg: {
             min: 8,
-            max: 10,
+            max: 10
         },
         conversion: 30,
-        def: [0, 0, 0, -9, 25, 0],
+        def: [0, 0, 0, -9, 25, 0]
     },
     f6: {
         element: "Fire",
         dmg: {
             min: 10,
-            max: 12,
+            max: 12
         },
         conversion: 37,
-        def: [0, 0, 0, -13, 36, 0],
+        def: [0, 0, 0, -13, 36, 0]
     },
     a1: {
         element: "Air",
         dmg: {
             min: 2,
-            max: 6,
+            max: 6
         },
         conversion: 11,
-        def: [0, 0, 0, 0, -1, 3],
+        def: [0, 0, 0, 0, -1, 3]
     },
     a2: {
         element: "Air",
         dmg: {
             min: 3,
-            max: 10,
+            max: 10
         },
         conversion: 14,
-        def: [0, 0, 0, 0, -2, 6],
+        def: [0, 0, 0, 0, -2, 6]
     },
     a3: {
         element: "Air",
         dmg: {
             min: 4,
-            max: 11,
+            max: 11
         },
         conversion: 17,
-        def: [0, 0, 0, 0, -3, 10],
+        def: [0, 0, 0, 0, -3, 10]
     },
     a4: {
         element: "Air",
         dmg: {
             min: 5,
-            max: 11,
+            max: 11
         },
         conversion: 22,
-        def: [0, 0, 0, 0, -5, 16],
+        def: [0, 0, 0, 0, -5, 16]
     },
     a5: {
         element: "Air",
         dmg: {
             min: 7,
-            max: 12,
+            max: 12
         },
         conversion: 28,
-        def: [0, 0, 0, 0, -9, 24],
+        def: [0, 0, 0, 0, -9, 24]
     },
     a6: {
         element: "Air",
         dmg: {
             min: 8,
-            max: 14,
+            max: 14
         },
         conversion: 35,
-        def: [0, 0, 0, 0, -13, 34],
-    },
+        def: [0, 0, 0, 0, -13, 34]
+    }
 };
 
 const skillPointNames = ["strength", "dexterity", "intelligence", "defence", "agility"];
@@ -283,7 +283,7 @@ const attackSpeedMultipliers = {
     normal: 2.05,
     slow: 1.5,
     verySlow: 0.83,
-    superSlow: 0.51,
+    superSlow: 0.51
 };
 
 const orderedAttackSpeed = [
@@ -293,7 +293,7 @@ const orderedAttackSpeed = [
     "normal",
     "fast",
     "veryFast",
-    "superFast",
+    "superFast"
 ];
 
 // Fuck Wynncraft changing it from snake_case to camelCase
@@ -304,7 +304,7 @@ const attackSpeedMap = {
     normal: "Normal",
     slow: "Slow",
     verySlow: "Very Slow",
-    superSlow: "Super Slow",
+    superSlow: "Super Slow"
 };
 
 const maxPlayerLevel = 106;
@@ -460,7 +460,7 @@ const spMultipliers = [
     0.800186321783018,
     0.802733309923217,
     0.805256871453982,
-    0.807757221847863,
+    0.807757221847863
 ];
 
 const SkillPointIndexes = Object.freeze({
@@ -468,13 +468,13 @@ const SkillPointIndexes = Object.freeze({
     Dexterity: 1,
     Intelligence: 2,
     Defence: 3,
-    Agility: 4,
+    Agility: 4
 });
 
 const abilityPointsAtLevel = [
     0,
-    1,  2,  2,  3,  3,  4,  4,  5,  5,  6,
-    6,  7,  8,  8,  9,  9, 10, 11, 11, 12,
+    1, 2, 2, 3, 3, 4, 4, 5, 5, 6,
+    6, 7, 8, 8, 9, 9, 10, 11, 11, 12,
     12, 13, 14, 15, 15, 16, 16, 17, 17, 18,
     18, 19, 19, 20, 20, 20, 21, 21, 22, 22,
     23, 23, 23, 24, 24, 25, 25, 26, 26, 27,
@@ -484,7 +484,7 @@ const abilityPointsAtLevel = [
     39, 39, 39, 40, 40, 40, 40, 41, 41, 41,
     41, 42, 42, 42, 42, 43, 43, 43, 43, 44,
     44, 44, 44, 45, 45
-]
+];
 
 const base64Values = [
     "0", "1", "2", "3", "4", "5", "6", "7",
@@ -494,7 +494,16 @@ const base64Values = [
     "w", "x", "y", "z", "A", "B", "C", "D",
     "E", "F", "G", "H", "I", "J", "K", "L",
     "M", "N", "O", "P", "Q", "R", "S", "T",
-    "U", "V", "W", "X", "Y", "Z", "_", "'",
+    "U", "V", "W", "X", "Y", "Z", "_", "'"
 ];
 
 const costNames = ["1st", "2nd", "3rd", "4th"];
+
+const damageColors = Object.freeze([
+    "#fca800",
+    "#0a0",
+    "#ff0",
+    "#1cc",
+    "#f11",
+    "#fff"
+]);

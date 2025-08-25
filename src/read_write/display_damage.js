@@ -22,17 +22,35 @@ function getDamageElement(build, damage, display) {
     holder.appendChild(document.createElement("br"));
 
     const averages = [];
-    for (let i = 0; i < damage.length; i++) {
-        averages[i] = damage[i].reduce((a, b) => a + b);
-        if (i < DamageExtremes.MINC) {
-            averages[i] *= 1 - build.sp_multipliers[SkillPointIndexes.Dexterity];
-        } else {
-            averages[i] *= build.sp_multipliers[SkillPointIndexes.Dexterity];
+    for (let i = 0; i < damage_type_count; i++) {
+        averages[i] = 0;
+        for (const j in damage) {
+            let type_damage = damage[j][i];
+
+            if (j < DamageExtremes.MINC)
+                type_damage *= 1 - build.sp_multipliers[SkillPointIndexes.Dexterity];
+            else
+                type_damage *= build.sp_multipliers[SkillPointIndexes.Dexterity];
+
+            averages[i] += type_damage;
         }
+        averages[i] /= 2;
     }
 
-    const average = averages.reduce((x, y) => x + y) / 2;
+    const average = averages.reduce((x, y) => x + y);
     holder.appendChild(document.createTextNode(selvify(average, true)));
+
+    const barHolder = holder.appendChild(document.createElement("div"));
+    barHolder.classList.add("color-bar-holder");
+
+    for (let i = 0; i < damage_type_count; i++) {
+        const span = barHolder.appendChild(document.createElement("span"));
+
+        span.classList.add("color-bar");
+        console.log(100 * averages[i] / average);
+        span.style.width = `${(averages[i] * 100) / average}%`;
+        span.style.backgroundColor = damageColors[i];
+    }
 
     return holder;
 }
