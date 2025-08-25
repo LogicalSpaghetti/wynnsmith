@@ -1,10 +1,12 @@
 # Focus
 ### Small
-1. Add basic display effects
+1. display:
+	1. Parse displays
+	2. Render displays
 2.  Add more than just abilities to the effect builder
 ### Major
 1. Effects
-2. Offhands
+2. Off-hands
 # General
 ### Feat
 1. Switch to a functional model instead of using `build` for everything
@@ -100,6 +102,7 @@
 	1. use `sessionStorage`
 3. Handle items removed from database
 4. Tree propagation is wrong, once it's gone down, it can't go left or right
+5. Inhibitor improper ids: (double check somehow) ![[Inhibitor.png]]
 ### Visual
 1. make elements look clickable or not
     1. pointer-events: none/initial;
@@ -168,24 +171,28 @@
 	2. Major Ids
 	3. Powder Specials
 2. Effect types
-	1. Attack variants
-		1. mostly automatically generated, i.e. multi-hits and DPS
-		2. multipliers
-		3. sums of multiple attacks
+	1. Variant sums
 	2. Attack Displays
-		1. points to a set of variants, and optionally a spell cost and/or healing.
-			1. one variant and optionally one healing is given display priority
-			2. a variant can be the sum of some number of attacks, or generated based on.
+		1. (ordered) damages sums
+			1. array pointing to per-spells
+		2. per-spell damage displays
+		3. heal
+		4. spell
 	3. Radiance
 	4. Sliders
 	5. Cost modifiers
 	6. Self-damage
 		1. Sacrificial Shrine health drain
 	7. Over-health?
-3. Effect toggles disabling each other.
+	8. Identification provider
+	9. Identification for identification
+	10. Id for healing
+		1. Fluid healing
+3. Effect toggles disabling each other
 4. External toggles
 	1. Take from other trees
-5. allow for selecting attack ids instead of manually typing them in
+5. allow for selecting (attack) ids instead of manually typing them in
+6. Sort effects by the average of their parent locations or something
 ### Effect Examples:
 1. `Haunting Memory`
 	1. Blocks `Uproot`'s conversion when taken

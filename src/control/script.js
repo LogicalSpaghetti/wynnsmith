@@ -1,7 +1,6 @@
 `use strict`;
 
 function refreshBuild() {
-    console.log("Begin build refresh:")
     const build = new Build();
 
     readBuild(build);

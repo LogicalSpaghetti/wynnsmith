@@ -75,5 +75,4 @@ function fixAttackSpeed(build) {
     build.stats.attackSpeed =
         Math.max(1, Math.min(orderedAttackSpeed.indexOf(build.base.attackSpeed) + build.ids.rawAttackSpeed,
             Object.keys(attackSpeedMultipliers).length - 1));
-    console.log(build.stats.attackSpeed);
 }

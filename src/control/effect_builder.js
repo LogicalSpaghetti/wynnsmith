@@ -553,6 +553,8 @@ class EffectType {
                 return this.setupConversionConfig();
             case "variant":
                 return this.setupVariantConfig();
+            case "display":
+                return this.setupDisplayConfig();
             case "mastery":
                 return this.setupMasteryConfig();
             case "heal":
@@ -705,6 +707,7 @@ class EffectType {
 
         const conversionInputs = [n, e, t, w, f, a];
 
+
         function setData(self) {
             const result = {};
 
@@ -738,12 +741,12 @@ class EffectType {
         holder.appendChild(document.createTextNode("Variant Type: "));
         const variantSelect = holder.appendChild(document.createElement("select"));
         variantSelect.innerHTML =
-            "<option value='basic'>Single</option>" +
+            "<option value='hit'>Single</option>" +
             "<option value='multi'>Multi-hit Total</option>" +
             "<option value='dps'>DPS</option>" +
-            "<option value='scaling-multi'>Scaling Multi-hit</option>";// +
-            // "<option value='scaling-dps'>Scaling Multi-tick</option>";
-        variantSelect.value = this.data.variant ?? "basic";
+            "<option value='scaling-multi'>Scaling Multi-hit</option>" +
+            "<option value='hit-modifier'>Per-hit Modifier</option>";
+        variantSelect.value = this.data.variant ?? "hit";
         variantSelect.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createElement("br"));
@@ -754,11 +757,49 @@ class EffectType {
         attack.value = this.data.attack ?? "";
         attack.addEventListener("change", () => setData(this));
 
+        const secondAttackContainer = holder.appendChild(document.createElement("div"));
+
+        secondAttackContainer.appendChild(document.createTextNode("Second Attack: "));
+        const secondAttack = secondAttackContainer.appendChild(document.createElement("input"));
+        secondAttack.placeholder = "internal name";
+        secondAttack.value = this.data.second_attack ?? "";
+        secondAttack.addEventListener("change", () => setData(this));
+
+
         function setData(self) {
             self.data = {
                 type: variantSelect.value,
                 internal_name: variantName.value,
                 attack: attack.value
+            };
+
+            if (variantSelect.value === "scaling-multi" || variantSelect.value === "scaling-multi") {
+                self.data.second_attack = secondAttack.value;
+                secondAttackContainer.style.display = "block";
+            } else {
+                secondAttackContainer.style.display = "none";
+            }
+        }
+
+        setData(this);
+        return holder;
+    }
+
+    setupDisplayConfig() {
+        const holder = document.createElement("div");
+
+        // name, (modifiable?)
+
+        holder.appendChild(document.createTextNode("Variant Names (csv): "));
+        const variants = holder.appendChild(document.createElement("input"));
+        variants.placeholder = "internal_name,internal_name2";
+        variants.value = this.data.attack ?? "";
+        variants.addEventListener("change", () => setData(this));
+
+
+        function setData(self) {
+            self.data = {
+                variants: variants.value.split(",").map(word => word.trim())
             };
         }
 
@@ -837,6 +878,7 @@ class EffectType {
         healInput.value = this.data.heal ?? "0";
         healInput.addEventListener("change", () => setData(this));
 
+
         function setData(self) {
             self.data = {
                 internal_name: internalName.value,
@@ -862,6 +904,7 @@ class EffectType {
         const numberInput = holder.appendChild(document.createElement("input"));
         numberInput.value = this.data.multiplier ?? "0";
         numberInput.addEventListener("change", () => setData(this));
+
 
         function setData(self) {
             self.data = {
@@ -896,6 +939,7 @@ class EffectType {
         targetInput.placeholder = "\"all\" for global multiplier";
         targetInput.value = this.data.target ?? "";
         targetInput.addEventListener("change", () => setData(this));
+
 
         function setData(self) {
             self.data = {
@@ -934,6 +978,7 @@ class EffectType {
             "<option value='vulnerability'>Vulnerability</option>";
         typeSelect.value = this.data.type ?? "damage-boost";
         typeSelect.addEventListener("change", () => setData(this));
+
 
         function setData(self) {
             self.data = {
@@ -1007,6 +1052,7 @@ class EffectType {
         const costInput = holder.appendChild(document.createElement("input"));
         costInput.value = this.data.cost_multiplier ?? "0";
         costInput.addEventListener("change", () => setData(this));
+
 
         function setData(self) {
             self.data = {

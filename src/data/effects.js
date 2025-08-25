@@ -63,8 +63,7 @@ const classEffects = {
         }
     },
     assassin: {
-        "wynnClass": "assassin",
-        "effects": {
+        "wynnClass": "assassin", "effects": {
             "0": {
                 "name": "Multihit Total",
                 "toggle_name": "",
@@ -109,7 +108,21 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {"type": "scaling-multi", "internal_name": "finality", "attack": "finality"}
+                "data": {
+                    "type": "scaling-multi",
+                    "internal_name": "finality",
+                    "attack": "finality",
+                    "second_attack": "multihit"
+                }
+            },
+            "4": {
+                "name": "Multihit Display",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "6"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {"variants": ["multihit_total", "finality"]}
             }
         }
     },

@@ -269,48 +269,45 @@ function addAttackVariants(build) {
 
         const attack = build.attacks.find(attack => attack.internal_name === variant.attack);
 
-        if (!attack) {
+        if (!attack)
             build.variants.splice(build.variants.indexOf(variant), 1);
-            continue;
-        }
-
-        variant.damage = getVariantConversion(variant.type, attack, build.stats.attackSpeed);
+        else
+            variant.damage = getVariantConversion(build, variant, attack);
     }
 }
 
-function getVariantConversion(variantType, attack, attack_speed) {
-    switch (variantType) {
-        case "basic":
+function getVariantConversion(build, variant, attack) {
+    const secondAttack = build.attacks.find(attack => attack.internal_name === variant.second_attack);
+    switch (variant.type) {
+        case "hit":
             return attack.damage;
         case "multi":
             return multiplyDamageByHits(attack.damage, attack.extra_hits);
         case "dps":
-            return multiplyDamageByDPS(attack.damage, attack, attack_speed);
+            return multiplyDamageByDPS(build, attack);
         case "scaling-multi":
             return multiplyScalingDamageByHits(attack.damage, attack.extra_hits);
+        case "hit-modifier":
+            return multiplyDamageByHits(attack.damage, secondAttack.extra_hits);
         default:
-            throw new Error(`invalid variant type: ${variantType}`);
+            throw new Error(`invalid variant type: ${variant.type}`);
     }
 }
 
 function multiplyDamageByHits(damage, extra_hits) {
-    console.log(JSON.stringify(damage));
     return damage.map(extreme => extreme.map(x => x * (1 + (extra_hits ?? 0))));
 }
 
 function multiplyScalingDamageByHits(damage, extra_hits) {
     const hits = 1 + (extra_hits ?? 0);
-    if (hits === 1) return damage;
     const multiplier = ((hits - 1) * hits) / 2; // == Σ(n - 1)
-    console.log(multiplier);
 
     return damage.map(extreme => extreme.map(x => x * multiplier));
 }
 
-function multiplyDamageByDPS(damage, attack, attack_speed) {
-    console.log(attackSpeedMultipliers[orderedAttackSpeed[attack_speed]]);
-    return multiplyDamageByHits(damage, attack.extra_hits).map(extreme => extreme.map(x =>
-        x * ((attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[attack_speed]] : (attack.duration / attack.frequency))
+function multiplyDamageByDPS(build, attack) {
+    return multiplyDamageByHits(attack.damage, attack.extra_hits).map(extreme => extreme.map(x =>
+        x * ((attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]] : (attack.duration / attack.frequency))
     ));
 }
 

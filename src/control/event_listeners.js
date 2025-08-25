@@ -110,7 +110,6 @@ function toggleEffectToggle(event) {
                 effectElement.classList.toggle("toggleOn");
         });
     }
-    console.log(toggle);
 
     refreshBuild();
 }
