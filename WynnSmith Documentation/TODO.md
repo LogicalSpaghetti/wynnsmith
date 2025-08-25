@@ -1,9 +1,7 @@
 # Focus
 ### Small
 1. display:
-	1. Spell
-	2. Attack Speed
-	3. Heals
+	1. Heals
 2. Heals
 	1. Heal display
 3. Sliders
@@ -139,13 +137,15 @@
 4. Verify that Damage Bonus and Vuln don't self-stack
 5. Verify that def modifiers stack
 6. Verify that "indirect damage" isn't affected by ***any*** multipliers
-	1. Is Twisted Tether affected by Vengeful Spirit, Mask of the Lunatic, Eldritch Call, Str/Dex, or Skill Point %s?
+	- Is Twisted Tether affected by Vengeful Spirit, Mask of the Lunatic, Eldritch Call, Str/Dex, or Skill Point %s?
 7. Is raw damage affected by attack speed?
 8. +Napalm applies after +Fallout
 9. Trickster: Confused enemies taking 30% more thunder damage?
-	1. Other similar effects, hopefully just ele%s
+	- Other similar effects, hopefully just ele%s
 10. Does Finality increase the damage of the first hit?
 11. Verify that the Finality equation is working
+12. Does Radiance affect Fluid Healing
+	- Test with Mage since it doesn't have health drain
 # Settings
 1. Ability to re-arrange GUI
 2. Change color theme
@@ -157,7 +157,7 @@
     3. x.
     4. Full rounding, i.e. 10k, 25.2m, 2.5k
     5. Selvs
-        1. Santas during December
+        - Santas during December
 # Search/Item
 ### Feat
 1. Search
@@ -169,7 +169,7 @@
 	2. maybe also a burger or kebab or something for extra doodads like roll chances
 3. hpr canceling guide
 4. Dynamic Search that works within the context of a build.
-	1. grey out useless aspects given tree
+	- grey out useless aspects given tree
 5. `html2canvas` can't handle the dynamically colored item text shadows
 6. untradable
 # Effect Builder

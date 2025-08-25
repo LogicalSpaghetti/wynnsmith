@@ -3,14 +3,19 @@ function addDamageDisplays(build, attackDisplayId = "attack_display") {
     attackDisplay.innerHTML = "";
 
     for (let display of build.displays) {
-        const variants =
-            display.variants.map(variantName => build.variants.find(variant => variant.internal_name === variantName));
-        const hasDefined = variants.find((v) => v != null);
-        if (!hasDefined) continue;
-
-        const damage = variants.reduce((damage, variant) => variant ? sumDamages(damage, variant.damage) : damage, newMinMax().concat(newMinMax()));
-        attackDisplay.appendChild(getDamageElement(build, damage, display));
+        const displayElement = createDisplayElement(build, display);
+        if (displayElement) attackDisplay.appendChild(displayElement);
     }
+}
+
+function createDisplayElement(build, display) {
+    const variants =
+        display.variants.map(variantName => build.variants.find(variant => variant.internal_name === variantName));
+    const hasDefined = variants.find((v) => v != null);
+    if (!hasDefined) return;
+
+    const damage = variants.reduce((damage, variant) => variant ? sumDamages(damage, variant.damage) : damage, newMinMax().concat(newMinMax()));
+    return (getDamageElement(build, damage, display));
 }
 
 function getDamageElement(build, damage, display) {

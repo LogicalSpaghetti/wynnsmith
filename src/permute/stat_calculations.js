@@ -73,10 +73,10 @@ function statCalculations(build) {
     // TODO: effect stat modifiers
     // if (build.has("toggles", "maskOfTheCoward"))
     //     ids.walkSpeed +=
-    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
+    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
     // if (build.has("toggles", "maskOfTheAwakened"))
     //     ids.walkSpeed +=
-    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heratic ?? 0);
+    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
     // if (build.has("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
     // if (build.has("toggles", "cowardMemory")) ids.slowEnemy += 30;
 

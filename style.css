@@ -96,6 +96,10 @@ label {
     font-weight: bold;
 }
 
+.fst-italic {
+    font-style: italic;
+}
+
 .minecraftTooltip .fw-bold {
     letter-spacing: 0.15rem;
 }

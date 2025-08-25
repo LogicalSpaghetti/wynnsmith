@@ -12,6 +12,7 @@ function displayBuildStats(build) {
     const stats = build.stats;
 
     support.innerHTML =
+        getAttackSpeedDisplay(stats.attackSpeed) +
         getStatDisplay("health", true, "Health", stats.health) +
         getStatDisplay("health", false, "Effective Hp", stats.ehp, "", true, true) +
         getStatDisplay("health", false, "EHp (no Agi)", stats.ehp, "", true, true) +
@@ -56,19 +57,25 @@ function getStatDisplay(colorClass, includeSymbol, label, stat, post = "", color
     const displayStat = roundForDisplay(stat);
     if (displayStat === roundForDisplay(statOrigin)) return "";
 
-    return (
-        "<div class=\"stat_row\">" +
-        "<div class=\"left" + (indent ? " sub" : "") + "\">" +
-        (includeSymbol ? iconHeaders[colorClass] : colorHeaders[colorClass]) +
-        (indent ? "→ " : "") +
-        label +
-        ":</span>" +
+    return "<div class='stat_row'>" +
+        `<div class='left${indent ? " sub" : ""}'>` +
+        getStatLabel(includeSymbol, colorClass, indent, label) +
         "</div>" +
-        "<div class=\"right " + (color ? (displayStat > 0 ? "positive" : "negative") : "") + "\">" +
-        displayStat + post +
-        "</div>" +
-        "</div>"
-    );
+        `<span class='right ${(color ? (displayStat > 0 ? "positive" : "negative") : "")}'>${displayStat}${post}</span>` +
+        "</div>";
+}
+
+function getStatLabel(includeSymbol, colorClass, indent, label) {
+    return minecraftToHTML(
+        (includeSymbol ? codeDictionaryGenericSymbols[colorClass] : codeDictionaryNamedColors[colorClass]) +
+        (indent ? "→ " : "") + `${label}:`);
+}
+
+function getAttackSpeedDisplay(attack_speed) {
+    return "<div class='stat_row'>" +
+        `<span class="left">${minecraftToHTML("§eAttack Speed:")}</span>` +
+        `<span class="right">${minecraftToHTML("§o" + attackSpeedMap[orderedAttackSpeed[attack_speed]])}</span>` +
+        "</div>";
 }
 
 function displayForDevelopment(build) {
