@@ -51,8 +51,7 @@ label {
 }
 
 .color-bar-holder {
-    height: fit-content;
-    padding-bottom: 0.4rem;
+    translate: 0 -0.5rem;
     padding-left: 1rem;
     padding-right: 1rem;
 }
@@ -143,6 +142,11 @@ label {
     -webkit-appearance: none;
 }
 
+.sp_cluster {
+    margin-left: 0.5ch;
+    margin-right: 0.5ch;
+}
+
 #gif_holder {
     position: absolute;
     height: 76px;
@@ -166,14 +170,6 @@ input:hover {
 input:focus {
     outline: none;
     border: 1px solid var(--ls-orange) !important;
-}
-
-#sp_section {
-    line-height: 0.75rem;
-    text-align: center;
-    width: 64ch;
-    padding: 0;
-    margin: 0;
 }
 
 .sp_input {
@@ -566,7 +562,7 @@ td {
 }
 
 .font-minecraft {
-    font-family: "minecraft";
+    font-family: minecraft, mojangles, unifont, unifontEmoji, sans-serif;
 }
 
 .font-default {

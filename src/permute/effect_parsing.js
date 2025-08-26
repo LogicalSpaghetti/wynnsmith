@@ -103,6 +103,7 @@ function parseVariantEffect(build, effect) {
     const variant = getOrCreateNamedEffect(build.variants, effect.data.internal_name);
     variant.type = effect.data.type;
     variant.attack = effect.data.attack;
+    variant.label = effect.data.label;
     if (effect.data.second_attack) variant.second_attack = effect.data.second_attack;
 }
 

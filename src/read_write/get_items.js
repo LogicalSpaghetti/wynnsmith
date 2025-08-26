@@ -9,9 +9,7 @@ function readGear(build) {
     const itemInputs = document.getElementById("item_inputs");
     const gearClusters = itemInputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
 
-    for (let cluster of gearClusters) {
-        addItem(build, cluster);
-    }
+    for (let cluster of gearClusters) addItem(build, cluster);
 }
 
 function readWeapons(build) {
@@ -29,7 +27,7 @@ function readWeapon(build) {
 
     addItem(build, weaponCluster);
 
-    build.wynnClass = item.requirements.classRequirement;
+    const wynnClass = build.wynnClass = item.requirements.classRequirement;
     addAttackSpeed(build, item);
 
     document.title = `${weaponInput.value} - WynnSmith`;
@@ -40,11 +38,10 @@ function readWeapon(build) {
         icon.rel = "icon";
         document.head.appendChild(icon);
     }
-    icon.href = "img/icons/" + item.requirements.classRequirement + ".png";
+    icon.href = "img/icons/" + wynnClass + ".png";
 
-    let weaponImg = weaponCluster.querySelector(".slot_img");
-    weaponImg.src = "img/item/" + item.requirements.classRequirement + ".png";
-
+    weaponCluster.querySelector(".slot_img").src =
+        "img/item/" + wynnClass + ".png";
 }
 
 function addItem(build, cluster) {
@@ -190,14 +187,19 @@ function getPowderSpecial(powderArray) {
 }
 
 // TODO: calculate SP reqs.
-function readSkillPointMultipliers(build) {
-    const spInputs = document.getElementById("sp_section").querySelectorAll(".sp_input");
-    for (let i = 0; i < 5; i++) {
-        let value = parseInt(spInputs[i].value);
-        spInputs[i].value = isNaN(value) ? 0 : value;
+function readSkillPointModifiers(build) {
+    const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
 
-        build.sp_multipliers[i] = getSkillPointMultiplier(value, i);
+    for (let cluster of spClusters) {
+        const modifierInput = cluster.querySelector(".sp_input");
+        const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
+
+        const value = modifierInput.value = parseInt(modifierInput.value) || 0;
+        build.sp_totals[index] += value;
+        build.sp_multipliers[index] = getSkillPointMultiplier(build.sp_totals, index);
     }
+
+
 }
 
 function getSkillPointMultiplier(value, i) {

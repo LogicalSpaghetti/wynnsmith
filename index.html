@@ -113,68 +113,45 @@
                 <button id="copy_long" class="copy_button" data-default="Copy Long">Copy Long</button>
             </div>
             <br>
-            <table id="sp_section" class="small-font">
-                <tr>
-                    <td class="sp-hold">
-                        <label for="strength" class="earth normal-font">
-                            <b class="font-minecraft" style="display: inline-block; width: 1ch">✤</b>
-                        </label>
-                        <input id="strength" class="input sp_input" placeholder="Strength"/>
-                        <br>
-                        Assign: 100
-                        <br>
-                        Minimum: 150
-                        <br>
-                        80.8% damage
-                    </td>
-                    <td class="sp-hold">
-                        <label for="dexterity" class="thunder normal-font">
-                            <b class="font-minecraft" style="display: inline-block; width: 1ch">✦</b>
-                        </label>
-                        <input id="dexterity" class="input sp_input" placeholder="Dexterity"/>
-                        <br>
-                        Assign: 100
-                        <br>
-                        Minimum: 150
-                        <br>
-                        80.8% crit
-                    </td>
-                    <td class="sp-hold">
-                        <label for="intelligence" class="water normal-font">
-                            <b class="font-minecraft" style="display: inline-block; width: 1ch">❉</b>
-                        </label>
-                        <input id="intelligence" class="input sp_input" placeholder="Intelligence"/>
-                        Assign: 100
-                        <br>
-                        Minimum: 150
-                        <br>
-                        80.8% cost red.
-                    </td>
-                    <td class="sp-hold">
-                        <label for="defence" class="fire normal-font">
-                            <b class="font-minecraft" style="display: inline-block; width: 1ch">✹</b>
-                        </label>
-                        <input id="defence" class="input sp_input" placeholder="Defence"/>
-                        Assign: 100
-                        <br>
-                        Minimum: 150
-                        <br>
-                        80.8% resist
-                    </td>
-                    <td class="sp-hold">
-                        <label for="agility" class="air normal-font">
-                            <b class="font-minecraft" style="display: inline-block; width: 1ch">❋</b>
-                        </label>
-                        <input id="agility" class="input sp_input" placeholder="Agility"/>
-                        Assign: 100
-                        <br>
-                        Minimum: 150
-                        <br>
-                        80.8% dodge
-                    </td>
-                </tr>
-            </table>
-            Remaining SP: 200
+            <div id="sp_section" style="display: flex">
+                <div class="sp_cluster" data-element="earth" style="text-align: center;">
+                    <b class="font-minecraft earth" style="display: inline-block; width: 1ch">✤</b>
+                    <span class="total_display earth">0</span>
+                    <div class="small-font">Assign: <span class="assigned_display">0</span></div>
+                    <div class="small-font">Modify:</div>
+                    <input class="input sp_input"/>
+                </div>
+                <div class="sp_cluster" data-element="thunder" style="text-align: center;">
+                    <b class="font-minecraft thunder" style="display: inline-block; width: 1ch">✦</b>
+                    <span class="total_display thunder">0</span>
+                    <div class="small-font">Assign: <span class="assigned_display">0</span></div>
+                    <div class="small-font">Modify:</div>
+                    <input class="input sp_input"/>
+                </div>
+                <div class="sp_cluster" data-element="water" style="text-align: center;">
+                    <b class="font-minecraft water" style="display: inline-block; width: 1ch">❉</b>
+                    <span class="total_display water">0</span>
+                    <div class="small-font">Assign: <span class="assigned_display">0</span></div>
+                    <div class="small-font">Modify:</div>
+                    <input class="input sp_input"/>
+                </div>
+                <div class="sp_cluster" data-element="fire" style="text-align: center;">
+                    <b class="font-minecraft fire" style="display: inline-block; width: 1ch">✹</b>
+                    <span class="total_display fire">0</span>
+                    <div class="small-font">Assign: <span class="assigned_display">0</span></div>
+                    <div class="small-font">Modify:</div>
+                    <input class="input sp_input"/>
+                </div>
+                <div class="sp_cluster" data-element="air" style="text-align: center;">
+                    <b class="font-minecraft air" style="display: inline-block; width: 1ch">❋</b>
+                    <span class="total_display air">0</span>
+                    <div class="small-font">Assign: <span class="assigned_display">0</span></div>
+                    <div class="small-font">Modify:</div>
+                    <input class="input sp_input"/>
+                </div>
+
+            </div>
+            Remaining SP: <span id="remaining_sp">200</span>
             <br>
             <button>Balance Str/Dex</button>
             <br>

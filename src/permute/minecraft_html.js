@@ -1,9 +1,10 @@
 `use strict`;
 
-function minecraftAsElement(text = "") {
+function minecraftAsElement(text, minecraftFont = false) {
     const htmlText = minecraftToHTML(text);
     const span = document.createElement("span");
     span.innerHTML = htmlText;
+    if (minecraftFont) span.classList.add("font-minecraft");
     return span;
 }
 
@@ -34,7 +35,6 @@ function minecraftToHTML(text = "") {
             if (style != null && codeDictionaryStyle[style] != null) pendingTextStyles[style] = true;
 
             if (content == null || content === "") return;
-
 
             pendingContent += "<span";
             spansToClose++;

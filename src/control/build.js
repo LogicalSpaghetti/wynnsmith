@@ -10,12 +10,12 @@ class Build {
     aspects = [];
     powders = {
         armour: [],
-        weapon: [],
+        weapon: []
     };
     specials = {
         weapon: "",
         armour: []
-    }
+    };
     attacks = [];
     masteries = [];
     heals = [];
@@ -25,9 +25,10 @@ class Build {
     spell_costs = [0, 0, 0, 0];
     spell_cost_modifiers = [0, 0, 0, 0];
     spell_cost_multipliers = [];
-    statArrays= {};
+    statArrays = {};
     stats = {};
-    sp_multipliers = [];
+    sp_totals = [0, 0, 0, 0, 0];
+    sp_multipliers = [0, 0, 0, 0, 0];
     toggles = [];
     variants = [];
     displays = [];

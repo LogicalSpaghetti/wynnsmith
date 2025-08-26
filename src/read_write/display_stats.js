@@ -15,7 +15,7 @@ function displayBuildStats(build) {
         getAttackSpeedDisplay(stats.attackSpeed) +
         getStatDisplay("health", true, "Health", stats.health) +
         getStatDisplay("health", false, "Effective Hp", stats.ehp, "", true, true) +
-        getStatDisplay("health", false, "EHp (no Agi)", stats.ehp, "", true, true) +
+        getStatDisplay("health", false, "EHp (no Agi)", stats.ehp_no_agi, "", true, true) +
         getStatDisplay("health", true, "Health Regen", stats.healthRegen, "/4s") +
         getStatDisplay("earth", true, "Earth Defence", stats["totalEarthDefence"]) +
         getStatDisplay("thunder", true, "Thunder Defence", stats["totalThunderDefence"]) +

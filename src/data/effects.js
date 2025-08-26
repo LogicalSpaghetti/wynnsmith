@@ -58,7 +58,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {"type": "dps", "internal_name": "melee", "attack": "melee"}
+                "data": {"type": "dps", "label": "DPS", "internal_name": "melee", "attack": "melee"}
             }
         }
     },
@@ -71,7 +71,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {"type": "multi", "internal_name": "multihit_total", "attack": "multihit"}
+                "data": {"type": "multi", "internal_name": "multihit_total", "label":"Total Damage", "attack": "multihit"}
             },
             "1": {
                 "name": "Finality",
@@ -111,6 +111,7 @@ const classEffects = {
                 "data": {
                     "type": "scaling-multi",
                     "internal_name": "finality",
+                    "label": "Finality Bonus",
                     "attack": "finality",
                     "second_attack": "multihit"
                 }
@@ -122,7 +123,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"name": "Multihit", "variants": ["multihit_total", "finality"], "spell": "2"}
+                "data": {"name": "Multihit", "variants": ["multihit_total", "finality"], "label":"Total Damage", "spell": "2"}
             },
             "5": {
                 "name": "Multihit Cost",

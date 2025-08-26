@@ -731,6 +731,14 @@ class EffectType {
     setupVariantConfig() {
         const holder = document.createElement("div");
 
+        holder.appendChild(document.createTextNode("Display Label: "));
+        const damageLabel = holder.appendChild(document.createElement("input"));
+        damageLabel.placeholder = "i.e. \"Total Damage\"";
+        damageLabel.value = this.data.label ?? "";
+        damageLabel.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
         holder.appendChild(document.createTextNode("Internal Name: "));
         const variantName = holder.appendChild(document.createElement("input"));
         variantName.value = this.data.internal_name ?? "";
@@ -770,6 +778,7 @@ class EffectType {
             self.data = {
                 type: variantSelect.value,
                 internal_name: variantName.value,
+                label: damageLabel.value,
                 attack: attack.value
             };
 
@@ -787,7 +796,6 @@ class EffectType {
 
     setupDisplayConfig() {
         const holder = document.createElement("div");
-
 
         holder.appendChild(document.createTextNode("Display Name: "));
         const displayName = holder.appendChild(document.createElement("input"));
@@ -817,11 +825,20 @@ class EffectType {
         variants.value = this.data.variants ?? "";
         variants.addEventListener("change", () => setData(this));
 
+        holder.appendChild(document.createElement("br"));
+
+        holder.appendChild(document.createTextNode("Damage Label: "));
+        const damageLabel = holder.appendChild(document.createElement("input"));
+        damageLabel.placeholder = "i.e. \"Total Damage\"";
+        damageLabel.value = this.data.label ?? "";
+        damageLabel.addEventListener("change", () => setData(this));
+
 
         function setData(self) {
             self.data = {
                 name: displayName.value,
-                variants: variants.value.split(",").map(word => word.trim())
+                variants: variants.value.split(",").map(word => word.trim()),
+                label: damageLabel.value
             };
 
             if (spellSelect.value !== "") self.data.spell = spellSelect.value;

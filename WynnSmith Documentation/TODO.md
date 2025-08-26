@@ -8,6 +8,7 @@
 4. Finish writing Aspect descriptions
 	1. Powder special descriptions
 5.  Add more than just abilities to the effect builder
+6. Melee display DPS and per-hit.
 ### Major
 1. Effects
 2. Off-hands

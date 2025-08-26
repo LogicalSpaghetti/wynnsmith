@@ -4,7 +4,7 @@ function readBuild(build) {
     readOldClass(build);
     readPlayerLevel(build);
     readItems(build);
-    readSkillPointMultipliers(build);
+    readSkillPointModifiers(build);
     readAbilities(build);
     readToggles(build);
 }
