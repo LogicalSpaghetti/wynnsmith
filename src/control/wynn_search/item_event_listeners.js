@@ -5,7 +5,7 @@ window.addEventListener("load", function () {
     document.title = `WynnSearch - ${item ? item.name : "Invalid Item!"}`;
 
     const display = document.getElementById("item_display");
-    display.innerHTML = getHoverHTMLForItem(item, "Invalid Item!");
+    display.innerHTML = getHoverTextForItem(item, "Invalid Item!");
     display.style.transformOrigin = "top center";
     scaleDisplay(display);
 

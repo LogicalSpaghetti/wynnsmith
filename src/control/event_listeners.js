@@ -34,7 +34,7 @@ function addEventListeners() {
         const link = cluster.querySelector(".item_link");
 
         link.addEventListener("mouseover", () => {
-            renderHoverTooltip(getHoverHTMLForItem(getItem(input.value)));
+            renderHoverTooltip(getHoverTextForItem(getItem(input.value)));
         });
         link.addEventListener("mouseout", () => {
             hideHoverAbilityTooltip();

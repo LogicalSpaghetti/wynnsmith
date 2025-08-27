@@ -1,18 +1,23 @@
 # Focus
 ### Small
-1. display:
+1. Skill Points
+	1. Find the minimums for all gear to fit together with any weapon
+	2. for per-weapon calculations, add the weapon's provided SP
+	3. for display, show the main-hand total
+2. display:
 	1. Heals
-2. Heals
+3. Heals
 	1. Heal display
-3. Sliders
-4. Finish writing Aspect descriptions
+4. Sliders
+5. Finish writing Aspect descriptions
 	1. Powder special descriptions
-5.  Add more than just abilities to the effect builder
-6. Melee display DPS and per-hit.
+6.  Add more than just abilities to the effect builder
+7. Melee display DPS and per-hit.
 ### Major
 1. Effects
 2. Off-hands
 3. SP Auto-calculation
+4. Ctrl+Shift+NUMBER and Ctrl+NUMBER, sets a bookmark and jumps to a bookmark
 # General
 ### Feat
 1. Switch to a functional model instead of using `build` for everything

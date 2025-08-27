@@ -209,7 +209,7 @@ function getHoverTextForAbility(abilityID, wynnClass) {
 }
 
 // todo: ings
-function getHoverHTMLForItem(item, invalidityText = "") {
+function getHoverTextForItem(item, invalidityText = "") {
     if (!item) return invalidityText;
 
     const sections = new Sections();

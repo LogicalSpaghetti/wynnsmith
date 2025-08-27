@@ -169,14 +169,49 @@ class Tree {
 
     }
 
+    updateAbilityDisplay(abilities) {
+        const abilityDisplay = document.querySelector("#ability_display");
+        abilityDisplay.innerHTML = "";
+
+        const select = abilityDisplay.appendChild(document.createElement("select"));
+        select.innerHTML = Object.entries(abilities)
+            .sort(([, aA], [, aB]) => (aA._plainname < aB._plainname) ? -1
+                : aA._plainname > aB._plainname ? 1 : 0)
+            .map(([abilityId, ability]) => {
+                console.log(`<option value='${abilityId}'>${minecraftToHTML(ability.name)}</option>`);
+                return `<option value='${abilityId}'>${minecraftToHTML(ability.name)}</option>`;
+            }).join("");
+
+        const addChild = abilityDisplay.appendChild(document.createElement("button"));
+        addChild.innerHTML = "+";
+        addChild.addEventListener("click", () => {
+            this.addEffect().addParent("nodes", select.value);
+        });
+
+        const abilityContainer = abilityDisplay.appendChild(document.createElement("div"));
+        abilityContainer.classList.add("minecraftTooltip");
+
+        select.addEventListener("change", () => {
+            abilityContainer.innerHTML = getHoverTextForAbility(select.value, this.wynnClass);
+        });
+
+        select.dispatchEvent(new Event("change"));
+    }
+
     updateAbilities() {
         this.generateNodes(punscake[this.wynnClass].abilities);
+        this.updateAbilityDisplay(punscake[this.wynnClass].abilities);
     }
 
     generateNodes(nodes) {
+        const orderedNodes = Object.entries(nodes)
+            .sort(([, aA], [, aB]) => (aA._plainname < aB._plainname) ? -1
+                : aA._plainname > aB._plainname ? 1 : 0)
+        console.log(orderedNodes);
         this.nodes = {};
         this.ability_holder.innerHTML = "";
-        for (let index in nodes) {
+        for (let [index] of orderedNodes) {
+            console.log(orderedNodes[index]);
             const ability = new Ability(this, index, nodes[index]);
             this.addAbility(index, ability);
         }
@@ -199,9 +234,9 @@ class Tree {
         const effect = new EffectBuilder(tree, id);
 
         this.effects[id] = effect;
-        this.effect_holder.appendChild(effect.html);
+        this.effect_holder.prepend(effect.html);
 
-        this.editEffect(-1);
+        this.editEffect(id);
 
         return effect;
     }
@@ -785,9 +820,7 @@ class EffectType {
             if (variantSelect.value === "scaling-multi" || variantSelect.value === "scaling-multi") {
                 self.data.second_attack = secondAttack.value;
                 secondAttackContainer.style.display = "block";
-            } else {
-                secondAttackContainer.style.display = "none";
-            }
+            } else secondAttackContainer.style.display = "none";
         }
 
         setData(this);

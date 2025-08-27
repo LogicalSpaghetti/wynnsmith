@@ -3,11 +3,16 @@ const player_bps = 5.612;
 function calculateSustainStats(build) {
     statCalculations(build);
 
-    calculateEHp(build);
+    mergeElementalDefences(build);
+    healthCalculations(build);
     calculateSpellCosts(build);
+    applyStatEffects(build);
 }
 
-function calculateEHp(build) {
+function healthCalculations(build) {
+    build.stats.health = Math.max(5, build.base.baseHealth + build.ids.rawHealth);
+    build.stats.healthRegen = computeHpr(build.ids.healthRegenRaw, build.ids.healthRegen / 100);
+
     const agility = build.sp_multipliers[SkillPointIndexes.Agility];
     const defence = build.sp_multipliers[SkillPointIndexes.Defence];
 
@@ -19,6 +24,13 @@ function calculateEHp(build) {
         build.stats.health
         / getEHpFactor(build)
         / ((1 - defence) * (1 - agility) + (0.1 * agility));
+
+    calculateHealing(build);
+}
+
+function calculateHealing(build) {
+    // TODO: Fluid Healing
+    for (let heal of build.heals) heal.heal *= build.stats.health;
 }
 
 function getEHpFactor(build) {
@@ -57,11 +69,6 @@ function calculateSpellCosts(build) {
 function statCalculations(build) {
     const ids = build.ids;
 
-    build.stats.health = Math.max(5, build.base.baseHealth + ids.rawHealth);
-    build.stats.healthRegen = computeHpr(ids.healthRegenRaw, ids.healthRegen / 100);
-
-    mergeElementalDefences(build);
-
     const maxManaMod = ids.rawMaxMana + build.sp_multipliers[SkillPointIndexes.Intelligence] * 100;
     build.stats.maxMana = 100 + maxManaMod;
 
@@ -70,15 +77,6 @@ function statCalculations(build) {
     build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[build.stats.attackSpeed];
     build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[build.stats.attackSpeed];
 
-    // TODO: effect stat modifiers
-    // if (build.has("toggles", "maskOfTheCoward"))
-    //     ids.walkSpeed +=
-    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
-    // if (build.has("toggles", "maskOfTheAwakened"))
-    //     ids.walkSpeed +=
-    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
-    // if (build.has("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
-    // if (build.has("toggles", "cowardMemory")) ids.slowEnemy += 30;
 
     build.stats.effectiveWS = player_bps * (ids.walkSpeed / 100 + 1);
 }
@@ -95,4 +93,16 @@ function mergeElementalDefences(build) {
 function computeHpr(base, percent) {
     return base <= 0 && percent >= 1 ? 0 :
         base * (1 + percent * Math.sign(base));
+}
+
+function applyStatEffects(build) {
+    // TODO: effect stat modifiers
+    // if (build.has("toggles", "maskOfTheCoward"))
+    //     ids.walkSpeed +=
+    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
+    // if (build.has("toggles", "maskOfTheAwakened"))
+    //     ids.walkSpeed +=
+    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
+    // if (build.has("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
+    // if (build.has("toggles", "cowardMemory")) ids.slowEnemy += 30;
 }

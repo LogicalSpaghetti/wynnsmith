@@ -9,12 +9,23 @@ function readGear(build) {
     const itemInputs = document.getElementById("item_inputs");
     const gearClusters = itemInputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
 
-    for (let cluster of gearClusters) addItem(build, cluster);
+    for (let cluster of gearClusters) {
+        addItem(build, cluster);
+        addItem(build, cluster);
+    }
 }
 
 function readWeapons(build) {
     readWeapon(build);
-    // todo: off-hands
+    const itemInputs = document.getElementById("item_inputs");
+    const weaponInput = itemInputs.querySelector(`.primary_weapon_cluster`);
+    const offhandInputs = itemInputs.querySelector(`.offhands`).querySelectorAll(`.input_cluster`);
+    const weaponClusters = offhandInputs.length < 1 ? [weaponInput] : [weaponInput].concat(offhandInputs);
+
+    for (let cluster of weaponClusters) {
+        const item = getItemByCluster(cluster);
+        if (item) build.weapons.push(item);
+    }
 }
 
 function readWeapon(build) {
@@ -42,6 +53,16 @@ function readWeapon(build) {
 
     weaponCluster.querySelector(".slot_img").src =
         "img/item/" + wynnClass + ".png";
+}
+
+function addPiece(build, cluster) {
+    const item = getItemByCluster(cluster);
+    if (item) build.equipment.push(item);
+}
+
+function addWeapon(build, cluster) {
+    const item = getItemByCluster(cluster);
+    if (item) build.weapons.push(item);
 }
 
 function addItem(build, cluster) {
@@ -195,11 +216,10 @@ function readSkillPointModifiers(build) {
         const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
 
         const value = modifierInput.value = parseInt(modifierInput.value) || 0;
+
         build.sp_totals[index] += value;
-        build.sp_multipliers[index] = getSkillPointMultiplier(build.sp_totals, index);
+        build.sp_multipliers[index] = getSkillPointMultiplier(build.sp_totals[index], index);
     }
-
-
 }
 
 function getSkillPointMultiplier(value, i) {

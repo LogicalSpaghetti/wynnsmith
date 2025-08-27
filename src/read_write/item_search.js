@@ -9,12 +9,13 @@ function getItemFromSearch(search) {
 }
 
 function getItem(itemName) {
-    return allItems.find((item) => item.name === itemName);
+    itemName = simplifyString(itemName);
+    return allItems.find((item) => simplifyString(item.name) === itemName);
 }
 
 function getItemInGroup(groupName, itemName) {
     const item = getItem(itemName);
-    if (!item) return;
+    if (!item) return null;
     if (item.subType === groupName || item.type === groupName) return item;
 }
 
@@ -29,9 +30,9 @@ function searchForItems(search) {
 }
 
 function simplifyString(string) {
-    return removeNonLetters(string.toLowerCase());
+    return removeInvalidCharacters(string.toLowerCase()).trim();
 }
 
-function removeNonLetters(string) {
-    return string.replace(/[^a-z0-9\-]/g, '');
+function removeInvalidCharacters(string) {
+    return string.replace(/[^A-Za-z0-9\-]/g, '');
 }
