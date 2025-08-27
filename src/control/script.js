@@ -1,20 +1,15 @@
 `use strict`;
 
 function refreshBuild() {
-    const build = new Build();
-
+    const build = new OldBuild();
     readBuild(build);
-    permuteBuild(build);
+
+    const input = new Input();
+    input.init();
+
+    getWeaponBuilds(input);
+    permuteOldBuild(build);
     displayBuild(build);
-}
-
-function permuteBuild(build) {
-    parseEffects(build);
-
-    computeIdentifications(build);
-
-    calculateSustainStats(build);
-    calculateDamageConversions(build);
 }
 
 function roundForDisplay(number, addPeriod) {
@@ -22,11 +17,9 @@ function roundForDisplay(number, addPeriod) {
     const ret = Math.round((number + Number.EPSILON) * 100) / 100;
 
     // add trailing zeros
-    if (ret.toString().split(".").length === 1) {
-        return ret + (addPeriod ? ".00" : "");
-    } else {
-        return ret.toString().split(".")[1].length < 2 ? ret + "0" : ret;
-    }
+    return ret.toString().split(".").length === 1
+        ? ret + (addPeriod ? ".00" : "")
+        : ret.toString().split(".")[1].length < 2 ? ret + "0" : ret;
 }
 
 function intToBase64(decimal) {
@@ -92,7 +85,7 @@ const iconHeaders = {
     "fire": getHeaderForIcon("fire", "✹"),
     "air": getHeaderForIcon("air", "❋"),
     "health": getHeaderForIcon("health", "⚔"),
-    "mana": getHeaderForIcon("water", "✺"),
+    "mana": getHeaderForIcon("water", "✺")
 };
 
 const colorHeaders = {
@@ -101,7 +94,7 @@ const colorHeaders = {
     "water": getHeaderForColor("water"),
     "fire": getHeaderForColor("fire"),
     "air": getHeaderForColor("air"),
-    "health": getHeaderForColor("health"),
+    "health": getHeaderForColor("health")
 };
 
 function getHeaderForIcon(color, elementEmoji) {
@@ -115,4 +108,8 @@ function getHeaderForIcon(color, elementEmoji) {
 
 function getHeaderForColor(color) {
     return `<span class=\"${color}\">`;
+}
+
+function cloneObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }

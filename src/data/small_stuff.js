@@ -276,6 +276,12 @@ const skillPointNames = ["strength", "dexterity", "intelligence", "defence", "ag
 const damageTypePrefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
 const damageTypeNames = ["Neutral", "Earth", "Thunder", "Water", "Fire", "Air"];
 
+const powderSpecialNames = {
+    weapon: ["Quake", "Chain Lightning", "Curse", "Courage", "Wind Prison"],
+    armour: ["Rage", "Kill Streak", "Concentration", "Endurance", "Dodge"]
+};
+const powderPrefixes = ["e", "t", "w", "f", "a"];
+
 const attackSpeedMultipliers = {
     superFast: 4.3,
     veryFast: 3.1,

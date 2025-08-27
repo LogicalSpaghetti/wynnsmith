@@ -178,7 +178,6 @@ class Tree {
             .sort(([, aA], [, aB]) => (aA._plainname < aB._plainname) ? -1
                 : aA._plainname > aB._plainname ? 1 : 0)
             .map(([abilityId, ability]) => {
-                console.log(`<option value='${abilityId}'>${minecraftToHTML(ability.name)}</option>`);
                 return `<option value='${abilityId}'>${minecraftToHTML(ability.name)}</option>`;
             }).join("");
 
@@ -207,11 +206,9 @@ class Tree {
         const orderedNodes = Object.entries(nodes)
             .sort(([, aA], [, aB]) => (aA._plainname < aB._plainname) ? -1
                 : aA._plainname > aB._plainname ? 1 : 0)
-        console.log(orderedNodes);
         this.nodes = {};
         this.ability_holder.innerHTML = "";
         for (let [index] of orderedNodes) {
-            console.log(orderedNodes[index]);
             const ability = new Ability(this, index, nodes[index]);
             this.addAbility(index, ability);
         }

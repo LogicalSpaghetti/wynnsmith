@@ -9,6 +9,7 @@ function getItemFromSearch(search) {
 }
 
 function getItem(itemName) {
+    if (!itemName) return null;
     itemName = simplifyString(itemName);
     return allItems.find((item) => simplifyString(item.name) === itemName);
 }

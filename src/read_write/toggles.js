@@ -7,6 +7,15 @@ function readToggles(build) {
             build.toggles.push(toggleElement.dataset.toggle_name);
 }
 
+function getActiveToggles() {
+    const toggles = Array.from(document.querySelector("#effect_toggles").querySelectorAll(".toggle"));
+    if (toggles.length < 1) return [];
+
+    return toggles
+        .reduce(toggle => toggle.classList.contains("toggleOn"))
+        .map(toggle => toggle.dataset.toggle_name);
+}
+
 function setToggles(build) {
     const effects = build.effects.map(effectId => classEffects[build.wynnClass].effects[effectId]);
 

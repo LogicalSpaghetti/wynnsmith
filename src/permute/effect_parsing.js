@@ -24,6 +24,41 @@ EffectTypes = Object.freeze({
     DISPLAY: "display"
 });
 
+function getSeparatedEffects(abilities, wynnClass) {
+    let effects = getEffects(abilities, wynnClass);
+    effects = getWithoutBlockedEffects(effects, wynnClass);
+    return splitEffects(effects, wynnClass);
+}
+
+function getEffects(abilities, wynnClass) {
+    const effectsData = classEffects[wynnClass]?.effects;
+    if (!effectsData) throw new Error(`Effects not found for class: ${wynnClass}!`);
+    const unvalidatedEffectIds = Object.keys(effectsData);
+
+    const effects = [];
+    for (let i = 0; i < unvalidatedEffectIds.length;) {
+        const id = unvalidatedEffectIds[i];
+        const effect = effectsData[id];
+        let hasAllParents = true;
+        let hasAnyParents = false;
+        for (let parent of effect.parents)
+            if (abilities[parent.section].includes(parent.id)) {
+                hasAnyParents = true;
+            } else {
+                hasAllParents = false;
+            }
+        if ((hasAnyParents && !effect.requires_all) || hasAllParents) {
+            effects.push(id);
+            unvalidatedEffectIds.splice(i, 1);
+            i = 0;
+        } else i++;
+    }
+
+    return effects.filter(effectId =>
+        !effectsData[effectId].toggle_name || !abilities.toggles.includes(effectsData[effectId].toggle_name));
+
+}
+
 function parseEffects(build) {
     removeBlockedEffects(build);
     applyEffects(build);
@@ -77,6 +112,70 @@ function applyEffects(build) {
         }
     });
 }
+
+function splitEffects(effects, wynnClass) {
+    const splitEffects = {
+        effects: effects,
+
+        attacks: [],
+        masteries: [],
+        heals: [],
+        resistances: [],
+        personal_multipliers: [],
+        team_multipliers: [],
+        spell_costs: [0, 0, 0, 0],
+        spell_cost_modifiers: [0, 0, 0, 0],
+        spell_cost_multipliers: [],
+        variants: [],
+        displays: []
+    };
+
+    const effectData = classEffects[wynnClass].effects;
+
+    effects.forEach(effectId => {
+        const effect = effectData[effectId];
+
+        switch (effect.type) {
+            case EffectTypes.EMPTY:
+                break;
+            case EffectTypes.CONVERSION:
+                parseConversionEffect(splitEffects, effect);
+                break;
+            case EffectTypes.VARIANT:
+                parseVariantEffect(splitEffects, effect);
+                break;
+            case EffectTypes.DISPLAY:
+                parseDisplayEffect(splitEffects, effect);
+                break;
+            case EffectTypes.MASTERY:
+                parseMasteryEffect(splitEffects, effect);
+                break;
+            case EffectTypes.HEAL:
+                parseHealEffect(splitEffects, effect);
+                break;
+            case EffectTypes.RESISTANCE:
+                parseResistanceEffect(splitEffects, effect);
+                break;
+            case EffectTypes.TEAM_MULTIPLIER:
+                parseTeamDamageMultiplierEffect(splitEffects, effect);
+                break;
+            case EffectTypes.PERSONAL_MULTIPLIER:
+                parsePersonalDamageMultiplierEffect(splitEffects, effect);
+                break;
+            case EffectTypes.COST:
+                parseSpellCostEffect(splitEffects, effect);
+                break;
+            case EffectTypes.COST_MULTIPLIER:
+                parseSpellCostMultiplierEffect(splitEffects, effect);
+                break;
+            default:
+                throw new Error("Unknown effect type: " + effect.type + ", id: " + effectId);
+        }
+    });
+
+    return splitEffects;
+}
+
 
 function parseConversionEffect(build, effect) {
     const attack = getOrCreateNamedEffect(build.attacks, effect.data.internal_name);
@@ -182,4 +281,11 @@ function removeBlockedEffects(build) {
         if (build.effects.indexOf(String(effectId)) !== -1)
             build.effects.splice(build.effects.indexOf(String(effectId)), 1);
     });
+}
+
+function getWithoutBlockedEffects(effects, wynnClass) {
+    const blockedIndexes = effects.reduce((arr, id) =>
+        arr.concat(classEffects[wynnClass].effects[id].blocks), []);
+
+    return effects.filter(id => !blockedIndexes.includes(id));
 }

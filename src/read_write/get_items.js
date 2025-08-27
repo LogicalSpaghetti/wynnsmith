@@ -5,27 +5,55 @@ function readItems(build) {
     readWeapons(build);
 }
 
+function getItemsFromHTML() {
+    return {
+        equipment: getEquipment(),
+        weapons: getWeapons(),
+        tomes: getTomes()
+    };
+}
+
 function readGear(build) {
     const itemInputs = document.getElementById("item_inputs");
     const gearClusters = itemInputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
 
     for (let cluster of gearClusters) {
         addItem(build, cluster);
-        addItem(build, cluster);
     }
+}
+
+function getEquipment(item_input_id = "item_inputs") {
+    const gearClusters = (document.getElementById(item_input_id)
+        .querySelectorAll(`.input_cluster[data-group="gear"]`));
+    return getItemsFromClusters(gearClusters);
+}
+
+
+function getTomes() {
+    const tomeClusters = document.getElementById("tome_inputs")
+        .querySelectorAll(".input_cluster");
+    return getItemsFromClusters(tomeClusters);
+}
+
+function getItemsFromClusters(clusters) {
+    return Array.from(clusters).map(cluster => readItemFromCluster(cluster));
 }
 
 function readWeapons(build) {
     readWeapon(build);
-    const itemInputs = document.getElementById("item_inputs");
-    const weaponInput = itemInputs.querySelector(`.primary_weapon_cluster`);
-    const offhandInputs = itemInputs.querySelector(`.offhands`).querySelectorAll(`.input_cluster`);
-    const weaponClusters = offhandInputs.length < 1 ? [weaponInput] : [weaponInput].concat(offhandInputs);
+}
 
-    for (let cluster of weaponClusters) {
-        const item = getItemByCluster(cluster);
-        if (item) build.weapons.push(item);
-    }
+function getWeapons() {
+    const itemInputs = document.getElementById("item_inputs");
+    const weaponCluster = itemInputs.querySelector(`.primary_weapon_cluster`);
+    const offhandWeaponClusters = itemInputs.querySelector(`.offhands`).querySelectorAll(`.input_cluster`);
+    const weaponClusters = offhandWeaponClusters.length < 1 ? [weaponCluster]
+        : offhandWeaponClusters.concat(weaponCluster);
+
+    const mainHand = getItemByCluster(weaponCluster);
+    if (!mainHand) return [];
+
+    return weaponClusters.map(cluster => readItemFromCluster(cluster));
 }
 
 function readWeapon(build) {
@@ -75,7 +103,7 @@ function addItem(build, cluster) {
     colorSlot(cluster, item);
     setLink(cluster, item);
 
-    addPowders(build, cluster);
+    addPowders(build, cluster, item);
     addMajorIds(build, item);
     addBases(build, item);
     addIds(build, item);
@@ -83,6 +111,27 @@ function addItem(build, cluster) {
 
 function addAttackSpeed(build, item) {
     build.base.attackSpeed = item.attackSpeed;
+}
+
+
+function readItemFromCluster(cluster) {
+    const item = {slot: cluster.dataset.slot};
+
+    const itemData = getItemByCluster(cluster);
+
+    setPowderSlots(cluster, itemData);
+
+    item.name = itemData?.name;
+
+    if (!itemData) return;
+
+    colorSlot(cluster, itemData);
+    setLink(cluster, itemData);
+
+    item.powders = getClusterPowders(cluster);
+    item.special = getPowderSpecial(item.powders, itemData.type === "weapon");
+
+    return item;
 }
 
 function addIds(build, item) {
@@ -94,11 +143,6 @@ function addIds(build, item) {
 
 function addId(build, id, idName) {
     build.ids[idName] += id;
-}
-
-function getAsMax(possibleInt) {
-    if (Number.isInteger(possibleInt)) return possibleInt;
-    return possibleInt.max;
 }
 
 function addBases(build, item) {
@@ -131,6 +175,7 @@ function addMinAndMaxTo(target, source) {
     target.max += source.max;
 }
 
+// TODO: move to the display step.
 function setPowderSlots(cluster, item) {
     const powderInput = cluster.querySelector(".powder_input");
     if (!powderInput) return;
@@ -159,7 +204,7 @@ function setLink(cluster, item) {
         .href = "./item/?" + item.name ?? "";
 }
 
-function addPowders(build, cluster) {
+function addPowders(build, cluster, item) {
     const powderInput = cluster.querySelector(".powder_input");
     if (!powderInput) return;
 
@@ -176,7 +221,7 @@ function addPowders(build, cluster) {
 
     sortPowderArray(slotPowders);
 
-    const special = getPowderSpecial(slotPowders);
+    const special = getPowderSpecial(slotPowders, item.type === "weapon");
 
     if (cluster.dataset.slot === "weapon") {
         build.powders.weapon = slotPowders;
@@ -185,6 +230,26 @@ function addPowders(build, cluster) {
         build.powders.armour = build.powders.armour.concat(slotPowders);
         build.specials.armour.push(special);
     }
+}
+
+function getClusterPowders(cluster) {
+    const powderInput = cluster.querySelector(".powder_input");
+    if (!powderInput) return [];
+
+    const powdersString = powderInput.value.length % 2 === 0 ? powderInput.value : powderInput.value.substring(0, powderInput.value.length - 1);
+
+    const slotPowders = [];
+
+    for (let i = 0; i < powdersString.length / 2; i++) {
+        const powderName = powdersString.substring(i * 2, i * 2 + 2);
+        const powder = powders[powderName];
+        if (powder == null) continue;
+        slotPowders.push(powderName);
+    }
+
+    sortPowderArray(slotPowders);
+
+    return slotPowders;
 }
 
 function sortPowderArray(powderArray) {
@@ -196,14 +261,16 @@ function sortPowderArray(powderArray) {
     powderArray.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
 }
 
-function getPowderSpecial(powderArray) {
+function getPowderSpecial(powderArray, isWeapon = false) {
     const tiered = powderArray.filter(powder => powder[1] > 3);
     let first = tiered[0];
     for (let i = 1; i < tiered.length; i++) {
         if (tiered[i][0] === first[0]) {
-            return {type: first[0], tier: (parseInt(tiered[i][1]) + parseInt(first[1]) - 7)};
+            const name = powderSpecialNames[isWeapon ? "weapon" : "armour"][powderPrefixes.indexOf(first[0]) - 1].toLowerCase();
+            const tier = parseInt(tiered[i][1]) + parseInt(first[1]) - 7
+            return `${name}${tier}`;
         }
-        first = tiered[i];
+        else first = tiered[i];
     }
 }
 
@@ -220,6 +287,20 @@ function readSkillPointModifiers(build) {
         build.sp_totals[index] += value;
         build.sp_multipliers[index] = getSkillPointMultiplier(build.sp_totals[index], index);
     }
+}
+
+function getSkillPointModifiers() {
+    const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
+
+    const totals = [];
+    for (let cluster of spClusters) {
+        const modifierInput = cluster.querySelector(".sp_input");
+        const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
+
+        totals[index] = (modifierInput.value = parseInt(modifierInput.value) || 0);
+    }
+
+    return totals;
 }
 
 function getSkillPointMultiplier(value, i) {

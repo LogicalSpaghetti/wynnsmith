@@ -27,6 +27,22 @@ function readAbilities(build) {
     addEffectsToBuild(build);
 }
 
+function getInputAbilities(wynnClass) {
+    const previousClass = document.getElementById("ability_tree").dataset.class;
+
+    if (previousClass !== wynnClass) return {
+        nodes: [],
+        aspects: [],
+        toggles: []
+    }
+
+    return {
+        nodes: getNodes(),
+        aspects: getAspects(),
+        toggles: getActiveToggles(),
+    }
+}
+
 function changeAbilityTree(build) {
     const abilityTree = document.getElementById("ability_tree");
     abilityTree.innerHTML = "";
@@ -177,6 +193,14 @@ function addNodesToBuild(build) {
     });
 }
 
+function getNodes() {
+    const treeNodes = Array.from(document.querySelectorAll(".tree_cell[data-type='node']"));
+
+    return treeNodes
+        .filter(node => node.dataset.selected === "true")
+        .map((node) => node.dataset.ability_id);
+}
+
 function addAspectsToBuild(build) {
     const aspects = document.getElementById("active_aspects").querySelectorAll(".aspect");
     aspects.forEach((aspect) => {
@@ -185,6 +209,16 @@ function addAspectsToBuild(build) {
             tier: parseInt(aspect.childNodes[2].dataset.tier)
         });
     });
+}
+
+function getAspects() {
+    const aspectInputs = Array.from(document.getElementById("active_aspects")
+        .querySelectorAll(".aspect"));
+
+    return aspectInputs.map(aspect => ({
+        name: aspect.dataset.aspect,
+        tier: parseInt(aspect.childNodes[2].dataset.tier)
+    }));
 }
 
 function validateTree(level = maxPlayerLevel) {
@@ -215,7 +249,7 @@ function validateTree(level = maxPlayerLevel) {
             selected: treeNode.dataset.selected === "true",
             mapID: parseInt(treeNode.dataset.map_id),
             element: treeNode,
-            ability: tree.abilities[abilityID],
+            ability: tree.abilities[abilityID]
         };
 
         if (abilityID === tree.startingAbilityID) nodes[abilityID].reachable = true;
@@ -323,15 +357,15 @@ function getElementFromAbilityID(index) {
 const dirs = ["up", "down", "left", "right"];
 
 const dirOffsets = {
-    up: -abilityTreeColumns, down: abilityTreeColumns, left: -1, right: 1,
+    up: -abilityTreeColumns, down: abilityTreeColumns, left: -1, right: 1
 };
 
 const inverseDirs = {
-    up: "down", down: "up", left: "right", right: "left",
+    up: "down", down: "up", left: "right", right: "left"
 };
 
 const dirIndexes = {
-    up: 0, down: 1, left: 2, right: 3,
+    up: 0, down: 1, left: 2, right: 3
 };
 
 function propagateHighlightTo(nodes, tree, destIndex, sourceDir) {
