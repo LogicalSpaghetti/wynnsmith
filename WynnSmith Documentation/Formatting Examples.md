@@ -16,7 +16,7 @@ Class Req: Shaman/Skyseer
 §a2 §7to §a8 §7Jump Height
 
 §a6% §7to §a26% §7Air Damage
-§a9% §7to §a39% §7Air Defense
+§a9% §7to §a39% §7Air Defence
 
 §a-3 §7to §a-13 §7Totem Cost
 §a-3 §7to §a-13 §7Haul Cost

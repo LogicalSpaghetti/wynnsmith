@@ -1,17 +1,24 @@
 const player_bps = 5.612;
 
+function calculateStats(build) {
+    statCalculations(build);
+
+    mergeElementalDefences(build);
+    healthCalculations(build);
+    calculateSpellCosts(build);
+}
+
 function calculateSustainStats(build) {
     statCalculations(build);
 
     mergeElementalDefences(build);
     healthCalculations(build);
     calculateSpellCosts(build);
-    applyStatEffects(build);
 }
 
 function healthCalculations(build) {
-    build.stats.health = Math.max(5, build.base.baseHealth + build.ids.rawHealth);
-    build.stats.healthRegen = computeHpr(build.ids.healthRegenRaw, build.ids.healthRegen / 100);
+    build.stats.health = Math.max(5, build.base.baseHealth + build.identifications.rawHealth);
+    build.stats.healthRegen = computeHpr(build.identifications.healthRegenRaw, build.identifications.healthRegen / 100);
 
     const agility = build.sp_multipliers[SkillPointIndexes.Agility];
     const defence = build.sp_multipliers[SkillPointIndexes.Defence];
@@ -30,12 +37,14 @@ function healthCalculations(build) {
 
 function calculateHealing(build) {
     // TODO: Fluid Healing
-    for (let heal of build.heals) heal.heal *= build.stats.health;
+    for (let heal of (build.heals ?? build.effects.heals)) heal.heal *= build.stats.health;
+    // TODO: remove split
 }
 
 function getEHpFactor(build) {
     return getClassEHp(build) *
-        build.resistances.reduce((a, b) => a * (1 - b.multiplier), 1);
+        (build.resistances ?? build.effects.resistances).reduce((a, b) => a * (1 - b.multiplier), 1);
+    // TODO: remove split
 }
 
 function getClassEHp(build) {
@@ -46,36 +55,41 @@ function getClassEHp(build) {
 }
 
 function calculateSpellCosts(build) {
-    for (let i in build.spell_costs) {
-        let cost = build.spell_costs[i];
+    // TODO: remove split
+    const spell_costs = build.spell_costs ?? build.effects.spell_costs;
+
+    for (let i in spell_costs) {
+        let cost = spell_costs[i];
 
         cost *= 1 - (0.5 * (build.sp_multipliers[SkillPointIndexes.Intelligence] / spMultipliers[150]));
 
-        cost += build.ids["raw" + costNames[i] + "SpellCost"];
+        cost += build.identifications["raw" + costNames[i] + "SpellCost"];
 
-        cost *= 1 + build.ids[costNames[i] + "SpellCost"] / 100;
+        cost *= 1 + build.identifications[costNames[i] + "SpellCost"] / 100;
 
-        cost += build.spell_cost_modifiers[i];
+        // TODO: remove split
+        cost += (build.spell_cost_modifiers ?? build.effects.spell_cost_modifiers)[i];
 
         cost = Math.max(cost, 1);
 
-        build.spell_costs[i] = cost;
+        spell_costs[i] = cost;
     }
 
-    for (const data of build.spell_cost_multipliers)
-        build.spell_costs[data.spell_number] *= data.cost_multiplier;
+    // TODO: remove split
+    for (const data of (build.spell_cost_multipliers ?? build.effects.spell_cost_modifiers))
+        spell_costs[data.spell_number] *= data.cost_multiplier;
 }
 
 function statCalculations(build) {
-    const ids = build.ids;
+    const ids = build.identifications;
 
     const maxManaMod = ids.rawMaxMana + build.sp_multipliers[SkillPointIndexes.Intelligence] * 100;
     build.stats.maxMana = 100 + maxManaMod;
 
     build.stats.trueManaRegen = ids.manaRegen + 25;
 
-    build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[build.stats.attackSpeed];
-    build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[build.stats.attackSpeed];
+    build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
+    build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
 
 
     build.stats.effectiveWS = player_bps * (ids.walkSpeed / 100 + 1);
@@ -83,26 +97,14 @@ function statCalculations(build) {
 
 function mergeElementalDefences(build) {
     for (let i = 1; i < damage_type_count; i++) {
-        const baseDefense = build.base[`base${damageTypeNames[i]}Defense`];
-        const percentDefense = 1 + ((build.ids.elementalDefence + build.ids[`${damageTypePrefixes[i]}Defence`]) / 100);
+        const baseDefence = build.base[`base${damageTypeNames[i]}Defence`];
+        const percentDefence = 1 + ((build.identifications.elementalDefence + build.identifications[`${damageTypePrefixes[i]}Defence`]) / 100);
 
-        build.stats[`total${damageTypeNames[i]}Defense`] = baseDefense * (Math.sign(baseDefense) * percentDefense);
+        build.stats[`total${damageTypeNames[i]}Defence`] = baseDefence * (Math.sign(baseDefence) * percentDefence);
     }
 }
 
 function computeHpr(base, percent) {
     return base <= 0 && percent >= 1 ? 0 :
         base * (1 + percent * Math.sign(base));
-}
-
-function applyStatEffects(build) {
-    // TODO: effect stat modifiers
-    // if (build.has("toggles", "maskOfTheCoward"))
-    //     ids.walkSpeed +=
-    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
-    // if (build.has("toggles", "maskOfTheAwakened"))
-    //     ids.walkSpeed +=
-    //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
-    // if (build.has("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
-    // if (build.has("toggles", "cowardMemory")) ids.slowEnemy += 30;
 }

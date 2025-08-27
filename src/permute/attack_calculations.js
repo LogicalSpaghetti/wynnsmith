@@ -34,7 +34,7 @@ function calculateDamageConversions(build) {
 function damageIdsToArrays(build) {
     const statArrays = build.statArrays;
     const base = build.base;
-    const ids = build.ids;
+    const ids = build.identifications;
 
     base.damage = [
         [
@@ -142,13 +142,13 @@ function convertRaw(build) {
             // NETWFA
             raw[i] = build.statArrays.rawDamages[attack.type][i];
             // damage
-            raw[i] += build.ids.rawDamage * (ratios[i] / baseTotal);
+            raw[i] += build.identifications.rawDamage * (ratios[i] / baseTotal);
             // ElementalDamage
             if (i !== neutral_index) raw[i] +=
-                build.ids[`rawElemental${attack.type}Damage`] *
+                build.identifications[`rawElemental${attack.type}Damage`] *
                 (ratios[i] / baseElementalTotal);
             // main/spell
-            raw[i] += (ratios[i] / baseTotal) * build.ids[`raw${attack.type}Damage`];
+            raw[i] += (ratios[i] / baseTotal) * build.identifications[`raw${attack.type}Damage`];
             raw[i] *= conversionTotal;
         }
     });
@@ -249,7 +249,7 @@ function applyOverridingDamageMultipliers(build) {
 
 function applyStrDex(build) {
     const strength = 1 + build.sp_multipliers[SkillPointIndexes.Strength];
-    const dexterity = 1 + build.ids.criticalDamageBonus / 100;
+    const dexterity = 1 + build.identifications.criticalDamageBonus / 100;
 
     for (const attack of build.attacks) {
         const damage = attack.damage = attack.damage.concat(newMinMax());

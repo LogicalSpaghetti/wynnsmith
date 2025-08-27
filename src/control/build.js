@@ -37,5 +37,5 @@ class OldBuild {
     displays = [];
 
     base = JSON.parse(emptyBaseString);
-    ids = JSON.parse(emptyIdsString);
+    identifications = JSON.parse(emptyIdsString);
 }

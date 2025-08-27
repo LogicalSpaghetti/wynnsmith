@@ -8,7 +8,7 @@ function displayBuildStats(build) {
         support.style.display = "inline-block";
     }
 
-    const ids = build.ids;
+    const ids = build.identifications;
     const stats = build.stats;
 
     support.innerHTML =

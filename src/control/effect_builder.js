@@ -155,11 +155,14 @@ class Tree {
     nodes = {};
     effects = {};
 
-    constructor(wynn_class, editor, ability_holder_id = "ability_holder", effect_holder_id = "effect_holder") {
+    constructor(wynn_class, editor, ability_holder_id = "ability_holder", effect_holder_id = "effect_holder", add_parentless_effect_id = "add_parentless_effect") {
         this.wynnClass = wynn_class;
 
         this.ability_holder = document.getElementById(ability_holder_id);
         this.updateAbilities();
+
+        this.add_parentless_effect = document.querySelector(`#${add_parentless_effect_id}`);
+        this.add_parentless_effect.addEventListener("click", () => this.addEffect());
 
         this.effect_holder = document.getElementById(effect_holder_id);
         this.effect_holder.innerHTML = "";
@@ -205,7 +208,7 @@ class Tree {
     generateNodes(nodes) {
         const orderedNodes = Object.entries(nodes)
             .sort(([, aA], [, aB]) => (aA._plainname < aB._plainname) ? -1
-                : aA._plainname > aB._plainname ? 1 : 0)
+                : aA._plainname > aB._plainname ? 1 : 0);
         this.nodes = {};
         this.ability_holder.innerHTML = "";
         for (let [index] of orderedNodes) {
@@ -1088,7 +1091,7 @@ class EffectType {
         holder.appendChild(document.createTextNode("Is Base Spell: "));
         const isBase = holder.appendChild(document.createElement("select"));
         isBase.innerHTML = "<option value=''>False</option><option value='true'>True</option>";
-        isBase.value = this.data.is_melee ?? "";
+        isBase.value = this.data.is_base_spell ?? "";
         isBase.addEventListener("change", () => setData(this));
 
 

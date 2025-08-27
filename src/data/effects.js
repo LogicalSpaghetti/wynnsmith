@@ -71,10 +71,10 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {"type": "multi", "internal_name": "multihit_total", "label":"Total Damage", "attack": "multihit"}
+                "data": {"type": "multi", "internal_name": "multihit_total", "label": "Multihit", "attack": "multihit"}
             },
             "1": {
-                "name": "Finality",
+                "name": "Finality Attack",
                 "toggle_name": "",
                 "parents": [{"section": "nodes", "id": "81"}],
                 "blocks": [],
@@ -102,7 +102,7 @@ const classEffects = {
                 }
             },
             "3": {
-                "name": "Finality Total",
+                "name": "Finality Bonus",
                 "toggle_name": "",
                 "parents": [{"section": "nodes", "id": "81"}],
                 "blocks": [],
@@ -123,7 +123,12 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"name": "Multihit", "variants": ["multihit_total", "finality"], "label":"Total Damage", "spell": "2"}
+                "data": {
+                    "name": "Multihit",
+                    "variants": ["multihit_total", "finality"],
+                    "label": "Total Damage",
+                    "spell": "2"
+                }
             },
             "5": {
                 "name": "Multihit Cost",
@@ -151,6 +156,38 @@ const classEffects = {
                 "requires_all": true,
                 "type": "cost",
                 "data": {"spell_number": 2, "cost": -5, "is_base_spell": false}
+            },
+            "8": {
+                "name": "Melee Attack",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "conv",
+                "data": {
+                    "internal_name": "melee",
+                    "type": "MainAttack",
+                    "is_melee": true,
+                    "conversion": [100, 0, 0, 0, 0, 0]
+                }
+            },
+            "9": {
+                "name": "Melee DPS",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "dps", "internal_name": "melee_dps", "label": "DPS", "attack": "melee"}
+            },
+            "10": {
+                "name": "Melee Display",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {"name": "Melee", "variants": ["melee_dps"], "label": "DPS"}
             }
         }
     },

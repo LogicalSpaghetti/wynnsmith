@@ -272,6 +272,7 @@ const powders = {
 };
 
 const skillPointNames = ["strength", "dexterity", "intelligence", "defence", "agility"];
+const capitalizedSkillPointNames = ["Strength", "Dexterity", "Intelligence", "Defence", "Agility"];
 
 const damageTypePrefixes = ["neutral", "earth", "thunder", "water", "fire", "air"];
 const damageTypeNames = ["Neutral", "Earth", "Thunder", "Water", "Fire", "Air"];

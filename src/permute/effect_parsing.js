@@ -24,6 +24,15 @@ EffectTypes = Object.freeze({
     DISPLAY: "display"
 });
 
+function getAbilities(inputAbilities, weapon, equipment) {
+    const items = equipment.concat(weapon);
+
+    inputAbilities.majorIds = getMajorIds(items);
+    inputAbilities.powderSpecials = items.map(item => item?.special).filter(item => item != null);
+
+    return inputAbilities;
+}
+
 function getSeparatedEffects(abilities, wynnClass) {
     let effects = getEffects(abilities, wynnClass);
     effects = getWithoutBlockedEffects(effects, wynnClass);

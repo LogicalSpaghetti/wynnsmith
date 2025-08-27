@@ -19,11 +19,18 @@ function permuteOldBuild(build) {
 
 function permuteBuild(build) {
     console.log("build: ", build);
+
+    modifyIdentifications(build);
+    calculateStats(build);
+
+    // TODO: rework for new system
+    // calculateDamageConversions(build);
 }
 
 class Build {
     weapon;
     equipment;
+    tomes;
 
     effects = {};
 
@@ -33,9 +40,14 @@ class Build {
     stats = {};
     statArrays = {};
 
+    sp_totals;
+    sp_multipliers;
+
+
     constructor(weapon, input) {
         this.weapon = weapon;
         this.equipment = input.items.equipment;
+        this.tomes = input.items.tomes;
 
         this.level = input.level;
 
@@ -44,21 +56,15 @@ class Build {
         const abilities = getAbilities(input.abilities, weapon, input.items.equipment);
         this.effects = getSeparatedEffects(abilities, this.wynnClass);
 
-        this.sp_totals = input.sp_totals;
+        const weaponTotals =
+            capitalizedSkillPointNames.map((name) => getItem(this.weapon.name).identifications[`raw${name}`]);
+        this.sp_totals = input.sp_totals.map((total, index) => total + (weaponTotals[index] ?? 0));
+        this.sp_multipliers = this.sp_totals.map(total => spMultipliers[total]);
 
         const itemStats = sumItemStats(this.weapon, this.equipment);
         this.base = itemStats.base;
         this.identifications = itemStats.identifications;
     }
-}
-
-function getAbilities(abilities, weapon, equipment) {
-    const items = equipment.concat(weapon);
-
-    abilities.majorIds = getMajorIds(items);
-    abilities.powderSpecials = items.map(item => item?.special).filter(item => item != null);
-
-    return abilities;
 }
 
 function getMajorIds(items) {
@@ -99,7 +105,6 @@ function addIdsToObject(object, ids) {
 }
 
 function addIdToObject(object, idName, id) {
-    console.log(getAsMax(id), idName)
     object[idName] += getAsMax(id);
 }
 

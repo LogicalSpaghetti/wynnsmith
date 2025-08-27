@@ -107,13 +107,15 @@
 					1. new_damage = 135
 33. Changelog
 34. Blockers that kill children properly
+35. -Skill Point modifier warning
 ### Fix
-1. use Object.freeze() on all database objects
-2. Data isn't saved if a tab gets unloaded
+1. Attacks aren't ordered
+2. Effect toggles aren't ordered
+3. use Object.freeze() on all database objects
+4. Data isn't saved if a tab gets unloaded
 	1. use `sessionStorage`
-3. Handle items removed from database
-4. Tree propagation is wrong, once it's gone down, it can't go left or right
-5. Inhibitor improper ids: (double check somehow) ![[Inhibitor.png]]
+5. Handle items removed from database
+6. Tree propagation is wrong, once it's gone down, it can't go left or right
 ### Visual
 1. make elements look clickable or not
     1. pointer-events: none/initial;

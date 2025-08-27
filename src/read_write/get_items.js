@@ -36,7 +36,7 @@ function getTomes() {
 }
 
 function getItemsFromClusters(clusters) {
-    return Array.from(clusters).map(cluster => readItemFromCluster(cluster));
+    return Array.from(clusters).map(cluster => readItemFromCluster(cluster)).filter(item => item != null);
 }
 
 function readWeapons(build) {
@@ -53,7 +53,7 @@ function getWeapons() {
     const mainHand = getItemByCluster(weaponCluster);
     if (!mainHand) return [];
 
-    return weaponClusters.map(cluster => readItemFromCluster(cluster));
+    return getItemsFromClusters(weaponClusters);
 }
 
 function readWeapon(build) {
@@ -142,7 +142,7 @@ function addIds(build, item) {
 }
 
 function addId(build, id, idName) {
-    build.ids[idName] += id;
+    build.identifications[idName] += id;
 }
 
 function addBases(build, item) {
@@ -266,7 +266,7 @@ function getPowderSpecial(powderArray, isWeapon = false) {
     let first = tiered[0];
     for (let i = 1; i < tiered.length; i++) {
         if (tiered[i][0] === first[0]) {
-            const name = powderSpecialNames[isWeapon ? "weapon" : "armour"][powderPrefixes.indexOf(first[0]) - 1].toLowerCase();
+            const name = powderSpecialNames[isWeapon ? "weapon" : "armour"][powderPrefixes.indexOf(first[0])].toLowerCase();
             const tier = parseInt(tiered[i][1]) + parseInt(first[1]) - 7
             return `${name}${tier}`;
         }
