@@ -33,10 +33,9 @@ function getAbilities(inputAbilities, weapon, equipment) {
     return inputAbilities;
 }
 
-function getSeparatedEffects(abilities, wynnClass) {
+function getBuildEffects(abilities, wynnClass) {
     let effects = getEffects(abilities, wynnClass);
-    effects = getWithoutBlockedEffects(effects, wynnClass);
-    return splitEffects(effects, wynnClass);
+    return getWithoutBlockedEffects(effects, wynnClass);
 }
 
 function getEffects(abilities, wynnClass) {
@@ -122,7 +121,8 @@ function applyEffects(build) {
     });
 }
 
-function splitEffects(effects, wynnClass) {
+function getSplitEffects(effects, wynnClass) {
+    // TODO: remove "effects" from splitEffects
     const splitEffects = {
         effects: effects,
 

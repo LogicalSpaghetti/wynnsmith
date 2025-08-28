@@ -96,12 +96,9 @@ function damageIdsToArrays(build) {
 }
 
 function addPowderBase(build) {
-    for (let powderName of build.powders.weapon) {
-        const powder = powders[powderName];
-        const i = damageTypeNames.indexOf(powder.element);
-
-        build.base.damage[DamageExtremes.MIN][i] += powder.dmg.min;
-        build.base.damage[DamageExtremes.MAX][i] += powder.dmg.max;
+    for (let powder of build.weapon.powders.map(name => powders[name])) {
+        for (let extreme in build.base.damage)
+            build.base.damage[extreme][damageTypeNames.indexOf(powder.element)] += powder.damage[extreme];
     }
 }
 
@@ -155,14 +152,11 @@ function convertRaw(build) {
 }
 
 function powderNeutralConversions(build) {
-    const weaponPowders = build.powders.weapon;
 
     let neutral = 100;
     let modifierPercents = [0, 0, 0, 0, 0, 0];
 
-    for (let i in weaponPowders) {
-        const powder = powders[weaponPowders[i]];
-
+    for (let powder of build.weapon.powders.map(name => powders[name])) {
         const elementalIndex = damageTypeNames.indexOf(powder.element);
         const modPercent = Math.min(neutral, powder.conversion);
 
@@ -173,7 +167,6 @@ function powderNeutralConversions(build) {
     }
 
     build.attacks.forEach(attack => {
-
         const convertedDamages = attack.base.map(extreme =>
             extreme.map((element, i) => extreme[neutral_index] * modifierPercents[i] / 100));
 

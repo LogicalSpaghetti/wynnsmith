@@ -7,7 +7,7 @@
 2. display:
 	1. Heals
 3. Heals
-	1. Heal display
+	1. Heal variant
 4. Sliders
 5. Finish writing Aspect descriptions
 	1. Powder special descriptions

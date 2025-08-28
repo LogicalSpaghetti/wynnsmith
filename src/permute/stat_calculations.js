@@ -37,14 +37,12 @@ function healthCalculations(build) {
 
 function calculateHealing(build) {
     // TODO: Fluid Healing
-    for (let heal of (build.heals ?? build.effects.heals)) heal.heal *= build.stats.health;
-    // TODO: remove split
+    for (let heal of (build.heals)) heal.heal *= build.stats.health;
 }
 
 function getEHpFactor(build) {
     return getClassEHp(build) *
-        (build.resistances ?? build.effects.resistances).reduce((a, b) => a * (1 - b.multiplier), 1);
-    // TODO: remove split
+        (build.resistances).reduce((a, b) => a * (1 - b.multiplier), 1);
 }
 
 function getClassEHp(build) {
@@ -55,8 +53,7 @@ function getClassEHp(build) {
 }
 
 function calculateSpellCosts(build) {
-    // TODO: remove split
-    const spell_costs = build.spell_costs ?? build.effects.spell_costs;
+    const spell_costs = build.spell_costs;
 
     for (let i in spell_costs) {
         let cost = spell_costs[i];
@@ -67,16 +64,14 @@ function calculateSpellCosts(build) {
 
         cost *= 1 + build.identifications[costNames[i] + "SpellCost"] / 100;
 
-        // TODO: remove split
-        cost += (build.spell_cost_modifiers ?? build.effects.spell_cost_modifiers)[i];
+        cost += build.spell_cost_modifiers[i];
 
         cost = Math.max(cost, 1);
 
         spell_costs[i] = cost;
     }
 
-    // TODO: remove split
-    for (const data of (build.spell_cost_multipliers ?? build.effects.spell_cost_modifiers))
+    for (const data of build.spell_cost_multipliers)
         spell_costs[data.spell_number] *= data.cost_multiplier;
 }
 

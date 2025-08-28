@@ -1,15 +1,12 @@
 `use strict`;
 
 function refreshBuild() {
-    const build = new OldBuild();
-    readBuild(build);
-
     const input = new Input();
     input.init();
 
-    getWeaponBuilds(input);
-    permuteOldBuild(build);
-    displayBuild(build);
+    const builds = getWeaponBuilds(input);
+    builds.forEach(build => permuteBuild(build));
+    builds.forEach(build => displayBuild(build));
 }
 
 function roundForDisplay(number, addPeriod) {

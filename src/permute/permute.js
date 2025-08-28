@@ -1,11 +1,7 @@
 `use strict`;
 
 function getWeaponBuilds(input) {
-    if (!input) return [];
-
-    const builds = input.items.weapons.map(weapon => new Build(weapon, input));
-
-    builds.forEach(build => permuteBuild(build));
+    return !input ? [] : input.items.weapons.map(weapon => new Build(weapon, input));
 }
 
 function permuteOldBuild(build) {
@@ -14,7 +10,7 @@ function permuteOldBuild(build) {
     computeIdentifications(build);
 
     calculateSustainStats(build);
-    calculateDamageConversions(build);
+    // calculateDamageConversions(build);
 }
 
 function permuteBuild(build) {
@@ -24,7 +20,7 @@ function permuteBuild(build) {
     calculateStats(build);
 
     // TODO: rework for new system
-    // calculateDamageConversions(build);
+    calculateDamageConversions(build);
 }
 
 class Build {
@@ -43,6 +39,17 @@ class Build {
     sp_totals;
     sp_multipliers;
 
+    attacks;
+    masteries;
+    heals;
+    resistances;
+    personal_multipliers;
+    team_multipliers;
+    spell_costs;
+    spell_cost_modifiers;
+    spell_cost_multipliers;
+    variants;
+    displays;
 
     constructor(weapon, input) {
         this.weapon = weapon;
@@ -54,10 +61,13 @@ class Build {
         this.wynnClass = input.wynnClass;
 
         const abilities = getAbilities(input.abilities, weapon, input.items.equipment);
-        this.effects = getSeparatedEffects(abilities, this.wynnClass);
 
-        const weaponTotals =
-            capitalizedSkillPointNames.map((name) => getItem(this.weapon.name).identifications[`raw${name}`]);
+        this.effects = getBuildEffects(abilities, this.wynnClass);
+
+        const splitEffects = getSplitEffects(this.effects, this.wynnClass);
+        for (let key in splitEffects) if (key !== "effects") this[key] = splitEffects[key];
+
+        const weaponTotals = getWeaponSkillPoints(getItem(this.weapon.name))
         this.sp_totals = input.sp_totals.map((total, index) => total + (weaponTotals[index] ?? 0));
         this.sp_multipliers = this.sp_totals.map(total => spMultipliers[total]);
 
@@ -111,4 +121,9 @@ function addIdToObject(object, idName, id) {
 function getAsMax(possibleInt) {
     if (Number.isInteger(possibleInt)) return possibleInt;
     return possibleInt.max;
+}
+
+function getWeaponSkillPoints(weapon) {
+    return capitalizedSkillPointNames.map((name) =>
+        (weapon.identifications) ? weapon.identifications[`raw${name}`] : 0);
 }
