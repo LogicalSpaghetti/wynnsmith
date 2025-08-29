@@ -1,11 +1,3 @@
-// read all toggles from the html, and any that are selected, add.
-function readToggles(build) {
-    const toggles = document.querySelector("#effect_toggles").querySelectorAll(".toggle");
-
-    for (let toggleElement of toggles)
-        if (toggleElement.classList.contains("toggleOn"))
-            build.toggles.push(toggleElement.dataset.toggle_name);
-}
 
 function getActiveToggles() {
     const toggles = Array.from(document.querySelector("#effect_toggles").querySelectorAll(".toggle"));
@@ -30,18 +22,18 @@ function setToggles(build) {
         });
     }
 
-    writeNewTogglesHTML(newToggles);
+    writeTogglesHTML(newToggles);
 }
 
-function writeNewTogglesHTML(newToggles) {
+function writeTogglesHTML(newToggles) {
     const toggleHolder = document.querySelector("#effect_toggles");
     toggleHolder.innerHTML = "";
 
-    for (const newToggle of newToggles) toggleHolder.appendChild(generateNewToggleHTML(newToggle));
+    for (const newToggle of newToggles) toggleHolder.appendChild(generateToggleHTML(newToggle));
 }
 
 // TODO: use newToggle.data to generate embellishments like effect type symbol and % multiplier
-function generateNewToggleHTML(newToggle) {
+function generateToggleHTML(newToggle) {
     const button = document.createElement("button");
 
     button.classList.add("toggle");

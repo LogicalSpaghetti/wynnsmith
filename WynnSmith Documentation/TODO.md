@@ -1,22 +1,23 @@
 # Focus
 ### Small
-1. SP modification isn't working
-2. SP modification doesn't update the build
-3. Balance Str/dex button
-4. display:
+
+1. display:
 	1. Heals
-5. Heals
+2. Heals
 	1. Heal variant
-6. Sliders
-7. Finish writing Aspect descriptions
+3. Sliders
+4. Finish writing Aspect descriptions
 	1. Powder special descriptions
-8.  Add more than just abilities to the effect builder
-9. Melee display DPS and per-hit.
+5.  Add more than just abilities to the effect builder
+6. Melee display DPS and per-hit.
 ### Major
 1. Effects
-2. Off-hands
-3. SP Auto-calculation
-4. Ctrl+Shift+NUMBER and Ctrl+NUMBER, sets a bookmark and jumps to a bookmark
+2. Build link generation/parsing
+3. Build comparison
+4. Selector popups (Tomes, Aspects)
+5. Item search
+6. Build history (storing old inputs) (only store if actually changed)
+7. 
 # General
 ### Feat
 1. Switch to a functional model instead of using `build` for everything
@@ -109,6 +110,9 @@
 35. Changelog
 36. Blockers that kill children properly
 37. -Skill Point modifier warning
+38. Set Bonuses aren't accounted for when calculating SP
+	1. to each item, assign an array called set which is an array of the SP gained for each tier
+	2. between recursions, pass a list of sets and the number of members.
 ### Fix
 1. Attacks aren't ordered
 2. Effect toggles aren't ordered

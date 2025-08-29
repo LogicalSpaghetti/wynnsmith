@@ -12,15 +12,6 @@ function getWeaponBuilds(input) {
     return !input ? [] : input.items.weapons.map(weapon => new Build(weapon, input));
 }
 
-function permuteOldBuild(build) {
-    parseEffects(build);
-
-    computeIdentifications(build);
-
-    calculateSustainStats(build);
-    // calculateDamageConversions(build);
-}
-
 function permuteBuild(build) {
     console.log("build: ", build);
 

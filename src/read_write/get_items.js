@@ -1,25 +1,11 @@
 `use strict`;
 
-function readItems(build) {
-    readGear(build);
-    readWeapons(build);
-}
-
 function getItemsFromHTML() {
     return {
         equipment: getEquipment(),
         weapons: getWeapons(),
         tomes: getTomes()
     };
-}
-
-function readGear(build) {
-    const itemInputs = document.getElementById("item_inputs");
-    const gearClusters = itemInputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
-
-    for (let cluster of gearClusters) {
-        addItem(build, cluster);
-    }
 }
 
 function getEquipment(item_input_id = "item_inputs") {
@@ -65,10 +51,6 @@ function replaceWithMorph(clusters) {
     })
 }
 
-function readWeapons(build) {
-    readWeapon(build);
-}
-
 function getWeapons() {
     const itemInputs = document.getElementById("item_inputs");
     const weaponCluster = itemInputs.querySelector(`.primary_weapon_cluster`);
@@ -80,54 +62,6 @@ function getWeapons() {
 
     return getItemsFromClusters(weaponClusters);
 }
-
-function readWeapon(build) {
-    const itemInputs = document.getElementById("item_inputs");
-    const weaponCluster = itemInputs.querySelector(".primary_weapon_cluster");
-    const weaponInput = weaponCluster.querySelector(".item_input");
-
-    const item = getItemInGroup("weapon", weaponInput.value);
-    if (!item) return;
-
-    addItem(build, weaponCluster);
-
-    const wynnClass = build.wynnClass = item.requirements.classRequirement;
-    addAttackSpeed(build, item);
-
-    document.title = `${weaponInput.value} - WynnSmith`;
-
-    let icon = document.querySelector("link[rel~='icon']");
-    if (!icon) {
-        icon = document.createElement("link");
-        icon.rel = "icon";
-        document.head.appendChild(icon);
-    }
-    icon.href = "img/icons/" + wynnClass + ".png";
-
-    weaponCluster.querySelector(".slot_img").src =
-        "img/item/" + wynnClass + ".png";
-}
-
-function addItem(build, cluster) {
-    const item = getItemByCluster(cluster);
-
-    setPowderSlots(cluster, item);
-
-    if (!item) return;
-
-    colorSlot(cluster, item);
-    setLink(cluster, item);
-
-    addPowders(build, cluster, item);
-    addMajorIds(build, item);
-    addBases(build, item);
-    addIds(build, item);
-}
-
-function addAttackSpeed(build, item) {
-    build.base.attackSpeed = item.attackSpeed;
-}
-
 
 function readItemFromCluster(cluster) {
     const item = {slot: cluster.dataset.slot};
@@ -147,37 +81,6 @@ function readItemFromCluster(cluster) {
     item.special = getPowderSpecial(item.powders, itemData.type === "weapon");
 
     return item;
-}
-
-function addIds(build, item) {
-    const ids = item.identifications;
-    if (!ids) return;
-    for (let idName in ids)
-        addId(build, getAsMax(ids[idName]), idName);
-}
-
-function addId(build, id, idName) {
-    build.identifications[idName] += id;
-}
-
-function addBases(build, item) {
-    const ids = item.base;
-    if (!ids) return;
-    for (let idName in ids)
-        addBase(build, ids[idName], idName);
-}
-
-function addBase(build, id, idName) {
-    if (!id) return;
-    if (Number.isInteger(id)) {
-        build.base[idName] += id;
-    } else {
-        addMinAndMaxTo(build.base[idName], id);
-    }
-}
-
-function addMajorIds(build, item) {
-    for (let maId in item.majorIds) build.maIds.push(maId);
 }
 
 function getItemByCluster(cluster) {
@@ -223,34 +126,6 @@ function setLink(cluster, item) {
         .href = "./item/?" + item.name ?? "";
 }
 
-function addPowders(build, cluster, item) {
-    const powderInput = cluster.querySelector(".powder_input");
-    if (!powderInput) return;
-
-    const powdersString = powderInput.value.length % 2 === 0 ? powderInput.value : powderInput.value.substring(0, powderInput.value.length - 1);
-
-    const slotPowders = [];
-
-    for (let i = 0; i < powdersString.length / 2; i++) {
-        const powderName = powdersString.substring(i * 2, i * 2 + 2);
-        const powder = powders[powderName];
-        if (powder == null) continue;
-        slotPowders.push(powderName);
-    }
-
-    sortPowderArray(slotPowders);
-
-    const special = getPowderSpecial(slotPowders, item.type === "weapon");
-
-    if (cluster.dataset.slot === "weapon") {
-        build.powders.weapon = slotPowders;
-        build.specials.weapon = special;
-    } else {
-        build.powders.armour = build.powders.armour.concat(slotPowders);
-        build.specials.armour.push(special);
-    }
-}
-
 function getClusterPowders(cluster) {
     const powderInput = cluster.querySelector(".powder_input");
     if (!powderInput) return [];
@@ -292,21 +167,6 @@ function getPowderSpecial(powderArray, isWeapon = false) {
     }
 }
 
-// TODO: calculate SP reqs.
-function readSkillPointModifiers(build) {
-    const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
-
-    for (let cluster of spClusters) {
-        const modifierInput = cluster.querySelector(".sp_input");
-        const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
-
-        const value = modifierInput.value = parseInt(modifierInput.value) || 0;
-
-        build.sp_totals[index] += value;
-        build.sp_multipliers[index] = getSkillPointMultiplier(build.sp_totals[index], index);
-    }
-}
-
 function getSkillPointModifiers() {
     const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
 
@@ -315,7 +175,7 @@ function getSkillPointModifiers() {
         const modifierInput = cluster.querySelector(".sp_input");
         const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
 
-        const value = parseInt(modifierInput.value) || 0;
+        const value = Math.max(-1000, Math.min(1000, parseInt(modifierInput.value))) || 0;
         if (modifierInput.value === "0-" || modifierInput.value === "-0" || modifierInput.value === "-")
             modifierInput.value = "-";
         else modifierInput.value = value;

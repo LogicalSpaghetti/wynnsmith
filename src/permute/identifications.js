@@ -5,14 +5,6 @@ function modifyIdentifications(build) {
     addOtherIdSources(build);
 
     getMeleeAttackSpeed(build);
-
-}
-
-function computeIdentifications(build) {
-    // radiance(build);
-    // addOtherIdSources(build);
-
-    fixAttackSpeed(build);
 }
 
 // TODO: turn into an effect
@@ -80,12 +72,6 @@ function getMeleeAttackSpeed(build) {
     build.stats.attackSpeed =
         Math.max(1, Math.min(Object.keys(attackSpeedMultipliers).length - 1),
             orderedAttackSpeed.indexOf(build.base.attackSpeed) + build.identifications.rawAttackSpeed);
-}
-
-function fixAttackSpeed(build) {
-    build.stats.attackSpeed =
-        Math.max(1, Math.min(orderedAttackSpeed.indexOf(build.base.attackSpeed) + build.identifications.rawAttackSpeed,
-            Object.keys(attackSpeedMultipliers).length - 1));
 }
 
 function applyStatEffects(build) {

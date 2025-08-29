@@ -1,13 +1,5 @@
 `use strict`;
 
-/* Import: */
-
-function encodeBuild(inputData) {
-    // TODO
-}
-
-/* Export: */
-
 function copyBuildLink(button, long) {
     navigator.clipboard.writeText(getBuildLinkText(long));
 }

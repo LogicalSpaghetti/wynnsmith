@@ -67,60 +67,6 @@ function getEffects(abilities, wynnClass) {
 
 }
 
-function parseEffects(build) {
-    removeBlockedEffects(build);
-    applyEffects(build);
-}
-
-function applyEffects(build) {
-    if (build.wynnClass === "") return;
-    const effectData = classEffects[build.wynnClass].effects;
-
-    build.effects.forEach(effectId => {
-        const effect = effectData[effectId];
-
-        if (effect.toggle_name !== "" && effect.toggle_name !== undefined)
-            if (!build.toggles.includes(effect.toggle_name)) return;
-
-        switch (effect.type) {
-            case EffectTypes.EMPTY:
-                break;
-            case EffectTypes.CONVERSION:
-                parseConversionEffect(build, effect);
-                break;
-            case EffectTypes.VARIANT:
-                parseVariantEffect(build, effect);
-                break;
-            case EffectTypes.DISPLAY:
-                parseDisplayEffect(build, effect);
-                break;
-            case EffectTypes.MASTERY:
-                parseMasteryEffect(build, effect);
-                break;
-            case EffectTypes.HEAL:
-                parseHealEffect(build, effect);
-                break;
-            case EffectTypes.RESISTANCE:
-                parseResistanceEffect(build, effect);
-                break;
-            case EffectTypes.TEAM_MULTIPLIER:
-                parseTeamDamageMultiplierEffect(build, effect);
-                break;
-            case EffectTypes.PERSONAL_MULTIPLIER:
-                parsePersonalDamageMultiplierEffect(build, effect);
-                break;
-            case EffectTypes.COST:
-                parseSpellCostEffect(build, effect);
-                break;
-            case EffectTypes.COST_MULTIPLIER:
-                parseSpellCostMultiplierEffect(build, effect);
-                break;
-            default:
-                throw new Error("Unknown effect type: " + effect.type + ", id: " + effectId);
-        }
-    });
-}
-
 function getSplitEffects(effects, wynnClass) {
     // TODO: remove "effects" from splitEffects
     const splitEffects = {
@@ -274,22 +220,6 @@ function getOrCreateNamedEffect(effectArray, internal_name) {
 
 function createUnnamedEffect(effectArray, data) {
     effectArray.push(data);
-}
-
-function removeBlockedEffects(build) {
-    const blockedIndexes = [];
-
-    build.effects.forEach(effectId => {
-        const effect = classEffects[build.wynnClass].effects[effectId];
-        effect.blocks.forEach(blockId => {
-            blockedIndexes.push(blockId);
-        });
-    });
-
-    blockedIndexes.forEach(effectId => {
-        if (build.effects.indexOf(String(effectId)) !== -1)
-            build.effects.splice(build.effects.indexOf(String(effectId)), 1);
-    });
 }
 
 function getWithoutBlockedEffects(effects, wynnClass) {

@@ -74,39 +74,6 @@ function romanToDecimal(str) {
     return num;
 }
 
-const iconHeaders = {
-    "neutral": getHeaderForIcon("neutral", "✣"),
-    "earth": getHeaderForIcon("earth", "✤"),
-    "thunder": getHeaderForIcon("thunder", "✦"),
-    "water": getHeaderForIcon("water", "❉"),
-    "fire": getHeaderForIcon("fire", "✹"),
-    "air": getHeaderForIcon("air", "❋"),
-    "health": getHeaderForIcon("health", "⚔"),
-    "mana": getHeaderForIcon("water", "✺")
-};
-
-const colorHeaders = {
-    "earth": getHeaderForColor("earth"),
-    "thunder": getHeaderForColor("thunder"),
-    "water": getHeaderForColor("water"),
-    "fire": getHeaderForColor("fire"),
-    "air": getHeaderForColor("air"),
-    "health": getHeaderForColor("health")
-};
-
-function getHeaderForIcon(color, elementEmoji) {
-    // TODO: replace with codeDictionary
-    // return minecraftToHTML(`${codeDictionaryGenericSymbols[color]} `)
-    return `<span class=\"${color}\">` +
-        `<b class=\"font-minecraft\" style=\"display: inline-block; width: 1ch\">` +
-        `${elementEmoji}` +
-        `</b> `;
-}
-
 function getHeaderForColor(color) {
     return `<span class=\"${color}\">`;
-}
-
-function cloneObject(obj) {
-    return JSON.parse(JSON.stringify(obj));
 }

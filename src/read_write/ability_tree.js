@@ -9,24 +9,6 @@ function treeClicked(event) {
     refreshBuild();
 }
 
-function readAbilities(build) {
-    if (build.wynnClass === "") return;
-
-    if (build.previousClass !== build.wynnClass) {
-        changeAbilityTree(build);
-        changeAspects(build);
-    }
-
-    validateTree(build.level);
-    renderHighlights();
-
-    if (build.previousClass === build.wynnClass) {
-        addNodesToBuild(build);
-        addAspectsToBuild(build);
-    }
-    addEffectsToBuild(build);
-}
-
 function getInputAbilities(wynnClass) {
     const previousClass = document.getElementById("ability_tree").dataset.class;
 
@@ -183,32 +165,12 @@ function mapHTML(tree, abilityTree, wynnClass) {
     }
 }
 
-// called any time the build changes but the class doesn't
-function addNodesToBuild(build) {
-    const treeNodes = document.querySelectorAll(".ability_img");
-    treeNodes.forEach((imgNode) => {
-        if (imgNode.parentElement.dataset.selected === "true") {
-            build.nodes.push(imgNode.dataset.id);
-        }
-    });
-}
-
 function getNodes() {
     const treeNodes = Array.from(document.querySelectorAll(".tree_cell[data-type='node']"));
 
     return treeNodes
         .filter(node => node.dataset.selected === "true")
         .map((node) => node.dataset.ability_id);
-}
-
-function addAspectsToBuild(build) {
-    const aspects = document.getElementById("active_aspects").querySelectorAll(".aspect");
-    aspects.forEach((aspect) => {
-        build.aspects.push({
-            name: aspect.dataset.aspect,
-            tier: parseInt(aspect.childNodes[2].dataset.tier)
-        });
-    });
 }
 
 function getAspects() {
@@ -230,7 +192,7 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
         // return;
     }
 
-    const tree = punscake[treeHTML.dataset.class];
+    const tree = punscake[wynnClass];
     if (!tree) return;
 
     // reset tree highlights
@@ -443,28 +405,3 @@ function renderHighlights() {
         };
     });
 }
-
-function addEffectsToBuild(build) {
-    const effects = classEffects[build.wynnClass].effects;
-    if (!effects) return;
-    const unvalidatedEffectIds = Object.keys(effects);
-
-    for (let i = 0; i < unvalidatedEffectIds.length;) {
-        const id = unvalidatedEffectIds[i];
-        const effect = effects[id];
-        let hasAllParents = true;
-        let hasAnyParents = false;
-        for (let parent of effect.parents)
-            if (build[parent.section].includes(parent.id)) {
-                hasAnyParents = true;
-            } else {
-                hasAllParents = false;
-            }
-        if ((hasAnyParents && !effect.requires_all) || hasAllParents) {
-            build.effects.push(id);
-            unvalidatedEffectIds.splice(i, 1);
-            i = 0;
-        } else i++;
-    }
-}
-

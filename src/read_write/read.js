@@ -1,29 +1,5 @@
 `use strict`;
 
-function readBuild(build) {
-    const input = new Input();
-
-    readOldClass(build);
-    readPlayerLevel(build);
-    readItems(build);
-    readSkillPointModifiers(build);
-    readAbilities(build);
-    readToggles(build);
-
-    return input;
-}
-
-function readOldClass(build) {
-    build.previousClass = document.getElementById("ability_tree").dataset.class;
-}
-
-function readPlayerLevel(build) {
-    build.level =
-        Math.min(maxPlayerLevel,
-            Math.max(1,
-                parseInt(document.getElementById("level_input").value) || 0));
-}
-
 function getPlayerLevel() {
     return Math.min(maxPlayerLevel,
         Math.max(1,
@@ -142,12 +118,6 @@ function getItemSPReqs(itemName) {
     return skillPointNames.map(name => Number(reqs[name] ?? 0));
 }
 
-function getSkillPointTotal(minimums, items, sp_modifiers) {
-    // TODO: modify here to get sans-weapon totals to use everything
-    return sp_modifiers;
-}
-
-// TODO: handle negative crit chance
 function balanceSP() {
     const remainingSP = document.getElementById("remaining_sp").dataset.value;
     if (remainingSP < 1) return;

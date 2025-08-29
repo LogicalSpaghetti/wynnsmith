@@ -8,14 +8,6 @@ function calculateStats(build) {
     calculateSpellCosts(build);
 }
 
-function calculateSustainStats(build) {
-    statCalculations(build);
-
-    mergeElementalDefences(build);
-    healthCalculations(build);
-    calculateSpellCosts(build);
-}
-
 function healthCalculations(build) {
     build.stats.health = Math.max(5, build.base.baseHealth + build.identifications.rawHealth);
     build.stats.healthRegen = computeHpr(build.identifications.healthRegenRaw, build.identifications.healthRegen / 100);
