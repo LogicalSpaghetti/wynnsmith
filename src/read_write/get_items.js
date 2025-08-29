@@ -43,7 +43,7 @@ function shouldReplaceWithMorph(weaponText) {
 
 function getIndexOfMorph(string) {
     const capitalizedIndex = string.indexOf("Morph-");
-    return capitalizedIndex !== -1 ? capitalizedIndex : string.indexOf(/morph-/i);
+    return capitalizedIndex !== -1 ? capitalizedIndex : string.indexOf("morph-");
 }
 
 function getTomes() {
@@ -197,7 +197,6 @@ function setPowderSlots(cluster, item) {
     const powderInput = cluster.querySelector(".powder_input");
     if (!powderInput) return;
 
-    console.log("2121");
     if (!item || !item.powderSlots) {
         powderInput.placeholder = "No Slots";
         powderInput.maxLength = 0;
@@ -205,7 +204,6 @@ function setPowderSlots(cluster, item) {
         powderInput.disabled = true;
         return;
     }
-
 
     powderInput.disabled = false;
     powderInput.placeholder = item.powderSlots + " Slots";

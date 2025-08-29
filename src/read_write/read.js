@@ -84,11 +84,11 @@ function getSkillPointMinAndAdded(items) {
         .map((x, i) => Math.max(x, unhelpfulMinimums[i]));
 
     const itemMins = getAssignedSPMinimums(toIterate, initialProvies);
-    console.log(itemMins)
+    console.log(itemMins);
     const addedMins = itemMins.added;
     const requiredMins = itemMins.required.map((min, j) =>
         finalUnhelpfulRequirements[j] > 0 ? Math.max(min + addedMins[j], finalUnhelpfulRequirements[j]) - addedMins[j] : min);
-    console.log(requiredMins)
+    console.log(requiredMins);
     return {required: requiredMins, added: addedMins};
 }
 
@@ -145,4 +145,59 @@ function getItemSPReqs(itemName) {
 function getSkillPointTotal(minimums, items, sp_modifiers) {
     // TODO: modify here to get sans-weapon totals to use everything
     return sp_modifiers;
+}
+
+// TODO: handle negative crit chance
+function balanceSP() {
+    const remainingSP = document.getElementById("remaining_sp").dataset.value;
+    if (remainingSP < 1) return;
+
+    const spInputs = document.getElementById("sp_section");
+    const strengthCluster = spInputs.querySelector(".sp_cluster[data-element='earth']")
+    const strength = parseInt(strengthCluster.querySelector(".total_display").textContent);
+    const dexterityCluster = spInputs.querySelector(".sp_cluster[data-element='thunder']");
+    const dexterity = parseInt(dexterityCluster.querySelector(".total_display").textContent);
+
+    console.log(strength, dexterity)
+
+    let newStrength;
+    let newDexterity;
+
+    const difference = Math.max(0, Math.abs(strength - dexterity));
+    const overBalance = remainingSP - difference
+
+    if (strength < 0 && dexterity < 0) {
+        newStrength = 0;
+        newDexterity = 0;
+    } else if (strength < 0 && dexterity >= 0) {
+        newStrength = 0;
+        newDexterity = remainingSP;
+    } else if (dexterity < 0 && strength >= 0) {
+        newStrength = remainingSP;
+        newDexterity = 0;
+    } else if (strength >= dexterity + remainingSP) {
+        newStrength = 0;
+        newDexterity = remainingSP;
+    } else if (dexterity >= strength + remainingSP) {
+        newStrength =  remainingSP;
+        newDexterity = 0;
+    } else if (strength > dexterity) {
+        newStrength = overBalance / 2;
+        newDexterity = overBalance / 2 + difference;
+    } else if (dexterity > strength) {
+        newStrength = overBalance / 2 + difference;
+        newDexterity = overBalance / 2;
+    } else { // strength === dexterity
+        newStrength = remainingSP / 2;
+        newDexterity = remainingSP / 2;
+    }
+
+    console.log(newStrength);
+    console.log(newDexterity);
+
+
+    strengthCluster.querySelector(".sp_input").value =
+        parseInt(strengthCluster.querySelector(".sp_input").value) + Math.ceil(newStrength);
+    dexterityCluster.querySelector(".sp_input").value =
+        parseInt(dexterityCluster.querySelector(".sp_input").value) + Math.floor(newDexterity);
 }

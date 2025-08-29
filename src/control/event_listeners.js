@@ -28,7 +28,7 @@ function addEventListeners() {
     });
     document.querySelector("#level_input").addEventListener("input", () => {
         refreshBuild();
-    })
+    });
     const treeElement = document.getElementById("ability_tree");
     // Ability Tree
     treeElement.addEventListener("click", (event) => {
@@ -87,6 +87,17 @@ function addEventListeners() {
     document.getElementById("add_offhand").addEventListener("click", () => {
         addOffhandInput();
     });
+
+    document.querySelectorAll(".sp_input").forEach(el => {
+        el.addEventListener("input", () => {
+            refreshBuild();
+        });
+    });
+
+    document.getElementById("balance_dmg").addEventListener("click", () => {
+        balanceSP();
+        refreshBuild();
+    })
 }
 
 function addListenersToInputCluster(cluster) {

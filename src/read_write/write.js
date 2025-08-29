@@ -18,7 +18,7 @@ function display(input, builds) {
 }
 
 function displayBuilds(builds) {
-    displayPrimaryBuild(builds[0])
+    displayPrimaryBuild(builds[0]);
 }
 
 function displaySkillPoints(input) {
@@ -26,7 +26,8 @@ function displaySkillPoints(input) {
     const spRemaining = document.getElementById("remaining_sp");
 
     const firstItemAdded = getItemAddedSP(getItem(input.items.weapons[0].name));
-    const assigned = input.sp_assigned;
+    const assigned = input.sp_assigned.map((sp, i) =>
+        sp + input.sp_modified[i]);
     const totals = input.sp_assigned.map((sp, i) =>
         sp + input.sp_added[i] + input.sp_modified[i] + firstItemAdded[i]);
 
@@ -37,8 +38,9 @@ function displaySkillPoints(input) {
         cluster.querySelector(".assigned_display").textContent = assigned[index];
     }
 
-    const remainingSP = assigned.reduce((a, b) => a - b, 2 * Math.min(input.level - 1, 100))
+    const remainingSP = assigned.reduce((a, b) => a - b, 2 * Math.min(input.level - 1, 100));
     spRemaining.innerHTML = minecraftToHTML(codeDictionaryPositivityColors[remainingSP >= 0] + remainingSP);
+    spRemaining.dataset.value = String(remainingSP);
 }
 
 function setPageEmbellishments(weaponName, wynnClass) {
