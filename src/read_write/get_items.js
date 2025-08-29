@@ -23,11 +23,28 @@ function readGear(build) {
 }
 
 function getEquipment(item_input_id = "item_inputs") {
-    const gearClusters = (document.getElementById(item_input_id)
-        .querySelectorAll(`.input_cluster[data-group="gear"]`));
-    return getItemsFromClusters(gearClusters);
+    const inputs = document.getElementById(item_input_id);
+    const equipmentClusters = inputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
+    const weaponElement = inputs.querySelector(`.primary_weapon_cluster`).querySelector(".item_input");
+    if (shouldReplaceWithMorph(weaponElement.value)) {
+        weaponElement.value = toStringWithoutMorph(weaponElement.value);
+        replaceWithMorph(equipmentClusters);
+    }
+    return getItemsFromClusters(inputs.querySelectorAll(`.input_cluster[data-group="gear"]`));
 }
 
+function toStringWithoutMorph(string) {
+    return string.replace(/morph-/i, "");
+}
+
+function shouldReplaceWithMorph(weaponText) {
+    return getIndexOfMorph(weaponText) !== -1;
+}
+
+function getIndexOfMorph(string) {
+    const capitalizedIndex = string.indexOf("Morph-");
+    return capitalizedIndex !== -1 ? capitalizedIndex : string.indexOf(/morph-/i);
+}
 
 function getTomes() {
     const tomeClusters = document.getElementById("tome_inputs")
@@ -37,6 +54,15 @@ function getTomes() {
 
 function getItemsFromClusters(clusters) {
     return Array.from(clusters).map(cluster => readItemFromCluster(cluster)).filter(item => item != null);
+}
+
+const morph = ["Morph-Stardust", "Morph-Steel", "Morph-Iron", "Morph-Gold", "Morph-Topaz", "Morph-Emerald", "Morph-Amethyst", "Morph-Ruby"];
+
+function replaceWithMorph(clusters) {
+    Array.from(clusters).forEach((cluster, i) => {
+        const input = cluster.querySelector(`.item_input`);
+        input.value = morph[i];
+    })
 }
 
 function readWeapons(build) {
@@ -167,19 +193,22 @@ function addMinAndMaxTo(target, source) {
     target.max += source.max;
 }
 
-// TODO: move to the display step.
 function setPowderSlots(cluster, item) {
     const powderInput = cluster.querySelector(".powder_input");
     if (!powderInput) return;
 
+    console.log("2121");
     if (!item || !item.powderSlots) {
         powderInput.placeholder = "No Slots";
         powderInput.maxLength = 0;
         powderInput.value = "";
+        powderInput.disabled = true;
         return;
     }
 
-    powderInput.placeholder = item.powderSlots + " slots";
+
+    powderInput.disabled = false;
+    powderInput.placeholder = item.powderSlots + " Slots";
     powderInput.maxLength = item.powderSlots * 2;
     if (powderInput.value.length > powderInput.maxLength) {
         powderInput.value = powderInput.value.substring(0, powderInput.maxLength);
