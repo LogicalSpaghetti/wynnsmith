@@ -1,18 +1,17 @@
 # Focus
 ### Small
-1. Skill Points
-	1. Find the minimums for all gear to fit together with any weapon
-	2. for per-weapon calculations, add the weapon's provided SP
-	3. for display, show the main-hand total
-2. display:
+1. SP modification isn't working
+2. SP modification doesn't update the build
+3. Balance Str/dex button
+4. display:
 	1. Heals
-3. Heals
+5. Heals
 	1. Heal variant
-4. Sliders
-5. Finish writing Aspect descriptions
+6. Sliders
+7. Finish writing Aspect descriptions
 	1. Powder special descriptions
-6.  Add more than just abilities to the effect builder
-7. Melee display DPS and per-hit.
+8.  Add more than just abilities to the effect builder
+9. Melee display DPS and per-hit.
 ### Major
 1. Effects
 2. Off-hands

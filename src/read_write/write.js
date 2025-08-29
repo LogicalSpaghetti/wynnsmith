@@ -14,6 +14,7 @@ function display(input, builds) {
     displayBuilds(builds);
     validateTree(input.level, input.wynnClass);
     renderHighlights();
+    setPageEmbellishments(input.items.weapons[0].name, input.wynnClass);
 }
 
 function displayBuilds(builds) {
@@ -22,6 +23,7 @@ function displayBuilds(builds) {
 
 function displaySkillPoints(input) {
     const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
+    const spRemaining = document.getElementById("remaining_sp");
 
     const firstItemAdded = getItemAddedSP(getItem(input.items.weapons[0].name));
     const assigned = input.sp_assigned;
@@ -34,4 +36,19 @@ function displaySkillPoints(input) {
         cluster.querySelector(".total_display").textContent = String(totals[index]);
         cluster.querySelector(".assigned_display").textContent = assigned[index];
     }
+
+    const remainingSP = assigned.reduce((a, b) => a - b, 2 * Math.min(input.level - 1, 100))
+    spRemaining.innerHTML = minecraftToHTML(codeDictionaryPositivityColors[remainingSP >= 0] + remainingSP);
+}
+
+function setPageEmbellishments(weaponName, wynnClass) {
+    document.title = `${weaponName} - WynnSmith`;
+
+    let icon = document.querySelector("link[rel~='icon']");
+    if (!icon) {
+        icon = document.createElement("link");
+        icon.rel = "icon";
+        document.head.appendChild(icon);
+    }
+    icon.href = "img/icons/" + wynnClass + ".png";
 }

@@ -64,25 +64,53 @@ class Input {
 
 function getSkillPointMinAndAdded(items) {
     const weaponRequirements = getSPRequirementForAllWeapons(items.weapons);
-    const skillPointData = itemNamesToSkillPointData(items.equipment);
-    const itemMins = getAssignedSPMinimums(skillPointData);
-    const addedMins = itemMins.added
-    const requiredMins = itemMins.required.map((min, j) =>
-        Math.max(min + addedMins[j], weaponRequirements[j]) - addedMins[j]);
 
+    const skillPointData = itemNamesToSkillPointData(items.equipment)
+        .filter(item => itemRequiresSomething(item) || itemProvidesSomething(item));
+
+    const toIterate = skillPointData
+        .filter(item => itemRequiresSomething(item) && itemProvidesSomething(item));
+    const onlyHasProvides = skillPointData
+        .filter(item => itemProvidesSomething(item) && !itemRequiresSomething(item));
+    const onlyHasRequirement = skillPointData
+        .filter(item => itemRequiresSomething(item) && !itemProvidesSomething(item));
+
+    const initialProvies = onlyHasProvides
+        .reduce((total, item) => total.map((x, i) => x + item.added[i]), [0, 0, 0, 0, 0]);
+    const unhelpfulMinimums = onlyHasRequirement
+        .reduce((total, item) => total.map((x, i) => Math.max(x, item.required[i])), [0, 0, 0, 0, 0]);
+
+    const finalUnhelpfulRequirements = weaponRequirements
+        .map((x, i) => Math.max(x, unhelpfulMinimums[i]));
+
+    const itemMins = getAssignedSPMinimums(toIterate, initialProvies);
+    console.log(itemMins)
+    const addedMins = itemMins.added;
+    const requiredMins = itemMins.required.map((min, j) =>
+        finalUnhelpfulRequirements[j] > 0 ? Math.max(min + addedMins[j], finalUnhelpfulRequirements[j]) - addedMins[j] : min);
+    console.log(requiredMins)
     return {required: requiredMins, added: addedMins};
 }
 
+function itemProvidesSomething(item) {
+    return undefined !== item.added.find(x => x !== 0);
+}
+
+function itemRequiresSomething(item) {
+    return undefined !== item.required.find(x => x !== 0);
+}
+
 // takes multiple seconds with a full build
-function getAssignedSPMinimums(skillPointData, required = [0, 0, 0, 0, 0], added = [0, 0, 0, 0, 0]) {
+function getAssignedSPMinimums(skillPointData, added = [0, 0, 0, 0, 0], required = [0, 0, 0, 0, 0]) {
     if (skillPointData.length > 0) {
         // return minimum of branches
         return skillPointData.map((item, i) => {
-            const newAssigned = required.map((min, j) =>
-                Math.max(min + added[j], item.required[j]) - added[j]);
             const newAdded = added.map((total, j) => total + item.added[j]);
+            const newRequired = required.map((min, j) =>
+                item.required[j] > 0 ? Math.max(min + added[j], item.required[j]) - added[j] : min)
+                .map((min, j) => min > 0 ? min + (item.added[j] < 0 ? -item.added[j] : 0) : 0);
 
-            return getAssignedSPMinimums(skillPointData.toSpliced(i, 1), newAssigned, newAdded);
+            return getAssignedSPMinimums(skillPointData.toSpliced(i, 1), newAdded, newRequired);
         })
             .reduce((a, b) =>
                 a.required.reduce((x, y) => x + y) <
@@ -99,7 +127,7 @@ function getItemAsSkillPointData(item) {
     return {
         required: skillPointNames.map(name => Number(item.requirements?.[name] ?? 0)),
         added: getItemAddedSP(item)
-    }
+    };
 }
 
 function getSPRequirementForAllWeapons(weapons) {
