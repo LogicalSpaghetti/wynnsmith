@@ -47,8 +47,7 @@ function getWeapons() {
     const itemInputs = document.getElementById("item_inputs");
     const weaponCluster = itemInputs.querySelector(`.primary_weapon_cluster`);
     const offhandWeaponClusters = itemInputs.querySelector(`.offhands`).querySelectorAll(`.input_cluster`);
-    const weaponClusters = offhandWeaponClusters.length < 1 ? [weaponCluster]
-        : offhandWeaponClusters.concat(weaponCluster);
+    const weaponClusters = [weaponCluster].concat(Array.from(offhandWeaponClusters));
 
     const mainHand = getItemByCluster(weaponCluster);
     if (!mainHand) return [];
@@ -81,16 +80,6 @@ function readWeapon(build) {
 
     weaponCluster.querySelector(".slot_img").src =
         "img/item/" + wynnClass + ".png";
-}
-
-function addPiece(build, cluster) {
-    const item = getItemByCluster(cluster);
-    if (item) build.equipment.push(item);
-}
-
-function addWeapon(build, cluster) {
-    const item = getItemByCluster(cluster);
-    if (item) build.weapons.push(item);
 }
 
 function addItem(build, cluster) {
@@ -167,7 +156,10 @@ function addMajorIds(build, item) {
 
 function getItemByCluster(cluster) {
     const input = cluster.querySelector(".item_input");
-    return getItemInGroup(cluster.dataset.slot, input.value);
+    const item = getItemInGroup(cluster.dataset.slot, input.value);
+    if (cluster.dataset.slot === "weapon") cluster.querySelector(".slot_img").src =
+        `img/item/${item?.requirements?.classRequirement ?? "archer"}.png`;
+    return item;
 }
 
 function addMinAndMaxTo(target, source) {
@@ -267,10 +259,9 @@ function getPowderSpecial(powderArray, isWeapon = false) {
     for (let i = 1; i < tiered.length; i++) {
         if (tiered[i][0] === first[0]) {
             const name = powderSpecialNames[isWeapon ? "weapon" : "armour"][powderPrefixes.indexOf(first[0])].toLowerCase();
-            const tier = parseInt(tiered[i][1]) + parseInt(first[1]) - 7
+            const tier = parseInt(tiered[i][1]) + parseInt(first[1]) - 7;
             return `${name}${tier}`;
-        }
-        else first = tiered[i];
+        } else first = tiered[i];
     }
 }
 
@@ -297,7 +288,12 @@ function getSkillPointModifiers() {
         const modifierInput = cluster.querySelector(".sp_input");
         const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
 
-        totals[index] = (modifierInput.value = parseInt(modifierInput.value) || 0);
+        const value = parseInt(modifierInput.value) || 0;
+        if (modifierInput.value === "0-" || modifierInput.value === "-0" || modifierInput.value === "-")
+            modifierInput.value = "-";
+        else modifierInput.value = value;
+
+        totals[index] = value;
     }
 
     return totals;

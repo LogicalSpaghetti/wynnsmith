@@ -1,5 +1,13 @@
 `use strict`;
 
+function permute(input) {
+    console.log("input: ", input);
+    const builds = getWeaponBuilds(input);
+    builds.forEach(build => permuteBuild(build));
+
+    return builds;
+}
+
 function getWeaponBuilds(input) {
     return !input ? [] : input.items.weapons.map(weapon => new Build(weapon, input));
 }
@@ -24,6 +32,8 @@ function permuteBuild(build) {
 }
 
 class Build {
+    level;
+
     weapon;
     equipment;
     tomes;
@@ -52,11 +62,11 @@ class Build {
     displays;
 
     constructor(weapon, input) {
+        this.level = input.level;
+
         this.weapon = weapon;
         this.equipment = input.items.equipment;
         this.tomes = input.items.tomes;
-
-        this.level = input.level;
 
         this.wynnClass = input.wynnClass;
 
@@ -67,9 +77,10 @@ class Build {
         const splitEffects = getSplitEffects(this.effects, this.wynnClass);
         for (let key in splitEffects) if (key !== "effects") this[key] = splitEffects[key];
 
-        const weaponTotals = getWeaponSkillPoints(getItem(this.weapon.name))
-        this.sp_totals = input.sp_totals.map((total, index) => total + (weaponTotals[index] ?? 0));
-        this.sp_multipliers = this.sp_totals.map(total => spMultipliers[total]);
+        const weaponTotals = getItemAddedSP(getItem(this.weapon.name));
+        this.sp_totals = input.sp_assigned.map((sp, i) =>
+            sp + input.sp_added[i] + input.sp_modified[i] + weaponTotals[i]);
+        this.sp_multipliers = this.sp_totals.map((total, i) => getSkillPointMultiplier(total, i));
 
         const itemStats = sumItemStats(this.weapon, this.equipment);
         this.base = itemStats.base;
@@ -123,7 +134,6 @@ function getAsMax(possibleInt) {
     return possibleInt.max;
 }
 
-function getWeaponSkillPoints(weapon) {
-    return capitalizedSkillPointNames.map((name) =>
-        (weapon.identifications) ? weapon.identifications[`raw${name}`] : 0);
+function getItemAddedSP(weapon) {
+    return capitalizedSkillPointNames.map((name) => Number(weapon?.identifications[`raw${name}`] ?? 0));
 }

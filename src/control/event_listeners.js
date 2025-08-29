@@ -2,6 +2,7 @@
 
 // called when the page finishes loading
 window.addEventListener("load", function () {
+    // TODO: before enabling everything and reloading, verify the version and handle it if it's old
     loadMiku();
 
     refreshBuild();
@@ -19,29 +20,16 @@ function loadMiku() {
 }
 
 function addEventListeners() {
-    // gets all inputs, including
-    document.querySelectorAll(".input").forEach((input) => {
-        input.addEventListener("input", function () {
-            refreshBuild();
-        });
-    });
-
     addAspectListeners();
     addTooltipListener();
 
     document.querySelectorAll(".input_cluster").forEach((cluster) => {
-        const input = cluster.querySelector(".item_input");
-        const link = cluster.querySelector(".item_link");
-
-        link.addEventListener("mouseover", () => {
-            renderHoverTooltip(getHoverTextForItem(getItem(input.value)));
-        });
-        link.addEventListener("mouseout", () => {
-            hideHoverAbilityTooltip();
-        });
+        addListenersToInputCluster(cluster);
     });
-
-    const treeElement = document.getElementById("ability_tree")
+    document.querySelector("#level_input").addEventListener("input", () => {
+        refreshBuild();
+    })
+    const treeElement = document.getElementById("ability_tree");
     // Ability Tree
     treeElement.addEventListener("click", (event) => {
         treeClicked(event);
@@ -53,9 +41,8 @@ function addEventListeners() {
         refreshBuild();
     });
     document.getElementById("clear_reds").addEventListener("click", () => {
-        treeElement.querySelectorAll("td[data-red='true']").forEach((td) => {
-            td.removeAttribute("data-red");
-            td.dataset.selected = "false";
+        treeElement.querySelectorAll("td[data-red='true']").forEach((node) => {
+            node.dataset.selected = "false";
         });
         refreshBuild();
     });
@@ -76,7 +63,7 @@ function addEventListeners() {
     document.querySelectorAll(".copy_button").forEach((button) => {
         button.addEventListener("click", function () {
             button.textContent = "Copied!";
-        })
+        });
     });
 
     document.getElementById("gif_input").addEventListener("change", (event) => {
@@ -96,6 +83,63 @@ function addEventListeners() {
     document.getElementById("opacity_slider").addEventListener("input", (event) => {
         document.getElementById("miku").style.opacity = event.target.value + "%";
     });
+
+    document.getElementById("add_offhand").addEventListener("click", () => {
+        addOffhandInput();
+    });
+}
+
+function addListenersToInputCluster(cluster) {
+    const input = cluster.querySelector(".item_input");
+    const link = cluster.querySelector(".item_link");
+    const inputs = cluster.querySelectorAll(".input");
+
+    link.addEventListener("mouseover", () => {
+        renderHoverTooltip(getHoverTextForItem(getItem(input.value)));
+    });
+    link.addEventListener("mouseout", () => {
+        hideHoverAbilityTooltip();
+    });
+
+    inputs.forEach(input => input.addEventListener("input", () => {
+        refreshBuild();
+    }));
+}
+
+function addOffhandInput() {
+    const offhandInputs = document.getElementById("item_inputs").querySelector(".offhands");
+
+    const cluster = offhandInputs.appendChild(document.createElement("div"));
+    cluster.classList.add("input_cluster");
+    cluster.dataset.slot = "weapon";
+    cluster.dataset.group = "weapon";
+
+    const a = cluster.appendChild(document.createElement("a"));
+    a.classList.add("item_link");
+    a.target = "_blank";
+
+
+    const image = a.appendChild(document.createElement("img"));
+    image.classList.add("slot_img");
+    image.src = "img/item/archer.png";
+    image.alt = "We";
+
+    const input = cluster.appendChild(document.createElement("input"));
+    input.classList.add("input", "item_input", "slot_input");
+    input.placeholder = "Offhand";
+
+    const powderInput = cluster.appendChild(document.createElement("input"));
+    powderInput.classList.add("input", "powder_input");
+    powderInput.placeholder = "0 Slots";
+
+    const removeInput = cluster.appendChild(document.createElement("button"));
+    removeInput.textContent = "x";
+    removeInput.addEventListener("click", () => {
+        offhandInputs.removeChild(cluster);
+        refreshBuild();
+    });
+
+    addListenersToInputCluster(cluster);
 }
 
 function toggleEffectToggle(event) {
@@ -203,7 +247,7 @@ document.getElementById("ansi_tree").addEventListener("click", function () {
 });
 
 document.getElementById("tree_img").addEventListener("click", function () {
-    copyImageById("ability_tree")
+    copyImageById("ability_tree");
 });
 
 function resetCopyText() {

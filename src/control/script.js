@@ -4,9 +4,9 @@ function refreshBuild() {
     const input = new Input();
     input.init();
 
-    const builds = getWeaponBuilds(input);
-    builds.forEach(build => permuteBuild(build));
-    builds.forEach(build => displayBuild(build));
+    const builds = permute(input);
+
+    display(input, builds);
 }
 
 function roundForDisplay(number, addPeriod) {

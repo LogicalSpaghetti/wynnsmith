@@ -34,28 +34,28 @@ function getInputAbilities(wynnClass) {
         nodes: [],
         aspects: [],
         toggles: []
-    }
+    };
 
     return {
         nodes: getNodes(),
         aspects: getAspects(),
-        toggles: getActiveToggles(),
-    }
+        toggles: getActiveToggles()
+    };
 }
 
-function changeAbilityTree(build) {
+function changeAbilityTree(wynnClass) {
     const abilityTree = document.getElementById("ability_tree");
     abilityTree.innerHTML = "";
 
-    abilityTree.dataset.class = build.wynnClass || abilityTree.dataset.class;
+    abilityTree.dataset.class = wynnClass || abilityTree.dataset.class;
 
-    const tree = punscake[build.wynnClass];
+    const tree = punscake[wynnClass];
 
     abilityTree.hidden = !tree;
 
     if (!tree) return;
 
-    mapHTML(tree, abilityTree, build.wynnClass);
+    mapHTML(tree, abilityTree, wynnClass);
 
     document.querySelectorAll(".node_img").forEach((img) => {
         img.ondragstart = () => {
@@ -64,8 +64,8 @@ function changeAbilityTree(build) {
     });
 }
 
-function changeAspects(build) {
-    const aspects = aspect_descriptions[build.wynnClass];
+function changeAspects(wynnClass) {
+    const aspects = aspect_descriptions[wynnClass];
 
     const activeHolder = document.getElementById("active_aspects");
     const inactiveHolder = document.getElementById("inactive_aspects");
@@ -85,7 +85,7 @@ function changeAspects(build) {
 
         const aspectImage = document.createElement("span");
         aspectImage.classList.add("aspect_image");
-        aspectImage.style["background-image"] = "url(img/aspect/" + build.wynnClass + ".png)";
+        aspectImage.style["background-image"] = "url(img/aspect/" + wynnClass + ".png)";
 
         const tierOverlay = document.createElement("span");
         tierOverlay.classList.add("aspect_tier");
@@ -221,9 +221,15 @@ function getAspects() {
     }));
 }
 
-function validateTree(level = maxPlayerLevel) {
+function validateTree(level = maxPlayerLevel, wynnClass) {
     const treeHTML = document.getElementById("ability_tree");
-    const wynnClass = treeHTML.dataset.class;
+
+    if (treeHTML.dataset.class !== wynnClass) {
+        changeAbilityTree(wynnClass);
+        changeAspects(wynnClass);
+        // return;
+    }
+
     const tree = punscake[treeHTML.dataset.class];
     if (!tree) return;
 
@@ -331,6 +337,7 @@ function displayAP(usedAP, maxAP) {
 function changeNodeImage(node, wynnClass) {
     const img = node.element.querySelector("img");
 
+    node.element.dataset.red = node.red;
     let suffix =
         node.red ? "_error" :
             node.valid ? "_active" :
@@ -340,6 +347,7 @@ function changeNodeImage(node, wynnClass) {
 
     let abilityType = node.ability.type;
     if (abilityType === "skill") abilityType = wynnClass;
+
     img.src = "img/node/" + abilityType + suffix + ".png";
     img.style.scale = (100 * img.naturalHeight) / 18 + "%";
 }
@@ -377,6 +385,7 @@ function propagateHighlightTo(nodes, tree, destIndex, sourceDir) {
     } else return propagateHighlightFrom(nodes, tree, destIndex, sourceDir);
 }
 
+// todo: once it's gone down it can't go left or right
 function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
     const sourceCell = tree.cellMap[sourceIndex];
     const element = getElementFromMapIndex(sourceIndex);
@@ -437,7 +446,7 @@ function renderHighlights() {
 
 function addEffectsToBuild(build) {
     const effects = classEffects[build.wynnClass].effects;
-    if (!effects) return; // TODO: remove once all effects have been added
+    if (!effects) return;
     const unvalidatedEffectIds = Object.keys(effects);
 
     for (let i = 0; i < unvalidatedEffectIds.length;) {

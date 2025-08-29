@@ -31,61 +31,63 @@
     4. Customization
 # Smith
 ### Feat
-1. Move all data files into `notWynnData`
-	1. in `WynnSmith` they should be minified.
+1. Error if offhand types don't match
+2. Effective health regen
+3. Move all data files into `notWynnData`
+	1. in `WynnSmith` they should be minified together.
 		1. All should be accessed from a unified database object
 			1. i.e. `database.items`, `database.indexes.aspects`, `database.effects.major_ids`, `database.trees.shaman.abilities`, `database.powders.f6`, `database.indexes.items.helmet`, `database.player.max_level`
-2. Versioning
+4. Versioning
 	1. Build updating
-3. to hell with build.final, burn every mention to that accursed object
-4. only add validly selected nodes to build
-5. powder specials
+5. to hell with build.final, burn every mention to that accursed object
+6. only add validly selected nodes to build
+7. powder specials
 	1. Armour powder specials don't apply to indirect damage
-6. Embed Search in a popup
+8. Embed Search in a popup
 	1. Clicking the icon next to a slot opens the search
 		1. Ctrl+Click or a button in that popup both link to the `/item` page
-7. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
-8. WynnBuilder link conversion
+9. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
+10. WynnBuilder link conversion
 	1. explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546) ([GitHub](https://github.com/wynnbuilder/wynnbuilder.github.io/blob/master/ENCODING.md))
-9. Build Linking
-10. WynnMana
+11. Build Linking
+12. WynnMana
 	1. Wynn-Cycle
-11. Offhand weapons
-12. Consumables
-13. Charms :>
-14. Trinkets
+13. Offhand weapons
+14. Consumables
+15. Charms :>
+16. Trinkets
 	1. Well of Power, etc.
-15. Raid buffs
-16. Lootrun Boons
-17. Id Modifier
+17. Raid buffs
+18. Lootrun Boons
+19. Id Modifier
 	1. notes range available given the build
-18. Attack details
-19. Attack grouping
-20. Sub-attacks
-21. Str/Dex auto-balance button
-22. Crafted Items
-23. Custom Items
+20. Attack details
+21. Attack grouping
+22. Sub-attacks
+23. Str/Dex auto-balance button
+24. Crafted Items
+25. Custom Items
 	1. Modified items
-24. Advanced export
+26. Advanced export
 	1. select specific sections to save
 	2. Save to/read from file or local storage
-25. Menu to import section of another build
-26. Tome short-hands
-27. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
+27. Menu to import section of another build
+28. Tome short-hands
+29. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
     1. [hpr is complicated](https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/)
     1. Outdated values confirmed by author
         1. remaining Mana and remaining hp likely both have an effect.
-28.  Use build.evaluate() for complex abstractions
+30.  Use build.evaluate() for complex abstractions
     1. try to make it allow user input without being a security flaw for equation sharing.
-29. Modified SP amount display+indication
+31. Modified SP amount display+indication
     1. save between build refreshes
-30. Make external toggles a collapsed tab, and include many more effects.
-31. Speed
+32. Make external toggles a collapsed tab, and include many more effects.
+33. Speed
 	1. Speed I (Trinkets)
 	2. Speed II (Windy Feet)
 	3. Speed III(?) (Stormy Feet)
 	4. Affects bps
-32. Toggle for duration factoring for buffs
+34. Toggle for duration factoring for buffs
 	1. For overriding
 		1. loop through the buffs from highest to lowest
 			1. multiply the damage by the multiplier and its up-time, and the percent of up-time remaining, (starts at 100%).
@@ -105,9 +107,9 @@
 				5. new_damage += 100\*(1 + 20%)\*100%\*remaining_time
 				6. remaining_time \*= 1 - 100%
 					1. new_damage = 135
-33. Changelog
-34. Blockers that kill children properly
-35. -Skill Point modifier warning
+35. Changelog
+36. Blockers that kill children properly
+37. -Skill Point modifier warning
 ### Fix
 1. Attacks aren't ordered
 2. Effect toggles aren't ordered

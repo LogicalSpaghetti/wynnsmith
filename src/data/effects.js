@@ -191,7 +191,7 @@ const classEffects = {
             }
         }
     },
-    mage: {},
-    shaman: {},
-    warrior: {}
+    mage: {"effects": {}},
+    shaman: {"effects": {}},
+    warrior: {"effects": {}}
 };
