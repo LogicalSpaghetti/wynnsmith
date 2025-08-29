@@ -9,6 +9,7 @@ function displayPrimaryBuild(build) {
 }
 
 function display(input, builds) {
+    if (!builds[0]) return;
     displaySkillPoints(input);
     displayBuilds(builds);
     validateTree(input.level, input.wynnClass);
