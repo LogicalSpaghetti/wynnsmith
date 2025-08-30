@@ -162,7 +162,14 @@ function parseVariantEffect(build, effect) {
 }
 
 function parseDisplayEffect(build, effect) {
-    createUnnamedEffect(build.displays, effect.data);
+    const display = getOrCreateNamedEffect(build.displays, effect.data.internal_name);
+    display.name = effect.data.name || display.name;
+    display.variants = (display.variants ?? []).concat(effect.data.variants);
+    display.label = effect.data.label || display.label;
+
+    if (effect.data.spell) display.spell = effect.data.spell;
+    if (effect.data.parent) display.parent = effect.data.parent;
+    display.children = {};
 }
 
 function parseMasteryEffect(build, effect) {

@@ -104,6 +104,9 @@
     let editor = new Editor(null);
     let tree = new Tree("archer", editor);
 
+
+    document.querySelector(`#add_parentless_effect`).addEventListener("click", () => tree.addEffect());
+
     document.getElementById("generate_tree").addEventListener("click", () => {
         const treeName = document.getElementById("abilities_tree_selector").value;
         loadNewFromClass(treeName);

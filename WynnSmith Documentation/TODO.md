@@ -1,26 +1,18 @@
 # Focus
 ### Small
-
-1. display:
-	1. Heals
-2. Heals
-	1. Heal variant
-3. Sliders
-4. Finish writing Aspect descriptions
-	1. Powder special descriptions
-5.  Add more than just abilities to the effect builder
-6. Melee display DPS and per-hit.
+1. Sub-displays
+	1. default-pinned
+	2. melee Per Attack, (pinned)
+	3. powder special, (pinned)
+	4. Totem Shove, (unpinned/pinnable)
+2.  Add more than just abilities to the effect builder
+3. Melee display DPS and per-hit.
 ### Major
-1. Effects
-2. Build link generation/parsing
-3. Build comparison
-4. Selector popups (Tomes, Aspects)
-5. Item search
-6. Build history (storing old inputs) (only store if actually changed)
-7. 
+1. Build link generation/parsing
+2. Build comparison
+3. Selector popups (Tomes, Aspects)
+4. Item search
 # General
-### Feat
-1. Switch to a functional model instead of using `build` for everything
 ### Fix
 1. Cursor tooltip overflowing screen.
 ### Visual
@@ -31,63 +23,93 @@
     4. Customization
 # Smith
 ### Feat
-1. Error if offhand types don't match
-2. Effective health regen
-3. Move all data files into `notWynnData`
-	1. in `WynnSmith` they should be minified together.
-		1. All should be accessed from a unified database object
-			1. i.e. `database.items`, `database.indexes.aspects`, `database.effects.major_ids`, `database.trees.shaman.abilities`, `database.powders.f6`, `database.indexes.items.helmet`, `database.player.max_level`
-4. Versioning
-	1. Build updating
-5. to hell with build.final, burn every mention to that accursed object
-6. only add validly selected nodes to build
-7. powder specials
-	1. Armour powder specials don't apply to indirect damage
-8. Embed Search in a popup
+1. Effects:
+	1. Tree-independent effects
+		1. Major Ids, Aspect (tiers), and powders as sources for effects.
+	2. Heals variant
+	3. Display
+		1. Shift-spell
+		2. Heals
+		3. Hover details
+		4. Toggle details
+		5. Comparison to other build
+		6. Sub-displays
+			- Display per-hit along-side DPS by tagging a sub-display to do so
+	4. Slider
+	5. Radiance
+	6. Powder Specials
+		1. Armour powder specials don't apply to indirect damage
+2. Data:
+	1. Write Aspect descriptions
+	2. Write Powder Descriptions
+3. Build Encoding:
+	1. Linking:
+		1. Advanced linking
+			1. Choose sections to link, only link one section
+	2. Versioning:
+		1. Updating old builds
+		2. Changelog
+	3. Local history:
+		1. compress to link, if link is different from previous, add to history
+		2. max history storage is a config that defaults to around 25
+	4. Comparison:
+		1. Compare to offhands, or to another build('s offhand)
+4. Errors:
+	1. Add error system
+	2. Tree errors
+			1. Not enough Skill Points
+			2. Invalidly selected node
+	3. Item errors
+			1. Offhand types not matching
+5. Stats:
+	1. Stat value editor
+	2. Effective health regeneration
+	3. Extra id sources:
+		1. Consumables
+		2. Charms :>
+		3. Trinkets
+			1. Well of Power, etc.
+		4. Raid buffs
+		5. Lootrun Boons
+6. Items:
+	1. Crafted items
+	2. Custom items
+	3. Items modified within range
+7. `notWynnData`:
+	1. Move all data files into `notWynnData`
+		1. in `WynnSmith` they should be minified together.
+			1. All should be accessed from a unified database object
+				1. i.e. `database.items`, `database.indexes.aspects`, `database.effects.major_ids`, `database.trees.shaman.abilities`, `database.powders.f6`, `database.indexes.items.helmet`, `database.player.max_level`
+8. Tree:
+	1. only add validly selected nodes to build
+9. Embed Search in a popup
 	1. Clicking the icon next to a slot opens the search
 		1. Ctrl+Click or a button in that popup both link to the `/item` page
-9. Split trigger, read, clean, permute, and write into discrete steps in the logic flow.
-10. WynnBuilder link conversion
-	1. explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546) ([GitHub](https://github.com/wynnbuilder/wynnbuilder.github.io/blob/master/ENCODING.md))
-11. Build Linking
-12. WynnMana
+10. WynnBuilder integration: 
+	1. link conversion
+		1. explained [here](https://discord.com/channels/819455894890872862/823070794686529577/1393454270594154546) ([GitHub](https://github.com/wynnbuilder/wynnbuilder.github.io/blob/master/ENCODING.md))
+11. WynnMana:
 	1. Wynn-Cycle
-13. Offhand weapons
-14. Consumables
-15. Charms :>
-16. Trinkets
-	1. Well of Power, etc.
-17. Raid buffs
-18. Lootrun Boons
-19. Id Modifier
-	1. notes range available given the build
-20. Attack details
-21. Attack grouping
-22. Sub-attacks
-23. Str/Dex auto-balance button
-24. Crafted Items
-25. Custom Items
-	1. Modified items
-26. Advanced export
+12. Advanced export
 	1. select specific sections to save
 	2. Save to/read from file or local storage
-27. Menu to import section of another build
-28. Tome short-hands
-29. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
+13. Menu to import section of another build
+14. Tome short-hands
+15. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
     1. [hpr is complicated](https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/)
     1. Outdated values confirmed by author
         1. remaining Mana and remaining hp likely both have an effect.
-30.  Use build.evaluate() for complex abstractions
+16.  Use build.evaluate() for complex abstractions
     1. try to make it allow user input without being a security flaw for equation sharing.
-31. Modified SP amount display+indication
+17. Modified SP amount display+indication
     1. save between build refreshes
-32. Make external toggles a collapsed tab, and include many more effects.
-33. Speed
+18. Make external toggles a collapsed tab, and include many more effects.
+19. Speed
 	1. Speed I (Trinkets)
 	2. Speed II (Windy Feet)
 	3. Speed III(?) (Stormy Feet)
 	4. Affects bps
-34. Toggle for duration factoring for buffs
+20. Toggle for duration factoring for buffs
 	1. For overriding
 		1. loop through the buffs from highest to lowest
 			1. multiply the damage by the multiplier and its up-time, and the percent of up-time remaining, (starts at 100%).
@@ -107,10 +129,10 @@
 				5. new_damage += 100\*(1 + 20%)\*100%\*remaining_time
 				6. remaining_time \*= 1 - 100%
 					1. new_damage = 135
-35. Changelog
-36. Blockers that kill children properly
-37. -Skill Point modifier warning
-38. Set Bonuses aren't accounted for when calculating SP
+21. 
+22. Blockers that kill children properly
+23. -Skill Point modifier warning
+24. Set Bonuses aren't accounted for when calculating SP
 	1. to each item, assign an array called set which is an array of the SP gained for each tier
 	2. between recursions, pass a list of sets and the number of members.
 ### Fix

@@ -59,13 +59,13 @@ class Editor {
     }
 
     changeEffectType(effect_type) {
-        this.effect.data = new EffectType(effect_type);
+        this.effect.data = new EffectType(this.tree, this.effect, effect_type);
         this.readEffectType();
     }
 
     readEffectType() {
         this.effect_specific_holder.innerHTML = "";
-        this.effect_specific_holder.appendChild(this.effect.data.configHTML);
+        this.effect_specific_holder.appendChild(this.effect.data.getConfigHTML());
     }
 
     setEffect(effect) {
@@ -155,14 +155,11 @@ class Tree {
     nodes = {};
     effects = {};
 
-    constructor(wynn_class, editor, ability_holder_id = "ability_holder", effect_holder_id = "effect_holder", add_parentless_effect_id = "add_parentless_effect") {
+    constructor(wynn_class, editor, ability_holder_id = "ability_holder", effect_holder_id = "effect_holder") {
         this.wynnClass = wynn_class;
 
         this.ability_holder = document.getElementById(ability_holder_id);
         this.updateAbilities();
-
-        this.add_parentless_effect = document.querySelector(`#${add_parentless_effect_id}`);
-        this.add_parentless_effect.addEventListener("click", () => this.addEffect());
 
         this.effect_holder = document.getElementById(effect_holder_id);
         this.effect_holder.innerHTML = "";
@@ -170,6 +167,7 @@ class Tree {
         this.editor = editor;
         editor.tree = this;
 
+        this.editEffect();
     }
 
     updateAbilityDisplay(abilities) {
@@ -245,7 +243,7 @@ class Tree {
         const effect = this.effects[id];
         effect.deleteEffect();
         delete this.effects[id];
-        if (this.editedEffectId === id) this.editEffect(-1);
+        if (this.editedEffectId === id) this.editEffect();
     }
 
     getChild(section, id) {
@@ -263,7 +261,7 @@ class Tree {
         }
     }
 
-    editEffect(id) {
+    editEffect(id = -1) {
         this.editedEffectId = id;
         const effect = this.effects[id];
         this.editor.setEffect(effect);
@@ -288,11 +286,21 @@ class Tree {
                 const parent = parents[i];
                 effect.addParent(parent.section, parent.id);
             }
-            effect.data = new EffectType(effectData.type, effectData.data);
+            effect.data = new EffectType(this, effect, effectData.type, effectData.data);
             effect.require_all_parents = effectData.requires_all;
             effect.setToggle(effectData.toggle_name);
         }
-        this.editEffect(-1);
+        this.editEffect();
+    }
+
+    getEffectsOfType(type) {
+        const result = [];
+        Object.keys(this.effects).forEach(effectKey => {
+            const effect = this.effects[effectKey];
+            console.log(effect)
+            if (effect.data?.type === type) result.push(effect);
+        })
+        return result;
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -376,7 +384,7 @@ class EffectBuilder {
 
     html;
     nameDisplay;
-    data = new EffectType("");
+    data;
     effectTypeDisplay;
 
     require_all_parents = true;
@@ -387,6 +395,7 @@ class EffectBuilder {
     constructor(tree, id) {
         this.tree = tree;
         this.id = id;
+        this.data = new EffectType(this.tree, this,"");
 
         this.createHTML();
         this.setName("");
@@ -570,17 +579,20 @@ class ChildData {
 }
 
 class EffectType {
+    tree;
+    effect;
     type;
-    configHTML;
     data = {};
 
-    constructor(type, data = {}) {
+    constructor(tree, effect, type, data = {}) {
+        this.tree = tree;
+        this.effect = effect;
         this.type = type;
         this.data = data;
-        this.configHTML = this.setupConfig(type);
     }
 
-    setupConfig() {
+
+    getConfigHTML() {
         switch (this.type) {
             case "script":
                 return this.setupScriptConfig();
@@ -830,6 +842,14 @@ class EffectType {
     setupDisplayConfig() {
         const holder = document.createElement("div");
 
+        holder.appendChild(document.createTextNode("Internal Name: "));
+        const internalName = holder.appendChild(document.createElement("input"));
+        internalName.placeholder = "internal_name";
+        internalName.value = this.data.internal_name ?? "";
+        internalName.addEventListener("change", () => setData(this));
+
+        holder.appendChild(document.createElement("br"));
+
         holder.appendChild(document.createTextNode("Display Name: "));
         const displayName = holder.appendChild(document.createElement("input"));
         displayName.placeholder = "Name";
@@ -838,8 +858,10 @@ class EffectType {
 
         holder.appendChild(document.createElement("br"));
 
-        holder.appendChild(document.createTextNode("Spell Cast: "));
-        const spellSelect = holder.appendChild(document.createElement("select"));
+        const spellDiv = holder.appendChild(document.createElement("div"));
+
+        spellDiv.append("Spell Cast: ");
+        const spellSelect = spellDiv.appendChild(document.createElement("select"));
         spellSelect.innerHTML =
             "<option value=''>-none-</option>" +
             "<option value='0'>1st Spell</option>" +
@@ -849,8 +871,15 @@ class EffectType {
         spellSelect.value = this.data.spell ?? "";
         spellSelect.addEventListener("change", () => setData(this));
 
-        holder.appendChild(document.createElement("br"));
+        const shiftHolder = holder.appendChild(document.createElement("div"));
 
+        shiftHolder.appendChild(document.createTextNode("Shift Spell: "));
+        const isShift = shiftHolder.appendChild(document.createElement("select"));
+        isShift.innerHTML =
+            "<option value='false'>false</option>" +
+            "<option value='true'>true</option>";
+        isShift.value = this.data.is_shift ?? "false";
+        isShift.addEventListener("change", () => setData(this));
 
         holder.appendChild(document.createTextNode("Variant Names (csv): "));
         const variants = holder.appendChild(document.createElement("input"));
@@ -866,19 +895,57 @@ class EffectType {
         damageLabel.value = this.data.label ?? "";
         damageLabel.addEventListener("change", () => setData(this));
 
+        holder.appendChild(document.createElement("br"));
+
+        const parentDisplay =
+            this.addSingleNodeSelector(holder, this.effect, setData, "display", "Parent:", true, this.data.parent ?? "");
+
 
         function setData(self) {
+            shiftHolder.style.display = spellSelect.value === "" ? "none" : "block";
+
             self.data = {
+                internal_name: internalName.value,
                 name: displayName.value,
                 variants: variants.value.split(",").map(word => word.trim()),
                 label: damageLabel.value
             };
 
-            if (spellSelect.value !== "") self.data.spell = spellSelect.value;
+            if (spellSelect.value) self.data.spell = spellSelect.value;
+            if (spellSelect.value) self.data.is_shift = isShift.value === "true";
+            if (parentDisplay.value) self.data.parent = parentDisplay.value;
         }
 
         setData(this);
         return holder;
+    }
+
+    addSingleNodeSelector(holder, thisEffect, refreshFunction, type, label, isOptional, initialValue) {
+        const possibleValues = this.tree.getEffectsOfType(type).filter(effect => effect !== thisEffect);
+
+        holder.append(label);
+        const select = holder.appendChild(document.createElement("select"));
+
+        if (isOptional) {
+            const option = document.createElement("option");
+            option.value = '';
+            option.innerText = "-optional-";
+            select.appendChild(option);
+        }
+        possibleValues.forEach(effect => select.appendChild(this.getEffectAsOption(effect)));
+
+        if (initialValue) select.value = initialValue;
+
+        select.addEventListener("change", () => refreshFunction(this));
+
+        return select;
+    }
+
+    getEffectAsOption(effect) {
+        const option = document.createElement("option");
+        option.value = effect.id;
+        option.innerText = effect.name;
+        return option;
     }
 
     setupMasteryConfig() {

@@ -2,6 +2,7 @@ function addDamageDisplays(build, attackDisplayId = "attack_display") {
     const attackDisplay = document.getElementById(attackDisplayId);
     attackDisplay.innerHTML = "";
 
+    // TODO: parent logic
     for (let display of build.displays) {
         const displayElement = createDisplayElement(build, display);
         if (displayElement) attackDisplay.appendChild(displayElement);

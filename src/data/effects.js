@@ -124,6 +124,7 @@ const classEffects = {
                 "requires_all": true,
                 "type": "display",
                 "data": {
+                    "internal_name": "multihit",
                     "name": "Multihit",
                     "variants": ["multihit_total", "finality"],
                     "label": "Total Damage",
@@ -187,7 +188,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"name": "Melee", "variants": ["melee_dps"], "label": "DPS"}
+                "data": {"internal_name": "melee", "name": "Melee", "variants": ["melee_dps"], "label": "DPS"}
             }
         }
     },
