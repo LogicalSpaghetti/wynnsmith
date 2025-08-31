@@ -1,9 +1,10 @@
 `use strict`;
 
 function getPlayerLevel() {
-    return Math.min(maxPlayerLevel,
-        Math.max(1,
-            parseInt(document.getElementById("level_input").value) || 0));
+    const inputValue = document.getElementById("level_input").value;
+    const value = Math.min(maxPlayerLevel, Math.max(1, parseInt(inputValue) || 0))
+    if (inputValue !== "") document.getElementById("level_input").value = value;
+    return value;
 }
 
 function getClassRequirementByWeaponName(name) {
@@ -60,11 +61,9 @@ function getSkillPointMinAndAdded(items) {
         .map((x, i) => Math.max(x, unhelpfulMinimums[i]));
 
     const itemMins = getAssignedSPMinimums(toIterate, initialProvies);
-    console.log(itemMins);
     const addedMins = itemMins.added;
     const requiredMins = itemMins.required.map((min, j) =>
         finalUnhelpfulRequirements[j] > 0 ? Math.max(min + addedMins[j], finalUnhelpfulRequirements[j]) - addedMins[j] : min);
-    console.log(requiredMins);
     return {required: requiredMins, added: addedMins};
 }
 
@@ -128,8 +127,6 @@ function balanceSP() {
     const dexterityCluster = spInputs.querySelector(".sp_cluster[data-element='thunder']");
     const dexterity = parseInt(dexterityCluster.querySelector(".total_display").textContent);
 
-    console.log(strength, dexterity)
-
     let newStrength;
     let newDexterity;
 
@@ -161,10 +158,6 @@ function balanceSP() {
         newStrength = remainingSP / 2;
         newDexterity = remainingSP / 2;
     }
-
-    console.log(newStrength);
-    console.log(newDexterity);
-
 
     strengthCluster.querySelector(".sp_input").value =
         parseInt(strengthCluster.querySelector(".sp_input").value) + Math.ceil(newStrength);

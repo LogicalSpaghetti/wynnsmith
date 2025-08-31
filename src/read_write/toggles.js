@@ -23,6 +23,8 @@ function setToggles(build) {
     }
 
     writeTogglesHTML(newToggles);
+
+    document.querySelector("#effects_holder").style.display = newToggles.length > 0 ? "block" : "none";
 }
 
 function writeTogglesHTML(newToggles) {

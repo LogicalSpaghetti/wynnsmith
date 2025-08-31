@@ -45,10 +45,10 @@ function getItemsFromClusters(clusters) {
 const morph = ["Morph-Stardust", "Morph-Steel", "Morph-Iron", "Morph-Gold", "Morph-Topaz", "Morph-Emerald", "Morph-Amethyst", "Morph-Ruby"];
 
 function replaceWithMorph(clusters) {
-    Array.from(clusters).forEach((cluster, i) => {
+    for (const [i, cluster] of clusters.entries()) {
         const input = cluster.querySelector(`.item_input`);
         input.value = morph[i];
-    })
+    }
 }
 
 function getWeapons() {
@@ -148,9 +148,7 @@ function getClusterPowders(cluster) {
 
 function sortPowderArray(powderArray) {
     const order = [];
-    powderArray.forEach((powder) => {
-        if (order.indexOf(powder[0]) === -1) order.push(powder[0]);
-    });
+    for (const powder of powderArray) if (order.indexOf(powder[0]) === -1) order.push(powder[0]);
 
     powderArray.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
 }

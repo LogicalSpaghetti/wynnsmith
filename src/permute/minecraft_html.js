@@ -85,7 +85,7 @@ function anyToHTML(text = "") {
 function splitByColorFormats(string) {
 
     let result = [{
-        color: null, content: "",
+        color: null, content: ""
     }];
 
     if (string === "") return result;
@@ -124,7 +124,7 @@ function splitByColorFormats(string) {
 function splitByOtherFormats(string = "") {
 
     let result = [
-        {decoration: null, style: null, content: ""},
+        {decoration: null, style: null, content: ""}
     ];
 
     if (string.length === 0) return result;
@@ -286,10 +286,19 @@ function getHoverTextForItem(item, invalidityText = "") {
 
     if (item.rarity) footer.add(`${codeDictionaryRarityColor[item.rarity]}${upperFirst(item.rarity)} ${snakeToTitle(item.subType)}`);
 
+    // todo: item set, i.e. Set: Morph
+
+    if (item.requirements?.quest) footer.add(`Quest Req: ${item.requirements.quest}`);
+
+
     footer.add(`§8${wrapText(item.lore)}`);
 
-    sections.add(footer);
+    if (item.restrictions) footer.add("§c" +
+    item.restrictions === "untradable" ? "Untradable Item"
+        : item.restrictions === "quest item" ? "Quest Item Only!"
+            : "Error! Unknown item restriction: " + item.restrictions);
 
+    sections.add(footer);
 
     return minecraftToHTML(sections.toString());
 }

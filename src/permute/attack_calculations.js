@@ -179,7 +179,7 @@ function powderNeutralConversions(build) {
 }
 
 function applySpellAttackSpeed(build) {
-    const attackSpeedMultiplier = attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
+    const attackSpeedMultiplier = attackSpeedMultipliers[orderedAttackSpeed[build.base.attackSpeed]];
 
     for (let attack of build.attacks)
         if (attack.type === "Spell")

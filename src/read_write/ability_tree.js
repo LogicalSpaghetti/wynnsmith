@@ -39,11 +39,8 @@ function changeAbilityTree(wynnClass) {
 
     mapHTML(tree, abilityTree, wynnClass);
 
-    document.querySelectorAll(".node_img").forEach((img) => {
-        img.ondragstart = () => {
-            return false;
-        };
-    });
+    for (const img of document.querySelectorAll(".node_img"))
+        img.ondragstart = () => false;
 }
 
 function changeAspects(wynnClass) {
@@ -55,7 +52,7 @@ function changeAspects(wynnClass) {
     activeHolder.innerHTML = "";
     inactiveHolder.innerHTML = "";
 
-    aspects.forEach(aspect => {
+    for (const aspect of aspects) {
         const name = aspect.name;
         const rarity = aspect.rarity;
 
@@ -89,7 +86,7 @@ function changeAspects(wynnClass) {
         aspectDiv.appendChild(tierOverlay);
         aspectDiv.appendChild(aspectImage);
         inactiveHolder.appendChild(aspectDiv);
-    });
+    }
 }
 
 function toggleNode(img) {
@@ -196,8 +193,8 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
     if (!tree) return;
 
     // reset tree highlights
-    treeHTML.querySelectorAll(".tree_cell")
-        .forEach(cell => cell.dataset.highlights = "0000");
+    for (const cell of treeHTML.querySelectorAll(".tree_cell"))
+        cell.dataset.highlights = "0000";
 
     let usedAP = 0;
     const nodes = {};
@@ -209,7 +206,7 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
     for (let archetype of tree.archetypes) archetypePoints[archetype] = 0;
 
     // gather all nodes
-    Object.keys(tree.abilities).forEach(abilityID => {
+    for (let abilityID of Object.keys(tree.abilities)) {
         const treeNode = getElementFromAbilityID(abilityID);
 
         nodes[abilityID] = {
@@ -223,7 +220,8 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
         if (abilityID === tree.startingAbilityID) nodes[abilityID].reachable = true;
 
         unvalidatedIDs.push(abilityID);
-    });
+
+    }
 
     // loop over all nodes in its exclusion list, returning whether any block it
     const blockedByExclusive = function (abilityID) {
@@ -266,7 +264,7 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
         }
     }
 
-    unvalidatedIDs.forEach((id) => nodes[id].red = true);
+    for (const id of unvalidatedIDs) nodes[id].red = true;
 
     const maxAP = abilityPointsAtLevel[level] ?? tree.properties.maxAbilityPoints;
     displayAP(usedAP, maxAP);
@@ -353,17 +351,17 @@ function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
     const element = getElementFromMapIndex(sourceIndex);
     const highlights = Array.from(element.dataset.highlights);
 
-    dirs.forEach(newDir => {
+    for (const newDir of dirs) {
         // if the node is going up
-        if (!tree.bTravesableUp && newDir === "up") return;
+        if (!tree.bTravesableUp && newDir === "up") continue;
         // if the cell doesn't go in this direction
-        if (sourceCell.travelNode[newDir] === 0) return;
+        if (sourceCell.travelNode[newDir] === 0) continue;
         // if this is the same direction it came from
-        if (inverseDirs[sourceDir] === newDir) return;
+        if (inverseDirs[sourceDir] === newDir) continue;
 
         // left on left edge or right on right edge
-        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 1 && newDir === "left") return;
-        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 0 && newDir === "right") return;
+        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 1 && newDir === "left") continue;
+        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 0 && newDir === "right") continue;
 
         let destIndex = sourceIndex + dirOffsets[newDir];
         if (tree.loopTree) {
@@ -374,16 +372,16 @@ function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
         const destCell = tree.cellMap[destIndex];
 
         // if it's not an occupied cell
-        if (destCell == null) return;
+        if (destCell == null) continue;
         // if dest doesn't connect to this
-        if (destCell.travelNode[inverseDirs[newDir]] === 0) return;
+        if (destCell.travelNode[inverseDirs[newDir]] === 0) continue;
 
         // if it finds a selected node:
         if (propagateHighlightTo(nodes, tree, destIndex, newDir)) {
             highlights[dirIndexes[newDir]] = 2;
             highlights[dirIndexes[inverseDirs[sourceDir]]] = 2;
         }
-    });
+    }
 
     element.dataset.highlights = highlights.join("");
 
@@ -392,16 +390,14 @@ function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
 }
 
 function renderHighlights() {
-    document.getElementById("ability_tree").querySelectorAll(".tree_cell[data-type='connector']").forEach(connector => {
+    for (let connector of document.getElementById("ability_tree").querySelectorAll(".tree_cell[data-type='connector']")) {
         connector.innerHTML = "";
-        if (connector.dataset.highlights === "0000") return;
+        if (connector.dataset.highlights === "0000") continue;
 
         const img = connector.appendChild(document.createElement("img"));
 
         img.src = "img/branch/" + connector.dataset.highlights + ".png";
         img.style.display = "block";
-        img.ondragstart = () => {
-            return false;
-        };
-    });
+        img.ondragstart = () => false;
+    }
 }

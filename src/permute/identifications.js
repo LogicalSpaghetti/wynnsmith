@@ -70,8 +70,10 @@ function addSkillPointPercents(build) {
 
 function getMeleeAttackSpeed(build) {
     build.stats.attackSpeed =
-        Math.max(1, Math.min(Object.keys(attackSpeedMultipliers).length - 1),
-            orderedAttackSpeed.indexOf(build.base.attackSpeed) + build.identifications.rawAttackSpeed);
+        Math.max(0, Math.min(Object.keys(attackSpeedMultipliers).length - 1,
+                orderedAttackSpeed.indexOf(build.base.attackSpeed) + build.identifications.rawAttackSpeed
+            )
+        );
 }
 
 function applyStatEffects(build) {

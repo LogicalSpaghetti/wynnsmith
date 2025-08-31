@@ -57,7 +57,7 @@ function getStatDisplay(colorClass, includeSymbol, label, stat, post = "", color
     const displayStat = roundForDisplay(stat);
     if (displayStat === roundForDisplay(statOrigin)) return "";
 
-    return "<div class='stat_row'>" +
+    return "<div class='flex-row'>" +
         `<div class='left${indent ? " sub" : ""}'>` +
         getStatLabel(includeSymbol, colorClass, indent, label) +
         "</div>" +
@@ -72,7 +72,7 @@ function getStatLabel(includeSymbol, colorClass, indent, label) {
 }
 
 function getAttackSpeedDisplay(attack_speed) {
-    return "<div class='stat_row'>" +
+    return "<div class='flex-row'>" +
         `<span class="left">${minecraftToHTML("§eAttack Speed:")}</span>` +
         `<span class="right">${minecraftToHTML("§o" + attackSpeedMap[orderedAttackSpeed[attack_speed]])}</span>` +
         "</div>";

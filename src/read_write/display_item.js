@@ -75,7 +75,7 @@ function getAverageDPS(item) {
 }
 
 
-function wrapText(text) {
+function wrapText(text, maxLength = 29) {
     if (!text) return "";
 
     const words = text.split(" ");
@@ -83,8 +83,8 @@ function wrapText(text) {
     let result = "";
 
     let subString = "";
-    words.forEach((word) => {
-        if (lengthWithoutFormatting(subString) + lengthWithoutFormatting(word) >= 29) {
+    for (let word of words) {
+        if (lengthWithoutFormatting(subString) + lengthWithoutFormatting(word) >= maxLength) {
             if (subString.length > 1)
                 result += subString + "\n";
             subString = word;
@@ -93,7 +93,8 @@ function wrapText(text) {
                 subString += " ";
             subString += word;
         }
-    });
+    }
+
     result += subString;
 
     return result;

@@ -1,12 +1,15 @@
 # Focus
 ### Small
-1. Sub-displays
+1. Something is wrong with spell damage calculations
+2. New/inherited internal names:
+	1. if new selected, give an input for it, otherwise hide the input 
+3. Sub-displays
 	1. default-pinned
 	2. melee Per Attack, (pinned)
 	3. powder special, (pinned)
-	4. Totem Shove, (unpinned/pinnable)
-2.  Add more than just abilities to the effect builder
-3. Melee display DPS and per-hit.
+	4. Totem Shove, (unpinned/pin-able)
+4.  Add more than just abilities to the effect builder
+5. Melee display DPS and per-hit.
 ### Major
 1. Build link generation/parsing
 2. Build comparison
@@ -95,21 +98,22 @@
 	2. Save to/read from file or local storage
 13. Menu to import section of another build
 14. Tome short-hands
-15. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
+15. Blood Pact 
+16. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
     1. [hpr is complicated](https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/)
     1. Outdated values confirmed by author
         1. remaining Mana and remaining hp likely both have an effect.
-16.  Use build.evaluate() for complex abstractions
+17.  Use build.evaluate() for complex abstractions
     1. try to make it allow user input without being a security flaw for equation sharing.
-17. Modified SP amount display+indication
+18. Modified SP amount display+indication
     1. save between build refreshes
-18. Make external toggles a collapsed tab, and include many more effects.
-19. Speed
+19. Make external toggles a collapsed tab, and include many more effects.
+20. Speed
 	1. Speed I (Trinkets)
 	2. Speed II (Windy Feet)
 	3. Speed III(?) (Stormy Feet)
 	4. Affects bps
-20. Toggle for duration factoring for buffs
+21. Toggle for duration factoring for buffs
 	1. For overriding
 		1. loop through the buffs from highest to lowest
 			1. multiply the damage by the multiplier and its up-time, and the percent of up-time remaining, (starts at 100%).
@@ -129,10 +133,10 @@
 				5. new_damage += 100\*(1 + 20%)\*100%\*remaining_time
 				6. remaining_time \*= 1 - 100%
 					1. new_damage = 135
-21. 
-22. Blockers that kill children properly
-23. -Skill Point modifier warning
-24. Set Bonuses aren't accounted for when calculating SP
+22. 
+23. Blockers that kill children properly
+24. -Skill Point modifier warning
+25. Set Bonuses aren't accounted for when calculating SP
 	1. to each item, assign an array called set which is an array of the SP gained for each tier
 	2. between recursions, pass a list of sets and the number of members.
 ### Fix

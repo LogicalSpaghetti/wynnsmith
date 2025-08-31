@@ -53,6 +53,8 @@ class Build {
     displays;
 
     constructor(weapon, input) {
+        const weaponItem = getItem(weapon.name)
+
         this.level = input.level;
 
         this.weapon = weapon;
@@ -68,13 +70,14 @@ class Build {
         const splitEffects = getSplitEffects(this.effects, this.wynnClass);
         for (let key in splitEffects) if (key !== "effects") this[key] = splitEffects[key];
 
-        const weaponTotals = getItemAddedSP(getItem(this.weapon.name));
+        const weaponTotals = getItemAddedSP(weaponItem);
         this.sp_totals = input.sp_assigned.map((sp, i) =>
             sp + input.sp_added[i] + input.sp_modified[i] + weaponTotals[i]);
         this.sp_multipliers = this.sp_totals.map((total, i) => getSkillPointMultiplier(total, i));
 
         const itemStats = sumItemStats(this.weapon, this.equipment);
         this.base = itemStats.base;
+        this.base.attackSpeed = orderedAttackSpeed.indexOf(weaponItem.attackSpeed);
         this.identifications = itemStats.identifications;
     }
 }

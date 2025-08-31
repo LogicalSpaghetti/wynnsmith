@@ -1,12 +1,4 @@
-function displayPrimaryBuild(build) {
-    addDamageDisplays(build);
-    displayBuildStats(build);
-    setToggles(build);
-
-    displayForDevelopment(build);
-
-    resetCopyText();
-}
+`use strict`;
 
 function display(input, builds) {
     if (!builds[0]) return;
@@ -15,6 +7,16 @@ function display(input, builds) {
     validateTree(input.level, input.wynnClass);
     renderHighlights();
     setPageEmbellishments(input.items.weapons[0].name, input.wynnClass);
+}
+
+function displayPrimaryBuild(build) {
+    addDamageDisplays(build);
+    displayBuildStats(build);
+    setToggles(build);
+
+    displayForDevelopment(build);
+
+    resetCopyText();
 }
 
 function displayBuilds(builds) {

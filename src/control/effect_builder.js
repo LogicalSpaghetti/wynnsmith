@@ -232,7 +232,7 @@ class Tree {
         const effect = new EffectBuilder(tree, id);
 
         this.effects[id] = effect;
-        this.effect_holder.prepend(effect.html);
+        this.effect_holder.append(effect.html);
 
         this.editEffect(id);
 
@@ -297,7 +297,6 @@ class Tree {
         const result = [];
         Object.keys(this.effects).forEach(effectKey => {
             const effect = this.effects[effectKey];
-            console.log(effect)
             if (effect.data?.type === type) result.push(effect);
         })
         return result;
@@ -766,7 +765,7 @@ class EffectType {
             if (duration.value) result.duration = parseFloat(duration.value);
             if (frequency.value) result.frequency = parseFloat(frequency.value);
             if (conversionInputs.find(input => input.value !== "" && input.value !== "0"))
-                result.conversion = conversionInputs.map(input => parseInt(input.value) || 0);
+                result.conversion = conversionInputs.map(input => parseFloat(input.value) || 0);
 
             self.data = result;
         }
@@ -943,7 +942,7 @@ class EffectType {
 
     getEffectAsOption(effect) {
         const option = document.createElement("option");
-        option.value = effect.id;
+        option.value = effect.data.data.internal_name;
         option.innerText = effect.name;
         return option;
     }

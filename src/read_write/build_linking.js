@@ -1,10 +1,10 @@
 `use strict`;
 
 function copyBuildLink(button, long) {
-    navigator.clipboard.writeText(getBuildLinkText(long));
+    navigator.clipboard.writeText(getBuildLink(long));
 }
 
-function getBuildLinkText(isLong) {
+function getBuildLink(isLong) {
     let text = location.href.replace(location.search, "") + "?";
     let appendedText = "";
     const inputs = document.getElementById("item_inputs")
@@ -22,113 +22,59 @@ function getBuildLinkText(isLong) {
     return text + appendedText + "\n";
 }
 
-function copyTreeAsANSIText() {
-    const red = `[2;31m`;
-    const green = "[2;32m";
-    const yellow = "[2;33m";
-    const blue = `[2;34m`;
-    const purple = `[2;35m`;
-    const white = "[2;37m";
+const nodeSymbol = "♦";
+const ansiColorTerminator = `[0m`;
+const ansiColors = Object.freeze({
+    red: `[2;31m`,
+    skill: "[2;32m",
+    yellow: "[2;33m",
+    blue: `[2;34m`,
+    purple: `[2;35m`,
+    white: "[2;37m",
+    grey: "[2;30m",
+    teal: "[2;36m"
+});
+const branchHighlightSymbols = Object.freeze({
+    "0220": "┐",
+    "0202": "┌",
+    "0222": "┬",
+    "0022": "─",
+    "2200": "│",
+    "2220": "┤",
+    "2020": "┘",
+    "2002": "└",
+    "2202": "├",
+    "2222": "┼",
+    "2022": "┴"
+});
 
-    const grey = "[2;30m";
-    const teal = "[2;36m";
+function copyTreeAsANSI() {
+    navigator.clipboard.writeText(getTreeAsANSI());
+}
 
-    // const bold = "[1;2m";
-    const foot = `[0m`;
+function getTreeAsANSI() {
+    let result = "```ansi";
+    for (const row of document.getElementById("ability_tree").childNodes) {
+        // if (i % 6 === 0 && i !== 0) continue;
+        result += "\n";
+        for (let cell of row.childNodes)
+            if (!cell.classList.contains("tree_cell")) result += " ";
+            else if (cell.dataset.type === "node") getNodeANSI(cell);
+            else if (cell.dataset.type === "connector") result += getConnectorANSI(cell);
+    }
+    return result + "```";
+}
 
-    const tree = document.getElementById("ability_tree");
-    const trs = tree.childNodes;
+function getConnectorANSI(cell) {
+    if (cell.dataset.highlights === "0000") return " ";
 
-    let output = "```ansi";
+    return ansiColors["teal"] +
+        branchHighlightSymbols[cell.dataset.highlights] ?? cell.dataset.highlights +
+        ansiColorTerminator;
+}
 
-    let rowCounter = 0;
-    trs.forEach((tr) => {
-        rowCounter++;
-        if (rowCounter % 6 === 1 && rowCounter !== 1) return;
-        output += "\n";
-        tr.childNodes.forEach((td) => {
-            if (!td.classList.contains("tree_cell")) {
-                output += " ";
-                return;
-            }
-
-            if (td.dataset.type === "node") {
-                if (td.dataset.selected !== "true") {
-                    output += grey;
-
-                } else
-                    switch (td.dataset.color) {
-                        case "red":
-                            output += red;
-                            break;
-                        case "skill":
-                            output += green;
-                            break;
-                        case "blue":
-                            output += blue;
-                            break;
-                        case "purple":
-                            output += purple;
-                            break;
-                        case "yellow":
-                            output += yellow;
-                            break;
-                        case "white":
-                            output += white;
-                            break;
-                        default:
-                            output += "?";
-                    }
-                output += "♦" + foot;
-            } else if (td.dataset.type === "connector") {
-                if (td.dataset.highlights === "0000") {
-                    output += " ";
-                    return;
-                }
-                output += teal;
-                switch (td.dataset.highlights) {
-                    case "0220":
-                        output += "┐";
-                        break;
-                    case "0202":
-                        output += "┌";
-                        break;
-                    case "0222":
-                        output += "┬";
-                        break;
-                    case "0022":
-                        output += "─";
-                        break;
-                    case "2200":
-                        output += "│";
-                        break;
-                    case "2220":
-                        output += "┤";
-                        break;
-                    case "2020":
-                        output += "┘";
-                        break;
-                    case "2002":
-                        output += "└";
-                        break;
-                    case "2202":
-                        output += "├";
-                        break;
-                    case "2222":
-                        output += "┼";
-                        break;
-                    case "2022":
-                        output += "┴";
-                        break;
-                    default:
-                        output += "?";
-                }
-                output += foot;
-            }
-        });
-    });
-
-    output += "```";
-
-    navigator.clipboard.writeText(output);
+function getNodeANSI(cell) {
+    return (cell.dataset.selected !== "true" ? ansiColors["grey"] :
+            (ansiColors[cell.dataset.color] ?? `Invalid Color: ${cell.dataset.color}`)) +
+        nodeSymbol + ansiColorTerminator;
 }

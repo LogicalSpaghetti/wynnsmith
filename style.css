@@ -50,6 +50,23 @@ label {
     text-align: center;
 }
 
+.sidenav {
+    overflow-x: hidden;
+    position: fixed;
+    width: 3ch;
+    text-align: center;
+    border: 1px solid #222;
+    height: 100vh;
+    z-index: 1;
+    top: 0;
+    left: 0;
+}
+
+#settings_open {
+    width: 3ch;
+    height: 3ch;
+}
+
 .color-bar-holder {
     translate: 0 -0.5rem;
     padding-left: 1rem;
@@ -259,7 +276,7 @@ input:focus {
     line-height: 150%;
 }
 
-.stat_row {
+.flex-row {
     white-space: nowrap !important;
     display: flex;
 }
@@ -319,6 +336,8 @@ td {
     background-color: var(--ls-ability_background);
     border: #4f5466 2px solid;
     padding: 8px;
+    transform-origin: top left;
+    /*scale: 0.85;*/ /* TODO: reasonable size, needs to not keep taking up space */
 }
 
 /*  */
@@ -336,20 +355,17 @@ td {
 #attack_display {
     text-align: center;
     line-height: 150%;
-    width: 0; // TODO: remove once testing complete
+    width: 0; /* TODO: remove once testing complete */
+}
+
+.attack-group {
+    margin: 0.5ch 0;
 }
 
 .attack-holder {
     width: 21ch;
     background-color: #181818;
-    /*padding: 1ch;*/
-    /*line-height: 150%;*/
     border: 1px solid var(--ls-background2);
-    margin-bottom: 0.5ch;
-}
-
-.attack-holder:last-child {
-    /*margin-bottom: 0;*/
 }
 
 /* Aspects */
@@ -510,6 +526,10 @@ td {
 
 .small-font {
     font-size: 0.5rem;
+}
+
+.medium-font {
+    font-size: 0.75rem;
 }
 
 .normal-font {
