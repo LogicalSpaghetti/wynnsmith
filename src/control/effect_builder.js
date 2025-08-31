@@ -798,6 +798,7 @@ class EffectType {
             "<option value='hit'>Single</option>" +
             "<option value='multi'>Multi-hit Total</option>" +
             "<option value='dps'>DPS</option>" +
+            "<option value='total'>Total</option>" +
             "<option value='scaling-multi'>Scaling Multi-hit</option>" +
             "<option value='hit-modifier'>Per-hit Modifier</option>";
         variantSelect.value = this.data.type ?? "hit";

@@ -280,6 +280,8 @@ function getVariantConversion(build, variant, attack) {
             return multiplyDamageByHits(attack.damage, attack.extra_hits);
         case "dps":
             return multiplyDamageByDPS(build, attack);
+        case "total":
+            return multiplyDamageOverTime(build, attack)
         case "scaling-multi":
             return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack.extra_hits);
         case "hit-modifier":
@@ -303,9 +305,13 @@ function multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
     return damage.map(extreme => extreme.map(x => x * multiplier));
 }
 
+function multiplyDamageOverTime(build, attack) {
+    return multiplyDamageByHits(multiplyDamageByDPS(build, attack), attack.duration);
+}
+
 function multiplyDamageByDPS(build, attack) {
     return multiplyDamageByHits(attack.damage, attack.extra_hits).map(extreme => extreme.map(x =>
-        x * ((attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]] : (attack.duration / attack.frequency))
+        x * ((attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]] : (1 / attack.frequency))
     ));
 }
 
