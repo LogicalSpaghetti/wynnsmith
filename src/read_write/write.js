@@ -7,6 +7,7 @@ function display(input, builds) {
     validateTree(input.level, input.wynnClass);
     renderHighlights();
     setPageEmbellishments(input.items.weapons[0].name, input.wynnClass);
+    displayEquipOrder(input);
 }
 
 function displayPrimaryBuild(build) {
@@ -31,13 +32,13 @@ function displaySkillPoints(input) {
     const assigned = input.sp_assigned.map((sp, i) =>
         sp + input.sp_modified[i]);
     const totals = input.sp_assigned.map((sp, i) =>
-        sp + input.sp_added[i] + input.sp_modified[i] + firstItemAdded[i]);
+        sp + input.sp_provided[i] + input.sp_modified[i] + firstItemAdded[i]);
 
     for (let cluster of spClusters) {
         const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
 
         cluster.querySelector(".total_display").textContent = String(totals[index]);
-        cluster.querySelector(".assigned_display").textContent = assigned[index];
+        cluster.querySelector(".assigned_display").textContent = String(assigned[index]);
     }
 
     const remainingSP = assigned.reduce((a, b) => a - b, 2 * Math.min(input.level - 1, 100));
@@ -55,4 +56,9 @@ function setPageEmbellishments(weaponName, wynnClass) {
         document.head.appendChild(icon);
     }
     icon.href = "img/icons/" + wynnClass + ".png";
+}
+
+function displayEquipOrder(input) {
+    document.getElementById("equip_order").innerHTML =
+        "<b>Equip Order:</b><br>" + input.equip_order.join("<br>");
 }

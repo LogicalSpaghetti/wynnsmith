@@ -18,7 +18,6 @@ function permuteBuild(build) {
     modifyIdentifications(build);
     calculateStats(build);
 
-    // TODO: rework for new system
     calculateDamageConversions(build);
 }
 
@@ -52,8 +51,10 @@ class Build {
     variants;
     displays;
 
+    toggles;
+
     constructor(weapon, input) {
-        const weaponItem = getItem(weapon.name)
+        const weaponItem = getItem(weapon.name);
 
         this.level = input.level;
 
@@ -72,7 +73,7 @@ class Build {
 
         const weaponTotals = getItemAddedSP(weaponItem);
         this.sp_totals = input.sp_assigned.map((sp, i) =>
-            sp + input.sp_added[i] + input.sp_modified[i] + weaponTotals[i]);
+            sp + input.sp_provided[i] + input.sp_modified[i] + weaponTotals[i]);
         this.sp_multipliers = this.sp_totals.map((total, i) => getSkillPointMultiplier(total, i));
 
         const itemStats = sumItemStats(this.weapon, this.equipment);
@@ -128,6 +129,6 @@ function getAsMax(possibleInt) {
     return possibleInt.max;
 }
 
-function getItemAddedSP(weapon) {
-    return capitalizedSkillPointNames.map((name) => Number(weapon?.identifications[`raw${name}`] ?? 0));
+function getItemAddedSP(item) {
+    return capitalizedSkillPointNames.map((name) => Number(item?.identifications[`raw${name}`] ?? 0));
 }

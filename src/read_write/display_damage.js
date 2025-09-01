@@ -12,12 +12,8 @@ function addDamageDisplays(build, attackDisplayId = "attack_display") {
         else parentDisplays.push(display);
     }
 
-    console.log(parentDisplays);
-    console.log(sortedChildDisplays);
-
     for (let display of parentDisplays) {
         const children = sortedChildDisplays[display.internal_name];
-        console.log(display.internal_name);
         const displayElement =
             createDisplayElement(display, children, build.variants, dexterity, build.spell_costs);
         if (displayElement) attackDisplay.appendChild(displayElement);
@@ -32,8 +28,6 @@ function addToSortingObject(sortingObject, entry, entryCategory) {
 function createDisplayElement(display, children, variants, dexterity, spell_costs) {
     const data = getDisplayData(display, variants, dexterity, spell_costs);
     if (!isDisplayWorthShowing(data)) return null;
-
-    console.log(children)
 
     const holder = document.createElement("div");
     holder.classList.add("attack-group")

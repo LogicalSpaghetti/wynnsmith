@@ -281,7 +281,7 @@ function getVariantConversion(build, variant, attack) {
         case "dps":
             return multiplyDamageByDPS(build, attack);
         case "total":
-            return multiplyDamageOverTime(build, attack)
+            return multiplyDamageOverTime(build, attack);
         case "scaling-multi":
             return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack.extra_hits);
         case "hit-modifier":
@@ -298,9 +298,7 @@ function multiplyDamageByHits(damage, extra_hits) {
 function multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
     const total_hits = 1 + (extra_hits ?? 0);
     let multiplier = 0;
-    for (let n = 1; n < total_hits - 1; n++) {
-        multiplier += Math.min(n, scaling_cap);
-    }
+    for (let n = 1; n < total_hits - 1; n++) multiplier += Math.min(n, scaling_cap);
 
     return damage.map(extreme => extreme.map(x => x * multiplier));
 }

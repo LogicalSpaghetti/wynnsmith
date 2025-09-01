@@ -1,15 +1,10 @@
 # Focus
 ### Small
-1. Something is wrong with spell damage calculations
+1. Toggles needs to be read by input and added to builds.
 2. New/inherited internal names:
-	1. if new selected, give an input for it, otherwise hide the input 
-3. Sub-displays
-	1. default-pinned
-	2. melee Per Attack, (pinned)
-	3. powder special, (pinned)
-	4. Totem Shove, (unpinned/pin-able)
-4.  Add more than just abilities to the effect builder
-5. Melee display DPS and per-hit.
+	1. if new selected, give an input for it, otherwise hide the input
+2.  Add more than just abilities to the effect builder
+3. Melee display DPS and per-hit.
 ### Major
 1. Build link generation/parsing
 2. Build comparison
@@ -38,10 +33,13 @@
 		5. Comparison to other build
 		6. Sub-displays
 			- Display per-hit along-side DPS by tagging a sub-display to do so
+		- Health-for-mana
+			- Blood Pact
 	4. Slider
 	5. Radiance
 	6. Powder Specials
 		1. Armour powder specials don't apply to indirect damage
+	7. 
 2. Data:
 	1. Write Aspect descriptions
 	2. Write Powder Descriptions
@@ -98,7 +96,8 @@
 	2. Save to/read from file or local storage
 13. Menu to import section of another build
 14. Tome short-hands
-15. Blood Pact 
+15. Blood Pact health cost next to mana cost
+	1. Generalize as a health-for-mana effect
 16. Blood Pact effective Mana/Mana Regen from hpr/ls/rally
     1. [hpr is complicated](https://forums.wynncraft.com/threads/the-health-regen-formula-has-been-reverse-engineered.292017/)
     1. Outdated values confirmed by author

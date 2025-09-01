@@ -2,7 +2,7 @@
 
 function getPlayerLevel() {
     const inputValue = document.getElementById("level_input").value;
-    const value = Math.min(maxPlayerLevel, Math.max(1, parseInt(inputValue) || 0))
+    const value = Math.min(maxPlayerLevel, Math.max(1, parseInt(inputValue) || 0));
     if (inputValue !== "") document.getElementById("level_input").value = value;
     return value;
 }
@@ -20,7 +20,7 @@ class Input {
     abilities;
 
     sp_assigned;
-    sp_added;
+    sp_provided;
     sp_modified;
 
     init() {
@@ -32,66 +32,54 @@ class Input {
 
         this.abilities = getInputAbilities(this.wynnClass);
 
-        const skillPoints = getSkillPointMinAndAdded(this.items);
-        this.sp_assigned = skillPoints.required;
-        this.sp_added = skillPoints.added;
+        const equipOrderInformation = getEquipOrderInformation(this.items);
+        this.equip_order = equipOrderInformation.equip_order;
+        this.sp_assigned = equipOrderInformation.required;
+        this.sp_provided = equipOrderInformation.provided;
         this.sp_modified = getSkillPointModifiers();
     }
 }
 
-function getSkillPointMinAndAdded(items) {
+function getEquipOrderInformation(items) {
     const weaponRequirements = getSPRequirementForAllWeapons(items.weapons);
 
     const skillPointData = itemNamesToSkillPointData(items.equipment)
         .filter(item => itemRequiresSomething(item) || itemProvidesSomething(item));
 
-    const toIterate = skillPointData
+    const providerRequirers = skillPointData
         .filter(item => itemRequiresSomething(item) && itemProvidesSomething(item));
-    const onlyHasProvides = skillPointData
+    const exclusiveProviders = skillPointData
         .filter(item => itemProvidesSomething(item) && !itemRequiresSomething(item));
-    const onlyHasRequirement = skillPointData
+    const exclusiveRequirers = skillPointData
         .filter(item => itemRequiresSomething(item) && !itemProvidesSomething(item));
 
-    const initialProvies = onlyHasProvides
-        .reduce((total, item) => total.map((x, i) => x + item.added[i]), [0, 0, 0, 0, 0]);
-    const unhelpfulMinimums = onlyHasRequirement
+    const initialProvided = exclusiveProviders
+        .reduce((total, item) => total.map((x, i) => x + item.provided[i]), [0, 0, 0, 0, 0]);
+    const unhelpfulItemMinimums = exclusiveRequirers
         .reduce((total, item) => total.map((x, i) => Math.max(x, item.required[i])), [0, 0, 0, 0, 0]);
 
-    const finalUnhelpfulRequirements = weaponRequirements
-        .map((x, i) => Math.max(x, unhelpfulMinimums[i]));
+    const unhelpfulRequirements = weaponRequirements
+        .map((x, i) => Math.max(x, unhelpfulItemMinimums[i]));
 
-    const itemMins = getAssignedSPMinimums(toIterate, initialProvies);
-    const addedMins = itemMins.added;
-    const requiredMins = itemMins.required.map((min, j) =>
-        finalUnhelpfulRequirements[j] > 0 ? Math.max(min + addedMins[j], finalUnhelpfulRequirements[j]) - addedMins[j] : min);
-    return {required: requiredMins, added: addedMins};
+    const subEquipOrder = getEquipOrder(providerRequirers, initialProvided);
+    const requiredSPFromPRs = getEquipOrderRequirement(providerRequirers, subEquipOrder, initialProvided);
+    console.log(requiredSPFromPRs);
+    const providedSP = addProvided(providerRequirers, initialProvided);
+    console.log(providedSP);
+    const requiredSP = addRequirements(requiredSPFromPRs, providedSP, unhelpfulRequirements);
+    console.log(requiredSP);
+
+    const equipOrder = mergeEquipOrder(exclusiveProviders, providerRequirers, exclusiveRequirers, subEquipOrder);
+
+    return {equip_order: equipOrder, required: requiredSP, provided: providedSP};
 }
 
 function itemProvidesSomething(item) {
-    return undefined !== item.added.find(x => x !== 0);
+    return undefined !== item.provided.find(x => x !== 0);
 }
 
 function itemRequiresSomething(item) {
     return undefined !== item.required.find(x => x !== 0);
-}
-
-// takes multiple seconds with a full build
-function getAssignedSPMinimums(skillPointData, added = [0, 0, 0, 0, 0], required = [0, 0, 0, 0, 0]) {
-    if (skillPointData.length > 0) {
-        // return minimum of branches
-        return skillPointData.map((item, i) => {
-            const newAdded = added.map((total, j) => total + item.added[j]);
-            const newRequired = required.map((min, j) =>
-                item.required[j] > 0 ? Math.max(min + added[j], item.required[j]) - added[j] : min)
-                .map((min, j) => min > 0 ? min + (item.added[j] < 0 ? -item.added[j] : 0) : 0);
-
-            return getAssignedSPMinimums(skillPointData.toSpliced(i, 1), newAdded, newRequired);
-        })
-            .reduce((a, b) =>
-                a.required.reduce((x, y) => x + y) <
-                b.required.reduce((x, y) => x + y)
-                    ? a : b);
-    } else return {required: required, added: added};
 }
 
 function itemNamesToSkillPointData(equipment) {
@@ -100,21 +88,110 @@ function itemNamesToSkillPointData(equipment) {
 
 function getItemAsSkillPointData(item) {
     return {
-        required: skillPointNames.map(name => Number(item.requirements?.[name] ?? 0)),
-        added: getItemAddedSP(item)
+        name: item.name,
+        required: getItemSPReqs(item),
+        provided: getItemAddedSP(item)
     };
 }
 
 function getSPRequirementForAllWeapons(weapons) {
     return weapons.reduce((mins, weapon) => {
-        const reqs = getItemSPReqs(weapon.name);
+        const reqs = getItemSPReqs(getItem(weapon.name));
         return mins.map((min, i) => Math.max(min, reqs[i]));
     }, [0, 0, 0, 0, 0]);
 }
 
-function getItemSPReqs(itemName) {
-    const reqs = getItem(itemName)?.requirements ?? {};
+function getItemSPReqs(item) {
+    const reqs = item?.requirements ?? {};
     return skillPointNames.map(name => Number(reqs[name] ?? 0));
+}
+
+function mergeEquipOrder(pre, central, post, centralOrder) {
+    return pre.concat(centralOrder.map(i => central[i])).concat(post).map(item => item.name);
+}
+
+function permutation(pick, max, usePermutation) {
+    pick = Math.floor(pick);
+    max = Math.floor(max);
+    if (pick > max) return console.error("Pick cannot be greater than max.");
+    if (pick <= 0) return console.error("Pick must be 1 or more.");
+    if (max <= 0) return console.error("Max must be 1 or more.");
+
+    const i = new Array(pick);
+    loopOneIndex(i, pick, max, 0, usePermutation);
+}
+
+function loopOneIndex(indices, pick, max, count, usePermutation) {
+    for (indices[count] = 0; indices[count] < max; indices[count]++) {
+        if (checkOverlap(indices, count)) {
+            if (count < pick - 1)
+                loopOneIndex(indices, pick, max, count + 1, usePermutation);
+            if (count === pick - 1) usePermutation(indices);
+        }
+    }
+}
+
+function checkOverlap(indices, count) {
+    if (count <= 0) return true;
+    if (indices.length <= count) return false;
+    for (let i = 0; i < count; i++)
+        if (indices[count] === indices[i]) return false;
+    return true;
+}
+
+function getEquipOrder(itemRanges, initialProvided = [0, 0, 0, 0, 0]) {
+    if (itemRanges.length < 1) return [];
+
+    let currentMinRequirement;
+    let currentBest;
+
+    const tryOrder = function (orderedIndexes) {
+        const requiredSP = getEquipOrderRequirement(itemRanges, orderedIndexes, initialProvided)
+            .reduce((a, b) => a + b);
+
+        if (currentMinRequirement == null || currentMinRequirement > requiredSP) {
+            currentMinRequirement = requiredSP;
+            currentBest = [...orderedIndexes]; // TODO: why is it that if we don't clone it, the result ends up being an array of length n full of n?
+        }
+    };
+
+    permutation(itemRanges.length, itemRanges.length, tryOrder);
+
+    return currentBest;
+}
+
+function getEquipOrderRequirement(itemRanges, orderedIndexes, initialProvided) {
+    const required = [0, 0, 0, 0, 0];
+    const provided = [...initialProvided];
+
+    for (const index of orderedIndexes)
+        for (let i = 0; i < required.length; i++) {
+            const itemRequired = itemRanges[index].required[i];
+            const itemProvided = itemRanges[index].provided[i];
+            if (itemRequired > 0) required[i] = getNewRequired(required[i], provided[i], itemRequired);
+            if (required[i] > 0 && itemProvided < 0) required[i] += -itemProvided;
+            provided[i] += itemProvided;
+        }
+
+    return required;
+}
+
+function addRequirements(required, provided, otherRequired) {
+    const newRequired = [];
+    for (let i = 0; i < required.length; i++) if (otherRequired[i] > 0)
+        newRequired[i] = Math.max(required[i] + provided[i], otherRequired[i]) - provided[i];
+    else newRequired[i] = required[i];
+    return newRequired;
+}
+
+function getNewRequired(oldRequired, provided, itemRequired) {
+    return Math.max(oldRequired + provided, itemRequired) - provided;
+}
+
+function addProvided(itemRanges, initialProvided) {
+    const provided = [...initialProvided];
+    for (const item of itemRanges) for (let i = 0; i < provided.length; i++) provided[i] += item.provided[i];
+    return provided;
 }
 
 function balanceSP() {
@@ -122,7 +199,7 @@ function balanceSP() {
     if (remainingSP < 1) return;
 
     const spInputs = document.getElementById("sp_section");
-    const strengthCluster = spInputs.querySelector(".sp_cluster[data-element='earth']")
+    const strengthCluster = spInputs.querySelector(".sp_cluster[data-element='earth']");
     const strength = parseInt(strengthCluster.querySelector(".total_display").textContent);
     const dexterityCluster = spInputs.querySelector(".sp_cluster[data-element='thunder']");
     const dexterity = parseInt(dexterityCluster.querySelector(".total_display").textContent);
@@ -131,7 +208,7 @@ function balanceSP() {
     let newDexterity;
 
     const difference = Math.max(0, Math.abs(strength - dexterity));
-    const overBalance = remainingSP - difference
+    const overBalance = remainingSP - difference;
 
     if (strength < 0 && dexterity < 0) {
         newStrength = 0;
@@ -146,7 +223,7 @@ function balanceSP() {
         newStrength = 0;
         newDexterity = remainingSP;
     } else if (dexterity >= strength + remainingSP) {
-        newStrength =  remainingSP;
+        newStrength = remainingSP;
         newDexterity = 0;
     } else if (strength > dexterity) {
         newStrength = overBalance / 2;
