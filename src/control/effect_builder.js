@@ -298,7 +298,7 @@ class Tree {
         Object.keys(this.effects).forEach(effectKey => {
             const effect = this.effects[effectKey];
             if (effect.data?.type === type) result.push(effect);
-        })
+        });
         return result;
     }
 
@@ -394,7 +394,7 @@ class EffectBuilder {
     constructor(tree, id) {
         this.tree = tree;
         this.id = id;
-        this.data = new EffectType(this.tree, this,"");
+        this.data = new EffectType(this.tree, this, "");
 
         this.createHTML();
         this.setName("");
@@ -881,11 +881,7 @@ class EffectType {
         isShift.value = this.data.is_shift ?? "false";
         isShift.addEventListener("change", () => setData(this));
 
-        holder.appendChild(document.createTextNode("Variant Names (csv): "));
-        const variants = holder.appendChild(document.createElement("input"));
-        variants.placeholder = "internal_name,internal_name2";
-        variants.value = this.data.variants ?? "";
-        variants.addEventListener("change", () => setData(this));
+        const newVariants = this.addMultiNodeSelector(holder, this.effect, setData, "variant", "Variants:", this.data.variants ?? "");
 
         holder.appendChild(document.createElement("br"));
 
@@ -898,7 +894,7 @@ class EffectType {
         holder.appendChild(document.createElement("br"));
 
         const parentDisplay =
-            this.addSingleNodeSelector(holder, this.effect, setData, "display", "Parent:", true, this.data.parent ?? "");
+            this.addSingleNodeSelect(holder, this.effect, setData, "display", "Parent:", true, this.data.parent ?? "");
 
 
         function setData(self) {
@@ -907,20 +903,22 @@ class EffectType {
             self.data = {
                 internal_name: internalName.value,
                 name: displayName.value,
-                variants: variants.value.split(",").map(word => word.trim()),
+                variants: newVariants(),
                 label: damageLabel.value
             };
 
             if (spellSelect.value) self.data.spell = spellSelect.value;
             if (spellSelect.value) self.data.is_shift = isShift.value === "true";
             if (parentDisplay.value) self.data.parent = parentDisplay.value;
+
+            console.log(self.data);
         }
 
         setData(this);
         return holder;
     }
 
-    addSingleNodeSelector(holder, thisEffect, refreshFunction, type, label, isOptional, initialValue) {
+    addSingleNodeSelect(holder, thisEffect, refreshFunction, type, label, isOptional, initialValue) {
         const possibleValues = this.tree.getEffectsOfType(type).filter(effect => effect !== thisEffect);
 
         holder.append(label);
@@ -929,7 +927,7 @@ class EffectType {
         if (isOptional) {
             const option = document.createElement("option");
             option.value = '';
-            option.innerText = "-optional-";
+            option.innerText = "-none-";
             select.appendChild(option);
         }
         possibleValues.forEach(effect => select.appendChild(this.getEffectAsOption(effect)));
@@ -940,6 +938,54 @@ class EffectType {
 
         return select;
     }
+
+    addMultiNodeSelector(holder, thisEffect, refreshFunction, type, label, selectedValues) {
+        const possibleValues = (type ? this.tree.getEffectsOfType(type) : this.tree.effects).filter(effect => effect !== thisEffect);
+
+        holder.append(label);
+
+        const selected = holder.appendChild(document.createElement("span"));
+        holder.appendChild(document.createElement("br"));
+        const expandButton = holder.appendChild(document.createElement("button"));
+        const multiSelector = holder.appendChild(document.createElement("div"));
+        multiSelector.style.display = "none";
+
+        expandButton.textContent = "⮜";
+        expandButton.addEventListener("click", () => {
+            const toggle = expandButton.dataset.show !== "true";
+            expandButton.dataset.show = String(toggle);
+            expandButton.textContent = toggle ? "⮟" : "⮜";
+            multiSelector.style.display = toggle ? "block" : "none";
+        });
+
+        const checkboxes = [];
+
+        for (const effect of possibleValues) {
+            if (effect === thisEffect) continue;
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.dataset.id = effect.id;
+            checkbox.dataset.name = effect.name;
+            checkbox.checked = selectedValues.includes(effect.id);
+            checkbox.addEventListener("change", () => {
+                refreshFunction(this);
+                refreshSelected();
+            });
+            const checkboxHolder = multiSelector.appendChild(document.createElement("div"));
+            checkboxHolder.append(checkbox, effect.name);
+            checkboxes.push(checkbox);
+        }
+
+        const refreshSelected = function () {
+            selected.textContent = " " + checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.name).join(", ");
+        };
+        refreshSelected();
+
+        return function () {
+            return checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.id);
+        };
+    }
+
 
     getEffectAsOption(effect) {
         const option = document.createElement("option");

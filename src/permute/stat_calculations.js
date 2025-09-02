@@ -8,6 +8,30 @@ function calculateStats(build) {
     calculateSpellCosts(build);
 }
 
+function statCalculations(build) {
+    const ids = build.identifications;
+
+    const maxManaMod = ids.rawMaxMana + build.sp_multipliers[SkillPointIndexes.Intelligence] * 100;
+    build.stats.maxMana = 100 + maxManaMod;
+
+    build.stats.trueManaRegen = ids.manaRegen + 25;
+
+    build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
+    build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
+
+
+    build.stats.effectiveWS = player_bps * (ids.walkSpeed / 100 + 1);
+}
+
+function mergeElementalDefences(build) {
+    for (let i = 1; i < damage_type_count; i++) {
+        const baseDefence = build.base[`base${damageTypeNames[i]}Defence`];
+        const percentDefence = 1 + ((build.identifications.elementalDefence + build.identifications[`${damageTypePrefixes[i]}Defence`]) / 100);
+
+        build.stats[`total${damageTypeNames[i]}Defence`] = baseDefence * (Math.sign(baseDefence) * percentDefence);
+    }
+}
+
 function healthCalculations(build) {
     build.stats.health = Math.max(5, build.base.baseHealth + build.identifications.rawHealth);
     build.stats.healthRegen = computeHpr(build.identifications.healthRegenRaw, build.identifications.healthRegen / 100);
@@ -23,6 +47,11 @@ function healthCalculations(build) {
         build.stats.health
         / getEHpFactor(build)
         / ((1 - defence) * (1 - agility) + (0.1 * agility));
+
+    build.stats.ehprPercent = build.stats.healthRegen / build.stats.health;
+
+    build.stats.lsPercent = build.identifications.lifeSteal / 3 / build.stats.health;
+    console.log(build.stats.lsPercent)
 
     calculateHealing(build);
 }
@@ -65,30 +94,6 @@ function calculateSpellCosts(build) {
 
     for (const data of build.spell_cost_multipliers)
         spell_costs[data.spell_number] *= data.cost_multiplier;
-}
-
-function statCalculations(build) {
-    const ids = build.identifications;
-
-    const maxManaMod = ids.rawMaxMana + build.sp_multipliers[SkillPointIndexes.Intelligence] * 100;
-    build.stats.maxMana = 100 + maxManaMod;
-
-    build.stats.trueManaRegen = ids.manaRegen + 25;
-
-    build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
-    build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
-
-
-    build.stats.effectiveWS = player_bps * (ids.walkSpeed / 100 + 1);
-}
-
-function mergeElementalDefences(build) {
-    for (let i = 1; i < damage_type_count; i++) {
-        const baseDefence = build.base[`base${damageTypeNames[i]}Defence`];
-        const percentDefence = 1 + ((build.identifications.elementalDefence + build.identifications[`${damageTypePrefixes[i]}Defence`]) / 100);
-
-        build.stats[`total${damageTypeNames[i]}Defence`] = baseDefence * (Math.sign(baseDefence) * percentDefence);
-    }
 }
 
 function computeHpr(base, percent) {

@@ -126,7 +126,7 @@ const classEffects = {
                 "data": {
                     "internal_name": "multihit",
                     "name": "Multihit",
-                    "variants": ["multihit_total", "finality"],
+                    "variants": ["0", "3"],
                     "label": "Total Damage",
                     "spell": "2"
                 }
@@ -188,11 +188,134 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"internal_name": "melee", "name": "Melee", "variants": ["melee_dps"], "label": "DPS"}
+                "data": {"internal_name": "melee", "name": "Melee", "variants": ["9"], "label": "DPS"}
             }
         }
     },
     mage: {"effects": {}},
-    shaman: {"wynnClass":"shaman","effects":{"0":{"name":"Totem Damage","toggle_name":"","parents":[{"section":"nodes","id":"1"}],"blocks":[],"requires_all":true,"type":"conv","data":{"internal_name":"totem","type":"Spell","duration":30,"frequency":0.4,"conversion":[6,0,0,0,0,6]}},"1":{"name":"Totem Cost","toggle_name":"","parents":[{"section":"nodes","id":"1"}],"blocks":[],"requires_all":true,"type":"cost","data":{"spell_number":0,"cost":30,"is_base_spell":true}},"2":{"name":"Totem DPS Variant","toggle_name":"","parents":[{"section":"nodes","id":"1"}],"blocks":[],"requires_all":true,"type":"variant","data":{"type":"dps","internal_name":"totem_dps","label":"Totem DPS","attack":"totem"}},"3":{"name":"Totem Display","toggle_name":"","parents":[{"section":"nodes","id":"1"}],"blocks":[],"requires_all":true,"type":"display","data":{"internal_name":"totem","name":"Totem","variants":["totem_dps"],"label":"DPS","spell":"0","is_shift":false}},"4":{"name":"Totem Smash Attack","toggle_name":"","parents":[{"section":"nodes","id":"4"}],"blocks":[],"requires_all":true,"type":"conv","data":{"internal_name":"totem_smash","type":"Spell","conversion":[120,0,0,0,30,0]}},"5":{"name":"Smash Variant","toggle_name":"","parents":[{"section":"nodes","id":"4"}],"blocks":[],"requires_all":true,"type":"variant","data":{"type":"hit","internal_name":"totem_smash","label":"Smash Damage","attack":"totem_smash"}},"6":{"name":"Totem Smash Display","toggle_name":"","parents":[{"section":"nodes","id":"4"}],"blocks":[],"requires_all":true,"type":"display","data":{"internal_name":"totem_smash","name":"Totem Smash","variants":["totem_smash"],"label":"Totem Smash Damage","parent":"totem"}},"7":{"name":"Melee Damage","toggle_name":"","parents":[],"blocks":[],"requires_all":true,"type":"conv","data":{"internal_name":"melee","type":"MainAttack","is_melee":true,"extra_hits":2,"conversion":[33.4,0,0,0,0,0]}},"8":{"name":"Melee Variant","toggle_name":"","parents":[],"blocks":[],"requires_all":true,"type":"variant","data":{"type":"dps","internal_name":"melee_dps","label":"Melee DPS","attack":"melee"}},"9":{"name":"Melee Display","toggle_name":"","parents":[],"blocks":[],"requires_all":true,"type":"display","data":{"internal_name":"melee_dps","name":"Melee","variants":["melee_dps"],"label":"DPS"}}}},
+    shaman: {
+        "wynnClass": "shaman", "effects": {
+            "0": {
+                "name": "Totem Damage",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "1"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "conv",
+                "data": {
+                    "internal_name": "totem",
+                    "type": "Spell",
+                    "duration": 30,
+                    "frequency": 0.4,
+                    "conversion": [6, 0, 0, 0, 0, 6]
+                }
+            },
+            "1": {
+                "name": "Totem Cost",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "1"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "cost",
+                "data": {"spell_number": 0, "cost": 30, "is_base_spell": true}
+            },
+            "2": {
+                "name": "Totem DPS Variant",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "1"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "dps", "internal_name": "totem_dps", "label": "Totem DPS", "attack": "totem"}
+            },
+            "3": {
+                "name": "Totem Display",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "1"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {
+                    "internal_name": "totem",
+                    "name": "Totem",
+                    "variants": ["2"],
+                    "label": "DPS",
+                    "spell": "0",
+                    "is_shift": false
+                }
+            },
+            "4": {
+                "name": "Totem Smash Attack",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "4"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "conv",
+                "data": {"internal_name": "totem_smash", "type": "Spell", "conversion": [120, 0, 0, 0, 30, 0]}
+            },
+            "5": {
+                "name": "Smash Variant",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "4"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {
+                    "type": "hit",
+                    "internal_name": "totem_smash",
+                    "label": "Smash Damage",
+                    "attack": "totem_smash"
+                }
+            },
+            "6": {
+                "name": "Totem Smash Display",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "4"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {
+                    "internal_name": "totem_smash",
+                    "name": "Totem Smash",
+                    "variants": ["5"],
+                    "label": "Totem Smash Damage",
+                    "parent": "totem"
+                }
+            },
+            "7": {
+                "name": "Melee Damage",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "conv",
+                "data": {
+                    "internal_name": "melee",
+                    "type": "MainAttack",
+                    "is_melee": true,
+                    "extra_hits": 2,
+                    "conversion": [33.4, 0, 0, 0, 0, 0]
+                }
+            },
+            "8": {
+                "name": "Melee Variant",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "dps", "internal_name": "melee_dps", "label": "Melee DPS", "attack": "melee"}
+            },
+            "9": {
+                "name": "Melee Display",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {"internal_name": "melee_dps", "name": "Melee", "variants": ["8"], "label": "DPS"}
+            }
+        }
+    },
     warrior: {"effects": {}}
 };

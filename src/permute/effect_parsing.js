@@ -62,12 +62,10 @@ function getEffects(abilities, wynnClass) {
         } else i++;
     }
 
-    return effects.filter(effectId =>
-        !effectsData[effectId].toggle_name || !abilities.toggles.includes(effectsData[effectId].toggle_name));
-
+    return effects;
 }
 
-function getSplitEffects(effects, wynnClass) {
+function getSplitEffects(effects, toggles, wynnClass) {
     // TODO: remove "effects" from splitEffects
     const splitEffects = {
         effects: effects,
@@ -81,14 +79,16 @@ function getSplitEffects(effects, wynnClass) {
         spell_costs: [0, 0, 0, 0],
         spell_cost_modifiers: [0, 0, 0, 0],
         spell_cost_multipliers: [],
-        variants: [],
+        variants: {},
         displays: []
     };
 
     const effectData = classEffects[wynnClass].effects;
 
-    effects.forEach(effectId => {
+    for (const effectId of effects) {
         const effect = effectData[effectId];
+
+        if (effect.toggle_name && !toggles.includes(effect.toggle_name)) continue;
 
         switch (effect.type) {
             case EffectTypes.EMPTY:
@@ -97,7 +97,7 @@ function getSplitEffects(effects, wynnClass) {
                 parseConversionEffect(splitEffects, effect);
                 break;
             case EffectTypes.VARIANT:
-                parseVariantEffect(splitEffects, effect);
+                parseVariantEffect(splitEffects, effect, effectId);
                 break;
             case EffectTypes.DISPLAY:
                 parseDisplayEffect(splitEffects, effect);
@@ -126,11 +126,10 @@ function getSplitEffects(effects, wynnClass) {
             default:
                 throw new Error("Unknown effect type: " + effect.type + ", id: " + effectId);
         }
-    });
+    }
 
     return splitEffects;
 }
-
 
 function parseConversionEffect(build, effect) {
     const attack = getOrCreateNamedEffect(build.attacks, effect.data.internal_name);
@@ -153,8 +152,9 @@ function sumConversions(conversionA, conversionB) {
     return conversionA.map((a, i) => a + conversionB[i]);
 }
 
-function parseVariantEffect(build, effect) {
-    const variant = getOrCreateNamedEffect(build.variants, effect.data.internal_name);
+function parseVariantEffect(build, effect, effectId) {
+    const variant = build.variants[effectId] = {};
+    console.log(variant);
     variant.type = effect.data.type;
     variant.attack = effect.data.attack;
     variant.label = effect.data.label;

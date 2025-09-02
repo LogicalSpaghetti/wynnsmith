@@ -64,8 +64,7 @@ function createChildDisplayElement(childDisplay, variants, dexterity, spell_cost
 }
 
 function getVariantsForDisplay(display, variants) {
-    return display.variants.map(variantName => variants.find(variant => variant.internal_name === variantName))
-        .filter(v => v != null);
+    return display.variants.map(variantId => variants[variantId]).filter(v => v != null);
 }
 
 function getDamageElement(display, damage, spell_cost, dexterity) {

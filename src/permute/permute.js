@@ -65,10 +65,11 @@ class Build {
         this.wynnClass = input.wynnClass;
 
         const abilities = getAbilities(input.abilities, weapon, input.items.equipment);
+        this.toggles = input.abilities.toggles;
 
         this.effects = getBuildEffects(abilities, this.wynnClass);
 
-        const splitEffects = getSplitEffects(this.effects, this.wynnClass);
+        const splitEffects = getSplitEffects(this.effects, this.toggles, this.wynnClass);
         for (let key in splitEffects) if (key !== "effects") this[key] = splitEffects[key];
 
         const weaponTotals = getItemAddedSP(weaponItem);

@@ -257,8 +257,8 @@ function applyStrDex(build) {
 }
 
 function addAttackVariants(build) {
-    for (let i in build.variants) {
-        const variant = build.variants[i];
+    for (let key in build.variants) {
+        const variant = build.variants[key];
 
         const attack = build.attacks.find(attack => attack.internal_name === variant.attack);
 
