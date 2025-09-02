@@ -1,6 +1,6 @@
 `use strict`;
 
-const abilityTreeColumns = 9;
+const treeColumns = 9;
 
 function treeClicked(event) {
     const target = event.target;
@@ -102,13 +102,13 @@ function mapHTML(tree, abilityTree, wynnClass) {
     const treeArray = [];
 
 
-    for (let i = 0; i < (abilityTreeColumns * tree.properties.pages * tree.properties.rowsPerPage); i++)
+    for (let i = 0; i < (treeColumns * tree.properties.pages * tree.properties.rowsPerPage); i++)
         treeArray.push(cellMap[i + 1]);
 
     let row = undefined;
     for (let i = 0; i < treeArray.length; i++) {
         const ability = treeArray[i];
-        if (i % abilityTreeColumns === 0) {
+        if (i % treeColumns === 0) {
             const tr = document.createElement("tr");
             abilityTree.appendChild(tr);
             row = tr;
@@ -253,7 +253,7 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
         } else if (node.reachable && (ability.archetypePointsRequired <= 0 || ability.archetypePointsRequired <= archetypePoints[ability.archetype])) {
             // node is reachable and has met its archetype req.
             node.valid = true;
-            propagateHighlightFrom(nodes, tree, node.mapID);
+            propagateHighlightFromNode(nodes, tree, node.mapID);
             if (ability.archetype !== "") archetypePoints[ability.archetype] += 1;
             unvalidatedIDs.splice(i, 1);
             i = 0;
@@ -325,7 +325,7 @@ function getElementFromAbilityID(index) {
 const dirs = ["up", "down", "left", "right"];
 
 const dirOffsets = {
-    up: -abilityTreeColumns, down: abilityTreeColumns, left: -1, right: 1
+    up: -treeColumns, down: treeColumns, left: -1, right: 1
 };
 
 const inverseDirs = {
@@ -336,49 +336,27 @@ const dirIndexes = {
     up: 0, down: 1, left: 2, right: 3
 };
 
-function propagateHighlightTo(nodes, tree, destIndex, sourceDir) {
+function propagateHighlightFromNode(nodes, tree, nodeIndex) {
+    propagateHighlightFrom(nodes, tree, nodeIndex, undefined, nodeIndex);
+}
+
+function propagateHighlightTo(nodes, tree, destIndex, sourceDir, sourceNodeIndex) {
     const cell = tree.cellMap[destIndex];
     const node = nodes[cell.abilityID];
     if (node) {
         node.reachable = true;
         return node.selected;
-    } else return propagateHighlightFrom(nodes, tree, destIndex, sourceDir);
+    } else return propagateHighlightFrom(nodes, tree, destIndex, sourceDir, sourceNodeIndex);
 }
 
-// todo: once it's gone down it can't go left or right
-function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
+function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir, nodeIndex) {
     const sourceCell = tree.cellMap[sourceIndex];
     const element = getElementFromMapIndex(sourceIndex);
     const highlights = Array.from(element.dataset.highlights);
 
-    for (const newDir of dirs) {
-        // if the node is going up
-        if (!tree.bTravesableUp && newDir === "up") continue;
-        // if the cell doesn't go in this direction
-        if (sourceCell.travelNode[newDir] === 0) continue;
-        // if this is the same direction it came from
-        if (inverseDirs[sourceDir] === newDir) continue;
-
-        // left on left edge or right on right edge
-        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 1 && newDir === "left") continue;
-        if (!tree.loopTree && sourceIndex % abilityTreeColumns === 0 && newDir === "right") continue;
-
-        let destIndex = sourceIndex + dirOffsets[newDir];
-        if (tree.loopTree) {
-            if (newDir === "left") destIndex += abilityTreeColumns;
-            if (newDir === "right") destIndex -= abilityTreeColumns;
-        }
-
-        const destCell = tree.cellMap[destIndex];
-
-        // if it's not an occupied cell
-        if (destCell == null) continue;
-        // if dest doesn't connect to this
-        if (destCell.travelNode[inverseDirs[newDir]] === 0) continue;
-
-        // if it finds a selected node:
-        if (propagateHighlightTo(nodes, tree, destIndex, newDir)) {
-            highlights[dirIndexes[newDir]] = 2;
+    for (const direction of getValidDirections(tree, sourceIndex, sourceDir, nodeIndex)) {
+        if (propagateHighlightTo(nodes, tree, getDestinationForDirection(tree, sourceIndex, direction), direction, nodeIndex)) {
+            highlights[dirIndexes[direction]] = 2;
             highlights[dirIndexes[inverseDirs[sourceDir]]] = 2;
         }
     }
@@ -387,6 +365,50 @@ function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir) {
 
     // if it's not 0000, return true
     return element.dataset.highlights !== "0000";
+}
+
+function getValidDirections(tree, sourceIndex, sourceDirection, nodeIndex) {
+    const source = tree.cellMap[sourceIndex];
+    return dirs.filter(direction => {
+        // if the node is going up
+        if (!tree.bTravesableUp && direction === "up") return false;
+        // if the cell doesn't go in this direction
+        if (source.travelNode[direction] === 0) return false;
+        // if this is the same direction it came from
+        if (inverseDirs[sourceDirection] === direction) return false;
+
+        // left on left edge or right on right edge
+        if (!tree.loopTree && sourceIndex % treeColumns === 1 && direction === "left") return false;
+        if (!tree.loopTree && sourceIndex % treeColumns === 0 && direction === "right") return false;
+
+        let destIndex = getDestinationForDirection(tree, sourceIndex, direction);
+
+
+        if ((direction === "left" || direction === "right")) {
+            console.log((nodeIndex), (destIndex))
+            if (getRow(nodeIndex) !== getRow(destIndex))
+                return false;
+        }
+
+        const destCell = tree.cellMap[destIndex];
+
+        // if it's not an occupied cell
+        if (!destCell) return false;
+        // if it connects
+        return destCell.travelNode[inverseDirs[direction]] !== 0;
+    });
+}
+
+function getDestinationForDirection(tree, sourceIndex, dir) {
+    let destIndex = sourceIndex + dirOffsets[dir];
+    if (tree.loopTree)
+        if (sourceIndex % treeColumns === 1 && dir === "left") destIndex += treeColumns;
+        else if (sourceIndex % treeColumns === 0 && dir === "right") destIndex -= treeColumns;
+    return destIndex;
+}
+
+function getRow(index) {
+    return Math.floor((index - 1) / treeColumns);
 }
 
 function renderHighlights() {

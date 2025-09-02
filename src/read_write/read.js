@@ -139,6 +139,7 @@ function checkOverlap(indices, count) {
     return true;
 }
 
+// TODO: sets
 function getEquipOrder(itemRanges, initialProvided = [0, 0, 0, 0, 0]) {
     if (itemRanges.length < 1) return [];
 
@@ -210,6 +211,7 @@ function balanceSP() {
     const difference = Math.max(0, Math.abs(strength - dexterity));
     const overBalance = remainingSP - difference;
 
+    // TODO: I hate this, rework it.
     if (strength < 0 && dexterity < 0) {
         newStrength = 0;
         newDexterity = 0;
