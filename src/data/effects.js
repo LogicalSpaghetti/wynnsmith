@@ -235,13 +235,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "conv",
-                "data": {
-                    "internal_name": "totem",
-                    "type": "Spell",
-                    "duration": 30,
-                    "frequency": 0.4,
-                    "conversion": [6, 0, 0, 0, 0, 6]
-                }
+                "data": {"id": "0", "type": "Spell", "frequency": 0.4, "duration": 30, "conversion": [6, 0, 0, 0, 0, 6]}
             },
             "1": {
                 "name": "Totem Cost",
@@ -259,7 +253,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {"type": "dps", "internal_name": "totem_dps", "label": "Totem DPS", "attack": "totem"}
+                "data": {"type": "dps", "label": "Totem DPS", "attack": "0"}
             },
             "3": {
                 "name": "Totem Display",
@@ -268,7 +262,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"internal_name": "totem", "name": "Totem", "variants": ["2"], "label": "DPS", "spell": "0"}
+                "data": {"name": "Totem", "variants": ["2"], "label": "DPS", "heals": [], "spell": "0"}
             },
             "4": {
                 "name": "Totem Smash Attack",
@@ -277,7 +271,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "conv",
-                "data": {"internal_name": "totem_smash", "type": "Spell", "conversion": [120, 0, 0, 0, 30, 0]}
+                "data": {"id": "4", "type": "Spell", "conversion": [120, 0, 0, 0, 30, 0]}
             },
             "5": {
                 "name": "Smash Variant",
@@ -286,12 +280,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {
-                    "type": "hit",
-                    "internal_name": "totem_smash",
-                    "label": "Smash Damage",
-                    "attack": "totem_smash"
-                }
+                "data": {"type": "hit", "label": "Smash Damage", "attack": "4"}
             },
             "6": {
                 "name": "Totem Smash Display",
@@ -301,11 +290,11 @@ const classEffects = {
                 "requires_all": true,
                 "type": "display",
                 "data": {
-                    "internal_name": "totem_smash",
                     "name": "Totem Smash",
                     "variants": ["5"],
                     "label": "Totem Smash Damage",
-                    "parent": "totem"
+                    "heals": [],
+                    "parent": "3"
                 }
             },
             "7": {
@@ -316,7 +305,7 @@ const classEffects = {
                 "requires_all": true,
                 "type": "conv",
                 "data": {
-                    "internal_name": "melee",
+                    "id": "7",
                     "type": "MainAttack",
                     "is_melee": true,
                     "extra_hits": 2,
@@ -330,7 +319,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {"type": "dps", "internal_name": "melee_dps", "label": "Melee DPS", "attack": "melee"}
+                "data": {"type": "dps", "label": "Melee DPS", "attack": "7"}
             },
             "9": {
                 "name": "Melee Display",
@@ -339,7 +328,16 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {"internal_name": "melee_dps", "name": "Melee", "variants": ["8"], "label": "DPS"}
+                "data": {"name": "Melee", "variants": ["8"], "label": "DPS", "heals": []}
+            },
+            "10": {
+                "name": "Imbued Totem",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "47"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "conv",
+                "data": {"id": "0", "conversion": [4, 0, 0, 0, 0, 0]}
             }
         }
     },

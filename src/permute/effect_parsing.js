@@ -13,6 +13,8 @@ function newMinMax() {
 EffectTypes = Object.freeze({
     EMPTY: "",
     CONVERSION: "conv",
+    VARIANT: "variant",
+    DISPLAY: "display",
     MASTERY: "mastery",
     HEAL: "heal",
     RESISTANCE: "resistance",
@@ -20,8 +22,6 @@ EffectTypes = Object.freeze({
     TEAM_MULTIPLIER: "team-multiplier",
     COST: "cost",
     COST_MULTIPLIER: "cost-multiplier",
-    VARIANT: "variant",
-    DISPLAY: "display"
 });
 
 function getAbilities(inputAbilities, weapon, equipment) {
@@ -71,6 +71,8 @@ function getSplitEffects(effects, toggles, wynnClass) {
         effects: effects,
 
         attacks: [],
+        variants: {},
+        displays: [],
         masteries: [],
         heals: [],
         resistances: [],
@@ -79,8 +81,6 @@ function getSplitEffects(effects, toggles, wynnClass) {
         spell_costs: [0, 0, 0, 0],
         spell_cost_modifiers: [0, 0, 0, 0],
         spell_cost_multipliers: [],
-        variants: {},
-        displays: []
     };
 
     const effectData = classEffects[wynnClass].effects;
@@ -94,13 +94,13 @@ function getSplitEffects(effects, toggles, wynnClass) {
             case EffectTypes.EMPTY:
                 break;
             case EffectTypes.CONVERSION:
-                parseConversionEffect(splitEffects, effect);
+                parseConversionEffect(splitEffects, effect, effectId);
                 break;
             case EffectTypes.VARIANT:
                 parseVariantEffect(splitEffects, effect, effectId);
                 break;
             case EffectTypes.DISPLAY:
-                parseDisplayEffect(splitEffects, effect);
+                parseDisplayEffect(splitEffects, effect, effectId);
                 break;
             case EffectTypes.MASTERY:
                 parseMasteryEffect(splitEffects, effect);
@@ -132,7 +132,7 @@ function getSplitEffects(effects, toggles, wynnClass) {
 }
 
 function parseConversionEffect(build, effect) {
-    const attack = getOrCreateNamedEffect(build.attacks, effect.data.internal_name);
+    const attack = getOrCreateNamedEffect(build.attacks, effect.data.id);
     attack.type = effect.data.type ?? attack.type;
     attack.is_melee = effect.data.is_melee ?? attack.is_melee;
     attack.conversion = sumConversions(attack.conversion, effect.data.conversion);
@@ -160,8 +160,8 @@ function parseVariantEffect(build, effect, effectId) {
     if (effect.data.second_attack) variant.second_attack = effect.data.second_attack;
 }
 
-function parseDisplayEffect(build, effect) {
-    const display = getOrCreateNamedEffect(build.displays, effect.data.internal_name);
+function parseDisplayEffect(build, effect, effectId) {
+    const display = getOrCreateNamedEffect(build.displays, effectId);
     display.name = effect.data.name || display.name;
     display.variants = (display.variants ?? []).concat(effect.data.variants);
     display.label = effect.data.label || display.label;

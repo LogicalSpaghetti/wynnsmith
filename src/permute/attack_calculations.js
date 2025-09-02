@@ -263,7 +263,7 @@ function addAttackVariants(build) {
         const attack = build.attacks.find(attack => attack.internal_name === variant.attack);
 
         if (!attack)
-            build.variants.splice(build.variants.indexOf(variant), 1);
+            delete build.variants[key];
         else
             variant.damage = getVariantConversion(build, variant, attack);
     }

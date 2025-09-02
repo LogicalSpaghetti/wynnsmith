@@ -1,8 +1,8 @@
 # Focus
 ### Small
-1. Toggles needs to be read by input and added to builds.
-2. New/inherited internal names:
-	1. if new selected, give an input for it, otherwise hide the input
+1. All except Shaman effects haven't been updated.
+2. replace internal names with targeting an effect id
+	1. name selectors will clear up ambiguity
 2.  Add more than just abilities to the effect builder
 3. Melee display DPS and per-hit.
 ### Major

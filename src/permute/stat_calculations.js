@@ -75,12 +75,9 @@ function getClassEHp(build) {
 function calculateSpellCosts(build) {
     const spell_costs = build.spell_costs;
 
-    console.log(spell_costs)
-
     for (let i in spell_costs) {
         let cost = spell_costs[i];
 
-        console.log("hey!", 1 / 0.5 * build.sp_multipliers[SkillPointIndexes.Intelligence] / spMultipliers[150])
         cost *= 1 - (0.5 * (build.sp_multipliers[SkillPointIndexes.Intelligence] / spMultipliers[150]));
 
         cost += build.identifications["raw" + costNames[i] + "SpellCost"];
@@ -96,8 +93,6 @@ function calculateSpellCosts(build) {
 
     for (const data of build.spell_cost_multipliers)
         spell_costs[data.spell_number] *= data.cost_multiplier;
-
-    console.log(build.spell_costs);
 }
 
 function computeHpr(base, percent) {

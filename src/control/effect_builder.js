@@ -605,6 +605,8 @@ class EffectType {
                 return this.setupMasteryConfig();
             case "heal":
                 return this.setupHealConfig();
+            case "heal-variant":
+                return this.setupHealVariantConfig();
             case "resistance":
                 return this.setupResistanceConfig();
             case "team-multiplier":
@@ -652,60 +654,29 @@ class EffectType {
     setupConversionConfig() {
         const holder = document.createElement("div");
 
-        holder.appendChild(document.createTextNode("Internal Name: "));
-        const nameInput = holder.appendChild(document.createElement("input"));
-        nameInput.value = this.data.internal_name ?? "";
-        nameInput.addEventListener("change", () => setData(this));
+        const damage = this.addSingleNodeSelect(
+            this.addDiv(holder), this.effect, setData, "conv", "Modifies Attack: ", this.data.id, true, this.effect.id);
 
-        holder.appendChild(document.createElement("br"));
+        const type = this.addSelect(this.addDiv(holder), setData, "Conversion Type: ", this.data.type, {
+            "Inherited": "",
+            "Spell": "Spell",
+            "Main Attack": "MainAttack"
+        });
 
-        holder.appendChild(document.createTextNode("Conversion Type: "));
-        const convType = holder.appendChild(document.createElement("select"));
-        convType.innerHTML = "<option value=''>Inherited</option><option value='Spell'>Spell</option><option value='MainAttack'>Main Attack</option>";
-        convType.value = this.data.type ?? "";
-        convType.addEventListener("change", () => setData(this));
+        const isMelee = this.addSelect(this.addDiv(holder), setData, "Is Left Click: ", this.data.is_melee, {
+            "Inherited/False": "",
+            "True": "true"
+        });
 
-        holder.appendChild(document.createElement("br"));
+        const isIndirect = this.addSelect(this.addDiv(holder), setData, "Is Indirect Damage: ", this.data.is_indirect, {
+            "Inherited/False": "",
+            "True": "true"
+        });
 
-        holder.appendChild(document.createTextNode("Is Left Click: "));
-        const isMelee = holder.appendChild(document.createElement("select"));
-        isMelee.innerHTML = "<option value=''>Inherited/False</option><option value='true'>True</option>";
-        isMelee.value = this.data.is_melee ?? "";
-        isMelee.addEventListener("change", () => setData(this));
+        const extraHits = this.addTextInput(this.addDiv(holder), setData, "Extra Hits: ", this.data.extra_hits, "0");
 
-        holder.appendChild(document.createElement("br"));
-
-        holder.appendChild(document.createTextNode("Is Indirect Damage: "));
-        const isIndirect = holder.appendChild(document.createElement("select"));
-        isIndirect.innerHTML = "<option value=''>Inherited/False</option><option value='true'>True</option>";
-        isIndirect.value = this.data.is_indirect ?? "";
-        isIndirect.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createElement("br"));
-
-        holder.appendChild(document.createTextNode("Extra Hits: "));
-        const extraHits = holder.appendChild(document.createElement("input"));
-        extraHits.placeholder = "0";
-        extraHits.value = this.data.extra_hits ?? "";
-        extraHits.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createElement("br"));
-
-        holder.appendChild(document.createTextNode("Frequency: "));
-        const frequency = holder.appendChild(document.createElement("input"));
-        frequency.placeholder = "N/A";
-        frequency.value = this.data.frequency ?? "";
-        frequency.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createElement("br"));
-
-        holder.appendChild(document.createTextNode("Duration: "));
-        const duration = holder.appendChild(document.createElement("input"));
-        duration.placeholder = "N/A";
-        duration.value = this.data.duration ?? "";
-        duration.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createElement("br"));
+        const frequency = this.addTextInput(this.addDiv(holder), setData, "Frequency: ", this.data.frequency, "N/A");
+        const duration = this.addTextInput(this.addDiv(holder), setData, "Duration: ", this.data.duration, "N/A");
 
         const conversionHolder = holder.appendChild(document.createElement("div"));
         conversionHolder.appendChild(document.createTextNode("Conversion: "));
@@ -755,15 +726,16 @@ class EffectType {
 
 
         function setData(self) {
-            const result = {};
+            const result = {
+                id: damage()
+            };
 
-            result.internal_name = nameInput.value;
-            if (convType.value) result.type = convType.value;
-            if (isMelee.value) result.is_melee = isMelee.value === "true";
-            if (isIndirect.value) result.is_indirect = isIndirect.value === "true";
-            if (extraHits.value) result.extra_hits = parseInt(extraHits.value);
-            if (duration.value) result.duration = parseFloat(duration.value);
-            if (frequency.value) result.frequency = parseFloat(frequency.value);
+            if (type()) result.type = type();
+            if (isMelee()) result.is_melee = true;
+            if (isIndirect()) result.is_indirect = true;
+            if (extraHits()) result.extra_hits = parseInt(extraHits());
+            if (frequency()) result.frequency = parseFloat(frequency());
+            if (duration()) result.duration = parseFloat(duration());
             if (conversionInputs.find(input => input.value !== "" && input.value !== "0"))
                 result.conversion = conversionInputs.map(input => parseFloat(input.value) || 0);
 
@@ -777,59 +749,37 @@ class EffectType {
     setupVariantConfig() {
         const holder = document.createElement("div");
 
-        holder.appendChild(document.createTextNode("Display Label: "));
-        const damageLabel = holder.appendChild(document.createElement("input"));
-        damageLabel.placeholder = "i.e. \"Total Damage\"";
-        damageLabel.value = this.data.label ?? "";
-        damageLabel.addEventListener("change", () => setData(this));
+        const label = this.addTextInput(this.addDiv(holder), setData, "Display Label: ", this.data.label, "i.e. \"Total Damage\"");
 
-        holder.appendChild(document.createElement("br"));
+        const variantType = this.addSelect(this.addDiv(holder), setData, "Variant Type: ", this.data.type ?? "hit", {
+            "Single": "hit",
+            "Multi-hit Total": "multi",
+            "DPS": "dps",
+            "Total": "total",
+            "Scaling Multi-hit": "scaling-multi",
+            "Per-hit Modifier": "hit-modifier"
+            // TODO:
+            //  Totemic Shatter, (8x)/Hymn of Hate, (0.5x)
+            //  should reference another variant, and not reference an attack.
+            //    hide the attack div and show a variant div
+        });
 
-        holder.appendChild(document.createTextNode("Internal Name: "));
-        const variantName = holder.appendChild(document.createElement("input"));
-        variantName.value = this.data.internal_name ?? "";
-        variantName.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createElement("br"));
-
-        holder.appendChild(document.createTextNode("Variant Type: "));
-        const variantSelect = holder.appendChild(document.createElement("select"));
-        variantSelect.innerHTML =
-            "<option value='hit'>Single</option>" +
-            "<option value='multi'>Multi-hit Total</option>" +
-            "<option value='dps'>DPS</option>" +
-            "<option value='total'>Total</option>" +
-            "<option value='scaling-multi'>Scaling Multi-hit</option>" +
-            "<option value='hit-modifier'>Per-hit Modifier</option>";
-        variantSelect.value = this.data.type ?? "hit";
-        variantSelect.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createElement("br"));
-
-        const attack = this.addSingleNodeSelect(
-            holder, this.effect, setData, "conv", "Attack:", false, this.data.attack);
-
-        const secondAttackContainer = holder.appendChild(document.createElement("div"));
-
-        secondAttackContainer.appendChild(document.createTextNode("Second Attack: "));
-        const secondAttack = secondAttackContainer.appendChild(document.createElement("input"));
-        secondAttack.placeholder = "internal name";
-        secondAttack.value = this.data.second_attack ?? "";
-        secondAttack.addEventListener("change", () => setData(this));
-
+        const attackDiv = this.addDiv(holder);
+        const attack = this.addSingleNodeSelect(attackDiv, this.effect, setData, "conv", "Attack:", this.data.attack, false);
+        const secondAttackDiv = this.addDiv(holder);
+        const secondAttack = this.addSingleNodeSelect(secondAttackDiv, this.effect, setData, "conv", "Scale-off Attack:", this.data.second_attack, false);
 
         function setData(self) {
             self.data = {
-                type: variantSelect.value,
-                internal_name: variantName.value,
-                label: damageLabel.value,
-                attack: attack.value
+                type: variantType(),
+                label: label(),
+                attack: attack()
             };
 
-            if (variantSelect.value === "scaling-multi" || variantSelect.value === "scaling-multi") {
-                self.data.second_attack = secondAttack.value;
-                secondAttackContainer.style.display = "block";
-            } else secondAttackContainer.style.display = "none";
+            if (variantType() === "scaling-multi" || variantType() === "scaling-multi") {
+                self.data.second_attack = secondAttack();
+                secondAttackDiv.style.display = "block";
+            } else secondAttackDiv.style.display = "none";
         }
 
         setData(this);
@@ -839,153 +789,51 @@ class EffectType {
     setupDisplayConfig() {
         const holder = document.createElement("div");
 
-        holder.appendChild(document.createTextNode("Internal Name: "));
-        const internalName = holder.appendChild(document.createElement("input"));
-        internalName.placeholder = "internal_name";
-        internalName.value = this.data.internal_name ?? "";
-        internalName.addEventListener("change", () => setData(this));
+        const name = this.addTextInput(this.addDiv(holder), setData, "Display Name: ", this.data.name ?? "", "Name");
 
-        holder.appendChild(document.createElement("br"));
+        const spellHolder = this.addDiv(holder);
+        const shiftHolder = this.addDiv(holder);
 
-        holder.appendChild(document.createTextNode("Display Name: "));
-        const displayName = holder.appendChild(document.createElement("input"));
-        displayName.placeholder = "Name";
-        displayName.value = this.data.name ?? "";
-        displayName.addEventListener("change", () => setData(this));
+        const spell = this.addSelect(spellHolder, setData, "Spell Cast: ", this.data.spell ?? "", {
+            "-none-": "",
+            "1st Spell": "0",
+            "2nd Spell": "1",
+            "3rd Spell": "2",
+            "4th Spell": "3"
+        }, shiftHolder);
 
-        holder.appendChild(document.createElement("br"));
+        const isShift = this.addSelect(shiftHolder, setData, "Is Shift Spell: ", this.data.is_shift ?? "", {
+            "false": "",
+            "true": "true"
+        });
 
-        const spellDiv = holder.appendChild(document.createElement("div"));
+        const variants = this.addMultiNodeSelector(this.addDiv(holder),
+            this.effect, setData, "variant", "Variants: ", this.data.variants ?? []);
 
-        spellDiv.append("Spell Cast: ");
-        const spellSelect = spellDiv.appendChild(document.createElement("select"));
-        spellSelect.innerHTML =
-            "<option value=''>-none-</option>" +
-            "<option value='0'>1st Spell</option>" +
-            "<option value='1'>2nd Spell</option>" +
-            "<option value='2'>3rd Spell</option>" +
-            "<option value='3'>4th Spell</option>";
-        spellSelect.value = this.data.spell ?? "";
-        spellSelect.addEventListener("change", () => setData(this));
+        const damage = this.addTextInput(this.addDiv(holder), setData, "Damage Label: ", this.data.label ?? "", "i.e. \"Total Damage\"");
 
-        const shiftHolder = holder.appendChild(document.createElement("div"));
+        const parent = this.addSingleNodeSelect(
+            this.addDiv(holder), this.effect, setData, "display", "Parent Display:", this.data.parent ?? "", true);
 
-        shiftHolder.appendChild(document.createTextNode("Shift Spell: "));
-        const isShift = shiftHolder.appendChild(document.createElement("select"));
-        isShift.innerHTML =
-            "<option value=''>false</option>" +
-            "<option value='true'>true</option>";
-        isShift.value = this.data.is_shift ?? "";
-        isShift.addEventListener("change", () => setData(this));
-
-        const newVariants = this.addMultiNodeSelector(holder, this.effect, setData, "variant", "Variants:", this.data.variants ?? "");
-
-        holder.appendChild(document.createElement("br"));
-
-        holder.appendChild(document.createTextNode("Damage Label: "));
-        const damageLabel = holder.appendChild(document.createElement("input"));
-        damageLabel.placeholder = "i.e. \"Total Damage\"";
-        damageLabel.value = this.data.label ?? "";
-        damageLabel.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createElement("br"));
-
-        const parentDisplay = this.addSingleNodeSelect(
-            holder, this.effect, setData, "display", "Parent:", true, this.data.parent ?? "");
+        const heals = this.addMultiNodeSelector(this.addDiv(holder),
+            this.effect, setData, "heal", "Heal Variants: ", this.data.heals ?? []);
 
 
         function setData(self) {
-            shiftHolder.style.display = spellSelect.value === "" ? "none" : "block";
-
             self.data = {
-                internal_name: internalName.value,
-                name: displayName.value,
-                variants: newVariants(),
-                label: damageLabel.value
+                name: name(),
+                variants: variants(),
+                label: damage()
             };
 
-            if (spellSelect.value) self.data.spell = spellSelect.value;
-            if (isShift.value) self.data.is_shift = isShift.value === "true";
-            if (parentDisplay.value) self.data.parent = parentDisplay.value;
+            if (heals().length) self.data.heals = heals();
+            if (spell()) self.data.spell = spell();
+            if (isShift()) self.data.is_shift = isShift() === "true";
+            if (parent()) self.data.parent = parent();
         }
 
         setData(this);
         return holder;
-    }
-
-    addSingleNodeSelect(holder, thisEffect, refreshFunction, type, label, isOptional, initialValue) {
-        const possibleValues = this.tree.getEffectsOfType(type).filter(effect => effect !== thisEffect);
-
-        holder.append(label);
-
-        const select = holder.appendChild(document.createElement("select"));
-        const initialOption = document.createElement("option");
-        initialOption.value = '';
-        initialOption.innerText = isOptional ? "-none-" : "-select-";
-        select.appendChild(initialOption);
-
-        possibleValues.forEach(effect => select.appendChild(this.getEffectAsOption(effect)));
-
-        if (initialValue) select.value = initialValue;
-
-        select.addEventListener("change", () => refreshFunction(this));
-
-        return select;
-    }
-
-    addMultiNodeSelector(holder, thisEffect, refreshFunction, type, label, selectedValues) {
-        const possibleValues = (type ? this.tree.getEffectsOfType(type) : this.tree.effects).filter(effect => effect !== thisEffect);
-
-        holder.append(label);
-
-        const selected = holder.appendChild(document.createElement("span"));
-        holder.appendChild(document.createElement("br"));
-        const expandButton = holder.appendChild(document.createElement("button"));
-        const multiSelector = holder.appendChild(document.createElement("div"));
-        multiSelector.style.display = "none";
-
-        expandButton.textContent = "⮜";
-        expandButton.addEventListener("click", () => {
-            const toggle = expandButton.dataset.show !== "true";
-            expandButton.dataset.show = String(toggle);
-            expandButton.textContent = toggle ? "⮟" : "⮜";
-            multiSelector.style.display = toggle ? "block" : "none";
-        });
-
-        const checkboxes = [];
-
-        for (const effect of possibleValues) {
-            if (effect === thisEffect) continue;
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.dataset.id = effect.id;
-            checkbox.dataset.name = effect.name;
-            checkbox.checked = selectedValues.includes(effect.id);
-            checkbox.addEventListener("change", () => {
-                refreshFunction(this);
-                refreshSelected();
-            });
-            const checkboxHolder = multiSelector.appendChild(document.createElement("div"));
-            checkboxHolder.append(checkbox, effect.name);
-            checkboxes.push(checkbox);
-        }
-
-        const refreshSelected = function () {
-            selected.textContent = " " + checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.name).join(", ");
-        };
-        refreshSelected();
-
-        return function () {
-            return checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.id);
-        };
-    }
-
-
-    getEffectAsOption(effect) {
-        const option = document.createElement("option");
-        option.value = effect.data.data.internal_name; // TODO: relace with effect id once all internal_names have been converted to selectors
-        option.innerText = effect.name;
-        return option;
     }
 
     setupMasteryConfig() {
@@ -1069,6 +917,10 @@ class EffectType {
 
         setData(this);
         return holder;
+    }
+
+    setupHealVariantConfig() {
+        // TODO
     }
 
     setupResistanceConfig() {
@@ -1245,4 +1097,122 @@ class EffectType {
         setData(this);
         return holder;
     }
+
+    addDiv(holder) {
+        return holder.appendChild(document.createElement("div"));
+    }
+
+    addSingleNodeSelect(div, thisEffect, refreshFunction, type, label, initialValue, isOptional = false, defaultValue = "") {
+        const possibleValues = this.tree.getEffectsOfType(type).filter(effect => effect !== thisEffect);
+
+        div.append(label);
+
+        const select = div.appendChild(document.createElement("select"));
+        const initialOption = document.createElement("option");
+        initialOption.value = defaultValue;
+        initialOption.innerText = isOptional ? "-none-" : "-select-";
+        select.appendChild(initialOption);
+
+        possibleValues.forEach(effect => select.appendChild(this.getEffectAsOption(effect)));
+
+        if (initialValue) select.value = initialValue;
+
+        select.addEventListener("change", () => refreshFunction(this));
+
+        return function () {
+            return select.value;
+        };
+    }
+
+    getEffectAsOption(effect) {
+        const option = document.createElement("option");
+        option.value = effect.id;
+        option.innerText = effect.name;
+        return option;
+    }
+
+    addMultiNodeSelector(div, thisEffect, refreshFunction, type, label, selectedValues) {
+        div.append(label);
+
+        const expandButton = div.appendChild(document.createElement("button"));
+        const selected = div.appendChild(document.createElement("span"));
+        div.appendChild(document.createElement("br"));
+        const multiSelector = div.appendChild(document.createElement("div"));
+        multiSelector.style.display = "none";
+
+        expandButton.textContent = "⮜";
+        expandButton.addEventListener("click", () => {
+            const toggle = expandButton.dataset.show !== "true";
+            expandButton.dataset.show = String(toggle);
+            expandButton.textContent = toggle ? "⮟" : "⮜";
+            multiSelector.style.display = toggle ? "block" : "none";
+        });
+
+        const checkboxes = [];
+
+        const possibleValues = (type ? this.tree.getEffectsOfType(type) : this.tree.effects).filter(effect => effect !== thisEffect);
+        for (const effect of possibleValues) {
+            if (effect === thisEffect) continue;
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.dataset.id = effect.id;
+            checkbox.dataset.name = effect.name;
+            checkbox.checked = selectedValues.includes(effect.id);
+            checkbox.addEventListener("change", () => {
+                refreshFunction(this);
+                refreshSelected();
+            });
+            const checkboxHolder = multiSelector.appendChild(document.createElement("div"));
+            checkboxHolder.append(checkbox, effect.name);
+            checkboxes.push(checkbox);
+        }
+
+        const refreshSelected = function () {
+            selected.textContent = " " + checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.name).join(", ");
+        };
+        refreshSelected();
+
+        return function () {
+            return checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.id);
+        };
+    }
+
+    addTextInput(holder, refreshFunction, label, value, placeholder = "") {
+        const div = holder.appendChild(document.createElement("div"));
+
+        div.append(label);
+        const input = div.appendChild(document.createElement("input"));
+        input.placeholder = placeholder;
+        if (value) input.value = value;
+        input.addEventListener("change", () => refreshFunction(this));
+
+        return function () {
+            return input.value;
+        };
+    }
+
+    addSelect(div, refreshFunction, label, value, values, elementToHide = undefined, hideWhenEmpty = true) {
+        div.append(label);
+        const select = div.appendChild(document.createElement("select"));
+        select.innerHTML = this.objectToOptions(values).join("");
+        if (value) select.value = value;
+        select.addEventListener("change", () => {
+            refreshFunction(this);
+            hideElement();
+        });
+
+        function hideElement() {
+            if (elementToHide) elementToHide.style.display = hideWhenEmpty === (select.value !== "") ? "block" : "none";
+        }
+
+        hideElement();
+        return function () {
+            return select.value;
+        };
+    }
+
+    objectToOptions(object) {
+        return Object.keys(object).map(key => `<option value="${object[key]}">${key}</option>`);
+    }
 }
+
