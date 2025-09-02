@@ -806,11 +806,8 @@ class EffectType {
 
         holder.appendChild(document.createElement("br"));
 
-        holder.appendChild(document.createTextNode("Attack Name: "));
-        const attack = holder.appendChild(document.createElement("input"));
-        attack.placeholder = "internal name";
-        attack.value = this.data.attack ?? "";
-        attack.addEventListener("change", () => setData(this));
+        const attack = this.addSingleNodeSelect(
+            holder, this.effect, setData, "conv", "Attack:", false, this.data.attack);
 
         const secondAttackContainer = holder.appendChild(document.createElement("div"));
 
@@ -876,9 +873,9 @@ class EffectType {
         shiftHolder.appendChild(document.createTextNode("Shift Spell: "));
         const isShift = shiftHolder.appendChild(document.createElement("select"));
         isShift.innerHTML =
-            "<option value='false'>false</option>" +
+            "<option value=''>false</option>" +
             "<option value='true'>true</option>";
-        isShift.value = this.data.is_shift ?? "false";
+        isShift.value = this.data.is_shift ?? "";
         isShift.addEventListener("change", () => setData(this));
 
         const newVariants = this.addMultiNodeSelector(holder, this.effect, setData, "variant", "Variants:", this.data.variants ?? "");
@@ -893,8 +890,8 @@ class EffectType {
 
         holder.appendChild(document.createElement("br"));
 
-        const parentDisplay =
-            this.addSingleNodeSelect(holder, this.effect, setData, "display", "Parent:", true, this.data.parent ?? "");
+        const parentDisplay = this.addSingleNodeSelect(
+            holder, this.effect, setData, "display", "Parent:", true, this.data.parent ?? "");
 
 
         function setData(self) {
@@ -908,10 +905,8 @@ class EffectType {
             };
 
             if (spellSelect.value) self.data.spell = spellSelect.value;
-            if (spellSelect.value) self.data.is_shift = isShift.value === "true";
+            if (isShift.value) self.data.is_shift = isShift.value === "true";
             if (parentDisplay.value) self.data.parent = parentDisplay.value;
-
-            console.log(self.data);
         }
 
         setData(this);
@@ -922,14 +917,13 @@ class EffectType {
         const possibleValues = this.tree.getEffectsOfType(type).filter(effect => effect !== thisEffect);
 
         holder.append(label);
-        const select = holder.appendChild(document.createElement("select"));
 
-        if (isOptional) {
-            const option = document.createElement("option");
-            option.value = '';
-            option.innerText = "-none-";
-            select.appendChild(option);
-        }
+        const select = holder.appendChild(document.createElement("select"));
+        const initialOption = document.createElement("option");
+        initialOption.value = '';
+        initialOption.innerText = isOptional ? "-none-" : "-select-";
+        select.appendChild(initialOption);
+
         possibleValues.forEach(effect => select.appendChild(this.getEffectAsOption(effect)));
 
         if (initialValue) select.value = initialValue;
@@ -989,7 +983,7 @@ class EffectType {
 
     getEffectAsOption(effect) {
         const option = document.createElement("option");
-        option.value = effect.data.data.internal_name;
+        option.value = effect.data.data.internal_name; // TODO: relace with effect id once all internal_names have been converted to selectors
         option.innerText = effect.name;
         return option;
     }

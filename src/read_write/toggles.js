@@ -3,8 +3,6 @@ function getActiveToggles() {
     const toggles = Array.from(document.querySelector("#effect_toggles").querySelectorAll(".toggle"));
     if (toggles.length < 1) return [];
 
-    console.log(toggles)
-
     return toggles
         .filter(toggle => toggle.classList.contains("toggleOn"))
         .map(toggle => toggle.dataset.toggle_name);

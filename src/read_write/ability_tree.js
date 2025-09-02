@@ -383,12 +383,9 @@ function getValidDirections(tree, sourceIndex, sourceDirection, nodeIndex) {
 
         let destIndex = getDestinationForDirection(tree, sourceIndex, direction);
 
-
-        if ((direction === "left" || direction === "right")) {
-            console.log((nodeIndex), (destIndex))
+        if ((direction === "left" || direction === "right"))
             if (getRow(nodeIndex) !== getRow(destIndex))
                 return false;
-        }
 
         const destCell = tree.cellMap[destIndex];
 

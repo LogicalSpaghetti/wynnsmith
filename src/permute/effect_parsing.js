@@ -154,7 +154,6 @@ function sumConversions(conversionA, conversionB) {
 
 function parseVariantEffect(build, effect, effectId) {
     const variant = build.variants[effectId] = {};
-    console.log(variant);
     variant.type = effect.data.type;
     variant.attack = effect.data.attack;
     variant.label = effect.data.label;

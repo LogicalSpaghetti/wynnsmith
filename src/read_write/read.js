@@ -63,11 +63,10 @@ function getEquipOrderInformation(items) {
 
     const subEquipOrder = getEquipOrder(providerRequirers, initialProvided);
     const requiredSPFromPRs = getEquipOrderRequirement(providerRequirers, subEquipOrder, initialProvided);
-    console.log(requiredSPFromPRs);
+
     const providedSP = addProvided(providerRequirers, initialProvided);
-    console.log(providedSP);
+
     const requiredSP = addRequirements(requiredSPFromPRs, providedSP, unhelpfulRequirements);
-    console.log(requiredSP);
 
     const equipOrder = mergeEquipOrder(exclusiveProviders, providerRequirers, exclusiveRequirers, subEquipOrder);
 

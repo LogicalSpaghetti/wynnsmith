@@ -48,10 +48,9 @@ function healthCalculations(build) {
         / getEHpFactor(build)
         / ((1 - defence) * (1 - agility) + (0.1 * agility));
 
-    build.stats.ehprPercent = build.stats.healthRegen / build.stats.health;
+    build.stats.ehprPercent = build.stats.healthRegen / 4 / build.stats.health;
 
     build.stats.lsPercent = build.identifications.lifeSteal / 3 / build.stats.health;
-    console.log(build.stats.lsPercent)
 
     calculateHealing(build);
 }
@@ -76,9 +75,12 @@ function getClassEHp(build) {
 function calculateSpellCosts(build) {
     const spell_costs = build.spell_costs;
 
+    console.log(spell_costs)
+
     for (let i in spell_costs) {
         let cost = spell_costs[i];
 
+        console.log("hey!", 1 / 0.5 * build.sp_multipliers[SkillPointIndexes.Intelligence] / spMultipliers[150])
         cost *= 1 - (0.5 * (build.sp_multipliers[SkillPointIndexes.Intelligence] / spMultipliers[150]));
 
         cost += build.identifications["raw" + costNames[i] + "SpellCost"];
@@ -94,6 +96,8 @@ function calculateSpellCosts(build) {
 
     for (const data of build.spell_cost_multipliers)
         spell_costs[data.spell_number] *= data.cost_multiplier;
+
+    console.log(build.spell_costs);
 }
 
 function computeHpr(base, percent) {

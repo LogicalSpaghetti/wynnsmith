@@ -31,7 +31,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "cost",
-                "data": {"spell_number": 2, "cost": 45, "is_base_spell": false}
+                "data": {"spell_number": 2, "cost": 45, "is_base_spell": true}
             },
             "3": {
                 "name": "Cheaper Arrow Bomb I",
@@ -58,7 +58,40 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "variant",
-                "data": {"type": "dps", "label": "DPS", "internal_name": "melee", "attack": "melee"}
+                "data": {"type": "dps", "internal_name": "melee", "label": "DPS", "attack": "melee"}
+            },
+            "6": {
+                "name": "Melee Display",
+                "toggle_name": "",
+                "parents": [],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {"internal_name": "melee", "name": "Melee", "variants": ["5"], "label": "DPS"}
+            },
+            "7": {
+                "name": "Arrow Bomb Variant",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "1"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "hit", "internal_name": "", "label": "Total Damage", "attack": "arrow_bomb"}
+            },
+            "8": {
+                "name": "Arrow Bomb Display",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "1"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {
+                    "internal_name": "arrow_bomb",
+                    "name": "Arrow Bomb",
+                    "variants": ["7"],
+                    "label": "Total Damage",
+                    "spell": "2"
+                }
             }
         }
     },
@@ -235,14 +268,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "display",
-                "data": {
-                    "internal_name": "totem",
-                    "name": "Totem",
-                    "variants": ["2"],
-                    "label": "DPS",
-                    "spell": "0",
-                    "is_shift": false
-                }
+                "data": {"internal_name": "totem", "name": "Totem", "variants": ["2"], "label": "DPS", "spell": "0"}
             },
             "4": {
                 "name": "Totem Smash Attack",
