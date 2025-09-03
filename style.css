@@ -98,12 +98,12 @@ label {
     border: 2px solid #230158;
     background-color: #110111;
     color: white;
-    font-family: minecraft, mojangles, unifont, unifontEmoji, serif;
-    text-shadow: 0.125rem 0.125rem 0 color-mix(in hsl, currentColor 24%, black);
-    min-height: 1em;
+    font-family: minecraft, icons, mojangles, unifont, unifontEmoji, serif;
+    text-shadow: 0.125rem 0.125rem 0 color-mix(in srgb, currentColor 24%, black);
+    min-height: 30px;
     border-radius: 4px;
-    word-spacing: 0.1rem;
-    letter-spacing: 0.02rem;
+    word-spacing: 0.09rem;
+    letter-spacing: 0.03rem;
     text-underline-offset: 0.1875rem;
     line-height: 1.25rem;
 }
@@ -536,55 +536,59 @@ td {
     font-size: initial;
 }
 
+
 @font-face {
-    font-family: "minecraft";
-    src: url("font/merged.woff");
+    font-family: 'minecraft';
+    src: url('font/minecraft.woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
-    font-family: "minecraft";
-    src: url("font/mergedbold.woff");
+    font-family: 'icons';
+    src: url('font/icons.woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'minecraft';
+    src: url('font/minecraft_bold.woff');
     font-weight: 900;
     font-style: normal;
     font-display: block;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
-    font-family: "mojangles";
-    src: url("font/mojangles.otf");
+    font-family: 'mojangles';
+    src: url('font/mojangles.otf');
     font-weight: normal;
     font-style: normal;
     font-display: block;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
-    font-family: "unifont";
-    src: url("font/unifont.otf");
+    font-family: 'unifont';
+    src: url('font/unifont.otf');
     font-weight: normal;
     font-style: normal;
     font-display: block;
-    text-rendering: optimizeLegibility;
 }
 
 @font-face {
-    font-family: "unifontEmoji";
-    src: url("font/unifontEmoji.otf");
+    font-family: 'unifontEmoji';
+    src: url('font/unifontEmoji.otf');
     font-weight: normal;
     font-style: normal;
     font-display: block;
-    text-rendering: optimizeLegibility;
 }
 
 .font-minecraft {
-    font-family: minecraft, mojangles, unifont, unifontEmoji, sans-serif;
+    font-family: minecraft, icons, mojangles, unifont, unifontEmoji, sans-serif;
 }
 
 .font-default {
-    font-family: none;
+    font-family: sans-serif;
 }
