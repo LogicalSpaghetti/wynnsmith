@@ -758,16 +758,14 @@ class EffectType {
             "Total": "total",
             "Scaling Multi-hit": "scaling-multi",
             "Per-hit Modifier": "hit-modifier"
-            // TODO:
-            //  Totemic Shatter, (8x)/Hymn of Hate, (0.5x)
-            //  should reference another variant, and not reference an attack.
-            //    hide the attack div and show a variant div
         });
 
         const attackDiv = this.addDiv(holder);
         const attack = this.addSingleNodeSelect(attackDiv, this.effect, setData, "conv", "Attack:", this.data.attack, false);
         const secondAttackDiv = this.addDiv(holder);
         const secondAttack = this.addSingleNodeSelect(secondAttackDiv, this.effect, setData, "conv", "Scale-off Attack:", this.data.second_attack, false);
+
+        const multiplier = this.addTextInput(this.addDiv(holder), setData, "Multiplier: ", this.data.multiplier, "1");
 
         function setData(self) {
             self.data = {
@@ -776,6 +774,7 @@ class EffectType {
                 attack: attack()
             };
 
+            if (multiplier()) self.data.multiplier = multiplier();
             if (variantType() === "scaling-multi" || variantType() === "scaling-multi") {
                 self.data.second_attack = secondAttack();
                 secondAttackDiv.style.display = "block";

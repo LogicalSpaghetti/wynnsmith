@@ -158,6 +158,7 @@ function parseVariantEffect(build, effect, effectId) {
     variant.attack = effect.data.attack;
     variant.label = effect.data.label;
     if (effect.data.second_attack) variant.second_attack = effect.data.second_attack;
+    if (effect.data.multiplier) variant.multiplier = effect.data.multiplier;
 }
 
 function parseDisplayEffect(build, effect, effectId) {

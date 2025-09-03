@@ -338,6 +338,24 @@ const classEffects = {
                 "requires_all": true,
                 "type": "conv",
                 "data": {"id": "0", "conversion": [4, 0, 0, 0, 0, 0]}
+            },
+            "11": {
+                "name": "Shatter Variant",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "46"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "variant",
+                "data": {"type": "dps", "label": "Shatter Damage", "attack": "0", "multiplier": "8"}
+            },
+            "12": {
+                "name": "Shatter Display",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "46"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "display",
+                "data": {"name": "Totemic Shatter", "variants": ["11"], "label": "Shatter Damage", "parent": "3"}
             }
         }
     },

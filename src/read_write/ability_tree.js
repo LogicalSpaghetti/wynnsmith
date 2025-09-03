@@ -332,32 +332,27 @@ const inverseDirs = {
     up: "down", down: "up", left: "right", right: "left"
 };
 
-const dirIndexes = {
-    up: 0, down: 1, left: 2, right: 3
-};
-
 function propagateHighlightFromNode(nodes, tree, nodeIndex) {
     propagateHighlightFrom(nodes, tree, nodeIndex, undefined, nodeIndex);
 }
 
-function propagateHighlightTo(nodes, tree, destIndex, sourceDir, sourceNodeIndex) {
+function propagateHighlightTo(nodes, tree, destIndex, sourceDir, nodeIndex) {
     const cell = tree.cellMap[destIndex];
     const node = nodes[cell.abilityID];
     if (node) {
         node.reachable = true;
         return node.selected;
-    } else return propagateHighlightFrom(nodes, tree, destIndex, sourceDir, sourceNodeIndex);
+    } else return propagateHighlightFrom(nodes, tree, destIndex, sourceDir, nodeIndex);
 }
 
 function propagateHighlightFrom(nodes, tree, sourceIndex, sourceDir, nodeIndex) {
-    const sourceCell = tree.cellMap[sourceIndex];
     const element = getElementFromMapIndex(sourceIndex);
     const highlights = Array.from(element.dataset.highlights);
 
     for (const direction of getValidDirections(tree, sourceIndex, sourceDir, nodeIndex)) {
         if (propagateHighlightTo(nodes, tree, getDestinationForDirection(tree, sourceIndex, direction), direction, nodeIndex)) {
-            highlights[dirIndexes[direction]] = 2;
-            highlights[dirIndexes[inverseDirs[sourceDir]]] = 2;
+            highlights[dirs.indexOf(direction)] = String(2);
+            highlights[dirs.indexOf(inverseDirs[sourceDir])] = String(2);
         }
     }
 

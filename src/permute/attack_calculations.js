@@ -270,29 +270,41 @@ function addAttackVariants(build) {
 }
 
 function getVariantConversion(build, variant, attack) {
-    const secondAttack = build.attacks.find(attack => attack.internal_name === variant.second_attack) ?? {extra_hits: -1};
+    const secondAttack = build.attacks.find(attack => attack.internal_name === variant.second_attack) ?? {extra_hits: 0};
     // TODO: secondAttack.extraHits should never be called if secondAttack doesn't exist. pass build and get second attack in the next function?
-    // (will matter greatly for Winded)
-    switch (variant.type) {
-        case "hit":
-            return attack.damage;
-        case "multi":
-            return multiplyDamageByHits(attack.damage, attack.extra_hits);
-        case "dps":
-            return multiplyDamageByDPS(build, attack);
-        case "total":
-            return multiplyDamageOverTime(build, attack);
-        case "scaling-multi":
-            return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack.extra_hits);
-        case "hit-modifier":
-            return multiplyDamageByHits(attack.damage, secondAttack.extra_hits);
-        default:
-            throw new Error(`invalid variant type: ${variant.type}`);
+    //  (will matter greatly for Winded)
+
+
+    const damage = getBeforeMultiplying();
+
+    return variant.multiplier ? multiplyDamageByMultiplier(damage, variant.multiplier) : damage;
+
+    function getBeforeMultiplying() {
+        switch (variant.type) {
+            case "hit":
+                return attack.damage;
+            case "multi":
+                return multiplyDamageByExtraHits(attack.damage, attack.extra_hits);
+            case "dps":
+                return multiplyDamageByDPS(build, attack);
+            case "total":
+                return multiplyDamageOverTime(build, attack);
+            case "scaling-multi":
+                return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack.extra_hits);
+            case "hit-modifier":
+                return multiplyDamageByExtraHits(attack.damage, secondAttack.extra_hits);
+            default:
+                throw new Error(`invalid variant type: ${variant.type}`);
+        }
     }
 }
 
-function multiplyDamageByHits(damage, extra_hits) {
-    return damage.map(extreme => extreme.map(x => x * (1 + (extra_hits ?? 0))));
+function multiplyDamageByMultiplier(damage, multiplier) {
+    return damage.map(extreme => extreme.map(x => x * multiplier));
+}
+
+function multiplyDamageByExtraHits(damage, extra_hits) {
+    return multiplyDamageByMultiplier(damage, (1 + (extra_hits ?? 0)));
 }
 
 function multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
@@ -300,17 +312,16 @@ function multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
     let multiplier = 0;
     for (let n = 1; n < total_hits - 1; n++) multiplier += Math.min(n, scaling_cap);
 
-    return damage.map(extreme => extreme.map(x => x * multiplier));
+    return multiplyDamageByMultiplier(damage, multiplier);
 }
 
 function multiplyDamageOverTime(build, attack) {
-    return multiplyDamageByHits(multiplyDamageByDPS(build, attack), attack.duration);
+    return multiplyDamageByMultiplier(multiplyDamageByDPS(build, attack), attack.duration);
 }
 
 function multiplyDamageByDPS(build, attack) {
-    return multiplyDamageByHits(attack.damage, attack.extra_hits).map(extreme => extreme.map(x =>
-        x * ((attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]] : (1 / attack.frequency))
-    ));
+    const multiplier = (attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]] : (1 / attack.frequency);
+    return multiplyDamageByMultiplier(multiplyDamageByExtraHits(attack.damage, attack.extra_hits), multiplier);
 }
 
 function zeroNegatives(build) {
