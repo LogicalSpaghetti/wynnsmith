@@ -7,15 +7,18 @@ function modifyIdentifications(build) {
     getMeleeAttackSpeed(build);
 }
 
+const radianceExcludedIds = Object.freeze([
+    "xpBonus", "lootBonus", "lootQuality", "gatherXpBonus", "gatherSpeed"
+]);
+
 // TODO: turn into an effect
 function radiance(build) {
-    // if (!build.toggles.includes("radiance")) return;
-    // const radiance = oddities.warrior.radiance;
-    // Object.keys(build.identifications).forEach((idName) => {
-    //     if (radiance.excludedIds.includes(idName)) return;
-    //     if (build.identifications[idName] <= 0) return;
-    //     build.identifications[idName] = Math.floor(build.identifications[idName] * (radiance.multiplier + Number.EPSILON));
-    // });
+    for (let radiance of build.id_multipliers) for (let idName in build.identifications) {
+        if (radianceExcludedIds.includes(idName)) continue;
+        if (build.identifications[idName] <= 0) continue;
+        const multiplier = (1 + radiance.multiplier / 100) + Number.EPSILON;
+        build.identifications[idName] = Math.floor(build.identifications[idName] * multiplier);
+    }
 }
 
 function addOtherIdSources(build) {
@@ -52,7 +55,7 @@ function applyExternalBuffs(build) {
 
 function includeTomes(build) {
     for (let tome of build.tomes) if (tome)
-        build.identifications = addIdsToObject(build.identifications, tome.identifications);
+        build.identifications = addIdsToObject(build.identifications, getItem(tome.name).identifications);
 }
 
 function includeCharms(build) {

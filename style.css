@@ -98,12 +98,12 @@ label {
     border: 2px solid #230158;
     background-color: #110111;
     color: white;
-    font-family: minecraft, icons, mojangles, unifont, unifontEmoji, serif;
+    font-family: minecraft, icons, mojangles, unifont, unifontEmoji, sans-serif;
     text-shadow: 0.125rem 0.125rem 0 color-mix(in srgb, currentColor 24%, black);
-    min-height: 30px;
+    min-height: 1rem;
     border-radius: 4px;
-    word-spacing: 0.09rem;
-    letter-spacing: 0.03rem;
+    word-spacing: 0.075rem;
+    letter-spacing: 0.025rem;
     text-underline-offset: 0.1875rem;
     line-height: 1.25rem;
 }
@@ -342,8 +342,8 @@ td {
 
 /*  */
 
-.full_center {
-    position: absolute;
+.full-center {
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

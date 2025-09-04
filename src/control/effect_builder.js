@@ -617,6 +617,8 @@ class EffectType {
                 return this.setupSpellCostConfig();
             case "cost-multiplier":
                 return this.setupSpellCostMultiplierConfig();
+            case "id-multiplier":
+                return this.setupPositiveIdMultiplier();
             default:
                 return this.emptyConfig();
         }
@@ -1097,6 +1099,21 @@ class EffectType {
         return holder;
     }
 
+    setupPositiveIdMultiplier() {
+        const holder = document.createElement("div");
+
+        const multiplier = this.addTextInput(holder, setData, "Percent multiplier: ", this.data.multiplier)
+
+        function setData(self) {
+            self.data = {
+                multiplier: parseFloat(multiplier()),
+            };
+        }
+
+        setData(this);
+        return holder;
+    }
+
     addDiv(holder) {
         return holder.appendChild(document.createElement("div"));
     }
@@ -1118,9 +1135,7 @@ class EffectType {
 
         select.addEventListener("change", () => refreshFunction(this));
 
-        return function () {
-            return select.value;
-        };
+        return () => select.value;
     }
 
     getEffectAsOption(effect) {
@@ -1171,9 +1186,7 @@ class EffectType {
         };
         refreshSelected();
 
-        return function () {
-            return checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.id);
-        };
+        return () => checkboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.dataset.id);
     }
 
     addTextInput(holder, refreshFunction, label, value, placeholder = "") {
@@ -1185,9 +1198,7 @@ class EffectType {
         if (value) input.value = value;
         input.addEventListener("change", () => refreshFunction(this));
 
-        return function () {
-            return input.value;
-        };
+        return () => input.value;
     }
 
     addSelect(div, refreshFunction, label, value, values, elementToHide = undefined, hideWhenEmpty = true) {
@@ -1205,9 +1216,7 @@ class EffectType {
         }
 
         hideElement();
-        return function () {
-            return select.value;
-        };
+        return () => select.value;
     }
 
     objectToOptions(object) {

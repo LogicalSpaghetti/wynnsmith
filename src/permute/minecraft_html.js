@@ -288,15 +288,15 @@ function getHoverTextForItem(item, invalidityText = "") {
 
     // todo: item set, i.e. Set: Morph
 
-    if (item.requirements?.quest) footer.add(`Quest Req: ${item.requirements.quest}`);
+    if (item.requirements?.quest) footer.add(`§7Quest Req: ${item.requirements.quest}`);
 
 
-    footer.add(`§8${wrapText(item.lore)}`);
+    if (item.lore) footer.add(`§8${wrapText(item.lore)}`);
 
     if (item.restrictions) footer.add("§c" +
-    item.restrictions === "untradable" ? "Untradable Item"
+    (item.restrictions === "untradable" ? "Untradable Item"
         : item.restrictions === "quest item" ? "Quest Item Only!"
-            : "Error! Unknown item restriction: " + item.restrictions);
+            : "Error! Unknown item restriction: " + item.restrictions));
 
     sections.add(footer);
 

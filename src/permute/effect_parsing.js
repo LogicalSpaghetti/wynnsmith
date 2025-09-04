@@ -22,6 +22,7 @@ EffectTypes = Object.freeze({
     TEAM_MULTIPLIER: "team-multiplier",
     COST: "cost",
     COST_MULTIPLIER: "cost-multiplier",
+    ID_MULTIPLIER: "id-multiplier",
 });
 
 function getAbilities(inputAbilities, weapon, equipment) {
@@ -81,6 +82,7 @@ function getSplitEffects(effects, toggles, wynnClass) {
         spell_costs: [0, 0, 0, 0],
         spell_cost_modifiers: [0, 0, 0, 0],
         spell_cost_multipliers: [],
+        id_multipliers: []
     };
 
     const effectData = classEffects[wynnClass].effects;
@@ -122,6 +124,9 @@ function getSplitEffects(effects, toggles, wynnClass) {
                 break;
             case EffectTypes.COST_MULTIPLIER:
                 parseSpellCostMultiplierEffect(splitEffects, effect);
+                break;
+            case EffectTypes.ID_MULTIPLIER:
+                parseIdMultiplierEffect(splitEffects, effect);
                 break;
             default:
                 throw new Error("Unknown effect type: " + effect.type + ", id: " + effectId);
@@ -213,6 +218,10 @@ function parseSpellCostEffect(build, effect) {
 
 function parseSpellCostMultiplierEffect(build, effect) {
     createUnnamedEffect(build.spell_cost_multipliers, effect.data);
+}
+
+function parseIdMultiplierEffect(build, effect) {
+    createUnnamedEffect(build.id_multipliers, effect.data)
 }
 
 function getOrCreateNamedEffect(effectArray, internal_name) {

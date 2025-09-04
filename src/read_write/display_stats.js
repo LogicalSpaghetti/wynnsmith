@@ -17,7 +17,7 @@ function displayBuildStats(build) {
         getStatDisplay("health", false, "Effective Hp", stats.ehp, "", true, true) +
         getStatDisplay("health", false, "EHp (no Agi)", stats.ehp_no_agi, "", true, true) +
         getStatDisplay("health", true, "Health Regen", stats.healthRegen, "/4s") +
-        getStatDisplay("health", false, "Effective HPR", stats.ehprPercent, "%", true, true) +
+        getStatDisplay("health", false, "Effective HPR", stats.ehprPercent, "%/s", true, true) +
         getStatDisplay("earth", true, "Earth Defence", stats["totalEarthDefence"]) +
         getStatDisplay("thunder", true, "Thunder Defence", stats["totalThunderDefence"]) +
         getStatDisplay("water", true, "Water Defence", stats["totalWaterDefence"]) +
@@ -31,7 +31,7 @@ function displayBuildStats(build) {
         getStatDisplay("water", true, "Total Max Mana", stats.maxMana, "", true, false, 100) +
         getStatDisplay("health", true, "Life Steal", ids.lifeSteal, "/3s") +
         getStatDisplay("health", false, "Life per Hit", stats.lifePerHit, "", true, true) +
-        getStatDisplay("health", false, "Max Life", stats.lsPercent, "%/s", true, true) +
+        getStatDisplay("health", false, "Effective Life Steal", stats.lsPercent, "%/s", true, true) +
         getStatDisplay("earth", false, "Poison", ids.poison, "/3s") +
         getStatDisplay("earth", false, "Thorns", ids.thorns, "%") +
         getStatDisplay("thunder", false, "Reflection", ids.reflection, "%") +

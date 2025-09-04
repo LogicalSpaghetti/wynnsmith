@@ -1,10 +1,17 @@
 # Focus
 ### Small
-1. All except Shaman effects haven't been updated.
-2. replace internal names with targeting an effect id
-	1. name selectors will clear up ambiguity
-2.  Add more than just abilities to the effect builder
-3. Melee display DPS and per-hit.
+1. Detailed damage
+2. Tome SP doesn't work
+	1. calc added SP per-build after Radiance applies.
+2. Dynamic node displays, (Archetype requirements, required ability)
+	1. Archetype highlighting
+3. Identification editing
+4. Small Tome selector
+	1. popup Zen-style text box when tab selected
+		1. tabbing from there cycles through aspects/tomes by icon
+		2. Escape or tabbing after the end closes and returns selection to the original element
+5.  Add more than just abilities to the effect builder
+6. Melee display DPS and per-hit.
 ### Major
 1. Build link generation/parsing
 2. Build comparison

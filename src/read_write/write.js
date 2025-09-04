@@ -39,11 +39,17 @@ function displaySkillPoints(input) {
 
         cluster.querySelector(".total_display").textContent = String(totals[index]);
         cluster.querySelector(".assigned_display").textContent = String(assigned[index]);
+
+        if (assigned[index] > 100) addWarning(`Manually assigning ${assigned[index]} Skill Points to ${capitalizedSkillPointNames[index]} is not possible.`);
     }
 
-    const remainingSP = assigned.reduce((a, b) => a - b, 2 * Math.min(input.level - 1, 100));
+    const maxSP = 2 * Math.min(input.level - 1, 100);
+    const remainingSP = assigned.reduce((a, b) => a - b, maxSP);
     spRemaining.innerHTML = minecraftToHTML(codeDictionaryPositivityColors[remainingSP >= 0] + remainingSP);
     spRemaining.dataset.value = String(remainingSP);
+    if (remainingSP < 0) {
+        addWarning(`Maximum Skill Points exceeded! For level ${input.level}, there are only ${maxSP} Skill Points available.`);
+    }
 }
 
 function setPageEmbellishments(weaponName, wynnClass) {

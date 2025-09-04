@@ -359,5 +359,18 @@ const classEffects = {
             }
         }
     },
-    warrior: {"effects": {}}
+    warrior: {
+        "wynnClass": "warrior",
+        "effects": {
+            "0": {
+                "name": "",
+                "toggle_name": "Radiance",
+                "parents": [{"section": "nodes", "id": "61"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "id-multiplier",
+                "data": {"multiplier": 20}
+            }
+        }
+    }
 };

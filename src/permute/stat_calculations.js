@@ -19,8 +19,8 @@ function statCalculations(build) {
     build.stats.manaPerHit = ids.manaSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
     build.stats.lifePerHit = ids.lifeSteal / 3 / attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]];
 
-
-    build.stats.effectiveWS = player_bps * (ids.walkSpeed / 100 + 1);
+    const cappedWalkSpeed = Math.min(400, Math.max(-100, ids.walkSpeed));
+    build.stats.effectiveWS = player_bps * (cappedWalkSpeed / 100 + 1);
 }
 
 function mergeElementalDefences(build) {
@@ -48,9 +48,9 @@ function healthCalculations(build) {
         / getEHpFactor(build)
         / ((1 - defence) * (1 - agility) + (0.1 * agility));
 
-    build.stats.ehprPercent = build.stats.healthRegen / 4 / build.stats.health;
+    build.stats.ehprPercent = build.stats.healthRegen / 4 / build.stats.health * 100;
 
-    build.stats.lsPercent = build.identifications.lifeSteal / 3 / build.stats.health;
+    build.stats.lsPercent = build.identifications.lifeSteal / 3 / build.stats.health * 100;
 
     calculateHealing(build);
 }

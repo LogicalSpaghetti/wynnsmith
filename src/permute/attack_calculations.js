@@ -290,9 +290,9 @@ function getVariantConversion(build, variant, attack) {
             case "total":
                 return multiplyDamageOverTime(build, attack);
             case "scaling-multi":
-                return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack.extra_hits);
+                return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack?.extra_hits);
             case "hit-modifier":
-                return multiplyDamageByExtraHits(attack.damage, secondAttack.extra_hits);
+                return multiplyDamageByExtraHits(attack.damage, secondAttack?.extra_hits);
             default:
                 throw new Error(`invalid variant type: ${variant.type}`);
         }

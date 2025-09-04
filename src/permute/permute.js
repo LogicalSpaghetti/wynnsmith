@@ -48,6 +48,7 @@ class Build {
     spell_costs;
     spell_cost_modifiers;
     spell_cost_multipliers;
+    id_multipliers;
     variants;
     displays;
 

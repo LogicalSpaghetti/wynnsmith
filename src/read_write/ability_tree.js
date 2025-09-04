@@ -267,7 +267,7 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
     for (const id of unvalidatedIDs) nodes[id].red = true;
 
     const maxAP = abilityPointsAtLevel[level] ?? tree.properties.maxAbilityPoints;
-    displayAP(usedAP, maxAP);
+    displayAP(usedAP, maxAP, level);
 
     for (let nodeID in nodes) {
         const node = nodes[nodeID];
@@ -286,12 +286,13 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
     for (let nodeID in nodes) changeNodeImage(nodes[nodeID], wynnClass);
 }
 
-function displayAP(usedAP, maxAP) {
+function displayAP(usedAP, maxAP, level) {
     const apDisplay = document.getElementById("assigned_ap_display");
     const maxAPDisplay = document.getElementById("max_ap_display");
     const apColor = usedAP > maxAP ? codeDictionaryPositivityColors.false : "";
     apDisplay.innerHTML = minecraftToHTML(apColor + usedAP);
     maxAPDisplay.innerHTML = maxAP;
+    if (usedAP > maxAP) addWarning(`Maximum Ability Points exceeded! For level ${level}, there are only ${maxAP} Ability Points available.`);
 }
 
 function changeNodeImage(node, wynnClass) {

@@ -1,6 +1,7 @@
 `use strict`;
 
 function refreshBuild() {
+    resetWarnings();
     const input = new Input();
     input.init();
 
