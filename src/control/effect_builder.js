@@ -619,6 +619,9 @@ class EffectType {
                 return this.setupSpellCostMultiplierConfig();
             case "id-multiplier":
                 return this.setupPositiveIdMultiplier();
+            case "id-heal-multiplier":
+                return this.setupRelativeHealingMultiplier();
+
             default:
                 return this.emptyConfig();
         }
@@ -811,13 +814,16 @@ class EffectType {
         const variants = this.addMultiNodeSelector(this.addDiv(holder),
             this.effect, setData, "variant", "Variants: ", this.data.variants ?? []);
 
+        const hiddenVariants = this.addMultiNodeSelector(this.addDiv(holder),
+            this.effect, setData, "variant", "Hidden Variants: ", this.data.hidden_variants ?? []);
+
         const damage = this.addTextInput(this.addDiv(holder), setData, "Damage Label: ", this.data.label ?? "", "i.e. \"Total Damage\"");
 
         const parent = this.addSingleNodeSelect(
             this.addDiv(holder), this.effect, setData, "display", "Parent Display:", this.data.parent ?? "", true);
 
         const heals = this.addMultiNodeSelector(this.addDiv(holder),
-            this.effect, setData, "heal", "Heal Variants: ", this.data.heals ?? []);
+            this.effect, setData, "heal-variant", "Heal Variants: ", this.data.heals ?? []);
 
 
         function setData(self) {
@@ -827,6 +833,7 @@ class EffectType {
                 label: damage()
             };
 
+            if (hiddenVariants().length) self.data.hidden_variants = hiddenVariants();
             if (heals().length) self.data.heals = heals();
             if (spell()) self.data.spell = spell();
             if (isShift()) self.data.is_shift = isShift() === "true";
@@ -897,22 +904,14 @@ class EffectType {
     setupHealConfig() {
         const holder = document.createElement("div");
 
-        holder.appendChild(document.createTextNode("Internal Name: "));
-        const internalName = holder.appendChild(document.createElement("input"));
-        internalName.value = this.data.internal_name ?? "";
-        holder.appendChild(document.createElement("br"));
-        internalName.addEventListener("change", () => setData(this));
-
-        holder.appendChild(document.createTextNode("Heal Percent: "));
-        const healInput = holder.appendChild(document.createElement("input"));
-        healInput.value = this.data.heal ?? "0";
-        healInput.addEventListener("change", () => setData(this));
-
+        const percent = this.addTextInput(this.addDiv(holder), setData, "Healing %: ", this.data.percent ?? "0", "0");
+        const heal = this.addSingleNodeSelect(
+            this.addDiv(holder), this.effect, setData, "conv", "Modify Existing Heal: ", this.data.id, true, this.effect.id);
 
         function setData(self) {
             self.data = {
-                internal_name: internalName.value,
-                heal: parseInt(healInput.value)
+                heal: heal(),
+                percent: parseInt(percent())
             };
         }
 
@@ -921,7 +920,25 @@ class EffectType {
     }
 
     setupHealVariantConfig() {
-        // TODO
+        const holder = document.createElement("div");
+
+        const heals = this.addMultiNodeSelector(this.addDiv(holder),
+            this.effect, setData, "heal", "Heals: ", this.data.heals ?? []);
+
+        const multiplier = this.addTextInput(this.addDiv(holder), setData, "Healing Multiplier: ", this.data.percent, "1");
+
+
+        function setData(self) {
+            self.data = {
+                heals: heals(),
+                percent: parseInt(multiplier())
+            };
+
+            if (multiplier()) self.data.multiplier = multiplier();
+        }
+
+        setData(this);
+        return holder;
     }
 
     setupResistanceConfig() {
@@ -1102,11 +1119,32 @@ class EffectType {
     setupPositiveIdMultiplier() {
         const holder = document.createElement("div");
 
-        const multiplier = this.addTextInput(holder, setData, "Percent multiplier: ", this.data.multiplier)
+        const multiplier = this.addTextInput(holder, setData, "Percent multiplier: ", this.data.multiplier);
 
         function setData(self) {
             self.data = {
+                multiplier: parseFloat(multiplier())
+            };
+        }
+
+        setData(this);
+        return holder;
+    }
+
+    setupRelativeHealingMultiplier() {
+        const holder = document.createElement("div");
+
+        const heal = this.addSingleNodeSelect(this.addDiv(holder), this.effect, setData, "heal", "Targeted Heal: ", this.data.heal ?? "");
+        const relativeId = this.addTextInput(this.addDiv(holder), setData, "Target Identification: ", this.data.identification ?? "", 'i.e. "waterDamage"');
+        const multiplier = this.addTextInput(this.addDiv(holder), setData, "Healing Powder: ", this.data.multiplier ?? "", `i.e. "0.3"`);
+        const max = this.addTextInput(this.addDiv(holder), setData, "Maximum %: ", this.data.max ?? "", `i.e. "75"`);
+
+        function setData(self) {
+            self.data = {
+                heal: heal(),
                 multiplier: parseFloat(multiplier()),
+                identification: relativeId(),
+                max: parseFloat(max())
             };
         }
 
@@ -1195,7 +1233,7 @@ class EffectType {
         div.append(label);
         const input = div.appendChild(document.createElement("input"));
         input.placeholder = placeholder;
-        if (value) input.value = value;
+        if (value) input.value = value ?? "";
         input.addEventListener("change", () => refreshFunction(this));
 
         return () => input.value;

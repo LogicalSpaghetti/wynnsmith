@@ -225,7 +225,29 @@ const classEffects = {
             }
         }
     },
-    mage: {"effects": {}},
+    mage: {
+        "wynnClass": "mage",
+        "effects": {
+            "0": {
+                "name": "Heal Heal",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "8"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "heal",
+                "data": {"heal": "0", "percent": 15}
+            },
+            "1": {
+                "name": "",
+                "toggle_name": "",
+                "parents": [{"section": "nodes", "id": "39"}],
+                "blocks": [],
+                "requires_all": true,
+                "type": "id-heal-multiplier",
+                "data": {"heal": "0", "multiplier": 0.3, "identification": "waterDamage", "max": 75}
+            }
+        }
+    },
     shaman: {
         "wynnClass": "shaman", "effects": {
             "0": {
