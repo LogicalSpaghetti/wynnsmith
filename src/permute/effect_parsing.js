@@ -17,12 +17,14 @@ EffectTypes = Object.freeze({
     DISPLAY: "display",
     MASTERY: "mastery",
     HEAL: "heal",
+    ID_HEAL: "id-heal-multiplier",
+    HEAL_VARIANT: "heal-variant",
     RESISTANCE: "resistance",
     PERSONAL_MULTIPLIER: "personal-multiplier",
     TEAM_MULTIPLIER: "team-multiplier",
     COST: "cost",
     COST_MULTIPLIER: "cost-multiplier",
-    ID_MULTIPLIER: "id-multiplier",
+    ID_MULTIPLIER: "id-multiplier"
 });
 
 function getAbilities(inputAbilities, weapon, equipment) {
@@ -110,6 +112,12 @@ function getSplitEffects(effects, toggles, wynnClass) {
             case EffectTypes.HEAL:
                 parseHealEffect(splitEffects, effect);
                 break;
+            case EffectTypes.HEAL_VARIANT:
+                parseHealVariantEffect(splitEffects, effect);
+                break;
+            case EffectTypes.ID_HEAL:
+                parseIdRelativeHealEffect(splitEffects, effect);
+                break;
             case EffectTypes.RESISTANCE:
                 parseResistanceEffect(splitEffects, effect);
                 break;
@@ -187,8 +195,16 @@ function parseMasteryEffect(build, effect) {
 }
 
 function parseHealEffect(build, effect) {
-    const heal = getOrCreateNamedEffect(build.heals, effect.data.internal_name);
-    heal.heal = (heal.heal ?? 0) + effect.data.heal;
+    const heal = getOrCreateNamedEffect(build.heals, effect.data.id);
+    heal.percent = (heal.percent ?? 0) + effect.data.percent;
+}
+
+function parseHealVariantEffect(build, effect) {
+    createUnnamedEffect(build.heal_variants, effect.data);
+}
+
+function parseIdRelativeHealEffect(build, effect) {
+    createUnnamedEffect(build.heal_id_multipliers, effect.data);
 }
 
 function parseResistanceEffect(build, effect) {
@@ -221,7 +237,7 @@ function parseSpellCostMultiplierEffect(build, effect) {
 }
 
 function parseIdMultiplierEffect(build, effect) {
-    createUnnamedEffect(build.id_multipliers, effect.data)
+    createUnnamedEffect(build.id_multipliers, effect.data);
 }
 
 function getOrCreateNamedEffect(effectArray, internal_name) {

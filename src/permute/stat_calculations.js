@@ -24,11 +24,13 @@ function statCalculations(build) {
 }
 
 function mergeElementalDefences(build) {
+    build.stats.defences = [];
+
     for (let i = 1; i < damage_type_count; i++) {
         const baseDefence = build.base[`base${damageTypeNames[i]}Defence`];
         const percentDefence = 1 + ((build.identifications.elementalDefence + build.identifications[`${damageTypePrefixes[i]}Defence`]) / 100);
 
-        build.stats[`total${damageTypeNames[i]}Defence`] = baseDefence * (Math.sign(baseDefence) * percentDefence);
+        build.stats.defences[i - 1] = baseDefence * percentDefence;
     }
 }
 

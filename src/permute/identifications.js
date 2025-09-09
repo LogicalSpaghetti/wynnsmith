@@ -8,10 +8,10 @@ function modifyIdentifications(build) {
 }
 
 const radianceExcludedIds = Object.freeze([
-    "xpBonus", "lootBonus", "lootQuality", "gatherXpBonus", "gatherSpeed"
+    "xpBonus", "lootBonus", "lootQuality", "gatherXpBonus", "gatherSpeed",
+    "rawStrength", "rawDexterity", "rawIntelligence", "rawDefense", "rawAgility"
 ]);
 
-// TODO: turn into an effect
 function radiance(build) {
     for (let radiance of build.id_multipliers) for (let idName in build.identifications) {
         if (radianceExcludedIds.includes(idName)) continue;
@@ -89,4 +89,9 @@ function applyStatEffects(build) {
     //         80 + ((aspects.shaman["Aspect of Stances"][build.aspects["Aspect of Stances"] - 1] ?? {}).heretic ?? 0);
     // if (build.has("toggles", "maskOfTheFanatic")) ids.walkSpeed -= 35;
     // if (build.has("toggles", "cowardMemory")) ids.slowEnemy += 30;
+}
+
+// TODO: loop through all tomes, equipment, and the weapon, and add their getItemAddedSP to the build.skill_points
+function calculateIdSkillPoints(build) {
+    getItemAddedSP()
 }

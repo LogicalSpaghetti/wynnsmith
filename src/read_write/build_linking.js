@@ -78,3 +78,66 @@ function getNodeANSI(cell) {
             (ansiColors[cell.dataset.color] ?? `Invalid Color: ${cell.dataset.color}`)) +
         nodeSymbol + ansiColorTerminator;
 }
+
+const version = 0;
+
+// encodeInput({level: 106, items:{weapons:[{slot:"weapon",name:"Warp",powders:["f6","f6","f6","f6","f6","f6","f6","f6","f6"]}]}});
+function encodeInput(input) {
+    let link = "11";
+    // version
+    link += decimalToBinary(version).padStart(12, "0");
+    // level
+    link += input.level === maxPlayerLevel ? "1"
+        : "0" + decimalToBinary(input.level).padStart(decimalToBinary(maxPlayerLevel).length, "0");
+    link += encodeItems(input);
+
+    // TODO: get input items in order
+    return decimalToBase64(binaryToDecimal(link));
+}
+
+function encodeItems(input) {
+    return encodeItem(input.items.weapons[0]);
+}
+
+function encodeItem(item) {
+    return encodeItemData(item) + encodeItemPowders(item);
+}
+
+function encodeItemData(item) {
+    if (!item.type) {
+        return "0" + `${decimalToBinary(indexedInternalNameGroups[item.slot].indexOf(item.name) + 1)}`
+            .padStart(decimalToBinary(indexedInternalNameGroups[item.slot].length + 1).length, "0");
+    } else if (item.type === "crafted") {
+
+    } else if (item.type === "modified") {
+
+    } else if (item.type === "custom") {
+
+    } else console.error(`invalid item: ${JSON.stringify(item)}`);
+}
+
+const powderLetters = ["e", "t", "w", "f", "a"];
+
+function encodeItemPowders(item) {
+    if (!item?.powders?.length) return "0";
+
+    let result = "1";
+
+    let lastPowder = "";
+    for (let i = 0; i < item.powders.length; i++) {
+        const powder = item.powders[i];
+
+        if (i > 0) result += powder === lastPowder ? "1" : "0";
+        if (powder !== lastPowder)
+            if (powder[1] === "6") {
+                result += decimalToBinary(powderLetters.indexOf(powder[0])).padStart(3, "0");
+            } else {
+                result += "101";
+                result += decimalToBinary(powderLetters.indexOf(powder[0])).padStart(3, "0");
+                result += decimalToBinary(powder[1]).padStart(3, "0");
+            }
+
+        lastPowder = powder;
+    }
+    return result;
+}

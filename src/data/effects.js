@@ -235,7 +235,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "heal",
-                "data": {"heal": "0", "percent": 15}
+                "data": {"id": "0", "percent": 15}
             },
             "1": {
                 "name": "",
@@ -244,7 +244,7 @@ const classEffects = {
                 "blocks": [],
                 "requires_all": true,
                 "type": "id-heal-multiplier",
-                "data": {"heal": "0", "multiplier": 0.3, "identification": "waterDamage", "max": 75}
+                "data": {"target": "0", "multiplier": 0.3, "identification": "waterDamage", "max": 75}
             }
         }
     },

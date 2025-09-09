@@ -70,9 +70,10 @@ function readItemFromCluster(cluster) {
 
     setPowderSlots(cluster, itemData);
 
-    item.name = itemData?.name;
-
     if (!itemData) return;
+
+    item.name = itemData.name;
+    if (itemData.type) item.type = itemData.type;
 
     colorSlot(cluster, itemData);
     setLink(cluster, itemData);
@@ -83,6 +84,7 @@ function readItemFromCluster(cluster) {
     return item;
 }
 
+// TODO: crafted/modified/custom items
 function getItemByCluster(cluster) {
     const input = cluster.querySelector(".item_input");
     const item = getItemInGroup(cluster.dataset.slot, input.value);

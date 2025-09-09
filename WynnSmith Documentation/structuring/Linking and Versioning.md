@@ -18,34 +18,35 @@ keep outdated information stored in a place that's only sent to the client if th
 
 (a "flag" is one bit to mark for a boolean state used to simplify common cases down)
 ###### link structure:
-1. Link type
+1. lead bit, (1)
+	- ensures if link type is 0, then that bit doesn't get removed
+2. Link type
 	- flag: is build
 	- if 0, don't interpret as a build
 		- ambiguous
-2. Version
+3. Version
 	- 12 bits
 		- 2048 possible versions
 			- if the first bit is 1, it means the versioning standard has changed
 	- used to ensure items and trees are read from that version of the database
-3. Player level
+4. Player level
 	- flag: max level
 	- dynamic length by: max level
-4. Items
-	- for each slot
-		- dynamic length by: category.length + 2
-		- 0..0 is an empty slot
-		- 0..1 is a crafted/custom item
-			- flag: custom item
-5. Powders
-	 - for each non-zero item:
-		 - flag: item has powders:
-			 - per-powder encoding:
-				 - 000-100 = etwfa
-				 - 101 for tier 3 of next xxx
-				 - 110 for element xxx and tier \_\_\_xxx
-				 - 111 unused, might use later
-			 - flag: repeat powder
-				 - flag: end powders for item
+5. Items
+	1. 3 bits
+		- number of offhands
+	2. for each slot
+		- flag: is normal, crafted, custom, or modified
+		- normal:
+			- dynamic length by: category.length + 1
+			- 0..0 is an empty slot
+		- flag: has powders
+		 - per-powder encoding:
+			 - 000-100 for `etwfa T6`
+			 - 101 for element xxx and tier \_\_\_xxx
+			 - 110 and 111 unused, might use later
+		 - flag: repeat powder
+			 - flag: end powders for item
 6. Modified SP
 	- flag: SP modified
 	- for each skill:
@@ -54,6 +55,7 @@ keep outdated information stored in a place that's only sent to the client if th
 	- flag: has aspects
 	- for each aspect slot:
 		- dynamic length by: class_aspect_count + 1
+		- 0..0 is an empty slot
 8. Tomes
 	- flag: has tomes
 		- flag: just guild tome

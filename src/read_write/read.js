@@ -1,16 +1,8 @@
 `use strict`;
 
-function getPlayerLevel() {
-    const inputValue = document.getElementById("level_input").value;
-    const value = Math.min(maxPlayerLevel, Math.max(1, parseInt(inputValue) || 0));
-    if (inputValue !== "") document.getElementById("level_input").value = value;
-    return value;
-}
-
-function getClassRequirementByWeaponName(name) {
-    // noinspection JSUnresolvedReference
-    return getItemInGroup("weapon", name)?.requirements?.classRequirement;
-}
+// TODO: Input should be identical to a build link, just the minimal information grouped up.
+//  class is read here since it's needed to allow for alternate-class offhands.
+//  when creating a build, if the class doesn't match then ignore the tree.
 
 class Input {
     level;
@@ -27,7 +19,7 @@ class Input {
         this.items = getItemsFromHTML();
         if (this.items.weapons.length === 0) return null;
 
-        this.wynnClass = getClassRequirementByWeaponName(this.items.weapons[0].name);
+        this.wynnClass = getWeaponClass(this.items.weapons[0].name);
         this.level = getPlayerLevel();
 
         this.abilities = getInputAbilities(this.wynnClass);
@@ -38,13 +30,16 @@ class Input {
         this.sp_provided = equipOrderInformation.provided;
         this.sp_modified = getSkillPointModifiers();
     }
+
+    static getPrimary() {
+
+    }
 }
 
 function getEquipOrderInformation(items) {
     const weaponRequirements = getSPRequirementForAllWeapons(items.weapons);
 
-    const skillPointData = itemNamesToSkillPointData(items.equipment)
-        .filter(item => itemRequiresSomething(item) || itemProvidesSomething(item));
+    const skillPointData = itemNamesToSkillPointData(items.equipment);
 
     const providerRequirers = skillPointData
         .filter(item => itemRequiresSomething(item) && itemProvidesSomething(item));
@@ -52,6 +47,8 @@ function getEquipOrderInformation(items) {
         .filter(item => itemProvidesSomething(item) && !itemRequiresSomething(item));
     const exclusiveRequirers = skillPointData
         .filter(item => itemRequiresSomething(item) && !itemProvidesSomething(item));
+    const nothingItems = skillPointData
+        .filter(item => !itemRequiresSomething(item) && !itemProvidesSomething(item));
 
     const initialProvided = exclusiveProviders
         .reduce((total, item) => total.map((x, i) => x + item.provided[i]), [0, 0, 0, 0, 0]);
@@ -68,9 +65,21 @@ function getEquipOrderInformation(items) {
 
     const requiredSP = addRequirements(requiredSPFromPRs, providedSP, unhelpfulRequirements);
 
-    const equipOrder = mergeEquipOrder(exclusiveProviders, providerRequirers, exclusiveRequirers, subEquipOrder);
+    const equipOrder = mergeEquipOrder(exclusiveProviders, providerRequirers, exclusiveRequirers, nothingItems, subEquipOrder);
 
     return {equip_order: equipOrder, required: requiredSP, provided: providedSP};
+}
+
+function getPlayerLevel() {
+    const inputValue = document.getElementById("level_input").value;
+    const value = Math.min(maxPlayerLevel, Math.max(1, parseInt(inputValue) || 0));
+    if (inputValue !== "") document.getElementById("level_input").value = value;
+    return value;
+}
+
+function getWeaponClass(name) {
+    // noinspection JSUnresolvedReference
+    return getItemInGroup("weapon", name)?.requirements?.classRequirement;
 }
 
 function itemProvidesSomething(item) {
@@ -105,8 +114,8 @@ function getItemSPReqs(item) {
     return skillPointNames.map(name => Number(reqs[name] ?? 0));
 }
 
-function mergeEquipOrder(pre, central, post, centralOrder) {
-    return pre.concat(centralOrder.map(i => central[i])).concat(post).map(item => item.name);
+function mergeEquipOrder(pre, central, post, nothing, centralOrder) {
+    return nothing.concat(pre).concat(centralOrder.map(i => central[i])).concat(post).map(item => item.name);
 }
 
 function permutation(pick, max, usePermutation) {
@@ -195,50 +204,40 @@ function addProvided(itemRanges, initialProvided) {
 }
 
 function balanceSP() {
-    const remainingSP = document.getElementById("remaining_sp").dataset.value;
+    const remainingSP = parseInt(document.getElementById("remaining_sp").dataset.value);
     if (remainingSP < 1) return;
 
     const spInputs = document.getElementById("sp_section");
     const strengthCluster = spInputs.querySelector(".sp_cluster[data-element='earth']");
     const strength = parseInt(strengthCluster.querySelector(".total_display").textContent);
+    const assignedStrength = parseInt(strengthCluster.querySelector(".assigned_display").textContent);
     const dexterityCluster = spInputs.querySelector(".sp_cluster[data-element='thunder']");
     const dexterity = parseInt(dexterityCluster.querySelector(".total_display").textContent);
+    const assignedDexterity = parseInt(dexterityCluster.querySelector(".assigned_display").textContent);
 
-    let newStrength;
-    let newDexterity;
-
-    const difference = Math.max(0, Math.abs(strength - dexterity));
-    const overBalance = remainingSP - difference;
-
-    // TODO: I hate this, rework it.
-    if (strength < 0 && dexterity < 0) {
-        newStrength = 0;
-        newDexterity = 0;
-    } else if (strength < 0 && dexterity >= 0) {
-        newStrength = 0;
-        newDexterity = remainingSP;
-    } else if (dexterity < 0 && strength >= 0) {
-        newStrength = remainingSP;
-        newDexterity = 0;
-    } else if (strength >= dexterity + remainingSP) {
-        newStrength = 0;
-        newDexterity = remainingSP;
-    } else if (dexterity >= strength + remainingSP) {
-        newStrength = remainingSP;
-        newDexterity = 0;
-    } else if (strength > dexterity) {
-        newStrength = overBalance / 2;
-        newDexterity = overBalance / 2 + difference;
-    } else if (dexterity > strength) {
-        newStrength = overBalance / 2 + difference;
-        newDexterity = overBalance / 2;
-    } else { // strength === dexterity
-        newStrength = remainingSP / 2;
-        newDexterity = remainingSP / 2;
-    }
+    const modifiers = getSPBalanceModifiers(strength, dexterity, remainingSP);
 
     strengthCluster.querySelector(".sp_input").value =
-        parseInt(strengthCluster.querySelector(".sp_input").value) + Math.ceil(newStrength);
+        parseInt(strengthCluster.querySelector(".sp_input").value) + Math.ceil(modifiers.strength);
     dexterityCluster.querySelector(".sp_input").value =
-        parseInt(dexterityCluster.querySelector(".sp_input").value) + Math.floor(newDexterity);
+        parseInt(dexterityCluster.querySelector(".sp_input").value) + Math.floor(modifiers.dexterity);
+}
+
+function getSPBalanceModifiers(strength, dexterity, spare) {
+    const difference = Math.max(0, Math.abs(strength - dexterity));
+    const overBalance = spare - difference;
+
+    if (strength > 150 && dexterity > 150) return {strength: 0, dexterity: 0};
+    if (strength > 150) return {strength: 0, dexterity: Math.max(0, Math.min(150, spare + dexterity) - dexterity)};
+    if (dexterity > 150) return {strength: Math.max(0, Math.min(150, spare + strength) - strength), dexterity: 0};
+
+    if (strength < 0 && dexterity < 0) return {strength: 0, dexterity: 0};
+    if (strength < 0 && dexterity >= 0) return {strength: 0, dexterity: spare};
+    if (dexterity < 0 && strength >= 0) return {strength: spare, dexterity: 0};
+
+    if (strength >= dexterity + spare) return {strength: 0, dexterity: spare};
+    if (dexterity >= strength + spare) return {strength: spare, dexterity: 0};
+    if (strength > dexterity) return {strength: overBalance / 2, dexterity: overBalance / 2 + difference};
+    if (strength < dexterity) return {strength: overBalance / 2 + difference, dexterity: overBalance / 2};
+    return {strength: spare / 2, dexterity: spare / 2};
 }

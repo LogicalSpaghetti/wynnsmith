@@ -20,7 +20,7 @@ function roundForDisplay(number, addPeriod) {
         : ret.toString().split(".")[1].length < 2 ? ret + "0" : ret;
 }
 
-function intToBase64(decimal) {
+function decimalToBase64(decimal) {
     let sfStr = "";
     do {
         sfStr = base64Values[decimal % 64] + sfStr;

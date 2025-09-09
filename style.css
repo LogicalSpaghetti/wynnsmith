@@ -355,7 +355,6 @@ td {
 #attack_display {
     text-align: center;
     line-height: 150%;
-    width: 0; /* TODO: remove once testing complete */
 }
 
 .attack-group {

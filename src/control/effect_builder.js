@@ -905,12 +905,12 @@ class EffectType {
         const holder = document.createElement("div");
 
         const percent = this.addTextInput(this.addDiv(holder), setData, "Healing %: ", this.data.percent ?? "0", "0");
-        const heal = this.addSingleNodeSelect(
+        const id = this.addSingleNodeSelect(
             this.addDiv(holder), this.effect, setData, "conv", "Modify Existing Heal: ", this.data.id, true, this.effect.id);
 
         function setData(self) {
             self.data = {
-                heal: heal(),
+                id: id(),
                 percent: parseInt(percent())
             };
         }
@@ -922,16 +922,14 @@ class EffectType {
     setupHealVariantConfig() {
         const holder = document.createElement("div");
 
-        const heals = this.addMultiNodeSelector(this.addDiv(holder),
+        const targets = this.addMultiNodeSelector(this.addDiv(holder),
             this.effect, setData, "heal", "Heals: ", this.data.heals ?? []);
-
         const multiplier = this.addTextInput(this.addDiv(holder), setData, "Healing Multiplier: ", this.data.percent, "1");
 
 
         function setData(self) {
             self.data = {
-                heals: heals(),
-                percent: parseInt(multiplier())
+                targets: targets()
             };
 
             if (multiplier()) self.data.multiplier = multiplier();
@@ -1134,14 +1132,14 @@ class EffectType {
     setupRelativeHealingMultiplier() {
         const holder = document.createElement("div");
 
-        const heal = this.addSingleNodeSelect(this.addDiv(holder), this.effect, setData, "heal", "Targeted Heal: ", this.data.heal ?? "");
+        const target = this.addSingleNodeSelect(this.addDiv(holder), this.effect, setData, "heal", "Targeted Heal: ", this.data.heal ?? "");
         const relativeId = this.addTextInput(this.addDiv(holder), setData, "Target Identification: ", this.data.identification ?? "", 'i.e. "waterDamage"');
         const multiplier = this.addTextInput(this.addDiv(holder), setData, "Healing Powder: ", this.data.multiplier ?? "", `i.e. "0.3"`);
         const max = this.addTextInput(this.addDiv(holder), setData, "Maximum %: ", this.data.max ?? "", `i.e. "75"`);
 
         function setData(self) {
             self.data = {
-                heal: heal(),
+                target: target(),
                 multiplier: parseFloat(multiplier()),
                 identification: relativeId(),
                 max: parseFloat(max())

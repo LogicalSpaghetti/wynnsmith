@@ -1,7 +1,7 @@
 `use strict`;
 
 function display(input, builds) {
-    if (!builds[0]) return;
+    if (!builds?.[0]) return;
     displaySkillPoints(input);
     displayBuilds(builds);
     validateTree(input.level, input.wynnClass);
@@ -28,6 +28,7 @@ function displaySkillPoints(input) {
     const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
     const spRemaining = document.getElementById("remaining_sp");
 
+    // TODO: needs 1st build info to know Tome SP, and id multiplier SP.
     const firstItemAdded = getItemAddedSP(getItem(input.items.weapons[0].name));
     const assigned = input.sp_assigned.map((sp, i) =>
         sp + input.sp_modified[i]);
@@ -55,7 +56,7 @@ function displaySkillPoints(input) {
 function setPageEmbellishments(weaponName, wynnClass) {
     document.title = `${weaponName} - WynnSmith`;
 
-    let icon = document.querySelector("link[rel~='icon']");
+    let icon = document.querySelector("link[rel='icon']");
     if (!icon) {
         icon = document.createElement("link");
         icon.rel = "icon";
@@ -65,6 +66,15 @@ function setPageEmbellishments(weaponName, wynnClass) {
 }
 
 function displayEquipOrder(input) {
-    document.getElementById("equip_order").innerHTML =
-        "<b>Equip Order:</b><br>" + input.equip_order.join("<br>");
+    const element = document.getElementById("equip_order");
+    if (!input.items.weapons.length) {
+        element.innerHTML = "<b>Input Weapon to Begin</b>";
+        return;
+    }
+    if (input.equip_order.length)
+        element.innerHTML = "Equip Order:<br>" + minecraftToHTML(input.equip_order
+            .map(name => codeDictionaryRarityColor[getItem(name).rarity] + name)
+            .join("\n"));
+    else element.innerHTML = "<span class=''>No Equipment Added</span>";
+
 }

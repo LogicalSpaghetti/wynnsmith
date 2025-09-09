@@ -18,11 +18,11 @@ function displayBuildStats(build) {
         getStatDisplay("health", false, "EHp (no Agi)", stats.ehp_no_agi, "", true, true) +
         getStatDisplay("health", true, "Health Regen", stats.healthRegen, "/4s") +
         getStatDisplay("health", false, "Effective HPR", stats.ehprPercent, "%/s", true, true) +
-        getStatDisplay("earth", true, "Earth Defence", stats["totalEarthDefence"]) +
-        getStatDisplay("thunder", true, "Thunder Defence", stats["totalThunderDefence"]) +
-        getStatDisplay("water", true, "Water Defence", stats["totalWaterDefence"]) +
-        getStatDisplay("fire", true, "Fire Defence", stats["totalFireDefence"]) +
-        getStatDisplay("air", true, "Air Defence", stats["totalAirDefence"]) +
+        getStatDisplay("earth", true, "Earth Defence", stats.defences[0]) +
+        getStatDisplay("thunder", true, "Thunder Defence", stats.defences[1]) +
+        getStatDisplay("water", true, "Water Defence", stats.defences[2]) +
+        getStatDisplay("fire", true, "Fire Defence", stats.defences[3]) +
+        getStatDisplay("air", true, "Air Defence", stats.defences[4]) +
         "<hr>" +
         getStatDisplay("water", true, "Mana Regen", ids.manaRegen, "/5s") +
         getStatDisplay("water", false, "True Mana Regen", stats.trueManaRegen, "/5s", true, true, 25) +

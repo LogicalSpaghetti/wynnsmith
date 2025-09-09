@@ -1,17 +1,23 @@
 # Focus
 ### Small
-1. Detailed damage
-2. Tome SP doesn't work
+1. init should have flags passed in for all values directing it to take from primary or secondary build.
+2. empty slots
+3. cap offhands to 7
+4. we need to store old version's section length variables too.
+5. repurpose `getabilities.html` for Aspects
+6. Test if Radiance affects Skill Points.
+7. Detailed damage
+8. Tome SP doesn't work
 	1. calc added SP per-build after Radiance applies.
-2. Dynamic node displays, (Archetype requirements, required ability)
+9. Dynamic node displays, (Archetype requirements, required ability)
 	1. Archetype highlighting
-3. Identification editing
-4. Small Tome selector
+10. Identification editing
+11. Small Tome selector
 	1. popup Zen-style text box when tab selected
 		1. tabbing from there cycles through aspects/tomes by icon
 		2. Escape or tabbing after the end closes and returns selection to the original element
-5.  Add more than just abilities to the effect builder
-6. Melee display DPS and per-hit.
+12.  Add more than just abilities to the effect builder
+13. Melee display DPS and per-hit.
 ### Major
 1. Build link generation/parsing
 2. Build comparison
@@ -152,7 +158,8 @@
 4. Data isn't saved if a tab gets unloaded
 	1. use `sessionStorage`
 5. Handle items removed from database
-6. Tree propagation is wrong, once it's gone down, it can't go left or right
+6. Block offhands from other classes
+7. Balance SP can exceed 100 assigned
 ### Visual
 1. make elements look clickable or not
     1. pointer-events: none/initial;
@@ -175,6 +182,7 @@
 10. background images are kinda mid
 11. Ability Tree shrinks a bit if the screen isn't wide enough
 12. Effect Toggle suffixes like this: ![[Active Boosts Example.png]]
+13. Slot icons next to items in the equip order
 ### Test
 1. Does Frog Dance proc Nature's Jolt?
 2. Does -hpr proc Twisted Tether?

@@ -3,22 +3,35 @@
 function permute(input) {
     console.log("input: ", input);
     const builds = getWeaponBuilds(input);
-    builds.forEach(build => permuteBuild(build));
+    builds?.forEach(build => permuteBuild(build));
 
     return builds;
 }
 
 function getWeaponBuilds(input) {
-    return !input ? [] : input.items.weapons.map(weapon => new Build(weapon, input));
+    return input?.items.weapons.map(weapon => new Build(weapon, input));
 }
 
 function permuteBuild(build) {
     console.log("build: ", build);
 
     modifyIdentifications(build);
+    calculateIdSkillPoints(build);
     calculateStats(build);
 
     calculateDamageConversions(build);
+}
+
+class NewBuild {
+    constructor(weapon, level, equipment, tomes, abilities, toggles, assigned_skill_points, modified_skill_points) {
+        this.weapon = weapon;
+        this.level = level;
+        this.equipment = equipment;
+        this.tomes = tomes;
+        this.abilities = abilities;
+        this.toggles = toggles;
+        this.skill_points = assigned_skill_points.map((sp, i) => sp + modified_skill_points[i]);
+    }
 }
 
 class Build {
@@ -42,6 +55,8 @@ class Build {
     attacks;
     masteries;
     heals;
+    heal_variants;
+    heal_id_multipliers;
     resistances;
     personal_multipliers;
     team_multipliers;
