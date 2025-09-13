@@ -1,5 +1,5 @@
 // call on initialization to add a Cursor Tooltip to the document
-function addTooltipListener() {
+export function addTooltipListener() {
     initTooltip()
 
     //Attaches a div to a cursor, used to display content
@@ -45,7 +45,7 @@ function moveTooltip(X, Y, checkHidden = false) {
     cursorTooltip.style.left = `${leftOffset}px`;
 }
 
-function renderHoverTooltip(innerHTML = "", container_id = "cursorTooltip") {
+export function renderHoverTooltip(innerHTML = "", container_id = "cursorTooltip") {
     const container = document.getElementById(container_id);
 
     if (innerHTML === "") return;
@@ -55,7 +55,7 @@ function renderHoverTooltip(innerHTML = "", container_id = "cursorTooltip") {
     container.innerHTML = innerHTML;
 }
 
-function hideHoverAbilityTooltip(container_id = "cursorTooltip") {
+export function hideHoverAbilityTooltip(container_id = "cursorTooltip") {
     const container = document.getElementById(container_id);
 
     container.hidden = true;

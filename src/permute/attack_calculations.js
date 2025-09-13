@@ -1,14 +1,18 @@
-`use strict`;
+import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../data/small_stuff.js";
+import {getPowder} from "./powders.js";
+import {SkillPointIndexes} from "./skill_points.js";
+import {newMinMax} from "./effect_parsing.js";
 
-// enum
-const DamageExtremes = Object.freeze({
+export const damage_type_count = 6;
+export const DamageExtremes = Object.freeze({
     MIN: 0,
     MAX: 1,
     MINC: 2,
     MAXC: 3
 });
+const neutral_index = 0;
 
-function calculateDamageConversions(build) {
+export default function calculateDamageConversions(build) {
     damageIdsToArrays(build);
 
     addPowderBase(build);
@@ -96,7 +100,7 @@ function damageIdsToArrays(build) {
 }
 
 function addPowderBase(build) {
-    for (let powder of build.weapon.powders.map(name => powders[name])) {
+    for (let powder of build.weapon.powders.map(name => getPowder(name))) {
         for (let extreme in build.base.damage)
             build.base.damage[extreme][damageTypeNames.indexOf(powder.element)] += powder.damage[extreme];
     }
@@ -156,7 +160,7 @@ function powderNeutralConversions(build) {
     let neutral = 100;
     let modifierPercents = [0, 0, 0, 0, 0, 0];
 
-    for (let powder of build.weapon.powders.map(name => powders[name])) {
+    for (let powder of build.weapon.powders.map(name => getPowder(name))) {
         const elementalIndex = damageTypeNames.indexOf(powder.element);
         const modPercent = Math.min(neutral, powder.conversion);
 
@@ -327,8 +331,4 @@ function multiplyDamageByDPS(build, attack) {
 function zeroNegatives(build) {
     for (let attack of build.attacks) for (let extreme of attack.damage) for (let i in extreme)
         if (extreme[i] < 0) extreme[i] = 0;
-}
-
-function sumDamages(damageA, damageB) {
-    return damageA.map((extreme, i) => extreme.map((x, j) => x + damageB[i][j]));
 }

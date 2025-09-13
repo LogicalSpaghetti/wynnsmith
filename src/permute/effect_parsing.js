@@ -1,16 +1,14 @@
-`use strict`;
+import * as search from "../read_write/item_search.js";
+import classEffects from "../data/effects.js";
 
-const neutral_index = 0;
-const damage_type_count = 6;
-
-function newMinMax() {
+export function newMinMax() {
     return [
         [0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0]
     ];
 }
 
-EffectTypes = Object.freeze({
+const EffectTypes = Object.freeze({
     EMPTY: "",
     CONVERSION: "conv",
     VARIANT: "variant",
@@ -27,7 +25,7 @@ EffectTypes = Object.freeze({
     ID_MULTIPLIER: "id-multiplier"
 });
 
-function getAbilities(inputAbilities, weapon, equipment) {
+export function getAbilities(inputAbilities, weapon, equipment) {
     const items = equipment.concat(weapon);
 
     inputAbilities.majorIds = getMajorIds(items);
@@ -36,7 +34,13 @@ function getAbilities(inputAbilities, weapon, equipment) {
     return inputAbilities;
 }
 
-function getBuildEffects(abilities, wynnClass) {
+function getMajorIds(items) {
+    if (!items.length) return search.getItem(items.name)?.majorIds;
+    return items.reduce((arr, item) => arr.concat(search.getItem(item?.name)?.majorIds), [])
+        .filter(item => item != null);
+}
+
+export function getBuildEffects(abilities, wynnClass) {
     let effects = getEffects(abilities, wynnClass);
     return getWithoutBlockedEffects(effects, wynnClass);
 }
@@ -68,7 +72,7 @@ function getEffects(abilities, wynnClass) {
     return effects;
 }
 
-function getSplitEffects(effects, toggles, wynnClass) {
+export function getSplitEffects(effects, toggles, wynnClass) {
     // TODO: remove "effects" from splitEffects
     const splitEffects = {
         effects: effects,

@@ -1,10 +1,8 @@
-`use strict`;
-
-function copyImageById(elementId) {
+export function copyImageById(elementId) {
     copyImageOfElement(document.getElementById(elementId));
 }
 
-function saveImageById(elementId) {
+export function saveImageById(elementId) {
     saveImageOfElement(document.getElementById(elementId));
 }
 

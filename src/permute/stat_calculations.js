@@ -1,6 +1,11 @@
-const player_bps = 5.612;
+import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../data/small_stuff.js";
+import {getSkillPointMultiplier, SkillPointIndexes} from "./skill_points.js";
+import {damage_type_count} from "./attack_calculations.js";
 
-function calculateStats(build) {
+export const player_bps = 5.612;
+const costNames = ["1st", "2nd", "3rd", "4th"];
+
+export default function calculateStats(build) {
     statCalculations(build);
 
     mergeElementalDefences(build);
@@ -80,7 +85,7 @@ function calculateSpellCosts(build) {
     for (let i in spell_costs) {
         let cost = spell_costs[i];
 
-        cost *= 1 - (0.5 * (build.sp_multipliers[SkillPointIndexes.Intelligence] / spMultipliers[150]));
+        cost *= 1 - (0.5 * (build.sp_multipliers[SkillPointIndexes.Intelligence] / getSkillPointMultiplier(150, SkillPointIndexes.Intelligence)));
 
         cost += build.identifications["raw" + costNames[i] + "SpellCost"];
 

@@ -1,6 +1,25 @@
-`use strict`;
+import {skillPointNames} from "./skill_points.js";
+import punscake from "../data/trees.js";
+import {attackSpeedMap} from "../data/small_stuff.js";
+import * as codeDictionary from "../data/code_dictionary.js";
+import {
+    base_stats,
+    identifications,
+    orderedBaseStats,
+    orderedRegularIds,
+    orderedSkillPointIds
+} from "../data/base_and_ids.js";
+import {
+    getAverageDPS,
+    getFormattedBase,
+    getFormattedId,
+    getFormattedSP,
+    snakeToTitle,
+    upperFirst, wrapText
+} from "../read_write/display_item.js";
+import major_id_descriptions from "../data/major_ids.js"
 
-function minecraftAsElement(text, minecraftFont = false) {
+export function minecraftAsElement(text, minecraftFont = false) {
     const htmlText = minecraftToHTML(text);
     const span = document.createElement("span");
     span.innerHTML = htmlText;
@@ -8,7 +27,7 @@ function minecraftAsElement(text, minecraftFont = false) {
     return span;
 }
 
-function minecraftToHTML(text = "") {
+export function minecraftToHTML(text = "") {
 
     let result = "";
 
@@ -30,9 +49,9 @@ function minecraftToHTML(text = "") {
             const style = formatSplit["style"];
             const content = formatSplit["content"];
 
-            if (decoration != null && codeDictionaryDecoration[decoration] != null) pendingTextDecorations[decoration] = true;
+            if (decoration != null && codeDictionary.decoration[decoration] != null) pendingTextDecorations[decoration] = true;
 
-            if (style != null && codeDictionaryStyle[style] != null) pendingTextStyles[style] = true;
+            if (style != null && codeDictionary.style[style] != null) pendingTextStyles[style] = true;
 
             if (content == null || content === "") return;
 
@@ -48,14 +67,14 @@ function minecraftToHTML(text = "") {
             if (bUseDecorations) {
                 pendingContent += " style=\"text-decoration:";
 
-                for (let decoration of decorations) pendingContent += " " + codeDictionaryDecoration[decoration];
+                for (let decoration of decorations) pendingContent += " " + codeDictionary.decoration[decoration];
 
                 pendingContent += "; text-decoration-thickness: 2px;\"";
             }
 
             if (bUseStyles) {
                 pendingContent += " class=\"";
-                for (let style of styles) pendingContent += " " + codeDictionaryStyle[style];
+                for (let style of styles) pendingContent += " " + codeDictionary.style[style];
                 pendingContent += "\"";
             }
 
@@ -68,7 +87,7 @@ function minecraftToHTML(text = "") {
 
         const color = colorSplit["color"];
 
-        if (color != null) if (codeDictionaryColor[color] != null) result += `<span style="color:${codeDictionaryColor[color]}">`; else result += `<span style="color:${sanitizeHTML(color)}">`; else result += "<span>";
+        if (color != null) if (codeDictionary.color[color] != null) result += `<span style="color:${codeDictionary.color[color]}">`; else result += `<span style="color:${sanitizeHTML(color)}">`; else result += "<span>";
 
         result += pendingContent;
 
@@ -95,7 +114,7 @@ function splitByColorFormats(string) {
 
         let char = string[i];
 
-        if (!minecraftDelimiters[char]) {
+        if (!codeDictionary.minecraftDelimiters[char]) {
             result[result.length - 1]["content"] += char;
             continue;
         }
@@ -105,7 +124,7 @@ function splitByColorFormats(string) {
 
         let code = string[i];
 
-        if (code in codeDictionaryColor) result.push({color: code, content: ""});
+        if (code in codeDictionary.color) result.push({color: code, content: ""});
 
         else if (code === "#" && string.length - i >= 7) {
             const endOfColorCode = i + 6;
@@ -133,7 +152,7 @@ function splitByOtherFormats(string = "") {
     for (i; i < string.length - 1; i++) {
         const char = string[i];
 
-        if (!minecraftDelimiters[char]) {
+        if (!codeDictionary.minecraftDelimiters[char]) {
             result[result.length - 1]["content"] += char;
             continue;
         }
@@ -141,11 +160,11 @@ function splitByOtherFormats(string = "") {
         i++;
         const code = string[i];
 
-        if (code in codeDictionaryStyle) result.push({style: code, content: ""});
+        if (code in codeDictionary.style) result.push({style: code, content: ""});
 
-        else if (code in codeDictionaryDecoration) result.push({decoration: code, content: ""});
+        else if (code in codeDictionary.decoration) result.push({decoration: code, content: ""});
     }
-    if (i < string.length && !minecraftDelimiters[string[string.length - 1]]) result[result.length - 1]["content"] += string[string.length - 1];
+    if (i < string.length && !codeDictionary.minecraftDelimiters[string[string.length - 1]]) result[result.length - 1]["content"] += string[string.length - 1];
 
     return result;
 }
@@ -154,7 +173,7 @@ function sanitizeHTML(text) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function insertStringBeforeSelected(insertString) {
+export function insertStringBeforeSelected(insertString) {
     const activeElement = document.activeElement;
     if (!activeElement || !(activeElement.type === "textarea" || activeElement.type === "text")) {
         return;
@@ -175,7 +194,7 @@ function insertStringBeforeSelected(insertString) {
     activeElement.dispatchEvent(new Event("input"));
 }
 
-function getHoverTextForAbility(abilityID, wynnClass) {
+export function getHoverTextForAbility(abilityID, wynnClass) {
     const abilities = punscake[wynnClass].abilities;
     const ability = abilities[abilityID];
 
@@ -209,12 +228,12 @@ function getHoverTextForAbility(abilityID, wynnClass) {
 }
 
 // todo: ings
-function getHoverTextForItem(item, invalidityText = "") {
+export function getHoverTextForItem(item, invalidityText = "") {
     if (!item) return invalidityText;
 
     const sections = new Sections();
 
-    const header = new Section(codeDictionaryRarityColor[item.rarity] + item.name);
+    const header = new Section(codeDictionary.rarityColor[item.rarity] + item.name);
     if (item.type === "weapon") header.add(`§7${attackSpeedMap[item.attackSpeed]} Attack Speed`);
 
     sections.add(header);
@@ -236,7 +255,7 @@ function getHoverTextForItem(item, invalidityText = "") {
 
     const reqs = new Section();
 
-    const checkMark = codeDictionaryReqIndicators[false];
+    const checkMark = codeDictionary.reqIndicators[false];
 
     const classReq = item.requirements.classRequirement;
     if (classReq) reqs.add(`${checkMark} §7Class Req: ${snakeToTitle(classReq)}`);
@@ -267,7 +286,7 @@ function getHoverTextForItem(item, invalidityText = "") {
                 continue;
             }
             idSection.add(getFormattedId(id, item.identifications[id], identifications,
-                true, item.requirements ? item.requirements.classRequirement : ""));
+                true, item.requirements?.classRequirement ?? ""));
         }
         sections.add(idSection);
     }
@@ -284,7 +303,7 @@ function getHoverTextForItem(item, invalidityText = "") {
 
     if (item.powderSlots > 0) footer.add(`§7[0/${item.powderSlots}] Powder Slots []`);
 
-    if (item.rarity) footer.add(`${codeDictionaryRarityColor[item.rarity]}${upperFirst(item.rarity)} ${snakeToTitle(item.subType)}`);
+    if (item.rarity) footer.add(`${codeDictionary.rarityColor[item.rarity]}${upperFirst(item.rarity)} ${snakeToTitle(item.subType)}`);
 
     // todo: item set, i.e. Set: Morph
 
@@ -294,9 +313,9 @@ function getHoverTextForItem(item, invalidityText = "") {
     if (item.lore) footer.add(`§8${wrapText(item.lore)}`);
 
     if (item.restrictions) footer.add("§c" +
-    (item.restrictions === "untradable" ? "Untradable Item"
-        : item.restrictions === "quest item" ? "Quest Item Only!"
-            : "Error! Unknown item restriction: " + item.restrictions));
+        (item.restrictions === "untradable" ? "Untradable Item"
+            : item.restrictions === "quest item" ? "Quest Item Only!"
+                : "Error! Unknown item restriction: " + item.restrictions));
 
     sections.add(footer);
 
@@ -339,7 +358,7 @@ class Section {
     }
 }
 
-function stripMinecraftFormatting(text = "") {
+export function stripMinecraftFormatting(text = "") {
     let result = "";
 
     const colorSplitArr = splitByColorFormats(text);

@@ -1,4 +1,4 @@
-const major_id_descriptions = {
+export default {
     "Alter Ego": "§3Awakened can be activated after saving 40% less mana, but its duration is reduced by 25%.",
     "Altruism": "§3Nearby players gain 100% of the health you gain from Health Regen and Life Steal.",
     "Brachiate": "§3Grappling Hook has 25% increased range and increased velocity, but no longer pulls enemies.",

@@ -1,15 +1,38 @@
-`use strict`;
+import punscake from "../data/trees.js";
+import {maxPlayerLevel} from "../data/small_stuff.js";
+import {refreshBuild} from "../control/script.js";
+import {getHoverTextForAbility, minecraftToHTML} from "../permute/minecraft_html.js";
+import aspect_descriptions from "../data/aspects.js";
+import {getActiveToggles} from "./toggles.js";
+import {decimalToRoman} from "../util/numbers.js";
+import * as codeDictionary from "../data/code_dictionary.js";
+import {addWarning} from "./warnings.js";
+import {hideHoverAbilityTooltip, renderHoverTooltip} from "../control/tooltip.js";
 
 const treeColumns = 9;
+const abilityPointsAtLevel = [
+    0,
+    1, 2, 2, 3, 3, 4, 4, 5, 5, 6,
+    6, 7, 8, 8, 9, 9, 10, 11, 11, 12,
+    12, 13, 14, 15, 15, 16, 16, 17, 17, 18,
+    18, 19, 19, 20, 20, 20, 21, 21, 22, 22,
+    23, 23, 23, 24, 24, 25, 25, 26, 26, 27,
+    27, 28, 28, 29, 29, 30, 30, 31, 31, 32,
+    32, 33, 33, 34, 34, 34, 35, 35, 35, 36,
+    36, 36, 37, 37, 37, 38, 38, 38, 38, 39,
+    39, 39, 39, 40, 40, 40, 40, 41, 41, 41,
+    41, 42, 42, 42, 42, 43, 43, 43, 43, 44,
+    44, 44, 44, 45, 45
+];
 
-function treeClicked(event) {
+export function treeClicked(event) {
     const target = event.target;
     if (target.dataset.type !== "ability") return;
     toggleNode(target);
     refreshBuild();
 }
 
-function getInputAbilities(wynnClass) {
+export function getInputAbilities(wynnClass) {
     const previousClass = document.getElementById("ability_tree").dataset.class;
 
     if (previousClass !== wynnClass) return {
@@ -180,7 +203,7 @@ function getAspects() {
     }));
 }
 
-function validateTree(level = maxPlayerLevel, wynnClass) {
+export function validateTree(level = maxPlayerLevel, wynnClass) {
     const treeHTML = document.getElementById("ability_tree");
 
     if (treeHTML.dataset.class !== wynnClass) {
@@ -289,7 +312,7 @@ function validateTree(level = maxPlayerLevel, wynnClass) {
 function displayAP(usedAP, maxAP, level) {
     const apDisplay = document.getElementById("assigned_ap_display");
     const maxAPDisplay = document.getElementById("max_ap_display");
-    const apColor = usedAP > maxAP ? codeDictionaryPositivityColors.false : "";
+    const apColor = usedAP > maxAP ? codeDictionary.positivityColors.false : "";
     apDisplay.innerHTML = minecraftToHTML(apColor + usedAP);
     maxAPDisplay.innerHTML = maxAP;
     if (usedAP > maxAP) addWarning(`Maximum Ability Points exceeded! For level ${level}, there are only ${maxAP} Ability Points available.`);
@@ -404,7 +427,7 @@ function getRow(index) {
     return Math.floor((index - 1) / treeColumns);
 }
 
-function renderHighlights() {
+export function renderHighlights() {
     for (let connector of document.getElementById("ability_tree").querySelectorAll(".tree_cell[data-type='connector']")) {
         connector.innerHTML = "";
         if (connector.dataset.highlights === "0000") continue;

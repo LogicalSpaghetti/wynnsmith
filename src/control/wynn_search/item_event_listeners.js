@@ -1,4 +1,7 @@
-`use strict`;
+import {copyImageById} from "../../read_write/image_exporting.js";
+import {saveImageById} from "../../read_write/image_exporting.js";
+import {getItemFromSearch} from "../../read_write/item_search.js";
+import {getHoverTextForItem} from "../../permute/minecraft_html.js";
 
 window.addEventListener("load", function () {
     const item = getItemFromSearch(window.location.search);

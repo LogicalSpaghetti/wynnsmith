@@ -1,6 +1,145 @@
-`use strict`;
+import * as search from "../read_write/item_search.js";
+import {calculateIdSkillPoints, getItemAddedSP, getSkillPointMultiplier} from "./skill_points.js";
+import * as effect_parsing from "./effect_parsing.js"
+import {orderedAttackSpeed} from "../data/small_stuff.js";
+import modifyIdentifications, {addBaseToObject} from "./identifications.js";
+import calculateStats from "./stat_calculations.js";
+import calculateDamageConversions from "./attack_calculations.js";
 
-function permute(input) {
+export const emptyBaseString = JSON.stringify({
+    // Health
+    baseHealth: 0,
+    // Ele-def Raw
+    baseEarthDefence: 0,
+    baseThunderDefence: 0,
+    baseWaterDefence: 0,
+    baseFireDefence: 0,
+    baseAirDefence: 0,
+    // Base Damage
+    baseDamage: {min: 0, max: 0},
+    baseEarthDamage: {min: 0, max: 0},
+    baseThunderDamage: {min: 0, max: 0},
+    baseWaterDamage: {min: 0, max: 0},
+    baseFireDamage: {min: 0, max: 0},
+    baseAirDamage: {min: 0, max: 0},
+    // Charms
+    leveledLootBonus: 0,
+    damageFromMobs: 0,
+    leveledXpBonus: 0,
+});
+
+const emptyIdsString = JSON.stringify({
+    // Skill Points
+    "rawStrength": 0,
+    "rawDexterity": 0,
+    "rawIntelligence": 0,
+    "rawDefence": 0,
+    "rawAgility": 0,
+    // Ele-def %
+    "earthDefence": 0,
+    "thunderDefence": 0,
+    "waterDefence": 0,
+    "fireDefence": 0,
+    "airDefence": 0,
+    "elementalDefence": 0,
+    // Raw Damage
+    "rawDamage": 0,
+    "rawMainAttackDamage": 0,
+    "rawSpellDamage": 0,
+    "rawNeutralDamage": 0,
+    "rawNeutralMainAttackDamage": 0,
+    "rawNeutralSpellDamage": 0,
+    "rawElementalDamage": 0,
+    "rawElementalMainAttackDamage": 0,
+    "rawElementalSpellDamage": 0,
+    "rawEarthDamage": 0,
+    "rawEarthMainAttackDamage": 0,
+    "rawEarthSpellDamage": 0,
+    "rawThunderDamage": 0,
+    "rawThunderMainAttackDamage": 0,
+    "rawThunderSpellDamage": 0,
+    "rawWaterDamage": 0,
+    "rawWaterMainAttackDamage": 0,
+    "rawWaterSpellDamage": 0,
+    "rawFireDamage": 0,
+    "rawFireMainAttackDamage": 0,
+    "rawFireSpellDamage": 0,
+    "rawAirDamage": 0,
+    "rawAirMainAttackDamage": 0,
+    "rawAirSpellDamage": 0,
+    // % Damage
+    "damage": 0,
+    "spellDamage": 0,
+    "mainAttackDamage": 0,
+    "neutralDamage": 0,
+    "neutralMainAttackDamage": 0,
+    "neutralSpellDamage": 0,
+    "elementalDamage": 0,
+    "elementalMainAttackDamage": 0,
+    "elementalSpellDamage": 0,
+    "earthDamage": 0,
+    "earthMainAttackDamage": 0,
+    "earthSpellDamage": 0,
+    "thunderDamage": 0,
+    "thunderMainAttackDamage": 0,
+    "thunderSpellDamage": 0,
+    "waterDamage": 0,
+    "waterMainAttackDamage": 0,
+    "waterSpellDamage": 0,
+    "fireDamage": 0,
+    "fireMainAttackDamage": 0,
+    "fireSpellDamage": 0,
+    "airDamage": 0,
+    "airMainAttackDamage": 0,
+    "airSpellDamage": 0,
+    // Passive Damage
+    "exploding": 0,
+    "poison": 0,
+    "thorns": 0,
+    "reflection": 0,
+    // Other Damage
+    "criticalDamageBonus": 0,
+    "knockback": 0,
+    "mainAttackRange": 0,
+    "rawAttackSpeed": 0,
+    // Health
+    "rawHealth": 0,
+    "healingEfficiency": 0,
+    "healthRegenRaw": 0,
+    "healthRegen": 0,
+    // Mana
+    "rawMaxMana": 0,
+    "manaRegen": 0,
+    // Steals
+    "lifeSteal": 0,
+    "manaSteal": 0,
+    // Costs
+    "1stSpellCost": 0,
+    "2ndSpellCost": 0,
+    "3rdSpellCost": 0,
+    "4thSpellCost": 0,
+    "raw1stSpellCost": 0,
+    "raw2ndSpellCost": 0,
+    "raw3rdSpellCost": 0,
+    "raw4thSpellCost": 0,
+    // Movement
+    "walkSpeed": 0,
+    "jumpHeight": 0,
+    "sprint": 0,
+    "sprintRegen": 0,
+    // XP and Gathering
+    "gatherSpeed": 0,
+    "gatherXpBonus": 0,
+    "lootBonus": 0,
+    "lootQuality": 0,
+    "stealing": 0,
+    "xpBonus": 0,
+    // Debuffs
+    "weakenEnemy": 0,
+    "slowEnemy": 0,
+});
+
+export function getBuildsFromInput(input) {
     console.log("input: ", input);
     const builds = getWeaponBuilds(input);
     builds?.forEach(build => permuteBuild(build));
@@ -70,7 +209,7 @@ class Build {
     toggles;
 
     constructor(weapon, input) {
-        const weaponItem = getItem(weapon.name);
+        const weaponItem = search.getItem(weapon.name);
 
         this.level = input.level;
 
@@ -80,12 +219,12 @@ class Build {
 
         this.wynnClass = input.wynnClass;
 
-        const abilities = getAbilities(input.abilities, weapon, input.items.equipment);
+        const abilities = effect_parsing.getAbilities(input.abilities, weapon, input.items.equipment);
         this.toggles = input.abilities.toggles;
 
-        this.effects = getBuildEffects(abilities, this.wynnClass);
+        this.effects = effect_parsing.getBuildEffects(abilities, this.wynnClass);
 
-        const splitEffects = getSplitEffects(this.effects, this.toggles, this.wynnClass);
+        const splitEffects = effect_parsing.getSplitEffects(this.effects, this.toggles, this.wynnClass);
         for (let key in splitEffects) if (key !== "effects") this[key] = splitEffects[key];
 
         const weaponTotals = getItemAddedSP(weaponItem);
@@ -100,21 +239,15 @@ class Build {
     }
 }
 
-function getMajorIds(items) {
-    if (!items.length) return getItem(items.name)?.majorIds;
-    return items.reduce((arr, item) => arr.concat(getItem(item?.name)?.majorIds), [])
-        .filter(item => item != null);
-}
-
 function sumItemStats(weapon, equipment) {
     const itemArray = equipment.concat(weapon);
 
     return {
         base:
-            itemArray.reduce((arr, item) => addBasesToObject(arr, getItem(item?.name)?.base), JSON.parse(emptyBaseString)),
+            itemArray.reduce((arr, item) => addBasesToObject(arr, search.getItem(item?.name)?.base), JSON.parse(emptyBaseString)),
         identifications:
             itemArray.reduce((arr, item) =>
-                addIdsToObject(arr, getItem(item?.name)?.identifications), JSON.parse(emptyIdsString))
+                addIdsToObject(arr, search.getItem(item?.name)?.identifications), JSON.parse(emptyIdsString))
     };
 }
 
@@ -123,16 +256,7 @@ function addBasesToObject(object, base) {
     return object;
 }
 
-function addBaseToObject(object, baseKey, base) {
-    if (!base) return;
-    if (Number.isInteger(base)) {
-        object[baseKey] += base;
-    } else {
-        addMinAndMaxTo(object[baseKey], base);
-    }
-}
-
-function addIdsToObject(object, ids) {
+export function addIdsToObject(object, ids) {
     if (ids) for (let idKey in ids) addIdToObject(object, idKey, ids[idKey]);
     return object;
 }
@@ -144,8 +268,4 @@ function addIdToObject(object, idName, id) {
 function getAsMax(possibleInt) {
     if (Number.isInteger(possibleInt)) return possibleInt;
     return possibleInt.max;
-}
-
-function getItemAddedSP(item) {
-    return capitalizedSkillPointNames.map((name) => Number(item?.identifications[`raw${name}`] ?? 0));
 }

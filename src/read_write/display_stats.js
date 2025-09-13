@@ -1,6 +1,12 @@
-const support = document.getElementById("support_display");
+import {roundForDisplay} from "../util/numbers.js";
+import {attackSpeedMap, orderedAttackSpeed} from "../data/small_stuff.js";
+import {minecraftToHTML} from "../permute/minecraft_html.js";
+import {player_bps} from "../permute/stat_calculations.js";
+import * as codeDictionary from "../data/code_dictionary.js";
 
-function displayBuildStats(build) {
+export function displayBuildStats(build) {
+    const support = document.getElementById("support_display");
+
     if (!build.wynnClass) {
         support.style.display = "none";
         return;
@@ -69,7 +75,7 @@ function getStatDisplay(colorClass, includeSymbol, label, stat, post = "", color
 
 function getStatLabel(includeSymbol, colorClass, indent, label) {
     return minecraftToHTML(
-        (includeSymbol ? codeDictionaryGenericSymbols[colorClass] : codeDictionaryNamedColors[colorClass]) +
+        (includeSymbol ? codeDictionary.genericSymbols[colorClass] : codeDictionary.namedColors[colorClass]) +
         (indent ? "→ " : "") + `${label}:`);
 }
 
@@ -80,7 +86,7 @@ function getAttackSpeedDisplay(attack_speed) {
         "</div>";
 }
 
-function displayForDevelopment(build) {
+export function displayForDevelopment(build) {
     document.getElementById(`dev_output`).textContent =
         JSON.stringify(build, undefined, 1);
 }

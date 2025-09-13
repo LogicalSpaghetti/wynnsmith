@@ -1,23 +1,47 @@
 # Focus
 ### Small
-1. init should have flags passed in for all values directing it to take from primary or secondary build.
-2. empty slots
-3. cap offhands to 7
-4. we need to store old version's section length variables too.
-5. repurpose `getabilities.html` for Aspects
-6. Test if Radiance affects Skill Points.
-7. Detailed damage
-8. Tome SP doesn't work
+see if inline latex is possible in Obsidian
+1. Noxious debuff based on enemy debuffs
+	1. "enemy debuff" needs to be an effect type? 
+2. popups
+	1. one element covers the whole screen with fixed positioning
+		1. n% transparent
+		2. when clicked, (if the target is itself), send a custom close event to the child
+	2. a sub-element is centered within that, holding the content
+		1. when escape is pressed, close
+3. comparison needs:
+	1. An input for the link, and a selector for offhand
+	2. A display of the build's items if different
+	3. a section for sliders 
+4. to get the input data, either:
+	1. generate from link
+		1. string class
+		2. flag write to all inputs
+		3. flag 
+	2. use classes like `input_1` to locate the correct elements to read from
+	3. give both, along with flags for which to draw from
+5. to get the build data, either:
+	1. grab from input
+	2. grab from two inputs, along with flags for
+6. second build needs toggles and sliders
+7. init should have flags passed in for all values directing it to take from primary or secondary build.
+8. empty slots
+9. cap offhands to 7
+10. we need to store old version's section length variables too.
+11. repurpose `getabilities.html` for Aspects
+12. Test if Radiance affects Skill Points.
+13. Detailed damage
+14. Tome SP doesn't work
 	1. calc added SP per-build after Radiance applies.
-9. Dynamic node displays, (Archetype requirements, required ability)
+15. Dynamic node displays, (Archetype requirements, required ability)
 	1. Archetype highlighting
-10. Identification editing
-11. Small Tome selector
+16. Identification editing
+17. Small Tome selector
 	1. popup Zen-style text box when tab selected
 		1. tabbing from there cycles through aspects/tomes by icon
 		2. Escape or tabbing after the end closes and returns selection to the original element
-12.  Add more than just abilities to the effect builder
-13. Melee display DPS and per-hit.
+18.  Add more than just abilities to the effect builder
+19. Melee display DPS and per-hit.
 ### Major
 1. Build link generation/parsing
 2. Build comparison

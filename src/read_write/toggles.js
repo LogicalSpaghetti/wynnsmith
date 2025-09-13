@@ -1,5 +1,6 @@
+import classEffects from "../data/effects.js";
 
-function getActiveToggles() {
+export function getActiveToggles() {
     const toggles = Array.from(document.querySelector("#effect_toggles").querySelectorAll(".toggle"));
     if (toggles.length < 1) return [];
 
@@ -8,7 +9,7 @@ function getActiveToggles() {
         .map(toggle => toggle.dataset.toggle_name);
 }
 
-function setToggles(build) {
+export function setToggles(build) {
     const effects = build.effects.map(effectId => classEffects[build.wynnClass].effects[effectId]);
 
     const newToggles = [];

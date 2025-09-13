@@ -44,7 +44,9 @@
 
     <script src="../../src/permute/minecraft_html.js"></script>
     <script src="../../src/data/code_dictionary.js"></script>
-    <script type="text/javascript">
+    <script type="module">
+        import {minecraftToHTML} from "../../src/permute/minecraft_html";
+
         document.getElementById("holder")
             .addEventListener("pointerdown", (e) => e.target.classList.contains("focusable") ? function () {
             } : e.preventDefault());
@@ -70,16 +72,16 @@
         //Populates color options from codeDictionaryColor map
         const colorContainers = document.getElementsByClassName("colorContainer");
 
-        for (let key in codeDictionaryColor) {
+        for (let key in codeDictionary.color) {
 
-            if (codeDictionaryColor[key] == null)
+            if (codeDictionary.color[key] == null)
                 continue;
 
             const button = document.createElement("button");
             button.style.height = "16px";
             button.style.width = "16px";
             button.style.padding = "2px";
-            button.style.backgroundColor = codeDictionaryColor[key];
+            button.style.backgroundColor = codeDictionary.color[key];
 
             button.tabIndex = -1;
             button.type = "button";
@@ -99,7 +101,7 @@
         //Populates generic Unicode options from codeDictionaryGenericSymbols map
         const genericUnicodeContainers = document.getElementsByClassName("genericUnicodeContainer");
 
-        for (let key in codeDictionaryGenericSymbols) {
+        for (let key in codeDictionary.genericSymbols) {
 
             const button = document.createElement("button");
             button.title = key;
@@ -107,15 +109,15 @@
 
             const div = document.createElement("div");
             button.appendChild(div);
-            div.innerHTML = minecraftToHTML(codeDictionaryGenericSymbols[key]);
+            div.innerHTML = minecraftToHTML(codeDictionary.genericSymbols[key]);
             button.tabIndex = "-1";
             button.type = "button";
 
-            for (container of genericUnicodeContainers) {
+            for (const container of genericUnicodeContainers) {
                 const clone = button.cloneNode(true);
                 container.appendChild(clone);
                 clone.addEventListener("click", () => {
-                    insertStringBeforeSelected(codeDictionaryGenericSymbols[key]);
+                    insertStringBeforeSelected(codeDictionary.genericSymbols[key]);
                 });
             }
 
@@ -126,7 +128,7 @@
         //Populates class unicode options from codeDictionaryClassSymbols map
         const classUnicodeContainers = document.getElementsByClassName("classUnicodeContainer");
 
-        for (let key in codeDictionaryClassSymbols) {
+        for (let key in codeDictionary.classSymbols) {
 
             const button = document.createElement("button");
             button.title = key;
@@ -134,16 +136,16 @@
 
             const div = document.createElement("div");
             button.appendChild(div);
-            div.innerHTML = minecraftToHTML(codeDictionaryClassSymbols[key]);
+            div.innerHTML = minecraftToHTML(codeDictionary.classSymbols[key]);
 
             button.tabIndex = "-1";
             button.type = "button";
 
-            for (container of classUnicodeContainers) {
+            for (const container of classUnicodeContainers) {
                 const clone = button.cloneNode(true);
                 container.appendChild(clone);
                 clone.addEventListener("click", () => {
-                    insertStringBeforeSelected(codeDictionaryClassSymbols[key]);
+                    insertStringBeforeSelected(codeDictionary.classSymbols[key]);
                 });
             }
 
@@ -154,7 +156,7 @@
         //Populates common ability options from codeDictionaryCommonAbilityAttributes map
         const commonAbilityUnicodeContainers = document.getElementsByClassName("commonAbilityUnicodeContainer");
 
-        for (let key in codeDictionaryCommonAbilityAttributes) {
+        for (let key in codeDictionary.commonAbilityAttributes) {
 
             const button = document.createElement("button");
             button.title = key;
@@ -162,7 +164,7 @@
 
             const div = document.createElement("div");
             button.appendChild(div);
-            div.innerHTML = minecraftToHTML(codeDictionaryCommonAbilityAttributes[key][0]);
+            div.innerHTML = minecraftToHTML(codeDictionary.commonAbilityAttributes[key][0]);
 
             button.tabIndex = "-1";
             button.type = "button";
@@ -171,7 +173,7 @@
                 const clone = button.cloneNode(true);
                 container.appendChild(clone);
                 clone.addEventListener("click", () => {
-                    insertStringBeforeSelected(codeDictionaryCommonAbilityAttributes[key][1]);
+                    insertStringBeforeSelected(codeDictionary.commonAbilityAttributes[key][1]);
                 });
             }
 

@@ -1,6 +1,4 @@
-`use strict`;
-
-const codeDictionaryGenericSymbols = {
+export const genericSymbols = {
     "mana": "§b✺",
     "health": "§4⚔",
 
@@ -22,7 +20,7 @@ const codeDictionaryGenericSymbols = {
     "slowness": "§c⬤",
 };
 
-const codeDictionaryClassSymbols = {
+export const classSymbols = {
     "focus": "§e➽",
 
     "winded": "§b≈",
@@ -44,7 +42,8 @@ const codeDictionaryClassSymbols = {
     "bloodpool": "§4⚕",
     "bleeding": "§c",
 };
-const codeDictionaryCommonAbilityAttributes = {
+
+export const commonAbilityAttributes = {
 
     "manacost": ["§b✺", "\n§b✺ §7Mana Cost: §f_"],
 
@@ -63,7 +62,7 @@ const codeDictionaryCommonAbilityAttributes = {
     "cooldown": ["§3⌚", "\n§3⌚ §7Cooldown: §f_s"],
 };
 
-const codeDictionaryColor = {
+export const color = {
     '0' : '#000000',
     '1' : '#0000AA',
     '2' : '#00AA00',
@@ -88,7 +87,7 @@ const codeDictionaryColor = {
     'k' : '#FF4545',
 };
 
-const codeDictionaryRarityColor = {
+export const rarityColor = {
     "common": "§f",
     "unique": "§e",
     "set": "§a",
@@ -99,12 +98,12 @@ const codeDictionaryRarityColor = {
     "crafted": "§3",
 };
 
-const codeDictionaryReqIndicators = {
+export const reqIndicators = {
     "true": "§a✔",
     "false": "§c✖",
 };
 
-const codeDictionarySkillPointColor = {
+export const skillPointColor = {
     "strength": "§2",
     "dexterity": "§e",
     "intelligence": "§b",
@@ -112,22 +111,22 @@ const codeDictionarySkillPointColor = {
     "agility": "§f"
 }
 
-const codeDictionaryPositivityColors = {
+export const positivityColors = {
     "true": "§a",
     "false": "§c",
 };
 
-const codeDictionaryDecoration = {
+export const decoration = {
     "m": "line-through", "n": "underline",
 };
-const codeDictionaryStyle = {
+export const style = {
     "l": "fw-bold", "o": "fst-italic",
 };
 
-const minecraftDelimiters = {"§": true, "&": true};
-const preferredDelimiter = "§";
+export const minecraftDelimiters = {"§": true, "&": true};
+export const preferredDelimiter = "§";
 
-const codeDictionaryNamedColors = {
+export const namedColors = {
     "mana": "§b",
     "health": "§4",
 

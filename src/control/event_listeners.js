@@ -1,4 +1,16 @@
-`use strict`;
+import * as settings from "../control/settings.js";
+import * as ability_tree from "../read_write/ability_tree.js";
+import * as numbers from "../util/numbers.js"
+import {preLoadAssets} from "./preloading.js";
+import {getItem} from "../read_write/item_search.js";
+import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "./tooltip.js";
+import {copyBuildLink, copyTreeAsANSI} from "../read_write/build_linking.js";
+import {balanceSP} from "../permute/skill_points.js";
+import {getHoverTextForItem} from "../permute/minecraft_html.js";
+import {refreshBuild} from "./script.js";
+import {decimalToRoman} from "../util/numbers.js";
+import {copyImageById} from "../read_write/image_exporting.js";
+import {hideSettings, toggleBoolean, toggleSettingsHide} from "../control/settings.js";
 
 // called when the page finishes loading
 window.addEventListener("load", function () {
@@ -16,10 +28,11 @@ window.addEventListener("load", async function () {
 });
 
 function loadMiku() {
-    document.getElementById("miku").src = loadString("miku");
+    document.getElementById("miku").src = settings.loadString("miku");
 }
 
 function addEventListeners() {
+    addSettingsListeners()
     addAspectListeners();
     addTooltipListener();
 
@@ -32,7 +45,7 @@ function addEventListeners() {
     const treeElement = document.getElementById("ability_tree");
     // Ability Tree
     treeElement.addEventListener("click", (event) => {
-        treeClicked(event);
+        ability_tree.treeClicked(event);
     });
     document.getElementById("clear_tree").addEventListener("click", () => {
         treeElement.querySelectorAll("td[data-selected='true']").forEach((td) => {
@@ -75,7 +88,7 @@ function addEventListeners() {
             const src = reader.result;
             // display the image on the page
             document.getElementById("miku").src = src;
-            saveString("miku", src);
+            settings.saveString("miku", src);
         };
     });
 
@@ -186,18 +199,18 @@ function addAspectListeners() {
                 numeral.classList.add("Tier_" + decimalToRoman(numeral.dataset.tier));
                 refreshBuild();
             }
-            numeral.textContent = decimalToRoman(numeral.dataset.tier);
+            numeral.textContent = numbers.decimalToRoman(numeral.dataset.tier);
             return;
         }
         if (clickTarget.classList.contains("aspect_down")) {
             const numeral = clickTarget.parentElement.childNodes[2];
             if (numeral.dataset.tier > 1) {
-                numeral.classList.remove("Tier_" + decimalToRoman(numeral.dataset.tier));
+                numeral.classList.remove("Tier_" + numbers.decimalToRoman(numeral.dataset.tier));
                 numeral.dataset.tier -= 1;
-                numeral.classList.add("Tier_" + decimalToRoman(numeral.dataset.tier));
+                numeral.classList.add("Tier_" + numbers.decimalToRoman(numeral.dataset.tier));
                 refreshBuild();
             }
-            numeral.textContent = decimalToRoman(numeral.dataset.tier);
+            numeral.textContent = numbers.decimalToRoman(numeral.dataset.tier);
             return;
         }
 
@@ -261,9 +274,33 @@ document.getElementById("tree_img").addEventListener("click", function () {
     copyImageById("ability_tree");
 });
 
-function resetCopyText() {
+export function resetCopyText() {
     // resets the buttons if they were clicked
     document.querySelectorAll(".copy_button").forEach((button) => {
         button.textContent = button.dataset["default"];
+    });
+}
+
+export function addSettingsListeners() {
+    document.querySelectorAll(".settings_toggle").forEach((t) =>
+        t.addEventListener("click", function () {
+            toggleSettingsHide();
+        })
+    );
+
+    document.addEventListener("keyup", (e) => {
+        if (e.key === "Escape") {
+            hideSettings();
+        }
+    });
+
+    document.getElementById("selv").addEventListener("click", function () {
+        toggleBoolean("selvs");
+        refreshBuild();
+    });
+
+    document.getElementById("detailed_damage").addEventListener("click", function () {
+        toggleBoolean("detailed_damage");
+        refreshBuild();
     });
 }

@@ -1,8 +1,33 @@
-`use strict`;
-
 // TODO: Input should be identical to a build link, just the minimal information grouped up.
 //  class is read here since it's needed to allow for alternate-class offhands.
 //  when creating a build, if the class doesn't match then ignore the tree.
+
+import {getItemsFromHTML} from "./get_items.js";
+import {maxPlayerLevel} from "../data/small_stuff.js";
+import {getInputAbilities} from "./ability_tree.js";
+import * as search from "./item_search.js"
+import {
+    getItemAddedSP,
+    getSkillPointModifiers,
+    getSPBalanceModifiers,
+    skillPointNames
+} from "../permute/skill_points.js";
+import {damageTypePrefixes} from "../data/small_stuff.js";
+
+export function getInputByElementClass(elementClass) {
+    return getPrimaryInput();
+}
+
+export function getInputFromLink(link) {
+    // TODO
+}
+
+// TODO: remove once class system is set up.
+function getPrimaryInput() {
+    const input = new Input();
+    input.init();
+    return input;
+}
 
 class Input {
     level;
@@ -15,7 +40,7 @@ class Input {
     sp_provided;
     sp_modified;
 
-    init() {
+    init(weapon = 0, ) {
         this.items = getItemsFromHTML();
         if (this.items.weapons.length === 0) return null;
 
@@ -79,7 +104,7 @@ function getPlayerLevel() {
 
 function getWeaponClass(name) {
     // noinspection JSUnresolvedReference
-    return getItemInGroup("weapon", name)?.requirements?.classRequirement;
+    return search.getItemInGroup("weapon", name)?.requirements?.classRequirement;
 }
 
 function itemProvidesSomething(item) {
@@ -91,7 +116,7 @@ function itemRequiresSomething(item) {
 }
 
 function itemNamesToSkillPointData(equipment) {
-    return equipment.map(item => getItemAsSkillPointData(getItem(item.name)));
+    return equipment.map(item => getItemAsSkillPointData(search.getItem(item.name)));
 }
 
 function getItemAsSkillPointData(item) {
@@ -104,7 +129,7 @@ function getItemAsSkillPointData(item) {
 
 function getSPRequirementForAllWeapons(weapons) {
     return weapons.reduce((mins, weapon) => {
-        const reqs = getItemSPReqs(getItem(weapon.name));
+        const reqs = getItemSPReqs(search.getItem(weapon.name));
         return mins.map((min, i) => Math.max(min, reqs[i]));
     }, [0, 0, 0, 0, 0]);
 }
@@ -201,43 +226,4 @@ function addProvided(itemRanges, initialProvided) {
     const provided = [...initialProvided];
     for (const item of itemRanges) for (let i = 0; i < provided.length; i++) provided[i] += item.provided[i];
     return provided;
-}
-
-function balanceSP() {
-    const remainingSP = parseInt(document.getElementById("remaining_sp").dataset.value);
-    if (remainingSP < 1) return;
-
-    const spInputs = document.getElementById("sp_section");
-    const strengthCluster = spInputs.querySelector(".sp_cluster[data-element='earth']");
-    const strength = parseInt(strengthCluster.querySelector(".total_display").textContent);
-    const assignedStrength = parseInt(strengthCluster.querySelector(".assigned_display").textContent);
-    const dexterityCluster = spInputs.querySelector(".sp_cluster[data-element='thunder']");
-    const dexterity = parseInt(dexterityCluster.querySelector(".total_display").textContent);
-    const assignedDexterity = parseInt(dexterityCluster.querySelector(".assigned_display").textContent);
-
-    const modifiers = getSPBalanceModifiers(strength, dexterity, remainingSP);
-
-    strengthCluster.querySelector(".sp_input").value =
-        parseInt(strengthCluster.querySelector(".sp_input").value) + Math.ceil(modifiers.strength);
-    dexterityCluster.querySelector(".sp_input").value =
-        parseInt(dexterityCluster.querySelector(".sp_input").value) + Math.floor(modifiers.dexterity);
-}
-
-function getSPBalanceModifiers(strength, dexterity, spare) {
-    const difference = Math.max(0, Math.abs(strength - dexterity));
-    const overBalance = spare - difference;
-
-    if (strength > 150 && dexterity > 150) return {strength: 0, dexterity: 0};
-    if (strength > 150) return {strength: 0, dexterity: Math.max(0, Math.min(150, spare + dexterity) - dexterity)};
-    if (dexterity > 150) return {strength: Math.max(0, Math.min(150, spare + strength) - strength), dexterity: 0};
-
-    if (strength < 0 && dexterity < 0) return {strength: 0, dexterity: 0};
-    if (strength < 0 && dexterity >= 0) return {strength: 0, dexterity: spare};
-    if (dexterity < 0 && strength >= 0) return {strength: spare, dexterity: 0};
-
-    if (strength >= dexterity + spare) return {strength: 0, dexterity: spare};
-    if (dexterity >= strength + spare) return {strength: spare, dexterity: 0};
-    if (strength > dexterity) return {strength: overBalance / 2, dexterity: overBalance / 2 + difference};
-    if (strength < dexterity) return {strength: overBalance / 2 + difference, dexterity: overBalance / 2};
-    return {strength: spare / 2, dexterity: spare / 2};
 }

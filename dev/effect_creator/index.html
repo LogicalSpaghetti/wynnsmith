@@ -95,14 +95,12 @@
     </div>
 </div>
 
-<script src="../../src/data/trees.js"></script>
-<script src="../../src/permute/minecraft_html.js"></script>
-<script src="../../src/data/code_dictionary.js"></script>
-<script src="../../src/control/tooltip.js"></script>
+<script type="module">
+    import {Editor} from "../../src/control/effect_builder.js";
+    import {Tree} from "../../src/control/effect_builder.js";
+    import {addTooltipListener} from "../../src/control/tooltip.js";
 
-<script src="../../src/control/effect_builder.js"></script>
 
-<script>
     let editor = new Editor(null);
     let tree = new Tree("archer", editor);
 

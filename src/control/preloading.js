@@ -99,7 +99,7 @@ const abilityImages = [
     "aspect/warrior.png",
 ];
 
-async function preLoadAssets() {
+export async function preLoadAssets() {
     const preloadImage = src =>
         new Promise((resolve, reject) => {
             const image = new Image();

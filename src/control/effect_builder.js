@@ -1,6 +1,10 @@
 // noinspection DuplicatedCode
+import punscake from "../data/trees.js";
+import {getHoverTextForAbility, minecraftAsElement, minecraftToHTML} from "../permute/minecraft_html.js";
+import * as codeDictionary from "../data/code_dictionary.js";
+import {hideHoverAbilityTooltip, renderHoverTooltip} from "./tooltip.js";
 
-class Editor {
+export class Editor {
     effect;
     element;
 
@@ -151,7 +155,7 @@ class Editor {
     }
 }
 
-class Tree {
+export class Tree {
     nodes = {};
     effects = {};
 
@@ -229,7 +233,7 @@ class Tree {
             id++;
         }
 
-        const effect = new EffectBuilder(tree, id);
+        const effect = new EffectBuilder(this, id);
 
         this.effects[id] = effect;
         this.effect_holder.append(effect.html);
@@ -689,19 +693,19 @@ class EffectType {
 
         conversionHolder.appendChild(document.createElement("br"));
 
-        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["neutral"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionary.genericSymbols["neutral"]));
         const n = conversionHolder.appendChild(document.createElement("input"));
         n.value = String(conv[0]);
         n.style.width = "5ch";
         n.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["earth"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionary.genericSymbols["earth"]));
         const e = conversionHolder.appendChild(document.createElement("input"));
         e.value = String(conv[1]);
         e.style.width = "5ch";
         e.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["thunder"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionary.genericSymbols["thunder"]));
         const t = conversionHolder.appendChild(document.createElement("input"));
         t.value = String(conv[2]);
         t.style.width = "5ch";
@@ -709,19 +713,19 @@ class EffectType {
 
         conversionHolder.appendChild(document.createElement("br"));
 
-        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["water"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionary.genericSymbols["water"]));
         const w = conversionHolder.appendChild(document.createElement("input"));
         w.value = String(conv[3]);
         w.style.width = "5ch";
         w.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["fire"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionary.genericSymbols["fire"]));
         const f = conversionHolder.appendChild(document.createElement("input"));
         f.value = String(conv[4]);
         f.style.width = "5ch";
         f.addEventListener("change", () => setData(this));
 
-        conversionHolder.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["air"]));
+        conversionHolder.appendChild(minecraftAsElement(codeDictionary.genericSymbols["air"]));
         const a = conversionHolder.appendChild(document.createElement("input"));
         a.value = String(conv[5]);
         a.style.width = "5ch";

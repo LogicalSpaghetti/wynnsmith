@@ -1,4 +1,21 @@
-function addDamageDisplays(build, attackDisplayId = "attack_display") {
+import {damage_type_count, DamageExtremes} from "../permute/attack_calculations.js";
+import {minecraftAsElement} from "../permute/minecraft_html.js";
+import {roundForDisplay} from "../util/numbers.js";
+import {SkillPointIndexes} from "../permute/skill_points.js";
+import {newMinMax} from "../permute/effect_parsing.js";
+import * as settings from "../control/settings.js"
+import * as codeDictionary from "../data/code_dictionary.js";
+
+const damageColors = Object.freeze([
+    "#fca800",
+    "#0a0",
+    "#ff0",
+    "#1cc",
+    "#f11",
+    "#fff"
+]);
+
+export default function addDamageDisplays(build, attackDisplayId = "attack_display") {
     const dexterity = build.sp_multipliers[SkillPointIndexes.Dexterity];
 
     const attackDisplay = document.getElementById(attackDisplayId);
@@ -52,6 +69,10 @@ function getDisplayData(display, variants, dexterity, spell_costs) {
         damage: damage,
         spell_cost: spell_cost
     };
+}
+
+function sumDamages(damageA, damageB) {
+    return damageA.map((extreme, i) => extreme.map((x, j) => x + damageB[i][j]));
 }
 
 function isDisplayWorthShowing(displayData) {
@@ -108,9 +129,9 @@ function getAttackSpellCostElement(name, spell_cost, holderType = "div") {
 
     if (spell_cost) {
         header.appendChild(document.createTextNode(" ("));
-        header.appendChild(minecraftAsElement(codeDictionaryGenericSymbols["mana"], true));
+        header.appendChild(minecraftAsElement(codeDictionary.genericSymbols["mana"], true));
         header.appendChild(minecraftAsElement(
-            codeDictionaryNamedColors["mana"] + roundForDisplay(spell_cost, true)));
+            codeDictionary.namedColors["mana"] + roundForDisplay(spell_cost, true)));
         header.appendChild(document.createTextNode(")"));
     }
 
@@ -147,7 +168,7 @@ function getElementBarElement(averages) {
 const oneSelv = 80000;
 
 function selvify(num, addPeriod) {
-    return loadBoolean("selvs") ?
+    return settings.loadBoolean("selvs") ?
         roundForDisplay(num / oneSelv, addPeriod) + ` ${new Date().getMonth() === 11 ? "santa" : "selv"}`
         : roundForDisplay(num, addPeriod);
 }

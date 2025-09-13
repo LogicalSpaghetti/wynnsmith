@@ -1,4 +1,4 @@
-const aspect_descriptions = {
+export default {
     "archer": [
         {
             "name": "Aspect of the Beastmaster",

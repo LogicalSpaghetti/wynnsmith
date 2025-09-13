@@ -350,6 +350,19 @@ td {
     -ms-transform: translate(-50%, -50%);
 }
 
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    background-color: rgba(16, 16, 16, 0.5);
+}
+
+.popup-content {
+
+}
+
 /* -- Attacks: -- */
 
 #attack_display {

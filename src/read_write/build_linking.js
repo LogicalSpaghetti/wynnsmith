@@ -1,6 +1,8 @@
-`use strict`;
+import {maxPlayerLevel} from "../data/small_stuff.js";
+import {binaryToDecimal, decimalToBase64, decimalToBinary} from "../util/numbers.js";
+import {getItemByCluster} from "./get_items.js";
 
-function copyBuildLink(button, long) {
+export function copyBuildLink(button, long) {
     navigator.clipboard.writeText(getBuildLink(long));
 }
 
@@ -48,7 +50,7 @@ const branchHighlightSymbols = Object.freeze({
     "2022": "┴"
 });
 
-function copyTreeAsANSI() {
+export function copyTreeAsANSI() {
     navigator.clipboard.writeText(getTreeAsANSI());
 }
 

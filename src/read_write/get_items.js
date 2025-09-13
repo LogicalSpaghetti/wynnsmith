@@ -1,6 +1,7 @@
-`use strict`;
+import * as search from "./item_search.js";
+import {getPowder, getPowderSpecialName} from "../permute/powders.js";
 
-function getItemsFromHTML() {
+export function getItemsFromHTML() {
     return {
         equipment: getEquipment(),
         weapons: getWeapons(),
@@ -79,23 +80,18 @@ function readItemFromCluster(cluster) {
     setLink(cluster, itemData);
 
     item.powders = getClusterPowders(cluster);
-    item.special = getPowderSpecial(item.powders, itemData.type === "weapon");
+    item.special = getSpecialFromPowders(item.powders, itemData.type === "weapon");
 
     return item;
 }
 
 // TODO: crafted/modified/custom items
-function getItemByCluster(cluster) {
+export function getItemByCluster(cluster) {
     const input = cluster.querySelector(".item_input");
-    const item = getItemInGroup(cluster.dataset.slot, input.value);
+    const item = search.getItemInGroup(cluster.dataset.slot, input.value);
     if (cluster.dataset.slot === "weapon") cluster.querySelector(".slot_img").src =
         `img/item/${item?.requirements?.classRequirement ?? "archer"}.png`;
     return item;
-}
-
-function addMinAndMaxTo(target, source) {
-    target.min += source.min;
-    target.max += source.max;
 }
 
 function setPowderSlots(cluster, item) {
@@ -138,7 +134,7 @@ function getClusterPowders(cluster) {
 
     for (let i = 0; i < powdersString.length / 2; i++) {
         const powderName = powdersString.substring(i * 2, i * 2 + 2);
-        const powder = powders[powderName];
+        const powder = getPowder(powderName);
         if (powder == null) continue;
         slotPowders.push(powderName);
     }
@@ -155,45 +151,14 @@ function sortPowderArray(powderArray) {
     powderArray.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
 }
 
-function getPowderSpecial(powderArray, isWeapon = false) {
+function getSpecialFromPowders(powderArray, isWeapon = false) {
     const tiered = powderArray.filter(powder => powder[1] > 3);
     let first = tiered[0];
     for (let i = 1; i < tiered.length; i++) {
         if (tiered[i][0] === first[0]) {
-            const name = powderSpecialNames[isWeapon ? "weapon" : "armour"][powderPrefixes.indexOf(first[0])].toLowerCase();
+            const name = getPowderSpecialName(isWeapon ? "weapon" : "armour", first[0]);
             const tier = parseInt(tiered[i][1]) + parseInt(first[1]) - 7;
             return `${name}${tier}`;
         } else first = tiered[i];
     }
-}
-
-function getSkillPointModifiers() {
-    const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
-
-    const totals = [];
-    for (let cluster of spClusters) {
-        const modifierInput = cluster.querySelector(".sp_input");
-        const index = damageTypePrefixes.indexOf(cluster.dataset.element) - 1;
-
-        const value = Math.max(-1000, Math.min(1000, parseInt(modifierInput.value))) || 0;
-        if (modifierInput.value === "0-" || modifierInput.value === "-0" || modifierInput.value === "-")
-            modifierInput.value = "-";
-        else modifierInput.value = value;
-
-        totals[index] = value;
-    }
-
-    return totals;
-}
-
-function getSkillPointMultiplier(value, i) {
-    let mlt = spMultipliers[capSkillPoint(value)];
-    if (i === 3) mlt *= 0.867;
-    if (i === 4) mlt *= 0.951;
-
-    return mlt;
-}
-
-function capSkillPoint(sp) {
-    return isNaN(sp) ? 0 : Math.min(Math.max(sp, 0), 150);
 }

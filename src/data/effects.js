@@ -1,4 +1,4 @@
-const classEffects = {
+export default {
     archer: {
         "wynnClass": "archer", "effects": {
             "0": {

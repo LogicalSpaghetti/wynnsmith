@@ -1,4 +1,7 @@
-`use strict`;
+import * as codeDictionary from "../data/code_dictionary.js";
+import {attackSpeedMultipliers, damageTypeNames} from "../data/small_stuff.js";
+import {roundForDisplay} from "../util/numbers.js";
+import {stripMinecraftFormatting} from "../permute/minecraft_html.js";
 
 const classSpellNames = {
     archer: ["Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"],
@@ -8,11 +11,11 @@ const classSpellNames = {
     warrior: ["Bash", "Charge", "Uppercut", "War Scream"],
 };
 
-function snakeToTitle(string) {
+export function snakeToTitle(string) {
     return string.split('_').map(upperFirst).join(' ');
 }
 
-function upperFirst(string) {
+export function upperFirst(string) {
     return string.slice(0, 1).toUpperCase() + string.slice(1, string.length);
 }
 
@@ -20,7 +23,7 @@ function isSpellCost(stat) {
     return stat.includes("SpellCost");
 }
 
-function getFormattedBase(name, value, source) {
+export function getFormattedBase(name, value, source) {
     if (!value) return "";
     if (value.max) {
         return `§7${source[name].name} ${value.min}${source[name].suffix ?? ""}§7-${value.max}${source[name].suffix ?? ""}`;
@@ -29,9 +32,9 @@ function getFormattedBase(name, value, source) {
     }
 }
 
-function getFormattedSP(name, value, source) {
+export function getFormattedSP(name, value, source) {
     if (!value) return "";
-    const colorPrefix = codeDictionaryPositivityColors[isSpellCost(name) !== (value.max ?? value >= 0)];
+    const colorPrefix = codeDictionary.positivityColors[isSpellCost(name) !== (value.max ?? value >= 0)];
     if (value.max) {
         return `${colorPrefix}${value.min}${source[name].suffix ?? ""}§7 to ${colorPrefix}${value.max}${source[name].suffix ?? ""} §7${source[name].name}`;
     } else {
@@ -39,9 +42,9 @@ function getFormattedSP(name, value, source) {
     }
 }
 
-function getFormattedId(name, value, source, colorSign = true, wynnClass = "") {
+export function getFormattedId(name, value, source, colorSign = true, wynnClass = "") {
     if (!value) return "";
-    const color_prefix = colorSign ? codeDictionaryPositivityColors[isSpellCost(name) !== ((value.max ?? value) >= 0)] : "§7";
+    const color_prefix = colorSign ? codeDictionary.positivityColors[isSpellCost(name) !== ((value.max ?? value) >= 0)] : "§7";
     const suffix = source[name].suffix ?? "";
     let nameOfId = source[name].name;
     if (wynnClass && isSpellCost(name)) {
@@ -62,7 +65,7 @@ function getFormattedId(name, value, source, colorSign = true, wynnClass = "") {
     }
 }
 
-function getAverageDPS(item) {
+export function getAverageDPS(item) {
     let result = 0;
     if (item.base)
         for (let i = 0; i < 6; i++) {
@@ -74,8 +77,7 @@ function getAverageDPS(item) {
     return roundForDisplay(attackSpeedMultipliers[item.attackSpeed] * result / 2);
 }
 
-
-function wrapText(text, maxLength = 29) {
+export function wrapText(text, maxLength = 29) {
     if (!text) return "";
 
     const words = text.split(" ");

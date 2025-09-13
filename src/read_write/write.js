@@ -1,9 +1,19 @@
-`use strict`;
+import {getItemAddedSP, getSkillPointName} from "../permute/skill_points.js";
+import * as search from "./item_search.js";
+import {damageTypePrefixes} from "../data/small_stuff.js";
+import {addWarning} from "./warnings.js";
+import {minecraftToHTML} from "../permute/minecraft_html.js";
+import {renderHighlights, validateTree} from "./ability_tree.js";
+import {displayBuildStats, displayForDevelopment} from "./display_stats.js";
+import addDamageDisplays from "./display_damage.js";
+import {resetCopyText} from "../control/event_listeners.js";
+import * as codeDictionary from "../data/code_dictionary.js";
+import {setToggles} from "./toggles.js";
 
-function display(input, builds) {
+export function displayBuilds(input, builds) {
     if (!builds?.[0]) return;
     displaySkillPoints(input);
-    displayBuilds(builds);
+    displayPrimaryBuild(builds[0]);
     validateTree(input.level, input.wynnClass);
     renderHighlights();
     setPageEmbellishments(input.items.weapons[0].name, input.wynnClass);
@@ -20,16 +30,12 @@ function displayPrimaryBuild(build) {
     resetCopyText();
 }
 
-function displayBuilds(builds) {
-    displayPrimaryBuild(builds[0]);
-}
-
 function displaySkillPoints(input) {
     const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
     const spRemaining = document.getElementById("remaining_sp");
 
     // TODO: needs 1st build info to know Tome SP, and id multiplier SP.
-    const firstItemAdded = getItemAddedSP(getItem(input.items.weapons[0].name));
+    const firstItemAdded = getItemAddedSP(search.getItem(input.items.weapons[0].name));
     const assigned = input.sp_assigned.map((sp, i) =>
         sp + input.sp_modified[i]);
     const totals = input.sp_assigned.map((sp, i) =>
@@ -41,12 +47,12 @@ function displaySkillPoints(input) {
         cluster.querySelector(".total_display").textContent = String(totals[index]);
         cluster.querySelector(".assigned_display").textContent = String(assigned[index]);
 
-        if (assigned[index] > 100) addWarning(`Manually assigning ${assigned[index]} Skill Points to ${capitalizedSkillPointNames[index]} is not possible.`);
+        if (assigned[index] > 100) addWarning(`Manually assigning ${assigned[index]} Skill Points to ${getSkillPointName(index)} is not possible.`);
     }
 
     const maxSP = 2 * Math.min(input.level - 1, 100);
     const remainingSP = assigned.reduce((a, b) => a - b, maxSP);
-    spRemaining.innerHTML = minecraftToHTML(codeDictionaryPositivityColors[remainingSP >= 0] + remainingSP);
+    spRemaining.innerHTML = minecraftToHTML(codeDictionary.positivityColors[remainingSP >= 0] + remainingSP);
     spRemaining.dataset.value = String(remainingSP);
     if (remainingSP < 0) {
         addWarning(`Maximum Skill Points exceeded! For level ${input.level}, there are only ${maxSP} Skill Points available.`);
@@ -73,7 +79,7 @@ function displayEquipOrder(input) {
     }
     if (input.equip_order.length)
         element.innerHTML = "Equip Order:<br>" + minecraftToHTML(input.equip_order
-            .map(name => codeDictionaryRarityColor[getItem(name).rarity] + name)
+            .map(name => codeDictionary.rarityColor[search.getItem(name).rarity] + name)
             .join("\n"));
     else element.innerHTML = "<span class=''>No Equipment Added</span>";
 
