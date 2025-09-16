@@ -270,9 +270,9 @@ document.getElementById("ansi_tree").addEventListener("click", function () {
     copyTreeAsANSI();
 });
 
-document.getElementById("tree_img").addEventListener("click", function () {
-    copyImageById("ability_tree");
-});
+// document.getElementById("tree_img").addEventListener("click", function () {
+//     copyImageById("ability_tree");
+// });
 
 export function resetCopyText() {
     // resets the buttons if they were clicked

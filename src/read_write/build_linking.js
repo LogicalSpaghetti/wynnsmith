@@ -57,14 +57,14 @@ export function copyTreeAsANSI() {
 function getTreeAsANSI() {
     let result = "```ansi";
     for (const row of document.getElementById("ability_tree").childNodes) {
-        // if (i % 6 === 0 && i !== 0) continue;
         result += "\n";
         for (let cell of row.childNodes)
             if (!cell.classList.contains("tree_cell")) result += " ";
-            else if (cell.dataset.type === "node") getNodeANSI(cell);
+            else if (cell.dataset.type === "node") result += getNodeANSI(cell);
             else if (cell.dataset.type === "connector") result += getConnectorANSI(cell);
     }
-    return result + "```";
+    result += "```";
+    return result.replaceAll(/\s+\n/g, "\n");
 }
 
 function getConnectorANSI(cell) {
@@ -76,9 +76,9 @@ function getConnectorANSI(cell) {
 }
 
 function getNodeANSI(cell) {
-    return (cell.dataset.selected !== "true" ? ansiColors["grey"] :
+    return ((cell.dataset.selected !== "true" ? ansiColors["grey"] :
             (ansiColors[cell.dataset.color] ?? `Invalid Color: ${cell.dataset.color}`)) +
-        nodeSymbol + ansiColorTerminator;
+        nodeSymbol + ansiColorTerminator);
 }
 
 const version = 0;

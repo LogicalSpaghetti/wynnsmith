@@ -1,3 +1,5 @@
+import * as html2canvas from '../../lib/html2canvas.min.js';
+
 export function copyImageById(elementId) {
     copyImageOfElement(document.getElementById(elementId));
 }
@@ -6,6 +8,7 @@ export function saveImageById(elementId) {
     saveImageOfElement(document.getElementById(elementId));
 }
 
+// TODO: doesn't work since switching to modules
 function copyImageOfElement(element) {
     html2canvas(element, {backgroundColor: null}).then((canvas) => {
         canvas.toBlob((blob) => {
