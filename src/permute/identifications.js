@@ -74,7 +74,7 @@ function applyExternalBuffs(build) {
 
 function includeTomes(build) {
     for (let tome of build.tomes) if (tome)
-        build.identifications = addIdsToObject(build.identifications, search.getItem(tome.name).identifications);
+        build.identifications = addIdsToObject(build.identifications, search.getItemByName(tome.name).identifications);
 }
 
 function includeCharms(build) {

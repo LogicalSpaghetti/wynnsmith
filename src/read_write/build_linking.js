@@ -1,6 +1,10 @@
-import {maxPlayerLevel} from "../data/small_stuff.js";
-import {binaryToDecimal, decimalToBase64, decimalToBinary} from "../util/numbers.js";
+import {base64ToDecimal, binaryToDecimal, decimalToBase64, decimalToBinary} from "../util/numbers.js";
 import {getItemByCluster} from "./get_items.js";
+import {maxPlayerLevel} from "../data/small_stuff.js";
+import {getNewInput} from "./read.js";
+import indexedInternalNameGroups from "../data/indexed_names.js";
+
+const version = 0;
 
 export function copyBuildLink(button, long) {
     navigator.clipboard.writeText(getBuildLink(long));
@@ -24,67 +28,10 @@ function getBuildLink(isLong) {
     return text + appendedText + "\n";
 }
 
-const nodeSymbol = "♦";
-const ansiColorTerminator = `[0m`;
-const ansiColors = Object.freeze({
-    red: `[2;31m`,
-    skill: "[2;32m",
-    yellow: "[2;33m",
-    blue: `[2;34m`,
-    purple: `[2;35m`,
-    white: "[2;37m",
-    grey: "[2;30m",
-    teal: "[2;36m"
-});
-const branchHighlightSymbols = Object.freeze({
-    "0220": "┐",
-    "0202": "┌",
-    "0222": "┬",
-    "0022": "─",
-    "2200": "│",
-    "2220": "┤",
-    "2020": "┘",
-    "2002": "└",
-    "2202": "├",
-    "2222": "┼",
-    "2022": "┴"
-});
-
-export function copyTreeAsANSI() {
-    navigator.clipboard.writeText(getTreeAsANSI());
-}
-
-function getTreeAsANSI() {
-    let result = "```ansi";
-    for (const row of document.getElementById("ability_tree").childNodes) {
-        result += "\n";
-        for (let cell of row.childNodes)
-            if (!cell.classList.contains("tree_cell")) result += " ";
-            else if (cell.dataset.type === "node") result += getNodeANSI(cell);
-            else if (cell.dataset.type === "connector") result += getConnectorANSI(cell);
-    }
-    result += "```";
-    return result.replaceAll(/\s+\n/g, "\n");
-}
-
-function getConnectorANSI(cell) {
-    if (cell.dataset.highlights === "0000") return " ";
-
-    return ansiColors["teal"] +
-        branchHighlightSymbols[cell.dataset.highlights] ?? cell.dataset.highlights +
-        ansiColorTerminator;
-}
-
-function getNodeANSI(cell) {
-    return ((cell.dataset.selected !== "true" ? ansiColors["grey"] :
-            (ansiColors[cell.dataset.color] ?? `Invalid Color: ${cell.dataset.color}`)) +
-        nodeSymbol + ansiColorTerminator);
-}
-
-const version = 0;
-
 // encodeInput({level: 106, items:{weapons:[{slot:"weapon",name:"Warp",powders:["f6","f6","f6","f6","f6","f6","f6","f6","f6"]}]}});
 function encodeInput(input) {
+    // padding 1
+    // isBuild flag
     let link = "11";
     // version
     link += decimalToBinary(version).padStart(12, "0");
@@ -93,18 +40,23 @@ function encodeInput(input) {
         : "0" + decimalToBinary(input.level).padStart(decimalToBinary(maxPlayerLevel).length, "0");
     link += encodeItems(input);
 
-    // TODO: get input items in order
+
     return decimalToBase64(binaryToDecimal(link));
 }
 
 function encodeItems(input) {
+    // TODO offhand count 3bits
     return encodeItem(input.items.weapons[0]);
+    // TODO: other items
+    //  item slot needs to be stored
 }
 
 function encodeItem(item) {
     return encodeItemData(item) + encodeItemPowders(item);
 }
 
+// TODO: add internalName to all items
+//  turn items into a class
 function encodeItemData(item) {
     if (!item.type) {
         return "0" + `${decimalToBinary(indexedInternalNameGroups[item.slot].indexOf(item.name) + 1)}`
@@ -119,6 +71,7 @@ function encodeItemData(item) {
 }
 
 const powderLetters = ["e", "t", "w", "f", "a"];
+const maxPowderTier = 6;
 
 function encodeItemPowders(item) {
     if (!item?.powders?.length) return "0";
@@ -131,7 +84,7 @@ function encodeItemPowders(item) {
 
         if (i > 0) result += powder === lastPowder ? "1" : "0";
         if (powder !== lastPowder)
-            if (powder[1] === "6") {
+            if (powder[1] === String(maxPowderTier)) {
                 result += decimalToBinary(powderLetters.indexOf(powder[0])).padStart(3, "0");
             } else {
                 result += "101";
@@ -142,4 +95,69 @@ function encodeItemPowders(item) {
         lastPowder = powder;
     }
     return result;
+}
+
+export function decodeLink(query) {
+    const binary = decimalToBinary(base64ToDecimal(query));
+
+    if (binary[1] === "1") return decodeBuild(binary.splice(0, 2));
+
+
+}
+
+const versionBits = 12;
+const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"]
+
+function decodeBuild(binary) {
+    const input = getNewInput();
+    // TODO database versioning
+    const linkVersion = binaryToDecimal(binary.splice(0, versionBits));
+    const isMaxLevel = binary.splice(0, 1) === "1";
+    input.level = isMaxLevel ? maxPlayerLevel : binary.splice(0, getBinaryLength(maxPlayerLevel));
+
+    const offhandCount = binaryToDecimal(binary.splice(0, 3));
+    // for each item
+    for (let i = 0; i < slots.length + offhandCount; i++) {
+        const categoryIndex = (i < offhandCount) ? 0 : i - offhandCount;
+        const category = slots[categoryIndex];
+        const item = {};
+        item.name = decodeItemName(binary, category);
+        const hasPowders = binary.splice(0, 1) === "1";
+        if (hasPowders) item.powders = decodePowders(binary);
+    }
+}
+
+function decodeItemName(binary, category) {
+    const type = binary.splice(0, 1);
+    if (type === "0") {
+        const length = getBinaryLength(indexedInternalNameGroups[category].length + 1);
+        const index = binaryToDecimal(binary.splice(0, length));
+        if (index === 0) return "";
+        return indexedInternalNameGroups[category][index - 1];
+    } else throw new Error(`invalid item type: ${type}`);
+}
+
+function decodePowders(binary) {
+    const powders = [];
+
+    let morePowders = true;
+    while (morePowders) {
+        const type = binaryToDecimal(binary.splice(0, 3));
+        let element;
+        let tier;
+        if (type < powderLetters.length) {
+            element = powderLetters[type];
+            tier = maxPowderTier;
+        } else if (type === powderLetters.length) {
+            element = powderLetters[binaryToDecimal(binary.splice(0, 3))];
+            tier = binaryToDecimal(binary.splice(0, 3));
+        } else throw new Error(`no powder encoding for type: ${type}`);
+        powders.push(`${element}${tier}`);
+    }
+
+    return powders;
+}
+
+function getBinaryLength(decimal) {
+    return decimalToBinary(decimal).length;
 }

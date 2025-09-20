@@ -2,15 +2,16 @@ import * as settings from "../control/settings.js";
 import * as ability_tree from "../read_write/ability_tree.js";
 import * as numbers from "../util/numbers.js"
 import {preLoadAssets} from "./preloading.js";
-import {getItem} from "../read_write/item_search.js";
+import {getItemByName} from "../read_write/item_search.js";
 import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "./tooltip.js";
-import {copyBuildLink, copyTreeAsANSI} from "../read_write/build_linking.js";
+import {copyBuildLink} from "../read_write/build_linking.js";
+import copyTreeAsANSI from "../read_write/ansi_tree.js";
 import {balanceSP} from "../permute/skill_points.js";
 import {getHoverTextForItem} from "../permute/minecraft_html.js";
 import {refreshBuild} from "./script.js";
 import {decimalToRoman} from "../util/numbers.js";
-import {copyImageById} from "../read_write/image_exporting.js";
-import {hideSettings, toggleBoolean, toggleSettingsHide} from "../control/settings.js";
+// import {copyImageById} from "../read_write/image_exporting.js";
+import {hideSettings, toggleBoolean, toggleSettingsHide} from "./settings.js";
 
 // called when the page finishes loading
 window.addEventListener("load", function () {
@@ -119,7 +120,7 @@ function addListenersToInputCluster(cluster) {
     const inputs = cluster.querySelectorAll(".input");
 
     link.addEventListener("mouseover", () => {
-        renderHoverTooltip(getHoverTextForItem(getItem(input.value)));
+        renderHoverTooltip(getHoverTextForItem(getItemByName(input.value)));
     });
     link.addEventListener("mouseout", () => {
         hideHoverAbilityTooltip();

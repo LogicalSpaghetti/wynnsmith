@@ -35,7 +35,7 @@ function displaySkillPoints(input) {
     const spRemaining = document.getElementById("remaining_sp");
 
     // TODO: needs 1st build info to know Tome SP, and id multiplier SP.
-    const firstItemAdded = getItemAddedSP(search.getItem(input.items.weapons[0].name));
+    const firstItemAdded = getItemAddedSP(search.getItemByName(input.items.weapons[0].name));
     const assigned = input.sp_assigned.map((sp, i) =>
         sp + input.sp_modified[i]);
     const totals = input.sp_assigned.map((sp, i) =>
@@ -79,7 +79,7 @@ function displayEquipOrder(input) {
     }
     if (input.equip_order.length)
         element.innerHTML = "Equip Order:<br>" + minecraftToHTML(input.equip_order
-            .map(name => codeDictionary.rarityColor[search.getItem(name).rarity] + name)
+            .map(name => codeDictionary.rarityColor[search.getItemByName(name).rarity] + name)
             .join("\n"));
     else element.innerHTML = "<span class=''>No Equipment Added</span>";
 

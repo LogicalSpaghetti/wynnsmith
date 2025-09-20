@@ -209,7 +209,7 @@ class Build {
     toggles;
 
     constructor(weapon, input) {
-        const weaponItem = search.getItem(weapon.name);
+        const weaponItem = search.getItemByName(weapon.name);
 
         this.level = input.level;
 
@@ -244,10 +244,10 @@ function sumItemStats(weapon, equipment) {
 
     return {
         base:
-            itemArray.reduce((arr, item) => addBasesToObject(arr, search.getItem(item?.name)?.base), JSON.parse(emptyBaseString)),
+            itemArray.reduce((arr, item) => addBasesToObject(arr, search.getItemByName(item?.name)?.base), JSON.parse(emptyBaseString)),
         identifications:
             itemArray.reduce((arr, item) =>
-                addIdsToObject(arr, search.getItem(item?.name)?.identifications), JSON.parse(emptyIdsString))
+                addIdsToObject(arr, search.getItemByName(item?.name)?.identifications), JSON.parse(emptyIdsString))
     };
 }
 

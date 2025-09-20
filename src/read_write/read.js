@@ -12,14 +12,14 @@ import {
     getSPBalanceModifiers,
     skillPointNames
 } from "../permute/skill_points.js";
-import {damageTypePrefixes} from "../data/small_stuff.js";
+import indexedInternalNameGroups from "../data/indexed_names.js";
 
 export function getInputByElementClass(elementClass) {
     return getPrimaryInput();
 }
 
-export function getInputFromLink(link) {
-    // TODO
+export function getNewInput() {
+    return new Input();
 }
 
 // TODO: remove once class system is set up.
@@ -59,6 +59,16 @@ class Input {
     static getPrimary() {
 
     }
+}
+
+export class Item {
+    constructor(name, powders, byInternalName) {
+        this.powders = powders;
+        this.data = byInternalName ? search.getItem(name) : search.getItemByName(name);
+    }
+
+    getInternalNameId = (category = null) =>
+        indexedInternalNameGroups[category ?? this.data.type].indexOf(this.data.internalName);
 }
 
 function getEquipOrderInformation(items) {
@@ -116,7 +126,7 @@ function itemRequiresSomething(item) {
 }
 
 function itemNamesToSkillPointData(equipment) {
-    return equipment.map(item => getItemAsSkillPointData(search.getItem(item.name)));
+    return equipment.map(item => getItemAsSkillPointData(search.getItemByName(item.name)));
 }
 
 function getItemAsSkillPointData(item) {
@@ -129,7 +139,7 @@ function getItemAsSkillPointData(item) {
 
 function getSPRequirementForAllWeapons(weapons) {
     return weapons.reduce((mins, weapon) => {
-        const reqs = getItemSPReqs(search.getItem(weapon.name));
+        const reqs = getItemSPReqs(search.getItemByName(weapon.name));
         return mins.map((min, i) => Math.max(min, reqs[i]));
     }, [0, 0, 0, 0, 0]);
 }

@@ -35,8 +35,8 @@ export function getAbilities(inputAbilities, weapon, equipment) {
 }
 
 function getMajorIds(items) {
-    if (!items.length) return search.getItem(items.name)?.majorIds;
-    return items.reduce((arr, item) => arr.concat(search.getItem(item?.name)?.majorIds), [])
+    if (!items.length) return search.getItemByName(items.name)?.majorIds;
+    return items.reduce((arr, item) => arr.concat(search.getItemByName(item?.name)?.majorIds), [])
         .filter(item => item != null);
 }
 

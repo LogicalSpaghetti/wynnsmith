@@ -6,17 +6,21 @@ export function getItemFromSearch(search) {
         .replaceAll("%20", " ")
         .replaceAll("%27", "'")
         .replaceAll("+", " "));
-    return getItem(cleanSearch) ?? getItem(search);
+    return getItemByName(cleanSearch) ?? getItemByName(search);
 }
 
-export function getItem(itemName) {
+export function getItemByName(itemName) {
     if (!itemName) return null;
     itemName = simplifyString(itemName);
     return allItems.find((item) => simplifyString(item.name) === itemName);
 }
 
+export function getItem(internalName) {
+    return allItems.find((item) => simplifyString(item.internalName) === internalName);
+}
+
 export function getItemInGroup(groupName, itemName) {
-    const item = getItem(itemName);
+    const item = getItemByName(itemName);
     if (!item) return null;
     if (item.subType === groupName || item.type === groupName) return item;
 }

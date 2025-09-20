@@ -10,3 +10,7 @@
 
 https://anseki.github.io/leader-line/
 - Looks cool, do something with?
+
+[Tailwind CSS](https://tailwindcss.com/)
+[Bootstrap](https://getbootstrap.com/)
+[Vitest](https://vitest.dev/)
