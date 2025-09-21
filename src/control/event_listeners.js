@@ -1,6 +1,6 @@
 import * as settings from "../control/settings.js";
 import * as ability_tree from "../read_write/ability_tree.js";
-import * as numbers from "../util/numbers.js"
+import * as numbers from "../util/numbers.js";
 import {preLoadAssets} from "./preloading.js";
 import {getItemByName} from "../read_write/item_search.js";
 import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "./tooltip.js";
@@ -11,20 +11,17 @@ import {getHoverTextForItem} from "../permute/minecraft_html.js";
 import {refreshBuild} from "./script.js";
 import {decimalToRoman} from "../util/numbers.js";
 // import {copyImageById} from "../read_write/image_exporting.js";
-import {hideSettings, toggleBoolean, toggleSettingsHide} from "./settings.js";
+import {toggleBoolean} from "./settings.js";
 
-// called when the page finishes loading
-window.addEventListener("load", function () {
+addElem(window, "load", () => {
     // TODO: before enabling everything and reloading, verify the version and handle it if it's old
     loadMiku();
-
     refreshBuild();
-
-    // added after everything has loaded to prevent premature reloads
+    // last to prevent premature reloads
     addEventListeners();
 });
 
-window.addEventListener("load", async function () {
+addElem(window, "load", async function () {
     await preLoadAssets();
 });
 
@@ -33,54 +30,39 @@ function loadMiku() {
 }
 
 function addEventListeners() {
-    addSettingsListeners()
+    addSettingsListeners();
     addAspectListeners();
     addTooltipListener();
 
     document.querySelectorAll(".input_cluster").forEach((cluster) => {
         addListenersToInputCluster(cluster);
     });
-    document.querySelector("#level_input").addEventListener("input", () => {
-        refreshBuild();
-    });
+
+    add("level_input", "input", refreshBuild);
     const treeElement = document.getElementById("ability_tree");
-    // Ability Tree
-    treeElement.addEventListener("click", (event) => {
-        ability_tree.treeClicked(event);
-    });
-    document.getElementById("clear_tree").addEventListener("click", () => {
-        treeElement.querySelectorAll("td[data-selected='true']").forEach((td) => {
-            td.dataset.selected = "false";
-        });
-        refreshBuild();
-    });
-    document.getElementById("clear_reds").addEventListener("click", () => {
-        treeElement.querySelectorAll("td[data-red='true']").forEach((node) => {
-            node.dataset.selected = "false";
-        });
+
+    addElem(treeElement, "click", ability_tree.treeClicked);
+
+    add("clear_tree", "click", () => {
+        treeElement.querySelectorAll("td[data-selected='true']")
+            .forEach((node) => node.dataset.selected = "false");
         refreshBuild();
     });
 
-    // Effect Toggles
-
-    document.getElementById("effect_toggles").addEventListener("click", (event) => {
-        toggleEffectToggle(event);
+    add("clear_reds", "click", () => {
+        treeElement.querySelectorAll("td[data-red='true']")
+            .forEach((node) => node.dataset.selected = "false");
+        refreshBuild();
     });
 
-    document.getElementById(`copy_short`).addEventListener("click", function () {
-        copyBuildLink(this, false);
-    });
-    document.getElementById(`copy_long`).addEventListener("click", function () {
-        copyBuildLink(this, true);
-    });
+    add("effect_toggles", "click", toggleEffectToggle);
 
-    document.querySelectorAll(".copy_button").forEach((button) => {
-        button.addEventListener("click", function () {
-            button.textContent = "Copied!";
-        });
-    });
+    add("copy_short", "click", (e) => copyBuildLink(e.target, false));
+    add("copy_long", "click", (e) => copyBuildLink(e.target, true));
 
-    document.getElementById("gif_input").addEventListener("change", (event) => {
+    addAll("copy_button", "click", (event) => event.target.textContent = "Copied!");
+
+    add("gif_input", "change", (event) => {
         const file = event.target.files[0];
         // do something with the file
         const reader = new FileReader();
@@ -93,25 +75,21 @@ function addEventListeners() {
         };
     });
 
-    document.getElementById("miku").style.opacity = document.getElementById("opacity_slider").value + "%";
-    document.getElementById("opacity_slider").addEventListener("input", (event) => {
+    add("opacity_slider", "input", (event) => {
         document.getElementById("miku").style.opacity = event.target.value + "%";
     });
+    dispatch("opacity_slider", "input");
 
-    document.getElementById("add_offhand").addEventListener("click", () => {
-        addOffhandInput();
-    });
+    add("add_offhand", "click", addOffhandInput);
 
-    document.querySelectorAll(".sp_input").forEach(el => {
-        el.addEventListener("input", () => {
-            refreshBuild();
-        });
-    });
+    addAll("sp_input", "input", refreshBuild);
 
-    document.getElementById("balance_dmg").addEventListener("click", () => {
+    add("balance_dmg", "click", () => {
         balanceSP();
         refreshBuild();
-    })
+    });
+
+    add("ansi_tree", "click", copyTreeAsANSI);
 }
 
 function addListenersToInputCluster(cluster) {
@@ -119,16 +97,9 @@ function addListenersToInputCluster(cluster) {
     const link = cluster.querySelector(".item_link");
     const inputs = cluster.querySelectorAll(".input");
 
-    link.addEventListener("mouseover", () => {
-        renderHoverTooltip(getHoverTextForItem(getItemByName(input.value)));
-    });
-    link.addEventListener("mouseout", () => {
-        hideHoverAbilityTooltip();
-    });
-
-    inputs.forEach(input => input.addEventListener("input", () => {
-        refreshBuild();
-    }));
+    addElem(link, "mouseover", () => renderHoverTooltip(getHoverTextForItem(getItemByName(input.value))));
+    addElem(link, "mouseout", () => hideHoverAbilityTooltip());
+    addAllElem(inputs, "input", refreshBuild);
 }
 
 function addOffhandInput() {
@@ -159,7 +130,7 @@ function addOffhandInput() {
 
     const removeInput = cluster.appendChild(document.createElement("button"));
     removeInput.textContent = "x";
-    removeInput.addEventListener("click", () => {
+    addElem(removeInput, "click", () => {
         offhandInputs.removeChild(cluster);
         refreshBuild();
     });
@@ -187,7 +158,7 @@ function addAspectListeners() {
     const active = document.getElementById("active_aspects");
     const inactive = document.getElementById("inactive_aspects");
 
-    active.addEventListener("click", (event) => {
+    addElem(active, "click", (event) => {
         const clickTarget = event.target;
 
         if (clickTarget.classList.contains("aspect_up")) {
@@ -240,7 +211,7 @@ function addAspectListeners() {
         refreshBuild();
     });
 
-    inactive.addEventListener("click", (event) => {
+    addElem(inactive, "click", (event) => {
         const clickTarget = event.target;
         if (!clickTarget.classList.contains("aspect_image") && !clickTarget.classList.contains("aspect_tier")) return;
         const aspect = clickTarget.parentElement;
@@ -267,41 +238,40 @@ function addAspectListeners() {
     });
 }
 
-document.getElementById("ansi_tree").addEventListener("click", function () {
-    copyTreeAsANSI();
-});
-
-// document.getElementById("tree_img").addEventListener("click", function () {
-//     copyImageById("ability_tree");
-// });
-
 export function resetCopyText() {
     // resets the buttons if they were clicked
-    document.querySelectorAll(".copy_button").forEach((button) => {
-        button.textContent = button.dataset["default"];
-    });
+    document.querySelectorAll(".copy_button").forEach(button =>
+        button.textContent = button.dataset["default"]);
 }
 
-export function addSettingsListeners() {
-    document.querySelectorAll(".settings_toggle").forEach((t) =>
-        t.addEventListener("click", function () {
-            toggleSettingsHide();
-        })
-    );
-
-    document.addEventListener("keyup", (e) => {
-        if (e.key === "Escape") {
-            hideSettings();
-        }
-    });
-
-    document.getElementById("selv").addEventListener("click", function () {
+function addSettingsListeners() {
+    add("selv", "click", () => {
         toggleBoolean("selvs");
         refreshBuild();
     });
-
-    document.getElementById("detailed_damage").addEventListener("click", function () {
+    add("detailed_damage", "click", () => {
         toggleBoolean("detailed_damage");
         refreshBuild();
     });
+}
+
+function add(id, type, lambda) {
+    document.getElementById(id).addEventListener(type, lambda);
+}
+
+function addElem(element, type, lambda) {
+    element.addEventListener(type, lambda);
+}
+
+function addAll(className, type, lambda) {
+    document.querySelectorAll(`.${className}`)
+        .forEach(el => el.addEventListener(type, lambda));
+}
+
+function addAllElem(elements, type, lambda) {
+    elements.forEach(el => el.addEventListener(type, lambda));
+}
+
+function dispatch(id, eventName) {
+    document.getElementById(id).dispatchEvent(new Event(eventName));
 }

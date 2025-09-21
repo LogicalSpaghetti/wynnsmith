@@ -9,7 +9,7 @@
 <body>
 <div class="sidenav">
     <br>
-    <button id="settings_open" class="settings_toggle">⚙</button>
+    <button popovertarget="settings" popovertargetaction="show" id="settings_open" class="settings_toggle">⚙</button>
 </div>
 <div id="content" style="margin-left: 3ch">
     <div class="flexCol">
@@ -25,7 +25,8 @@
                 <br>
                 <button id="ansi_tree" class="copy_button" data-default="Copy ANSI Tree">Copy ANSI Tree</button>
                 <br>
-                <button id="tree_img" class="copy_button" data-default="Copy Tree as Image" hidden>Copy Tree as Image</button>
+                <button id="tree_img" class="copy_button" data-default="Copy Tree as Image" hidden>Copy Tree as Image
+                </button>
             </div>
         </section>
         <!-- Column -->
@@ -281,23 +282,13 @@
         </section>
         <!-- Column -->
         <section>
+            <button popovertarget="compare_section" popovertargetaction="show">Compare Build...</button>
             <div class="m1">
                 <div id="attack_display">
                     <div class="attack-holder">
                         Input Weapon
                     </div>
                 </div>
-            </div>
-        </section>
-        <!-- Column -->
-        <section>
-            <div>
-                Compare to:
-                <input>
-                <br>
-                Toggles/Sliders
-                <br>
-                if other build, toggles for which inputs are shared.
             </div>
         </section>
     </div>
@@ -310,11 +301,7 @@
         <a href="https://www.wynnpool.com/" target="_blank">Wynnpool</a>
     </div>
 </div>
-<div
-        class="hide_section"
-        id="settings"
-        style="text-align: center; background-color: #333; min-height: 100vh"
->
+<div popover id="settings">
     <button id="selv">Toggle Selvs</button>
     <br><br>
     <button id="detailed_damage">Toggle Detailed Damage</button>
@@ -328,13 +315,28 @@
         <input id="opacity_slider" class="slider" type="range" value="15" style="width: 210px"/>
     </div>
     <br>
-    <button id="settings_close" class="settings_toggle">Close Settings</button>
+    <button popovertarget="settings" popovertargetaction="hide">Close Settings</button>
     <br><br><br><br>
     <div id="dev_output" class="output font-minecraft"></div>
 </div>
-<div class="popup" hidden>
-    <div class="popup-content full-center">
-        Hello!
+<div popover id="compare_section">
+    <div style="background: #808080; padding: 10px; text-align: center;">
+        <h1>Compare build to</h1>
+        <div style="display: inline-block;">
+            Compare to Offhand:
+            <br>
+            <select>
+                <option value="">-none-</option>
+            </select>
+        </div>
+        <div style="display: inline-block;">
+            Compare to link:
+            <br>
+            <input placeholder="paste link here" type="text">
+        </div>
+        <br>
+        <br>
+        <button popovertarget="compare_section" popovertargetaction="hide">Close</button>
     </div>
 </div>
 
