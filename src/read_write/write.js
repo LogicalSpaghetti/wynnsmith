@@ -16,7 +16,7 @@ export function displayBuilds(input, builds) {
     displayPrimaryBuild(builds[0]);
     validateTree(input.level, input.wynnClass);
     renderHighlights();
-    setPageEmbellishments(input.items.weapons[0].name, input.wynnClass);
+    setPageEmbellishments(input.items.weapon.name, input.wynnClass);
     displayEquipOrder(input);
 }
 
@@ -35,7 +35,7 @@ function displaySkillPoints(input) {
     const spRemaining = document.getElementById("remaining_sp");
 
     // TODO: needs 1st build info to know Tome SP, and id multiplier SP.
-    const firstItemAdded = getItemAddedSP(search.getItemByName(input.items.weapons[0].name));
+    const firstItemAdded = getItemAddedSP(search.getItemByName(input.items.weapon.name));
     const assigned = input.sp_assigned.map((sp, i) =>
         sp + input.sp_modified[i]);
     const totals = input.sp_assigned.map((sp, i) =>

@@ -4,7 +4,7 @@ import * as numbers from "../util/numbers.js";
 import {preLoadAssets} from "./preloading.js";
 import {getItemByName} from "../read_write/item_search.js";
 import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "./tooltip.js";
-import {copyBuildLink} from "../read_write/build_linking.js";
+import {copyBuildLink} from "../read_write/build.js";
 import copyTreeAsANSI from "../read_write/ansi_tree.js";
 import {balanceSP} from "../permute/skill_points.js";
 import {getHoverTextForItem} from "../permute/minecraft_html.js";
@@ -30,17 +30,29 @@ function loadMiku() {
 }
 
 function addEventListeners() {
-    addSettingsListeners();
-    addAspectListeners();
     addTooltipListener();
 
-    document.querySelectorAll(".input_cluster").forEach((cluster) => {
-        addListenersToInputCluster(cluster);
-    });
+    addSettingsListeners();
+    addAspectListeners();
+
+    // Input:
+    document.querySelectorAll(".input_cluster").forEach((cluster) => addListenersToInputCluster(cluster));
+
+    add("add_offhand", "click", addOffhandInput);
 
     add("level_input", "input", refreshBuild);
     const treeElement = document.getElementById("ability_tree");
 
+    add("effect_toggles", "click", toggleEffectToggle);
+
+    addAll("sp_input", "input", refreshBuild);
+
+    add("balance_dmg", "click", () => {
+        balanceSP();
+        refreshBuild();
+    });
+
+    // Tree:
     addElem(treeElement, "click", ability_tree.treeClicked);
 
     add("clear_tree", "click", () => {
@@ -55,41 +67,13 @@ function addEventListeners() {
         refreshBuild();
     });
 
-    add("effect_toggles", "click", toggleEffectToggle);
+    add("ansi_tree", "click", copyTreeAsANSI);
 
+    // Copy:
     add("copy_short", "click", (e) => copyBuildLink(e.target, false));
     add("copy_long", "click", (e) => copyBuildLink(e.target, true));
 
     addAll("copy_button", "click", (event) => event.target.textContent = "Copied!");
-
-    add("gif_input", "change", (event) => {
-        const file = event.target.files[0];
-        // do something with the file
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            const src = reader.result;
-            // display the image on the page
-            document.getElementById("miku").src = src;
-            settings.saveString("miku", src);
-        };
-    });
-
-    add("opacity_slider", "input", (event) => {
-        document.getElementById("miku").style.opacity = event.target.value + "%";
-    });
-    dispatch("opacity_slider", "input");
-
-    add("add_offhand", "click", addOffhandInput);
-
-    addAll("sp_input", "input", refreshBuild);
-
-    add("balance_dmg", "click", () => {
-        balanceSP();
-        refreshBuild();
-    });
-
-    add("ansi_tree", "click", copyTreeAsANSI);
 }
 
 function addListenersToInputCluster(cluster) {
@@ -253,6 +237,24 @@ function addSettingsListeners() {
         toggleBoolean("detailed_damage");
         refreshBuild();
     });
+
+    add("gif_input", "change", (event) => {
+        const file = event.target.files[0];
+        // do something with the file
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const src = reader.result;
+            // display the image on the page
+            document.getElementById("miku").src = src;
+            settings.saveString("miku", src);
+        };
+    });
+
+    add("opacity_slider", "input", (event) => {
+        document.getElementById("miku").style.opacity = event.target.value + "%";
+    });
+    dispatch("opacity_slider", "input");
 }
 
 function add(id, type, lambda) {

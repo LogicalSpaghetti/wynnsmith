@@ -161,18 +161,6 @@ function permuteBuild(build) {
     calculateDamageConversions(build);
 }
 
-class NewBuild {
-    constructor(weapon, level, equipment, tomes, abilities, toggles, assigned_skill_points, modified_skill_points) {
-        this.weapon = weapon;
-        this.level = level;
-        this.equipment = equipment;
-        this.tomes = tomes;
-        this.abilities = abilities;
-        this.toggles = toggles;
-        this.skill_points = assigned_skill_points.map((sp, i) => sp + modified_skill_points[i]);
-    }
-}
-
 class Build {
     level;
 

@@ -1,15 +1,13 @@
-// TODO: Input should be identical to a build link, just the minimal information grouped up.
-//  class is read here since it's needed to allow for alternate-class offhands.
-//  when creating a build, if the class doesn't match then ignore the tree.
-
-import {getItemsFromHTML} from "./get_items.js";
-import {maxPlayerLevel} from "../data/small_stuff.js";
+import {base64ToDecimal, binaryToDecimal, decimalToBase64, decimalToBinary} from "../util/numbers.js";
+import {getBinaryLength, getItemByCluster} from "./get_items.js";
+import punscake from "../data/trees.js";
+import {Items} from "./get_items.js";
+import {maxPlayerLevel, wynnClasses} from "../data/small_stuff.js";
 import {getInputAbilities} from "./ability_tree.js";
-import * as search from "./item_search.js"
+import * as search from "./item_search.js";
 import {
     getItemAddedSP,
     getSkillPointModifiers,
-    getSPBalanceModifiers,
     skillPointNames
 } from "../permute/skill_points.js";
 import indexedInternalNameGroups from "../data/indexed_names.js";
@@ -40,8 +38,8 @@ class Input {
     sp_provided;
     sp_modified;
 
-    init(weapon = 0, ) {
-        this.items = getItemsFromHTML();
+    init(weapon = 0) {
+        this.items = Items.fromHTML();
         if (this.items.weapons.length === 0) return null;
 
         this.wynnClass = getWeaponClass(this.items.weapons[0].name);
@@ -57,18 +55,111 @@ class Input {
     }
 
     static getPrimary() {
+        // TODO
+    }
 
+    // encodeInput({level: 106, items:{weapons:[{slot:"weapon",name:"Warp",powders:["f6","f6","f6","f6","f6","f6","f6","f6","f6"]}]}});
+    toBinary(input) {
+        // padding 1
+        // isBuild flag
+        let link = "11";
+        // version
+        link += decimalToBinary(version).padStart(12, "0");
+        // level
+        link += input.level === maxPlayerLevel ? "1"
+            : "0" + decimalToBinary(input.level).padStart(decimalToBinary(maxPlayerLevel).length, "0");
+        link += this.items.toBinary();
+
+
+        return decimalToBase64(binaryToDecimal(link));
+    }
+
+}
+
+export class Tree {
+    wynnClass;
+    nodes = [];
+
+    static fromElement(id = "ability_tree") {
+        const tree = new Tree();
+
+        const treeElement = document.getElementById(id);
+
+        tree.wynnClass = treeElement.dataset.class;
+
+        for (const node of treeElement.querySelectorAll("[data-type='node']"))
+            tree.nodes.push({
+                map_id: node.dataset.map_id,
+                selected: node.dataset.selected === "true"
+            });
+
+        return tree;
+    }
+
+    static fromClass(wynnClass = "archer") {
+        const tree = new Tree();
+
+        tree.wynnClass = wynnClass;
+
+        for (const map_id in punscake[wynnClass].cellMap.filter(cell => cell.abilityID != null))
+            tree.nodes.push({
+                map_id,
+                selected: false
+            });
+
+        return tree;
+    }
+
+    // TODO: version?
+    //  to hell with versioning
+    static fromLink(link, wynnClass = "inLink") {
+        const tree = new Tree();
+
+        tree.wynnClass = wynnClass !== "inLink" ? wynnClass : wynnClasses[binaryToDecimal(link.splice(0, 3))];
+
+        const mapIds = Object.keys(punscake[tree.wynnClass].cellMap.filter(cell => cell.abilityID != null));
+        for (let i = 0; i < mapIds.length; i++)
+            tree.nodes.push({
+                map_id: mapIds[i],
+                selected: link[i] === "1"
+            });
+
+        link.splice(0, mapIds.length);
+
+        return tree;
+    }
+
+    toLink(includeClass = false) {
+        let link = "";
+
+        if (includeClass) link += decimalToBinary(wynnClasses.indexOf(this.wynnClass)).padStart(3, "0");
+
+        for (let node of this.nodes) link += node.selected ? "1" : "0";
+
+        return link;
     }
 }
 
-export class Item {
-    constructor(name, powders, byInternalName) {
-        this.powders = powders;
-        this.data = byInternalName ? search.getItem(name) : search.getItemByName(name);
-    }
+class Build {
+    weapon;
+    level;
+    equipment;
+    tomes;
+    abilities;
+    toggles;
+    assigned_skill_points;
+    modified_skill_points;
 
-    getInternalNameId = (category = null) =>
-        indexedInternalNameGroups[category ?? this.data.type].indexOf(this.data.internalName);
+    constructor(weapon, level, equipment, tomes, abilities, toggles, assigned_skill_points, modified_skill_points) {
+        this.weapon = weapon;
+        this.level = level;
+        this.equipment = equipment;
+        this.tomes = tomes;
+        this.abilities = abilities;
+        this.toggles = toggles;
+        this.assigned_skill_points = assigned_skill_points;
+        this.modified_skill_points = modified_skill_points;
+    }
 }
 
 function getEquipOrderInformation(items) {
@@ -236,4 +327,57 @@ function addProvided(itemRanges, initialProvided) {
     const provided = [...initialProvided];
     for (const item of itemRanges) for (let i = 0; i < provided.length; i++) provided[i] += item.provided[i];
     return provided;
+}
+
+const version = 0;
+
+export function copyBuildLink(button, long) {
+    navigator.clipboard.writeText(getBuildLink(long));
+}
+
+function getBuildLink(isLong) {
+    let text = location.href.replace(location.search, "") + "?";
+    let appendedText = "";
+    const inputs = document.getElementById("item_inputs")
+        .querySelectorAll(".input_cluster");
+    for (let cluster of inputs) {
+        const item = getItemByCluster(cluster);
+        if (!item) continue;
+
+        if (text.charAt(text.length - 1) !== "?") text += "&";
+        text += cluster.dataset["slot"] + "=" + item.name.replaceAll(" ", "_");
+        if (isLong) appendedText += "\n> " + item.name;
+        if (isLong && cluster.dataset["slot"] === "weapon")
+            appendedText += " [" + cluster.querySelector(".powder_input").value + "]";
+    }
+    return text + appendedText + "\n";
+}
+
+export function decodeLink(query) {
+    const binary = decimalToBinary(base64ToDecimal(query));
+
+    if (binary[1] === "1") return decodeBuild(binary.splice(0, 2));
+
+
+}
+
+const versionBits = 12;
+
+function decodeBuild(binary) {
+    const input = getNewInput();
+    // TODO database versioning
+    const linkVersion = binaryToDecimal(binary.splice(0, versionBits));
+    const isMaxLevel = binary.splice(0, 1) === "1";
+    input.level = isMaxLevel ? maxPlayerLevel : binary.splice(0, getBinaryLength(maxPlayerLevel));
+
+    const offhandCount = binaryToDecimal(binary.splice(0, 3));
+    // for each item
+    for (let i = 0; i < slots.length + offhandCount; i++) {
+        const categoryIndex = (i < offhandCount) ? 0 : i - offhandCount;
+        const category = slots[categoryIndex];
+        const item = {};
+        item.name = decodeItemName(binary, category);
+        const hasPowders = binary.splice(0, 1) === "1";
+        if (hasPowders) item.powders = decodePowders(binary);
+    }
 }

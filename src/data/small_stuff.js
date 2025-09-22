@@ -32,3 +32,7 @@ export const attackSpeedMap = {
 };
 
 export const maxPlayerLevel = 106;
+
+export const wynnClasses = [
+    "archer", "assassin", "mage", "shaman", "warrior"
+]
