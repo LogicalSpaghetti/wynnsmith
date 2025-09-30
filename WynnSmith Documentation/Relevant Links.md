@@ -14,3 +14,5 @@ https://anseki.github.io/leader-line/
 [Tailwind CSS](https://tailwindcss.com/)
 [Bootstrap](https://getbootstrap.com/)
 [Vitest](https://vitest.dev/)
+
+[MathQuill](http://mathquill.com/)

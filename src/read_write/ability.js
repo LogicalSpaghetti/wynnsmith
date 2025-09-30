@@ -3,11 +3,11 @@ import {maxPlayerLevel} from "../data/small_stuff.js";
 import {refreshBuild} from "../control/script.js";
 import {getHoverTextForAbility, minecraftToHTML} from "../permute/minecraft_html.js";
 import aspect_descriptions from "../data/aspects.js";
-import {getActiveToggles} from "./toggles.js";
 import {decimalToRoman} from "../util/numbers.js";
 import * as codeDictionary from "../data/code_dictionary.js";
 import {addWarning} from "./warnings.js";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../control/tooltip.js";
+import classEffects from "../data/effects";
 
 const treeColumns = 9;
 const abilityPointsAtLevel = [
@@ -32,20 +32,33 @@ export function treeClicked(event) {
     refreshBuild();
 }
 
-export function getInputAbilities(wynnClass) {
-    const previousClass = document.getElementById("ability_tree").dataset.class;
+export class Abilities {
+    nodes;
+    aspects;
+    abilities;
 
-    if (previousClass !== wynnClass) return {
-        nodes: [],
-        aspects: [],
-        toggles: []
-    };
+    constructor(nodes = [], aspects = [], toggles = []) {
+        this.nodes = nodes;
+        this.aspects = aspects;
+        this.toggles = toggles;
+    }
 
-    return {
-        nodes: getNodes(),
-        aspects: getAspects(),
-        toggles: getActiveToggles()
-    };
+    static read(wynnClass) {
+        const previousClass = document.getElementById("ability_tree").dataset.class;
+        if (previousClass !== wynnClass) return new Abilities();
+        return new Abilities(Abilities.#readNodes(), Abilities.#readAspects(), getActiveToggles());
+    }
+
+    static #readNodes = () => Array.from(document.querySelectorAll(".tree_cell[data-type='node']"))
+        .filter(node => node.dataset.selected === "true")
+        .map((node) => node.dataset.ability_id);
+
+    static #readAspects() {
+        const aspectInputs = document.getElementById("active_aspects").querySelectorAll(".aspect");
+        return Array.from(aspectInputs).map(input => Aspect.fromInput(input));
+    }
+
+
 }
 
 function changeAbilityTree(wynnClass) {
@@ -183,24 +196,6 @@ function mapHTML(tree, abilityTree, wynnClass) {
 
         cell.appendChild(img);
     }
-}
-
-function getNodes() {
-    const treeNodes = Array.from(document.querySelectorAll(".tree_cell[data-type='node']"));
-
-    return treeNodes
-        .filter(node => node.dataset.selected === "true")
-        .map((node) => node.dataset.ability_id);
-}
-
-function getAspects() {
-    const aspectInputs = Array.from(document.getElementById("active_aspects")
-        .querySelectorAll(".aspect"));
-
-    return aspectInputs.map(aspect => ({
-        name: aspect.dataset.aspect,
-        tier: parseInt(aspect.childNodes[2].dataset.tier)
-    }));
 }
 
 export function validateTree(level = maxPlayerLevel, wynnClass) {
@@ -438,4 +433,84 @@ export function renderHighlights() {
         img.style.display = "block";
         img.ondragstart = () => false;
     }
+}
+
+// #region Aspects
+
+// TODO: add to tree builder and rework input before finishing formatting.
+class Aspect {
+    id;
+    tier;
+    data;
+
+    constructor(id, tier, data) {
+        this.name = name;
+        this.tier = tier;
+    }
+
+    static fromInput = (input) => new Aspect(input.dataset.aspect, parseInt(input.childNodes[2].dataset.tier));
+
+    static fromBinary() {
+        // TODO
+        return new Aspect();
+    }
+
+    toBinary() {
+        // TODO
+        return "";
+    }
+
+    // TODO: adding Aspects to HTML
+}
+
+// #endregion
+
+// #region Toggles
+
+export function getActiveToggles() {
+    const toggles = Array.from(document.querySelector("#effect_toggles").querySelectorAll(".toggle"));
+    if (toggles.length < 1) return [];
+
+    return toggles
+        .filter(toggle => toggle.classList.contains("toggleOn"))
+        .map(toggle => toggle.dataset.toggle_name);
+}
+
+export function setToggles(build) {
+    const effects = build.effects.map(effectId => classEffects[build.wynnClass].effects[effectId]);
+
+    const newToggles = [];
+    for (let effect of effects) {
+        if (effect.toggle_name === "") continue;
+
+        newToggles.push({
+            toggle_name: effect.toggle_name,
+            data: effect.data,
+            selected: build.toggles.includes(effect.toggle_name)
+        });
+    }
+
+    writeTogglesHTML(newToggles);
+
+    document.querySelector("#effects_holder").style.display = newToggles.length > 0 ? "block" : "none";
+}
+
+function writeTogglesHTML(newToggles) {
+    const toggleHolder = document.querySelector("#effect_toggles");
+    toggleHolder.innerHTML = "";
+
+    for (const newToggle of newToggles) toggleHolder.appendChild(generateToggleHTML(newToggle));
+}
+
+// TODO: use newToggle.data to generate embellishments like effect type symbol and % multiplier
+function generateToggleHTML(newToggle) {
+    const button = document.createElement("button");
+
+    button.classList.add("toggle");
+    if (newToggle.selected) button.classList.add("toggleOn");
+
+    button.dataset.toggle_name = newToggle.toggle_name;
+    button.innerHTML = newToggle.toggle_name;
+
+    return button;
 }

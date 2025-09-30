@@ -44,8 +44,12 @@ export function binaryToDecimal(binary) {
     return parseInt(binary, 2);
 }
 
-export function decimalToBinary(decimal) {
-    return (decimal >>> 0).toString(2);
+export function decimalToBinary(decimal, maxDecimal = 1) {
+    return decimalToPaddedBinary(decimal, decimalToPaddedBinary(maxDecimal).length);
+}
+
+function decimalToPaddedBinary(decimal, paddingLength = 1) {
+    return (decimal >>> 0).toString(2).padStart(paddingLength, "0");
 }
 
 export function decimalToRoman(num) {
@@ -72,4 +76,18 @@ export function romanToDecimal(str) {
     if (!(str && validator.test(str))) return false;
     while ((m = token.exec(str))) num += key[m[0]];
     return num;
+}
+
+export function getBinaryLength(number) {
+    return decimalToBinary(number).length;
+}
+
+// returns a boolean if length is 1, otherwise it returns an integer.
+export function flag(binary, length = 1) {
+    if (length === 1) return binary.splice(0, 1) === "1";
+    return decimalToBinary(binary.splice(0, length));
+}
+
+export function spliceOffNumber(binary, maxValue) {
+    return binaryToDecimal(binary.splice(0, getBinaryLength(maxValue)));
 }

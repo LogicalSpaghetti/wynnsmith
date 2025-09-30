@@ -1,5 +1,5 @@
 import * as settings from "../control/settings.js";
-import * as ability_tree from "../read_write/ability_tree.js";
+import * as ability_tree from "../read_write/ability.js";
 import * as numbers from "../util/numbers.js";
 import {preLoadAssets} from "./preloading.js";
 import {getItemByName} from "../read_write/item_search.js";

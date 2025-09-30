@@ -3,12 +3,11 @@ import * as search from "./item_search.js";
 import {damageTypePrefixes} from "../data/small_stuff.js";
 import {addWarning} from "./warnings.js";
 import {minecraftToHTML} from "../permute/minecraft_html.js";
-import {renderHighlights, validateTree} from "./ability_tree.js";
+import {renderHighlights, setToggles, validateTree} from "./ability.js";
 import {displayBuildStats, displayForDevelopment} from "./display_stats.js";
 import addDamageDisplays from "./display_damage.js";
 import {resetCopyText} from "../control/event_listeners.js";
 import * as codeDictionary from "../data/code_dictionary.js";
-import {setToggles} from "./toggles.js";
 
 export function displayBuilds(input, builds) {
     if (!builds?.[0]) return;

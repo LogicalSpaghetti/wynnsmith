@@ -1,9 +1,9 @@
-import {base64ToDecimal, binaryToDecimal, decimalToBase64, decimalToBinary} from "../util/numbers.js";
-import {getBinaryLength, getItemByCluster} from "./get_items.js";
+import {base64ToDecimal, binaryToDecimal, decimalToBase64, decimalToBinary, getBinaryLength} from "../util/numbers.js";
+import {getItemByCluster} from "./item.js";
 import punscake from "../data/trees.js";
-import {Items} from "./get_items.js";
+import {Items} from "./item.js";
 import {maxPlayerLevel, wynnClasses} from "../data/small_stuff.js";
-import {getInputAbilities} from "./ability_tree.js";
+import {Abilities} from "./ability.js";
 import * as search from "./item_search.js";
 import {
     getItemAddedSP,
@@ -45,7 +45,7 @@ class Input {
         this.wynnClass = getWeaponClass(this.items.weapons[0].name);
         this.level = getPlayerLevel();
 
-        this.abilities = getInputAbilities(this.wynnClass);
+        this.abilities = Abilities.read(this.wynnClass);
 
         const equipOrderInformation = getEquipOrderInformation(this.items);
         this.equip_order = equipOrderInformation.equip_order;
@@ -280,7 +280,8 @@ function getEquipOrder(itemRanges, initialProvided = [0, 0, 0, 0, 0]) {
     let currentMinRequirement;
     let currentBest;
 
-    const tryOrder = function (orderedIndexes) {
+    // note: If there's any room to optimize the build order/SP calculation, it's going to be within this function.
+    function tryOrder(orderedIndexes) {
         const requiredSP = getEquipOrderRequirement(itemRanges, orderedIndexes, initialProvided)
             .reduce((a, b) => a + b);
 
@@ -288,7 +289,7 @@ function getEquipOrder(itemRanges, initialProvided = [0, 0, 0, 0, 0]) {
             currentMinRequirement = requiredSP;
             currentBest = [...orderedIndexes]; // TODO: why is it that if we don't clone it, the result ends up being an array of length n full of n?
         }
-    };
+    }
 
     permutation(itemRanges.length, itemRanges.length, tryOrder);
 

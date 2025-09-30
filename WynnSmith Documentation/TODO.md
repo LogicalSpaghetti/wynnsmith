@@ -1,47 +1,49 @@
 # Focus
 ### Small
 see if inline latex is possible in Obsidian
-1. Noxious debuff based on enemy debuffs
+1. Check out Pinta image editor
+	1. make a personal TODO instead of using the project's TODO.
+2. Noxious debuff based on enemy debuffs
 	1. "enemy debuff" needs to be an effect type? 
-2. popups
+3. popups
 	1. one element covers the whole screen with fixed positioning
 		1. n% transparent
 		2. when clicked, (if the target is itself), send a custom close event to the child
 	2. a sub-element is centered within that, holding the content
 		1. when escape is pressed, close
-3. comparison needs:
+4. comparison needs:
 	1. An input for the link, and a selector for offhand
 	2. A display of the build's items if different
 	3. a section for sliders 
-4. to get the input data, either:
+5. to get the input data, either:
 	1. generate from link
 		1. string class
 		2. flag write to all inputs
 		3. flag 
 	2. use classes like `input_1` to locate the correct elements to read from
 	3. give both, along with flags for which to draw from
-5. to get the build data, either:
+6. to get the build data, either:
 	1. grab from input
 	2. grab from two inputs, along with flags for
-6. second build needs toggles and sliders
-7. init should have flags passed in for all values directing it to take from primary or secondary build.
-8. empty slots
-9. cap offhands to 7
-10. we need to store old version's section length variables too.
-11. repurpose `getabilities.html` for Aspects
-12. Test if Radiance affects Skill Points.
-13. Detailed damage
-14. Tome SP doesn't work
+7. second build needs toggles and sliders
+8. init should have flags passed in for all values directing it to take from primary or secondary build.
+9. empty slots
+10. cap offhands to 7
+11. we need to store old version's section length variables too.
+12. repurpose `getabilities.html` for Aspects
+13. Test if Radiance affects Skill Points.
+14. Detailed damage
+15. Tome SP doesn't work
 	1. calc added SP per-build after Radiance applies.
-15. Dynamic node displays, (Archetype requirements, required ability)
+16. Dynamic node displays, (Archetype requirements, required ability)
 	1. Archetype highlighting
-16. Identification editing
-17. Small Tome selector
+17. Identification editing
+18. Small Tome selector
 	1. popup Zen-style text box when tab selected
 		1. tabbing from there cycles through aspects/tomes by icon
 		2. Escape or tabbing after the end closes and returns selection to the original element
-18.  Add more than just abilities to the effect builder
-19. Melee display DPS and per-hit.
+19.  Add more than just abilities to the effect builder
+20. Melee display DPS and per-hit.
 ### Major
 1. Build link generation/parsing
 2. Build comparison
@@ -184,6 +186,8 @@ see if inline latex is possible in Obsidian
 5. Handle items removed from database
 6. Block offhands from other classes
 7. Balance SP can exceed 100 assigned
+8. When reading from HTML, the slot order is assumed instead of being read.
+	- within an "Items" object, the order should always be consistent and empty slots should always be indicated, that way it can easily encode and decode without worrying about order.
 ### Visual
 1. make elements look clickable or not
     1. pointer-events: none/initial;
@@ -286,8 +290,8 @@ see if inline latex is possible in Obsidian
 	1. a "variant" of `Arrow Storm`, tripling its damage
 3. `Backstab`
 	1. a new "conversion" which blocks `Multihit`
-4. `Commander` scaling melee damage with `Puppet` count slider
-	1. a 3% "slider multiplier" targeting `Melee` named "puppet slider"
+4. `Commander`
+	1. A 3% slider multiplier linked to `Melee` and the puppet count slider.
 # Post-release planned features
 1. Extended information inclusion
     1. alternate tree options
@@ -296,3 +300,5 @@ see if inline latex is possible in Obsidian
     4. folders of builds
     5. build author notes
     6. mobile support
+    7. Full damage equations dynamically generated with labels
+	    1. [MathQuill](http://mathquill.com/)

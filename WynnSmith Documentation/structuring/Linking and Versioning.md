@@ -35,7 +35,10 @@ keep outdated information stored in a place that's only sent to the client if th
 5. Items
 	1. 3 bits
 		- number of offhands
-	2. for each slot
+	- weapon
+	- offhands(?)
+	- equipment
+	1. for each slot
 		- flag: is normal, crafted, custom, or modified
 		- normal:
 			- dynamic length by: category.length + 1
@@ -46,22 +49,22 @@ keep outdated information stored in a place that's only sent to the client if th
 			 - 101 for element xxx and tier \_\_\_xxx
 			 - 110 and 111 unused, might use later
 		 - flag: repeat powder
-			 - flag: end powders for item
-6. Modified SP
-	- flag: SP modified
-	- for each skill:
-		- dynamic length by:  max SP assignable to skill (100) 
-7. Aspects
-	- flag: has aspects
-	- for each aspect slot:
-		- dynamic length by: class_aspect_count + 1
-		- 0..0 is an empty slot
-8. Tomes
+			 - flag: end powders for item, (only if not repeated)
+6. Tomes
 	- flag: has tomes
 		- flag: just guild tome
 	- for each tome slot:
 		- identical to item slot encoding
 			- including technically having room for custom tomes
+7. Modified SP
+	- flag: SP modified
+	- for each skill:
+		- dynamic length by:  max SP assignable to skill (100) 
+8. Aspects
+	- flag: has aspects
+	- for each aspect slot:
+		- dynamic length by: class_aspect_count + 1
+		- 0..0 is an empty slot
 9. Tree
 	- dynamic length by: until the end of the build
 	- capped off with zeros so that the total length of everything is 0 mod 6

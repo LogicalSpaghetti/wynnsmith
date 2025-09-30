@@ -18,6 +18,7 @@ function statCalculations(build) {
 
     const maxManaMod = ids.rawMaxMana + build.sp_multipliers[SkillPointIndexes.Intelligence] * 100;
     build.stats.maxMana = 100 + maxManaMod;
+    // TODO: max mana with and without int, with int as a sub-stat
 
     build.stats.trueManaRegen = ids.manaRegen + 25;
 
