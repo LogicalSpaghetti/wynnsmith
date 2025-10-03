@@ -50,29 +50,62 @@ label {
     text-align: center;
 }
 
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
 .sidenav {
+    background-color: var(--ls-background);
     overflow-x: hidden;
     position: fixed;
-    width: 3ch;
-    text-align: center;
-    border: 1px solid #222;
+    width: 3vw;
+    border: 0.1vw solid #222;
     height: 100vh;
-    z-index: 1;
     top: 0;
     left: 0;
+    transition-property: width;
+    transition-duration: 0.15s;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    box-sizing: border-box;
 }
 
-#settings {
-    padding: 2ch;
-    text-align: center;
-    background-color: #333;
-    height: 80vh;
-    overflow: scroll;
+.sidenav:hover {
+    width: 11vw;
 }
 
-#settings_open {
-    width: 3ch;
-    height: 3ch;
+.sidenav a,.sidenav button {
+    padding: .4vw;
+    display: block;
+    white-space: nowrap;
+    text-decoration: none;
+    color: white;
+    font-size: .85vw;
+    background: none;
+    height: fit-content;
+    width: 100%;
+    text-align: left;
+    border: none;
+}
+
+.sidenav a:hover, .sidenav button:hover {
+    background-color: var(--ls-background2);
+    border: none;
+}
+
+.sidenav a img, .sidenav button img {
+    vertical-align: middle;
+    margin-right: .6vw;
+    width: 2vw;
+
+}
+
+.sidenav hr {
+    border: 0.3vh solid var(--ls-trim);
 }
 
 .color-bar-holder {
@@ -194,7 +227,7 @@ input:hover {
 
 input:focus {
     outline: none;
-    border: 1px solid var(--ls-orange) !important;
+    border: 1px solid var(--ls-orange);
 }
 
 .sp_input {
@@ -272,7 +305,6 @@ input:focus {
 /* -- Output: -- */
 
 #dev_output {
-    margin-left: 20px;
     word-wrap: normal;
     white-space: pre-line;
 }
@@ -358,19 +390,19 @@ td {
     -ms-transform: translate(-50%, -50%);
 }
 
-.popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    min-height: 100vh;
-    min-width: 100vw;
-    background-color: rgba(16, 16, 16, 0.5);
-}
-
 [popover] {
-    padding: 0;
+    padding: 4vh;
     border: none;
     color: inherit;
+    background-color: #333;
+    text-align: center;
+    max-height: 80vh;
+    overflow: scroll;
+}
+
+[popover] > div {
+    margin-top: 2.5vh;
+    margin-bottom: 2.5vh;
 }
 
 ::backdrop {

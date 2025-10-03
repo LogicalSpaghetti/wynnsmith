@@ -73,11 +73,16 @@ function getEHpFactor(build) {
         (build.resistances).reduce((a, b) => a * (1 - b.multiplier), 1);
 }
 
+const classBaseResistance = Object.freeze({
+    "archer": 0.7,
+    "assassin": 1,
+    "mage": 0.8,
+    "shaman": 0.6,
+    "warrior": 1
+});
+
 function getClassEHp(build) {
-    return build.wynnClass === "shaman" ? 2 - 0.6
-        : build.wynnClass === "archer" ? 2 - 0.7
-            : build.wynnClass === "mage" ? 2 - 0.8
-                : 1;
+    return 2 - classBaseResistance[build.wynnClass];
 }
 
 function calculateSpellCosts(build) {

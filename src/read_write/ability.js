@@ -7,7 +7,7 @@ import {decimalToRoman} from "../util/numbers.js";
 import * as codeDictionary from "../data/code_dictionary.js";
 import {addWarning} from "./warnings.js";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../control/tooltip.js";
-import classEffects from "../data/effects";
+import classEffects from "../data/effects.js";
 
 const treeColumns = 9;
 const abilityPointsAtLevel = [
@@ -31,6 +31,8 @@ export function treeClicked(event) {
     toggleNode(target);
     refreshBuild();
 }
+
+//region [Abilities]
 
 export class Abilities {
     nodes;
@@ -57,9 +59,43 @@ export class Abilities {
         const aspectInputs = document.getElementById("active_aspects").querySelectorAll(".aspect");
         return Array.from(aspectInputs).map(input => Aspect.fromInput(input));
     }
-
-
 }
+
+//endregion
+
+// region [Tree]
+
+export class Tree {
+    static id = "abilityTree";
+
+    wynnClass;
+    data;
+    selectedNodes;
+
+    constructor(wynnClass, selectedNodes = []) {
+        this.wynnClass = wynnClass;
+        this.selectedNodes = selectedNodes;
+        this.data = Tree.getDataFromClass(wynnClass);
+    }
+
+    fromHTML() {
+        const tree = document.querySelector(`#${Tree.id}}`);
+
+
+    }
+
+    #getElement = (element) => document.querySelector(`#${Tree.id}}`);
+
+    static getDataFromClass(wynnClass) {
+        return punscake[wynnClass];
+    }
+
+    static markClear() {
+
+    }
+}
+
+// endregion
 
 function changeAbilityTree(wynnClass) {
     const abilityTree = document.getElementById("ability_tree");

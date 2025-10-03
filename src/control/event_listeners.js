@@ -10,13 +10,12 @@ import {balanceSP} from "../permute/skill_points.js";
 import {getHoverTextForItem} from "../permute/minecraft_html.js";
 import {refreshBuild} from "./script.js";
 import {decimalToRoman} from "../util/numbers.js";
-// import {copyImageById} from "../read_write/image_exporting.js";
-import {toggleBoolean} from "./settings.js";
+import {toggleBoolean, loadBoolean} from "./settings.js";
 
 addElem(window, "load", () => {
     // TODO: before enabling everything and reloading, verify the version and handle it if it's old
-    loadMiku();
-    refreshBuild();
+    // TODO: uncomment
+    // refreshBuild();
     // last to prevent premature reloads
     addEventListeners();
 });
@@ -24,10 +23,6 @@ addElem(window, "load", () => {
 addElem(window, "load", async function () {
     await preLoadAssets();
 });
-
-function loadMiku() {
-    document.getElementById("miku").src = settings.loadString("miku");
-}
 
 function addEventListeners() {
     addTooltipListener();
@@ -229,24 +224,18 @@ export function resetCopyText() {
 }
 
 function addSettingsListeners() {
-    add("selv", "click", () => {
-        toggleBoolean("selvs");
-        refreshBuild();
-    });
-    add("detailed_damage", "click", () => {
-        toggleBoolean("detailed_damage");
-        refreshBuild();
-    });
+    initCheckbox("selvs");
+    initCheckbox("detailed_damage");
 
+    const miku = document.getElementById("miku");
+    miku.src = settings.loadString("miku");
     add("gif_input", "change", (event) => {
         const file = event.target.files[0];
-        // do something with the file
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
             const src = reader.result;
-            // display the image on the page
-            document.getElementById("miku").src = src;
+            miku.src = src;
             settings.saveString("miku", src);
         };
     });
@@ -255,6 +244,15 @@ function addSettingsListeners() {
         document.getElementById("miku").style.opacity = event.target.value + "%";
     });
     dispatch("opacity_slider", "input");
+}
+
+function initCheckbox(elementId, boolId = elementId, extraCode = () => refreshBuild()) {
+    const checkbox = document.getElementById(elementId);
+    checkbox.addEventListener("click", () => {
+        toggleBoolean(boolId);
+        extraCode();
+    });
+    checkbox.checked = loadBoolean(boolId);
 }
 
 function add(id, type, lambda) {
