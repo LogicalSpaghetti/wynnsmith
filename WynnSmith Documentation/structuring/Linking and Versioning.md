@@ -3,41 +3,31 @@ For each version, changes to the tree are logged
 when loading an old link, it applies all changes in reverse
 every so often, log a full version of the tree
 keep outdated information stored in a place that's only sent to the client if they try to load an old link
+###### Link structure:
+- `https://fiel.us/wynnsmith/?b=<str:base64>`
 
-###### allowed link characters:
-	alphaneumerics
-		62 options
-	-$_.+!*'(),
-		source: http://www.faqs.org/rfcs/rfc1738.html
-		11 options
-		on discord
-			"-" causes a newline
-			"," at the end of a link gets excluded
-		only "'" and "_" get included when double-clicked
-			use for base_64
+###### Base 64
+- alphanumerics, "`'`", and "`_`".[^1]
 
-(a "flag" is one bit to mark for a boolean state used to simplify common cases down)
-###### link structure:
+###### binary link structure:
 1. lead bit, (1)
 	- ensures if link type is 0, then that bit doesn't get removed
-2. Link type
-	- flag: is build
-	- if 0, don't interpret as a build
-		- ambiguous
-3. Version
+2. Version
 	- 12 bits
 		- 2048 possible versions
 			- if the first bit is 1, it means the versioning standard has changed
 	- used to ensure items and trees are read from that version of the database
-4. Player level
+3. Player level
 	- flag: max level
 	- dynamic length by: max level
-5. Items
+4. Items
 	1. 3 bits
 		- number of offhands
 	- weapon
 	- offhands(?)
 	- equipment
+	- flag: hasTomes
+	- tomes
 	1. for each slot
 		- flag: is normal, crafted, custom, or modified
 		- normal:
@@ -50,32 +40,20 @@ keep outdated information stored in a place that's only sent to the client if th
 			 - 110 and 111 unused, might use later
 		 - flag: repeat powder
 			 - flag: end powders for item, (only if not repeated)
-6. Tomes
-	- flag: has tomes
-		- flag: just guild tome
-	- for each tome slot:
-		- identical to item slot encoding
-			- including technically having room for custom tomes
-7. Modified SP
+5. Modified SP
 	- flag: SP modified
 	- for each skill:
 		- dynamic length by:  max SP assignable to skill (100) 
-8. Aspects
+6. Aspects
 	- flag: has aspects
 	- for each aspect slot:
 		- dynamic length by: class_aspect_count + 1
 		- 0..0 is an empty slot
-9. Tree
-	- dynamic length by: until the end of the build
-	- capped off with zeros so that the total length of everything is 0 mod 6
-	- propagate through the tree (~~up~~ down left right)
-		- when a selected node is encountered, append "1"
-			- re-propagate from here immediately
-				- this way it goes straight down the tree, and left/right branches break the tree less
-		- when an deselected node is encountered, append "0"
-	- when parsing, run using the old tree
-		- map to the new tree either using location, or node ID
-10. Section delimiter
+7. Tree
+	- dynamic length by: tree total node count
+	- 1 bit per node
+	- map from old links by ability id
+8. Section delimiter
 	- will likely use equals sign "="
 		- safer options: `-$.+!*(),`
 			- allowed in all URL standards
@@ -84,4 +62,10 @@ keep outdated information stored in a place that's only sent to the client if th
 	- separates different builds to be encoded within one link
 ### Crafted Encoding
 1. TODO
+### Modified Item Encoding
+1. TODO
+2. Note on rolls:
+	1. `positive_roll = parseFloat((Math.round((Math.random() * (1.3 - 0.3) + 0.3) * 100) / 100).toFixed(2));`
+	2. `let negative_roll = parseFloat((Math.round((Math.random() * (1.3 - 0.7) + 0.7) * 100) / 100).toFixed(2));`
 
+[^1]: Should more need to be added to a ? parameter without affecting the binary, then any of the following may be used if necessary: `-$.+!*(),`.  None are included when double-clicked, Comma is excluded if at the end of a link, and minus causes a line break.

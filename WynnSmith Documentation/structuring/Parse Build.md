@@ -17,23 +17,14 @@ Input -> Read -> Permute -> Write
 	- Generating a build returns a fully permuted build.
 	- Each build comes with a Warnings object.
 2. Generate the secondary Build given the Input.
-3. Pass the Build(s) into write()
-###### write(\_:Build, \_:Build?)
-1. fix(\_:Build, \_:Build?). 
+	- build.comparison = secondary Build
+3. Pass the Build into write()
+###### write(\_:Build)
+1. fix(\_:Build). 
 	1. Modifies inputs 
 		- i.e. Changing tree class, showing error messages/indicators, capping SP, changing toggles...
-2. display(\_:Build, \_:Build?).
+2. display(\_:Build).
 	1. Display stats 
 	2. Display attacks
 	3. Display tree highlighting
 	4. ...
-
-- ./
-	- src
-		- wynnsmith
-			- site
-			- build
-			- util
-		- itemsmith
-		- shared
-	- data
