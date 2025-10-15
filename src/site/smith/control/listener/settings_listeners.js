@@ -1,7 +1,7 @@
-import * as settings from "../../logic/settings.js";
-import {refreshBuild} from "../script.js";
-import {loadBoolean, toggleBoolean} from "../../logic/settings.js";
-import {add, dispatch} from "../../../../common/event_listener.js";
+import * as settings from "../settings.js";
+import {refreshBuild} from "../../script.js";
+import {loadBoolean, toggleBoolean} from "../settings.js";
+import {add, dispatch} from "../../../common/event_listener.js";
 
 export function addSettingsListeners() {
     initCheckbox("selvs");

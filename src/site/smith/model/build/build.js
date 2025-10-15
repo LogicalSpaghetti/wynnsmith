@@ -1,79 +1,15 @@
 import {base64ToDecimal, binaryToDecimal, decimalToBase64, decimalToBinary, getBinaryLength} from "../../../common/numbers.js";
-import {Item} from "./item.js";
-import punscake from "../../../data/trees.js";
-import {Items} from "./item.js";
-import {maxPlayerLevel, wynnClasses} from "../../../data/small_stuff.js";
-import {Abilities} from "./ability.js";
-import * as search from "./item_search.js";
+import punscake from "../../../../data/trees.js";
+import {Items} from "../item/item.js";
+import {maxPlayerLevel, wynnClasses} from "../../../../data/small_stuff.js";
+import {Abilities} from "../ability/ability.js";
+import * as search from "../../control/database/item_search.js";
 import {
     getItemAddedSP,
     getSkillPointModifiers,
     skillPointNames
-} from "../logic/build/skill_points.js";
-
-export function getInputByElementClass(elementClass) {
-    return getPrimaryInput();
-}
-
-export function getNewInput() {
-    return new Input();
-}
-
-// TODO: remove once class system is set up.
-function getPrimaryInput() {
-    const input = new Input();
-    input.init();
-    return input;
-}
-
-class Input {
-    level;
-    wynnClass = "";
-
-    items;
-    abilities;
-
-    sp_assigned;
-    sp_provided;
-    sp_modified;
-
-    init(weapon = 0) {
-        this.items = Items.fromHTML();
-        if (this.items.weapons.length === 0) return null;
-
-        this.wynnClass = getWeaponClass(this.items.weapons[0].name);
-        this.level = getPlayerLevel();
-
-        this.abilities = Abilities.read(this.wynnClass);
-
-        const equipOrderInformation = getEquipOrderInformation(this.items);
-        this.equip_order = equipOrderInformation.equip_order;
-        this.sp_assigned = equipOrderInformation.required;
-        this.sp_provided = equipOrderInformation.provided;
-        this.sp_modified = getSkillPointModifiers();
-    }
-
-    static getPrimary() {
-        // TODO
-    }
-
-    // encodeInput({level: 106, items:{weapons:[{slot:"weapon",name:"Warp",powders:["f6","f6","f6","f6","f6","f6","f6","f6","f6"]}]}});
-    toBinary(input) {
-        // padding 1
-        // isBuild flag
-        let link = "11";
-        // version
-        link += decimalToBinary(version).padStart(12, "0");
-        // level
-        link += input.level === maxPlayerLevel ? "1"
-            : "0" + decimalToBinary(input.level).padStart(decimalToBinary(maxPlayerLevel).length, "0");
-        link += this.items.toBinary();
-
-
-        return decimalToBase64(binaryToDecimal(link));
-    }
-
-}
+} from "../skill_points.js";
+import {base64ToBinary} from "../../../common/numbers.js";
 
 export class Tree {
     wynnClass;
@@ -329,24 +265,55 @@ function addProvided(itemRanges, initialProvided) {
     return provided;
 }
 
-export function copyBuildLink(button, long) {
-    navigator.clipboard.writeText(getBuildLink(long));
-}
+// TODO: should be part of the database
+const latestVersion = 0;
+const versionLength = 12;
 
-function getBuildLink(isLong) {
-    let text = location.href.replace(location.search, "") + "?";
-    let appendedText = "";
-    const inputs = document.getElementById("item_inputs")
-        .querySelectorAll(".input_cluster");
-    for (let cluster of inputs) {
-        const itemName = Item.fromCluster(cluster)?.data?.name;
-        if (!itemName) continue;
+// all the data of a link.
+class BuildLink {
+    version;
+    level;
+    items;
+    modifiedSP;
+    abilities;
+    secondaryBuild;
 
-        if (text.charAt(text.length - 1) !== "?") text += "&";
-        text += cluster.dataset["slot"] + "=" + itemName.replaceAll(" ", "_");
-        if (isLong) appendedText += "\n> " + itemName;
-        if (isLong && cluster.dataset["slot"] === "weapon")
-            appendedText += " [" + cluster.querySelector(".powder_input").value + "]";
+    constructor(version, level, items, modifiedSP, abilities, secondaryBuild) {
+
     }
-    return text + appendedText + "\n";
+
+    static fromURL() {
+        const urlParams = new URL(window.location.toLocaleString()).searchParams;
+        const b = urlParams.get('b');
+        if (!b) return new BuildLink();
+        return BuildLink.fromBase64(b);
+    }
+
+    static fromBase64(base64String) {
+        const binary = base64ToBinary(base64String);
+        // TODO
+    }
+
+    static fromHTML() {
+        // TODO
+        const level = document.getElementById("level_input").value;
+        const items = Items.fromHTML();
+        const modifiedSP = getSkillPointModifiers();
+        const abilities = Abilities.fromHTML();
+        const secondaryBuild = BuildLink.secondaryBuildFromHTML();
+
+        return new BuildLink(latestVersion, level, items, modifiedSP, abilities, secondaryBuild);
+    }
+
+    static secondaryBuildFromHTML() {
+        // TODO
+    }
+
+    secondaryBuildToHTML() {
+        // TODO
+    }
+
+    toHTML() {
+        // TODO
+    }
 }

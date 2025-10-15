@@ -1,7 +1,7 @@
-import {copyImageById} from "../smith/html/image_exporting.js";
-import {saveImageById} from "../smith/html/image_exporting.js";
-import {getItemFromSearch} from "../smith/html/item_search.js";
-import {getHoverTextForItem} from "../smith/logic/minecraft_html.js";
+import {copyImageById} from "../common/image_exporting.js";
+import {saveImageById} from "../common/image_exporting.js";
+import {getItemFromSearch} from "../smith/control/database/item_search.js";
+import {getHoverTextForItem} from "../common/minecraft_html.js";
 
 window.addEventListener("load", function () {
     const item = getItemFromSearch(window.location.search);

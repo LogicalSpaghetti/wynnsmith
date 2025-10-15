@@ -1,5 +1,5 @@
 
-import {Items} from "./item.js";
+import {Items} from "../model/item/item.js";
 
 
 class Inputs {

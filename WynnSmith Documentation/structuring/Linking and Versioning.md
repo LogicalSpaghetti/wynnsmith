@@ -53,13 +53,11 @@ keep outdated information stored in a place that's only sent to the client if th
 	- dynamic length by: tree total node count
 	- 1 bit per node
 	- map from old links by ability id
-8. Section delimiter
-	- will likely use equals sign "="
-		- safer options: `-$.+!*(),`
-			- allowed in all URL standards
-			- not used for base_64
-			- not part of any URL standards as a special character
-	- separates different builds to be encoded within one link
+8. Cycle
+	- TODO
+9. Secondary build
+	- flag: `hasSecondaryBuild`
+	- includes all build data except for a secondary build.
 ### Crafted Encoding
 1. TODO
 ### Modified Item Encoding

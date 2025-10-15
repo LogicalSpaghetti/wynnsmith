@@ -1,8 +1,8 @@
 // noinspection DuplicatedCode
 import punscake from "../../data/trees.js";
-import {getHoverTextForAbility, minecraftAsElement, minecraftToHTML} from "../smith/logic/minecraft_html.js";
+import {getHoverTextForAbility, minecraftAsElement, minecraftToHTML} from "../common/minecraft_html.js";
 import * as codeDictionary from "../../data/code_dictionary.js";
-import {hideHoverAbilityTooltip, renderHoverTooltip} from "../smith/logic/tooltip.js";
+import {hideHoverAbilityTooltip, renderHoverTooltip} from "../common/tooltip.js";
 
 export class Editor {
     effect;

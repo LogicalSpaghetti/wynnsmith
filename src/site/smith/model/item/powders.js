@@ -1,4 +1,4 @@
-import {binaryToDecimal, decimalToBinary, flag, spliceOffNumber} from "../../../../common/numbers.js";
+import {binaryToDecimal, decimalToBinary, flag, spliceOffNumber} from "../../../common/numbers.js";
 
 const powders = {
     e1: {

@@ -1,8 +1,8 @@
 import {roundForDisplay} from "../../../common/numbers.js";
-import {attackSpeedMap, orderedAttackSpeed} from "../../../data/small_stuff.js";
-import {minecraftToHTML} from "../logic/minecraft_html.js";
-import {player_bps} from "../logic/build/stat_calculations.js";
-import * as codeDictionary from "../../../data/code_dictionary.js";
+import {attackSpeedMap, orderedAttackSpeed} from "../../../../data/small_stuff.js";
+import {minecraftToHTML} from "../../../common/minecraft_html.js";
+import {player_bps} from "./stat_calculations.js";
+import * as codeDictionary from "../../../../data/code_dictionary.js";
 
 export function displayBuildStats(build) {
     const support = document.getElementById("support_display");

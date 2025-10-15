@@ -1,10 +1,10 @@
-import {resetWarnings} from "../html/warnings.js";
-import {getInputByElementClass} from "../html/build.js";
-import {getBuildsFromInput} from "../logic/build/permute.js";
-import {displayBuilds} from "../html/write.js";
-import {preLoadAssets} from "../logic/preloading.js";
-import {addInputListeners} from "./listener/input_listeners.js";
-import {addSettingsListeners} from "./listener/settings_listeners.js";
+import {resetWarnings} from "./control/warnings.js";
+import {getInputByElementClass} from "./model/build/build.js";
+import {getBuildsFromInput} from "./model/build/permute.js";
+import {displayBuilds} from "./control/write.js";
+import {preLoadAssets} from "./control/preloading.js";
+import {addInputListeners} from "./control/listener/input_listeners.js";
+import {addSettingsListeners} from "./control/listener/settings_listeners.js";
 
 // code entry point:
 document.addEventListener("load", loadSite);

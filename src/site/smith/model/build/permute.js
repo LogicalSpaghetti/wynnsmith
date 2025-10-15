@@ -1,10 +1,10 @@
-import * as search from "../../html/item_search.js";
-import {calculateIdSkillPoints, getItemAddedSP, getSkillPointMultiplier} from "./skill_points.js";
-import * as effect_parsing from "./effect_parsing.js"
+import * as search from "../../control/database/item_search.js";
+import {calculateIdSkillPoints, getItemAddedSP, getSkillPointMultiplier} from "../skill_points.js";
+import * as effect_parsing from "../ability/effect_parsing.js"
 import {orderedAttackSpeed} from "../../../../data/small_stuff.js";
-import modifyIdentifications, {addBaseToObject} from "./identifications.js";
+import modifyIdentifications, {addBaseToObject} from "../item/identifications.js";
 import calculateStats from "./stat_calculations.js";
-import calculateDamageConversions from "./attack_calculations.js";
+import calculateDamageConversions from "../attack/attack_calculations.js";
 
 export const emptyBaseString = JSON.stringify({
     // Health

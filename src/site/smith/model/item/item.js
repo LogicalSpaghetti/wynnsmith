@@ -1,8 +1,8 @@
-import * as search from "./item_search.js";
-import {getItem} from "./item_search.js";
-import indexedInternalNameGroups from "../../../data/indexed_names.js";
+import * as search from "../../control/database/item_search.js";
+import {getItem} from "../../control/database/item_search.js";
+import indexedInternalNameGroups from "../../../../data/indexed_names.js";
 import {binaryToDecimal, decimalToBinary, flag, getBinaryLength, spliceOffNumber} from "../../../common/numbers.js";
-import {Powders} from "../logic/build/powders.js";
+import {Powders} from "./powders.js";
 
 const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"];
 const weaponCategory = "weapon";

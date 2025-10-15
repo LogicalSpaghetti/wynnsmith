@@ -1,5 +1,7 @@
-import allItems from "../../../data/items.js";
-import {snakeToTitle} from "./display_item.js";
+import allItems from "../../../../data/items.js";
+import {snakeToTitle} from "../../../common/display_item.js";
+
+// TODO: merge into item.js and database.js
 
 export function getItemFromSearch(search) {
     let cleanSearch = snakeToTitle(search.substring(1, search.length)

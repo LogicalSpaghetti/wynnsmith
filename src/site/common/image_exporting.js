@@ -1,5 +1,3 @@
-import * as html2canvas from '../../../../lib/html2canvas.min.js';
-
 export function copyImageById(elementId) {
     copyImageOfElement(document.getElementById(elementId));
 }
@@ -10,7 +8,7 @@ export function saveImageById(elementId) {
 
 // TODO: doesn't work since switching to modules
 function copyImageOfElement(element) {
-    html2canvas(element, {backgroundColor: null}).then((canvas) => {
+    window.html2canvas(element, {backgroundColor: null}).then((canvas) => {
         canvas.toBlob((blob) => {
             navigator.clipboard.write([new ClipboardItem({"image/png": blob})]);
         }, "image/png");
@@ -18,7 +16,7 @@ function copyImageOfElement(element) {
 }
 
 function saveImageOfElement(element) {
-    html2canvas(element, {backgroundColor: null}).then((canvas) => {
+    window.html2canvas(element, {backgroundColor: null}).then((canvas) => {
         const dataURL = canvas.toDataURL("image/png");
 
         const link = document.createElement("a");

@@ -1,11 +1,11 @@
-import {getItemAddedSP, getSkillPointName} from "../logic/build/skill_points.js";
-import * as search from "./item_search.js";
+import {getItemAddedSP, getSkillPointName} from "../model/skill_points.js";
+import * as search from "./database/item_search.js";
 import {damageTypePrefixes} from "../../../data/small_stuff.js";
 import {addWarning} from "./warnings.js";
-import {minecraftToHTML} from "../logic/minecraft_html.js";
-import {renderHighlights, setToggles, validateTree} from "./ability.js";
-import {displayBuildStats, displayForDevelopment} from "./display_stats.js";
-import addDamageDisplays from "./display_damage.js";
+import {minecraftToHTML} from "../../common/minecraft_html.js";
+import {renderHighlights, setToggles, validateTree} from "../model/ability/ability.js";
+import {displayBuildStats, displayForDevelopment} from "../model/build/display_stats.js";
+import addDamageDisplays from "../model/attack/attack_display.js";
 import * as codeDictionary from "../../../data/code_dictionary.js";
 
 export function displayBuilds(input, builds) {

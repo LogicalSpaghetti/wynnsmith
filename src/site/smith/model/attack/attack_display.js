@@ -1,10 +1,10 @@
-import {damage_type_count, DamageExtremes} from "../logic/build/attack_calculations.js";
-import {minecraftAsElement} from "../logic/minecraft_html.js";
+import {damage_type_count, DamageExtremes} from "./attack_calculations.js";
+import {minecraftAsElement} from "../../../common/minecraft_html.js";
 import {roundForDisplay} from "../../../common/numbers.js";
-import {SkillPointIndexes} from "../logic/build/skill_points.js";
-import {newMinMax} from "../logic/build/effect_parsing.js";
-import * as settings from "../logic/settings.js"
-import * as codeDictionary from "../../../data/code_dictionary.js";
+import {SkillPointIndexes} from "../skill_points.js";
+import {newMinMax} from "../ability/effect_parsing.js";
+import * as settings from "../../control/settings.js"
+import * as codeDictionary from "../../../../data/code_dictionary.js";
 
 const damageColors = Object.freeze([
     "#fca800",

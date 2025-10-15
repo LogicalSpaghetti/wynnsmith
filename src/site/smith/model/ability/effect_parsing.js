@@ -1,4 +1,4 @@
-import * as search from "../../html/item_search.js";
+import * as search from "../../control/database/item_search.js";
 import classEffects from "../../../../data/effects.js";
 
 export function newMinMax() {

@@ -1,7 +1,7 @@
 import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../../../data/small_stuff.js";
-import {getPowder} from "./powders.js";
-import {SkillPointIndexes} from "./skill_points.js";
-import {newMinMax} from "./effect_parsing.js";
+import {getPowder} from "../item/powders.js";
+import {SkillPointIndexes} from "../skill_points.js";
+import {newMinMax} from "../ability/effect_parsing.js";
 
 export const damage_type_count = 6;
 export const DamageExtremes = Object.freeze({

@@ -1,14 +1,14 @@
-import {skillPointNames} from "./build/skill_points.js";
-import punscake from "../../../data/trees.js";
-import {attackSpeedMap} from "../../../data/small_stuff.js";
-import * as codeDictionary from "../../../data/code_dictionary.js";
+import {skillPointNames} from "../smith/model/skill_points.js";
+import punscake from "../../data/trees.js";
+import {attackSpeedMap} from "../../data/small_stuff.js";
+import * as codeDictionary from "../../data/code_dictionary.js";
 import {
     base_stats,
     identifications,
     orderedBaseStats,
     orderedRegularIds,
     orderedSkillPointIds
-} from "../../../data/base_and_ids.js";
+} from "../../data/base_and_ids.js";
 import {
     getAverageDPS,
     getFormattedBase,
@@ -16,8 +16,8 @@ import {
     getFormattedSP,
     snakeToTitle,
     upperFirst, wrapText
-} from "../html/display_item.js";
-import major_id_descriptions from "../../../data/major_ids.js"
+} from "./display_item.js";
+import major_id_descriptions from "../../data/major_ids.js"
 
 export function minecraftAsElement(text, minecraftFont = false) {
     const htmlText = minecraftToHTML(text);

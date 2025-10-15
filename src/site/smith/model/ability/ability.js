@@ -1,13 +1,13 @@
-import punscake from "../../../data/trees.js";
-import {maxPlayerLevel} from "../../../data/small_stuff.js";
-import {refreshBuild} from "../control/script.js";
-import {getHoverTextForAbility, minecraftToHTML} from "../logic/minecraft_html.js";
-import aspect_descriptions from "../../../data/aspects.js";
+import punscake from "../../../../data/trees.js";
+import {maxPlayerLevel} from "../../../../data/small_stuff.js";
+import {refreshBuild} from "../../script.js";
+import {getHoverTextForAbility, minecraftToHTML} from "../../../common/minecraft_html.js";
+import aspect_descriptions from "../../../../data/aspects.js";
 import {decimalToRoman} from "../../../common/numbers.js";
-import * as codeDictionary from "../../../data/code_dictionary.js";
-import {addWarning} from "./warnings.js";
-import {hideHoverAbilityTooltip, renderHoverTooltip} from "../logic/tooltip.js";
-import classEffects from "../../../data/effects.js";
+import * as codeDictionary from "../../../../data/code_dictionary.js";
+import {addWarning} from "../../control/warnings.js";
+import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../../common/tooltip.js";
+import classEffects from "../../../../data/effects.js";
 
 const treeColumns = 9;
 const abilityPointsAtLevel = [
@@ -37,7 +37,7 @@ export function treeClicked(event) {
 export class Abilities {
     nodes;
     aspects;
-    abilities;
+    toggles;
 
     constructor(nodes = [], aspects = [], toggles = []) {
         this.nodes = nodes;
@@ -45,7 +45,7 @@ export class Abilities {
         this.toggles = toggles;
     }
 
-    static read(wynnClass) {
+    static fromHTML(wynnClass) {
         const previousClass = document.getElementById("ability_tree").dataset.class;
         if (previousClass !== wynnClass) return new Abilities();
         return new Abilities(Abilities.#readNodes(), Abilities.#readAspects(), getActiveToggles());
@@ -78,13 +78,19 @@ export class Tree {
         this.data = Tree.getDataFromClass(wynnClass);
     }
 
-    fromHTML() {
-        const tree = document.querySelector(`#${Tree.id}}`);
+    static fromHTML(id = Tree.id) {
+
+        const treeElement = document.querySelector(`#${id}}`);
+
+        const wynnClass = treeElement.dataset.class;
 
 
+        const nodes = [];
+        for (const node of treeElement.querySelectorAll("[data-type='node']"))
+            nodes.push(new Node(node.dataset.map_id, node.dataset.selected === "true"));
+
+        const tree = new Tree(wynnClass, nodes);
     }
-
-    #getElement = (element) => document.querySelector(`#${Tree.id}}`);
 
     static getDataFromClass(wynnClass) {
         return punscake[wynnClass];
@@ -92,6 +98,16 @@ export class Tree {
 
     static markClear() {
 
+    }
+}
+
+class Node {
+    map_id;
+    selected;
+
+    constructor(map_id, selected) {
+        this.map_id = map_id;
+        this.selected = selected;
     }
 }
 

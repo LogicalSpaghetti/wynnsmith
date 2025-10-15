@@ -1,7 +1,7 @@
-import * as codeDictionary from "../../../data/code_dictionary.js";
-import {attackSpeedMultipliers, damageTypeNames} from "../../../data/small_stuff.js";
-import {roundForDisplay} from "../../../common/numbers.js";
-import {stripMinecraftFormatting} from "../logic/minecraft_html.js";
+import * as codeDictionary from "../../data/code_dictionary.js";
+import {attackSpeedMultipliers, damageTypeNames} from "../../data/small_stuff.js";
+import {roundForDisplay} from "./numbers.js";
+import {stripMinecraftFormatting} from "./minecraft_html.js";
 
 const classSpellNames = {
     archer: ["Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"],

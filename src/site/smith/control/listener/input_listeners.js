@@ -1,14 +1,13 @@
-import * as ability_tree from "../../html/ability.js";
-import * as numbers from "../../../../common/numbers.js";
-import {getItemByName} from "../../html/item_search.js";
-import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "../../logic/tooltip.js";
-import {copyBuildLink} from "../../html/build.js";
-import copyTreeAsANSI from "../../html/ansi_tree.js";
-import {balanceSP} from "../../logic/build/skill_points.js";
-import {getHoverTextForItem} from "../../logic/minecraft_html.js";
-import {refreshBuild} from "../script.js";
-import {decimalToRoman} from "../../../../common/numbers.js";
-import {add, addAll, addAllElem, addElem} from "../../../../common/event_listener.js";
+import * as ability_tree from "../../model/ability/ability.js";
+import * as numbers from "../../../common/numbers.js";
+import {getItemByName} from "../database/item_search.js";
+import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "../../../common/tooltip.js";
+import copyTreeAsANSI from "../../model/ability/ansi_tree.js";
+import {balanceSP} from "../../model/skill_points.js";
+import {getHoverTextForItem} from "../../../common/minecraft_html.js";
+import {refreshBuild} from "../../script.js";
+import {decimalToRoman} from "../../../common/numbers.js";
+import {add, addAll, addAllElem, addElem} from "../../../common/event_listener.js";
 
 export function addInputListeners() {
     addTooltipListener();
@@ -48,8 +47,7 @@ export function addInputListeners() {
     add("ansi_tree", "click", copyTreeAsANSI);
 
     // Copy:
-    add("copy_short", "click", (e) => copyBuildLink(e.target, false));
-    add("copy_long", "click", (e) => copyBuildLink(e.target, true));
+    // TODO
 
     addAll("copy_button", "click", (event) => event.target.textContent = "Copied!");
 
