@@ -9,11 +9,11 @@ Input -> Read -> Permute -> Write
 2. permute()
 3. write()
 ###### read()
-1. Gather all data from HTML elements into discrete objects within an Input object.
+1. Gather all data from HTML elements into discrete objects within a Build Data object.
 	- Never passes on an Element, only strings bools and numbers. 
 2. Pass the Input into permute() and get back the modified versions.
-###### permute(\_:Input)
-1. Generate the primary Build given the Input.
+###### permute(\_:Build Data)
+1. Generate the primary Build given the Build Data.
 	- Generating a build returns a fully permuted build.
 	- Each build comes with a Warnings object.
 2. Generate the secondary Build given the Input.
@@ -28,3 +28,9 @@ Input -> Read -> Permute -> Write
 	2. Display attacks
 	3. Display tree highlighting
 	4. ...
+
+link -> build -> stats
+html -> build -> stats
+html -> build -> link
+link -> build -> html
+

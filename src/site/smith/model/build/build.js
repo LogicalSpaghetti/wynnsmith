@@ -1,7 +1,5 @@
-import {base64ToDecimal, binaryToDecimal, decimalToBase64, decimalToBinary, getBinaryLength} from "../../../common/numbers.js";
-import punscake from "../../../../data/trees.js";
 import {Items} from "../item/item.js";
-import {maxPlayerLevel, wynnClasses} from "../../../../data/small_stuff.js";
+import {maxPlayerLevel} from "../../../../data/small_stuff.js";
 import {Abilities} from "../ability/ability.js";
 import * as search from "../../control/database/item_search.js";
 import {
@@ -11,89 +9,56 @@ import {
 } from "../skill_points.js";
 import {base64ToBinary} from "../../../common/numbers.js";
 
-export class Tree {
-    wynnClass;
-    nodes = [];
+// TODO: should be part of the database
+const latestVersion = 0;
+const versionLength = 12;
 
-    static fromElement(id = "ability_tree") {
-        const tree = new Tree();
-
-        const treeElement = document.getElementById(id);
-
-        tree.wynnClass = treeElement.dataset.class;
-
-        for (const node of treeElement.querySelectorAll("[data-type='node']"))
-            tree.nodes.push({
-                map_id: node.dataset.map_id,
-                selected: node.dataset.selected === "true"
-            });
-
-        return tree;
-    }
-
-    static fromClass(wynnClass = "archer") {
-        const tree = new Tree();
-
-        tree.wynnClass = wynnClass;
-
-        for (const map_id in punscake[wynnClass].cellMap.filter(cell => cell.abilityID != null))
-            tree.nodes.push({
-                map_id,
-                selected: false
-            });
-
-        return tree;
-    }
-
-    // TODO: version?
-    //  to hell with versioning
-    static fromLink(link, wynnClass = "inLink") {
-        const tree = new Tree();
-
-        tree.wynnClass = wynnClass !== "inLink" ? wynnClass : wynnClasses[binaryToDecimal(link.splice(0, 3))];
-
-        const mapIds = Object.keys(punscake[tree.wynnClass].cellMap.filter(cell => cell.abilityID != null));
-        for (let i = 0; i < mapIds.length; i++)
-            tree.nodes.push({
-                map_id: mapIds[i],
-                selected: link[i] === "1"
-            });
-
-        link.splice(0, mapIds.length);
-
-        return tree;
-    }
-
-    toLink(includeClass = false) {
-        let link = "";
-
-        if (includeClass) link += decimalToBinary(wynnClasses.indexOf(this.wynnClass)).padStart(3, "0");
-
-        for (let node of this.nodes) link += node.selected ? "1" : "0";
-
-        return link;
-    }
-}
-
-class Build {
-    weapon;
+class BuildData {
+    version;
     level;
-    equipment;
-    tomes;
+    items;
     abilities;
-    toggles;
-    assigned_skill_points;
-    modified_skill_points;
+    modifiedSP;
 
-    constructor(weapon, level, equipment, tomes, abilities, toggles, assigned_skill_points, modified_skill_points) {
-        this.weapon = weapon;
+    constructor(version, level, items, modifiedSP, abilities) {
+        this.version = version;
         this.level = level;
-        this.equipment = equipment;
-        this.tomes = tomes;
+        this.items = items;
         this.abilities = abilities;
-        this.toggles = toggles;
-        this.assigned_skill_points = assigned_skill_points;
-        this.modified_skill_points = modified_skill_points;
+        this.modifiedSP = modifiedSP;
+    }
+
+    static fromURL() {
+        const urlParams = new URL(window.location.toLocaleString()).searchParams;
+        const b = urlParams.get('b');
+        if (!b) return new BuildData();
+        return BuildData.fromBase64(b);
+    }
+
+    static fromBase64(base64String) {
+        const binary = base64ToBinary(base64String);
+        // TODO
+    }
+
+    static fromHTML() {
+        // TODO
+        const level = document.getElementById("level_input").value;
+        const items = Items.fromHTML();
+        const modifiedSP = getSkillPointModifiers();
+        const abilities = Abilities.fromHTML();
+        return new BuildData(latestVersion, level, items, modifiedSP, abilities);
+    }
+
+    toURL() {
+        // TODO
+    }
+
+    toBase64() {
+        // TODO
+    }
+
+    toHTML() {
+        // TODO
     }
 }
 
@@ -263,57 +228,4 @@ function addProvided(itemRanges, initialProvided) {
     const provided = [...initialProvided];
     for (const item of itemRanges) for (let i = 0; i < provided.length; i++) provided[i] += item.provided[i];
     return provided;
-}
-
-// TODO: should be part of the database
-const latestVersion = 0;
-const versionLength = 12;
-
-// all the data of a link.
-class BuildLink {
-    version;
-    level;
-    items;
-    modifiedSP;
-    abilities;
-    secondaryBuild;
-
-    constructor(version, level, items, modifiedSP, abilities, secondaryBuild) {
-
-    }
-
-    static fromURL() {
-        const urlParams = new URL(window.location.toLocaleString()).searchParams;
-        const b = urlParams.get('b');
-        if (!b) return new BuildLink();
-        return BuildLink.fromBase64(b);
-    }
-
-    static fromBase64(base64String) {
-        const binary = base64ToBinary(base64String);
-        // TODO
-    }
-
-    static fromHTML() {
-        // TODO
-        const level = document.getElementById("level_input").value;
-        const items = Items.fromHTML();
-        const modifiedSP = getSkillPointModifiers();
-        const abilities = Abilities.fromHTML();
-        const secondaryBuild = BuildLink.secondaryBuildFromHTML();
-
-        return new BuildLink(latestVersion, level, items, modifiedSP, abilities, secondaryBuild);
-    }
-
-    static secondaryBuildFromHTML() {
-        // TODO
-    }
-
-    secondaryBuildToHTML() {
-        // TODO
-    }
-
-    toHTML() {
-        // TODO
-    }
 }

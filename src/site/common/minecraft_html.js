@@ -291,11 +291,11 @@ export function getHoverTextForItem(item, invalidityText = "") {
         sections.add(idSection);
     }
 
+    // TODO: map item database entries to use Major Id ids.
     if (item.majorIds) {
         let section = new Section();
-        for (let name in item.majorIds) {
-            section.add(wrapText(`§b+${name}: §3${major_id_descriptions[name]}`));
-        }
+        for (let name in item.majorIds)
+            section.add(wrapText(`§b+${name}: §3${major_id_descriptions.find(id => id.name = name).description}`));
         sections.add(section);
     }
 
