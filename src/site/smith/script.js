@@ -1,5 +1,4 @@
 import {resetWarnings} from "./control/warnings.js";
-import {getInputByElementClass} from "./model/build/build.js";
 import {getBuildsFromInput} from "./model/build/permute.js";
 import {displayBuilds} from "./control/write.js";
 import {preLoadAssets} from "./control/preloading.js";

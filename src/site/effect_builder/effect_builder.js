@@ -689,7 +689,7 @@ class EffectType {
 
         const conversionHolder = holder.appendChild(document.createElement("div"));
         conversionHolder.appendChild(document.createTextNode("Conversion: "));
-        const conv = (this.data.conversion ?? [0, 0, 0, 0, 0, 0]);
+        const conv = (this.data.ratios ?? [0, 0, 0, 0, 0, 0]);
 
         conversionHolder.appendChild(document.createElement("br"));
 
@@ -746,7 +746,7 @@ class EffectType {
             if (frequency()) result.frequency = parseFloat(frequency());
             if (duration()) result.duration = parseFloat(duration());
             if (conversionInputs.find(input => input.value !== "" && input.value !== "0"))
-                result.conversion = conversionInputs.map(input => parseFloat(input.value) || 0);
+                result.ratios = conversionInputs.map(input => parseFloat(input.value) || 0);
 
             self.data = result;
         }

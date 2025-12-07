@@ -1,7 +1,13 @@
-import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../../../data/small_stuff.js";
+import {
+    attackSpeedMultipliers,
+    damageTypeNames,
+    damageTypePrefixes,
+    orderedAttackSpeed
+} from "../../../../data/small_stuff.js";
 import {getPowder} from "../item/powders.js";
 import {SkillPointIndexes} from "../skill_points.js";
 import {newMinMax} from "../ability/effect_parsing.js";
+
 
 export const damage_type_count = 6;
 export const DamageExtremes = Object.freeze({
@@ -10,114 +16,51 @@ export const DamageExtremes = Object.freeze({
     MINC: 2,
     MAXC: 3
 });
-const neutral_index = 0;
+export const neutral_index = 0;
 
-export default function calculateDamageConversions(build) {
-    damageIdsToArrays(build);
+export default class Attacks {
+    conversions;
 
-    addPowderBase(build);
+    constructor(build/*TODO: likely shouldn't still be passed in this deep*/, stats) {
+        this.conversions = Conversions(stats);
+        convertBase(build, stats);
+        convertRaw(build, stats);
+        powderNeutralConversions(build, stats);
 
-    convertBase(build);
-    convertRaw(build);
-    powderNeutralConversions(build);
+        applyPercents(build, stats);
+        applyMasteries(build, stats);
+        applySpellAttackSpeed(build, stats);
 
-    applyPercents(build);
-    applyMasteries(build);
-    applySpellAttackSpeed(build);
+        mergeAttackDamage(build, stats);
 
-    mergeAttackDamage(build);
+        applyPersonalDamageMultipliers(build, stats);
+        applyOverridingDamageMultipliers(build, stats);
+        applyStrDex(build, stats);
 
-    applyPersonalDamageMultipliers(build);
-    applyOverridingDamageMultipliers(build);
-    applyStrDex(build);
-
-    addAttackVariants(build);
-    zeroNegatives(build);
-}
-
-function damageIdsToArrays(build) {
-    const statArrays = build.statArrays;
-    const base = build.base;
-    const ids = build.identifications;
-
-    base.damage = [
-        [
-            base.baseDamage.min,
-            base.baseEarthDamage.min,
-            base.baseThunderDamage.min,
-            base.baseWaterDamage.min,
-            base.baseFireDamage.min,
-            base.baseAirDamage.min
-        ],
-        [
-            base.baseDamage.max,
-            base.baseEarthDamage.max,
-            base.baseThunderDamage.max,
-            base.baseWaterDamage.max,
-            base.baseFireDamage.max,
-            base.baseAirDamage.max
-        ]
-    ];
-
-    statArrays.rawDamages = {
-        MainAttack: [],
-        Spell: []
-    };
-
-    for (let i in damageTypeNames) {
-        const type = damageTypeNames[i];
-        for (let category in statArrays.rawDamages)
-            statArrays.rawDamages[category][i] =
-                ids[`raw${type}${category}Damage`] + ids[`raw${type}Damage`];
-    }
-
-    ids.rawElementalSpellDamage += ids.rawElementalDamage;
-    ids.rawElementalMainAttackDamage += ids.rawElementalDamage;
-
-    statArrays.percentDamages = {
-        MainAttack: [],
-        Spell: []
-    };
-
-    damageTypePrefixes.forEach((prefix, i) => {
-        const type = damageTypePrefixes[i];
-        const typedDamage =
-            ids.damage + ids[type + "Damage"] + (i === neutral_index ? 0 : ids.elementalDamage);
-
-        statArrays.percentDamages.MainAttack[i] =
-            ids[type + "MainAttackDamage"] +
-            ids.mainAttackDamage +
-            typedDamage +
-            (i === neutral_index ? 0 : ids["elementalMainAttackDamage"]);
-
-        statArrays.percentDamages.Spell[i] =
-            ids[type + "SpellDamage"] +
-            ids.spellDamage +
-            typedDamage +
-            (i === neutral_index ? 0 : ids["elementalSpellDamage"]);
-
-    });
-}
-
-function addPowderBase(build) {
-    for (let powder of build.weapon.powders.map(name => getPowder(name))) {
-        for (let extreme in build.base.damage)
-            build.base.damage[extreme][damageTypeNames.indexOf(powder.element)] += powder.damage[extreme];
+        addAttackVariants(build, stats);
+        zeroNegatives(build, stats);
     }
 }
 
-function convertBase(build) {
-    build.attacks.forEach((attack) => {
-        const neutralConversion = attack.conversion[0] / 100;
+// putting all the stuff on the attacks is kinda stupid
+class Conversions {
+    constructor(stats) {
+        this.base = this.base(stats.effects.attacks);
+    }
 
-        for (let extremeIndex in attack.base) {
-            const extremeTotal = build.base.damage[extremeIndex].reduce((a, b) => a + b);
+    base(attacks, baseDamage) {
+        attacks.forEach((attack) => {
+            const neutralConversion = attack.conversion[0] / 100;
 
-            for (let i in attack.base[extremeIndex]) attack.base[extremeIndex][i] +=
-                build.base.damage[extremeIndex][i] * neutralConversion +
-                (parseInt(i) !== neutral_index ? (attack.conversion[i] / 100) * extremeTotal : 0);
-        }
-    });
+            for (let extremeIndex in attack.base) {
+                const extremeTotal = baseDamage[extremeIndex].reduce((a, b) => a + b);
+
+                for (let i in attack.base[extremeIndex]) attack.base[extremeIndex][i] +=
+                    baseDamage[extremeIndex][i] * neutralConversion +
+                    (parseInt(i) !== neutral_index ? (attack.conversion[i] / 100) * extremeTotal : 0);
+            }
+        });
+    }
 }
 
 function convertRaw(build) {

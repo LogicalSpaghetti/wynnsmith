@@ -77,7 +77,7 @@ export function getSplitEffects(effects, toggles, wynnClass) {
     const splitEffects = {
         effects: effects,
 
-        attacks: [],
+        conversions: [],
         variants: {},
         displays: [],
         masteries: [],
@@ -149,18 +149,14 @@ export function getSplitEffects(effects, toggles, wynnClass) {
 }
 
 function parseConversionEffect(build, effect) {
-    const attack = getOrCreateNamedEffect(build.attacks, effect.data.id);
-    attack.type = effect.data.type ?? attack.type;
-    attack.is_melee = effect.data.is_melee ?? attack.is_melee;
-    attack.conversion = sumConversions(attack.conversion, effect.data.conversion);
+    const conversion = getOrCreateNamedEffect(build.conversions, effect.data.id);
+    conversion.type = effect.data.type ?? conversion.type;
+    conversion.is_melee = effect.data.is_melee ?? conversion.is_melee;
+    conversion.ratios = sumConversions(conversion.ratios, effect.data.ratios);
 
-    if (effect.data.extra_hits) attack.extra_hits = (attack.extra_hits ?? 0) + effect.data.extra_hits;
-    if (effect.data.frequency) attack.frequency = (attack.frequency ?? 1) * effect.data.frequency;
-    if (effect.data.duration) attack.duration = (attack.duration ?? 0) + effect.data.duration;
-
-    attack.base = newMinMax();
-    attack.raw = [0, 0, 0, 0, 0, 0];
-    attack.damage = newMinMax();
+    if (effect.data.extra_hits) conversion.extra_hits = (conversion.extra_hits ?? 0) + effect.data.extra_hits;
+    if (effect.data.frequency) conversion.frequency = (conversion.frequency ?? 1) * effect.data.frequency;
+    if (effect.data.duration) conversion.duration = (conversion.duration ?? 0) + effect.data.duration;
 }
 
 function sumConversions(conversionA, conversionB) {

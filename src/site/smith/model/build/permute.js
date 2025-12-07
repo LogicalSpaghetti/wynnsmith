@@ -148,7 +148,7 @@ export function getBuildsFromInput(input) {
 }
 
 function getWeaponBuilds(input) {
-    return input?.items.weapons.map(weapon => new Build(weapon, input));
+    return input?.items.weapons.map(weapon => new OldBuild(weapon, input));
 }
 
 function permuteBuild(build) {
@@ -161,7 +161,7 @@ function permuteBuild(build) {
     calculateDamageConversions(build);
 }
 
-class Build {
+class OldBuild {
     level;
 
     weapon;
