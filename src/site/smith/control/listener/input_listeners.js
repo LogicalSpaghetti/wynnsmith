@@ -49,7 +49,7 @@ export function addInputListeners() {
     // Copy:
     // TODO
 
-    addAll("copy_button", "click", (event) => event.target.textContent = "Copied!");
+    addAll("copy_button", "click", (e) => e.target.textContent = "Copied!");
 
     addAspectListeners();
 }
@@ -100,8 +100,8 @@ function addOffhandInput() {
     addListenersToInputCluster(cluster);
 }
 
-function toggleEffectToggle(event) {
-    let toggle = event.target.closest("button");
+function toggleEffectToggle(e) {
+    let toggle = e.target.closest("button");
     if (!toggle || !toggle.classList.contains("toggle")) return;
     toggle.classList.toggle("toggleOn");
 
@@ -121,8 +121,8 @@ function addAspectListeners() {
     const active = document.getElementById("active_aspects");
     const inactive = document.getElementById("inactive_aspects");
 
-    addElem(active, "click", (event) => {
-        const clickTarget = event.target;
+    addElem(active, "click", (e) => {
+        const clickTarget = e.target;
 
         if (clickTarget.classList.contains("aspect_up")) {
             const numeral = clickTarget.parentElement.childNodes[2];
@@ -174,8 +174,8 @@ function addAspectListeners() {
         refreshBuild();
     });
 
-    addElem(inactive, "click", (event) => {
-        const clickTarget = event.target;
+    addElem(inactive, "click", (e) => {
+        const clickTarget = e.target;
         if (!clickTarget.classList.contains("aspect_image") && !clickTarget.classList.contains("aspect_tier")) return;
         const aspect = clickTarget.parentElement;
 

@@ -1,12 +1,7 @@
-import {
-    attackSpeedMultipliers,
-    damageTypeNames,
-    damageTypePrefixes,
-    orderedAttackSpeed
-} from "../../../../data/small_stuff.js";
+import {attackSpeedMultipliers, damageTypeNames, orderedAttackSpeed} from "../../../../data/small_stuff.js";
 import {getPowder} from "../item/powders.js";
 import {SkillPointIndexes} from "../skill_points.js";
-import {newMinMax} from "../ability/effect_parsing.js";
+import {newDamages, newMinMax} from "../ability/effect_parsing.js";
 
 
 export const damage_type_count = 6;
@@ -16,16 +11,17 @@ export const DamageExtremes = Object.freeze({
     MINC: 2,
     MAXC: 3
 });
+export const ExtremeNames = Object.freeze([
+    "min",
+    "max"
+]);
 export const neutral_index = 0;
 
 export default class Attacks {
     conversions;
 
     constructor(build/*TODO: likely shouldn't still be passed in this deep*/, stats) {
-        this.conversions = Conversions(stats);
-        convertBase(build, stats);
-        convertRaw(build, stats);
-        powderNeutralConversions(build, stats);
+        this.conversions = new Conversions(stats);
 
         applyPercents(build, stats);
         applyMasteries(build, stats);
@@ -42,87 +38,124 @@ export default class Attacks {
     }
 }
 
-// putting all the stuff on the attacks is kinda stupid
 class Conversions {
-    constructor(stats) {
-        this.base = this.base(stats.effects.attacks);
+    constructor(stats, powders) {
+        this.convertBases(stats);
+        this.convertRaws(stats);
+        this.powderNeutralConversions(stats, powders);
     }
 
-    base(attacks, baseDamage) {
-        attacks.forEach((attack) => {
-            const neutralConversion = attack.conversion[0] / 100;
-
-            for (let extremeIndex in attack.base) {
-                const extremeTotal = baseDamage[extremeIndex].reduce((a, b) => a + b);
-
-                for (let i in attack.base[extremeIndex]) attack.base[extremeIndex][i] +=
-                    baseDamage[extremeIndex][i] * neutralConversion +
-                    (parseInt(i) !== neutral_index ? (attack.conversion[i] / 100) * extremeTotal : 0);
-            }
-        });
+    convertBases(stats) {
+        const baseDamage = this.parseBase(stats.base);
+        for (let i in stats.effects.conversions)
+            this[i] = {base: this.convertBase(stats.effects.conversions[i], baseDamage), raw: null};
     }
-}
 
-function convertRaw(build) {
-    build.attacks.forEach((attack) => {
-        const raw = attack.raw;
+    parseBase = (base) => [
+        [
+            base.baseDamage.min,
+            base.baseEarthDamage.min,
+            base.baseThunderDamage.min,
+            base.baseWaterDamage.min,
+            base.baseFireDamage.min,
+            base.baseAirDamage.min
+        ], [
+            base.baseDamage.max,
+            base.baseEarthDamage.max,
+            base.baseThunderDamage.max,
+            base.baseWaterDamage.max,
+            base.baseFireDamage.max,
+            base.baseAirDamage.max
+        ]
+    ];
 
-        const conversionTotal =
-            attack.conversion.reduce((sum, a) => sum + parseInt(a), 0) / 100;
+    convertBase(conversion, baseDamage) {
+        const result = newMinMax();
 
-        const baseTotal = attack.base.map(extreme =>
+        const neutralConversion = conversion.ratios[0] / 100;
+        for (let extremeIndex in result) {
+            const extremeTotal = baseDamage[extremeIndex].reduce((a, b) => a + b);
+            for (let i in result[extremeIndex]) result[extremeIndex][i] +=
+                baseDamage[extremeIndex][i] * neutralConversion +
+                (parseInt(i) !== neutral_index ? (conversion.ratios[i] / 100) * extremeTotal : 0);
+        }
+
+        return result;
+    }
+
+    convertRaws(stats) {
+        const raw = this.parseRaw(stats.identifications);
+        for (let i in stats.effects.conversions)
+            this[i].raw = this.convertRaw(stats.effects.conversions[i], stats.identifications, this[i].base, raw);
+    }
+
+    parseRaw(ids) {
+        const raw = {
+            MainAttack: [],
+            Spell: []
+        };
+
+        for (let i in damageTypeNames) for (let category in raw)
+            raw[category][i] = ids[`raw${damageTypeNames[i]}${category}Damage`] + ids[`raw${damageTypeNames[i]}Damage`];
+
+        return raw;
+    }
+
+    convertRaw(conversion, ids, convertedBase, raw) {
+        const convertedRaw = newDamages();
+
+        const conversionTotal = conversion.ratios.reduce((sum, a) => sum + parseInt(a), 0) / 100;
+        const baseTotal = convertedBase.map(extreme =>
             extreme.reduce((a, b) => a + b))
             .reduce((a, b) => a + b);
-
-        const baseElementalTotal = attack.base.map(extreme =>
+        const baseElementalTotal = conversion.base.map(extreme =>
             extreme.reduce((a, b, i) => a + (i === neutral_index ? 0 : b), 0))
             .reduce((a, b) => a + b);
+        const ratios = conversion.base[DamageExtremes.MIN].map((e, i) =>
+            (e + conversion.base[DamageExtremes.MAX][i]));
 
-        const ratios = attack.base[0].map((e, i) => (e + attack.base[1][i]));
+        for (let i in convertedRaw)
+            convertedRaw[i] = conversion.base[DamageExtremes.MAX][i] === 0 ? 0 : conversionTotal * (
+                // NETWFA
+                raw[conversion.type][i]
+                // damage
+                + ids.rawDamage * (ratios[i] / baseTotal)
+                // ElementalDamage
+                + (i !== neutral_index ?
+                    (ids[`rawElemental${conversion.type}Damage`] + ids[`rawElementalDamage`]) *
+                    (ratios[i] / baseElementalTotal) : 0)
+                // main/spell
+                + (ratios[i] / baseTotal) * ids[`raw${conversion.type}Damage`]);
 
-        for (let i in raw) {
-            if (attack.base[DamageExtremes.MAX][i] === 0) continue;
-
-            // NETWFA
-            raw[i] = build.statArrays.rawDamages[attack.type][i];
-            // damage
-            raw[i] += build.identifications.rawDamage * (ratios[i] / baseTotal);
-            // ElementalDamage
-            if (i !== neutral_index) raw[i] +=
-                build.identifications[`rawElemental${attack.type}Damage`] *
-                (ratios[i] / baseElementalTotal);
-            // main/spell
-            raw[i] += (ratios[i] / baseTotal) * build.identifications[`raw${attack.type}Damage`];
-            raw[i] *= conversionTotal;
-        }
-    });
-}
-
-function powderNeutralConversions(build) {
-
-    let neutral = 100;
-    let modifierPercents = [0, 0, 0, 0, 0, 0];
-
-    for (let powder of build.weapon.powders.map(name => getPowder(name))) {
-        const elementalIndex = damageTypeNames.indexOf(powder.element);
-        const modPercent = Math.min(neutral, powder.conversion);
-
-        neutral -= modPercent;
-        modifierPercents[elementalIndex] += modPercent;
-
-        if (neutral < 1) break;
+        return convertedRaw;
     }
 
-    build.attacks.forEach(attack => {
-        const convertedDamages = attack.base.map(extreme =>
-            extreme.map((element, i) => extreme[neutral_index] * modifierPercents[i] / 100));
+    powderNeutralConversions(stats, powders) {
+        let neutral = 100;
+        let modifierPercents = [0, 0, 0, 0, 0, 0];
 
-        for (let extremeIndex in attack.base) for (let i = 0; i < damage_type_count; i++)
-            if (i === neutral_index)
-                attack.base[extremeIndex][i] *= neutral / 100;
-            else
-                attack.base[extremeIndex][i] += convertedDamages[extremeIndex][i];
-    });
+        for (let powder of powders.map(name => getPowder(name))) {
+            const elementalIndex = damageTypeNames.indexOf(powder.element);
+            const modPercent = Math.min(neutral, powder.conversion);
+
+            neutral -= modPercent;
+            modifierPercents[elementalIndex] += modPercent;
+
+            if (neutral < 1) break;
+        }
+
+        for (let i in this) {
+            const convertedDamages = this[i].base.map(extreme =>
+                extreme.map((element, i) => extreme[neutral_index] * modifierPercents[i] / 100));
+
+            for (let extremeIndex in this[i].base)
+                for (let i = 0; i < damage_type_count; i++)
+                    if (i === neutral_index)
+                        this[i].base[extremeIndex][i] *= neutral / 100;
+                    else
+                        this[i].base[extremeIndex][i] += convertedDamages[extremeIndex][i];
+        }
+    }
 }
 
 function applySpellAttackSpeed(build) {

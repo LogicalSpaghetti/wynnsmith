@@ -2,6 +2,7 @@ import * as settings from "../settings.js";
 import {refreshBuild} from "../../script.js";
 import {loadBoolean, toggleBoolean} from "../settings.js";
 import {add, dispatch} from "../../../common/event_listener.js";
+import runTests from "../../../../test/test.js";
 
 export function addSettingsListeners() {
     initCheckbox("selvs");
@@ -9,8 +10,8 @@ export function addSettingsListeners() {
 
     const miku = document.getElementById("miku");
     miku.src = settings.loadString("miku");
-    add("gif_input", "change", (event) => {
-        const file = event.target.files[0];
+    add("gif_input", "change", (e) => {
+        const file = e.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
@@ -20,10 +21,11 @@ export function addSettingsListeners() {
         };
     });
 
-    add("opacity_slider", "input", (event) => {
-        document.getElementById("miku").style.opacity = event.target.value + "%";
-    });
+    add("opacity_slider", "input", (e) =>
+        document.getElementById("miku").style.opacity = e.target.value + "%");
     dispatch("opacity_slider", "input");
+
+    add("run_tests", "click", runTests);
 }
 
 function initCheckbox(elementId, boolId = elementId, extraCode = () => refreshBuild()) {

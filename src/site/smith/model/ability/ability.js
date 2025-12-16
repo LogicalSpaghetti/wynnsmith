@@ -25,8 +25,8 @@ const abilityPointsAtLevel = [
     44, 44, 44, 45, 45
 ];
 
-export function treeClicked(event) {
-    const target = event.target;
+export function treeClicked(e) {
+    const target = e.target;
     if (target.dataset.type !== "ability") return;
     toggleNode(target);
     refreshBuild();

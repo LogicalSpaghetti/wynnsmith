@@ -1,24 +1,18 @@
-import {damageTypeNames, damageTypePrefixes} from "../../../../data/small_stuff";
-import {getPowder} from "../item/powders";
-import {neutral_index} from "../attack/attack_calculations.js";
-
 export default class Stats {
     other; // other.ehp
     base; // base.rawHealth
     identifications; // identifications.health
     effects; // effects.effectType[i]
-
+    damage;
 
     constructor(build) {
 
     }
 }
 
-// TODO: integrate into Stats
-function init(base, ids) {
-    const damage = {};
-
-    damage.base = [
+// TODO: this structure should not be used. Left for reference to compare and ensure all ids referenced here are accounted for.
+function arrayifyDamage(base, ids) {
+    this.base = [
         [
             base.baseDamage.min,
             base.baseEarthDamage.min,
@@ -44,14 +38,15 @@ function init(base, ids) {
 
     for (let i in damageTypeNames) {
         const type = damageTypeNames[i];
-        for (let category in damage.raw)
-            damage.raw[category][i] =
+        for (let category in raw)
+            raw[category][i] =
                 ids[`raw${type}${category}Damage`] + ids[`raw${type}Damage`];
     }
 
-    // TODO: figure out where these were being used and ensure both are
-    // ids.rawElementalSpellDamage += ids.rawElementalDamage;
-    // ids.rawElementalMainAttackDamage += ids.rawElementalDamage;
+    elementalRaw = {
+        MainAttack: ids[`rawElemental${"MainAttack"}Damage`] + ids.rawElementalDamage,
+        Spell: ids[`rawElemental${"Spell"}Damage`] + ids.rawElementalDamage
+    };
 
     damage.percent = {
         MainAttack: [],
@@ -63,25 +58,22 @@ function init(base, ids) {
         const typedDamage =
             ids.damage + ids[type + "Damage"] + (i === neutral_index ? 0 : ids.elementalDamage);
 
-        damage.percent.MainAttack[i] =
+        this.percent.MainAttack[i] =
             ids[type + "MainAttackDamage"] +
             ids.mainAttackDamage +
             typedDamage +
             (i === neutral_index ? 0 : ids.elementalMainAttackDamage);
 
-        damage.percent.Spell[i] =
+        this.percent.Spell[i] =
             ids[type + "SpellDamage"] +
             ids.spellDamage +
             typedDamage +
             (i === neutral_index ? 0 : ids.elementalSpellDamage);
-
     });
 }
 
-// TODO: integrate into Stats
-function applyPowders(base, powders) {
-    // TODO: ensure the powder format at this point is correct
+function applyPowders(powders) {
     for (let powder of powders.map(name => getPowder(name)))
-        for (let extreme in base)
-            base[extreme][damageTypeNames.indexOf(powder.element)] += powder.damage[extreme];
+        for (let extreme in this.base)
+            this.base[extreme][damageTypeNames.indexOf(powder.element)] += powder.damage[extreme];
 }

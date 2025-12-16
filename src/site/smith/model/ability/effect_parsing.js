@@ -2,10 +2,11 @@ import * as search from "../../control/database/item_search.js";
 import classEffects from "../../../../data/effects.js";
 
 export function newMinMax() {
-    return [
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0]
-    ];
+    return [newDamages(), newDamages()];
+}
+
+export function newDamages() {
+    return [0, 0, 0, 0, 0, 0];
 }
 
 const EffectTypes = Object.freeze({
@@ -149,7 +150,7 @@ export function getSplitEffects(effects, toggles, wynnClass) {
 }
 
 function parseConversionEffect(build, effect) {
-    const conversion = getOrCreateNamedEffect(build.conversions, effect.data.id);
+    const conversion = getNamedEffect(build.conversions, effect.data.id);
     conversion.type = effect.data.type ?? conversion.type;
     conversion.is_melee = effect.data.is_melee ?? conversion.is_melee;
     conversion.ratios = sumConversions(conversion.ratios, effect.data.ratios);
@@ -170,19 +171,21 @@ function parseVariantEffect(build, effect, effectId) {
     variant.type = effect.data.type;
     variant.attack = effect.data.attack;
     variant.label = effect.data.label;
+
     if (effect.data.second_attack) variant.second_attack = effect.data.second_attack;
     if (effect.data.multiplier) variant.multiplier = effect.data.multiplier;
 }
 
 function parseDisplayEffect(build, effect, effectId) {
-    const display = getOrCreateNamedEffect(build.displays, effectId);
+    const display = getNamedEffect(build.displays, effectId);
     display.name = effect.data.name || display.name;
     display.variants = (display.variants ?? []).concat(effect.data.variants);
     display.label = effect.data.label || display.label;
 
     if (effect.data.spell) display.spell = effect.data.spell;
     if (effect.data.parent) display.parent = effect.data.parent;
-    display.children = {};
+
+    display.children = {}; // TODO: remove
 }
 
 function parseMasteryEffect(build, effect) {
@@ -195,7 +198,7 @@ function parseMasteryEffect(build, effect) {
 }
 
 function parseHealEffect(build, effect) {
-    const heal = getOrCreateNamedEffect(build.heals, effect.data.id);
+    const heal = getNamedEffect(build.heals, effect.data.id);
     heal.percent = (heal.percent ?? 0) + effect.data.percent;
 }
 
@@ -208,28 +211,27 @@ function parseIdRelativeHealEffect(build, effect) {
 }
 
 function parseResistanceEffect(build, effect) {
-    const resistance = getOrCreateNamedEffect(build.resistances, effect.data.internal_name);
+    const resistance = getNamedEffect(build.resistances, effect.data.internal_name);
     resistance.multiplier = (resistance.multiplier ?? 0) + effect.data.multiplier;
 }
 
 function parseTeamDamageMultiplierEffect(build, effect) {
-    const teamMultiplier = getOrCreateNamedEffect(build.team_multipliers, effect.data.internal_name);
+    const teamMultiplier = getNamedEffect(build.team_multipliers, effect.data.internal_name);
     teamMultiplier.multiplier = (teamMultiplier.multiplier ?? 0) + effect.data.multiplier;
     teamMultiplier.type = effect.data.type ?? teamMultiplier.type;
 }
 
 function parsePersonalDamageMultiplierEffect(build, effect) {
-    const personalMultiplier = getOrCreateNamedEffect(build.personal_multipliers, effect.data.internal_name);
+    const personalMultiplier = getNamedEffect(build.personal_multipliers, effect.data.internal_name);
     personalMultiplier.multiplier = (personalMultiplier.multiplier ?? 0) + effect.data.multiplier;
     personalMultiplier.target = effect.data.target ?? personalMultiplier.target;
 }
 
 function parseSpellCostEffect(build, effect) {
-    if (effect.data.is_base_spell) {
+    if (effect.data.is_base_spell)
         build.spell_costs[effect.data.spell_number] += effect.data.cost;
-    } else {
+    else
         build.spell_cost_modifiers[effect.data.spell_number] += effect.data.cost;
-    }
 }
 
 function parseSpellCostMultiplierEffect(build, effect) {
@@ -240,14 +242,8 @@ function parseIdMultiplierEffect(build, effect) {
     createUnnamedEffect(build.id_multipliers, effect.data);
 }
 
-function getOrCreateNamedEffect(effectArray, internal_name) {
-    const found = effectArray.find(effect => effect.internal_name === internal_name);
-    if (!found) {
-        const result = {internal_name: internal_name};
-        effectArray.push(result);
-        return result;
-    }
-    return found;
+function getNamedEffect(effectArray, id) {
+    return effectArray[id] || (effectArray[id] = {});
 }
 
 function createUnnamedEffect(effectArray, data) {

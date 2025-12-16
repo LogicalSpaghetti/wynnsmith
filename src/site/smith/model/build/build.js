@@ -13,7 +13,7 @@ import {base64ToBinary} from "../../../common/numbers.js";
 const latestVersion = 0;
 const versionLength = 12;
 
-class BuildData {
+class Build {
     version;
     level;
     items;
@@ -31,8 +31,8 @@ class BuildData {
     static fromURL() {
         const urlParams = new URL(window.location.toLocaleString()).searchParams;
         const b = urlParams.get('b');
-        if (!b) return new BuildData();
-        return BuildData.fromBase64(b);
+        if (!b) return new Build();
+        return Build.fromBase64(b);
     }
 
     static fromBase64(base64String) {
@@ -46,7 +46,7 @@ class BuildData {
         const items = Items.fromHTML();
         const modifiedSP = getSkillPointModifiers();
         const abilities = Abilities.fromHTML();
-        return new BuildData(latestVersion, level, items, modifiedSP, abilities);
+        return new Build(latestVersion, level, items, modifiedSP, abilities);
     }
 
     toURL() {

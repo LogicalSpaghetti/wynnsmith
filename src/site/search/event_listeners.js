@@ -26,18 +26,17 @@ function scaleDisplay(display) {
     display.style.scale = (Math.min(window.innerHeight - 16, height) / height) * 100 + "%";
 }
 
-document.addEventListener("keydown", function (event) {
-    if (event.key === "c") {
-        event.preventDefault();
+document.addEventListener("keydown", (e) => {
+    if (e.key === "c") {
+        e.preventDefault();
         copyImageById("item_display");
     }
-    if (event.key === "s") {
-        event.preventDefault();
+    if (e.key === "s") {
+        e.preventDefault();
         saveImageById("item_display");
     }
-
-    if (event.key === "l") {
-        event.preventDefault();
+    if (e.key === "l") {
+        e.preventDefault();
         navigator.clipboard.writeText(window.location.toString());
     }
 });
