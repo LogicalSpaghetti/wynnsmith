@@ -5,9 +5,9 @@ import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from ".
 import copyTreeAsANSI from "../../model/ability/ansi_tree.js";
 import {balanceSP} from "../../model/skill_points.js";
 import {getHoverTextForItem} from "../../../common/minecraft_html.js";
-import {refreshBuild} from "../../script.js";
 import {decimalToRoman} from "../../../common/numbers.js";
 import {add, addAll, addAllElem, addElem} from "../../../common/event_listener.js";
+import {updateBuild} from "../updateBuild";
 
 export function addInputListeners() {
     addTooltipListener();
@@ -17,16 +17,16 @@ export function addInputListeners() {
 
     add("add_offhand", "click", addOffhandInput);
 
-    add("level_input", "input", refreshBuild);
+    add("level_input", "input", updateBuild);
     const treeElement = document.getElementById("ability_tree");
 
     add("effect_toggles", "click", toggleEffectToggle);
 
-    addAll("sp_input", "input", refreshBuild);
+    addAll("sp_input", "input", updateBuild);
 
     add("balance_dmg", "click", () => {
         balanceSP();
-        refreshBuild();
+        updateBuild();
     });
 
     // Tree:
@@ -35,13 +35,13 @@ export function addInputListeners() {
     add("clear_tree", "click", () => {
         treeElement.querySelectorAll("td[data-selected='true']")
             .forEach((node) => node.dataset.selected = "false");
-        refreshBuild();
+        updateBuild();
     });
 
     add("clear_reds", "click", () => {
         treeElement.querySelectorAll("td[data-red='true']")
             .forEach((node) => node.dataset.selected = "false");
-        refreshBuild();
+        updateBuild();
     });
 
     add("ansi_tree", "click", copyTreeAsANSI);
@@ -61,7 +61,7 @@ function addListenersToInputCluster(cluster) {
 
     addElem(link, "mouseover", () => renderHoverTooltip(getHoverTextForItem(getItemByName(input.value))));
     addElem(link, "mouseout", () => hideHoverAbilityTooltip());
-    addAllElem(inputs, "input", refreshBuild);
+    addAllElem(inputs, "input", updateBuild);
 }
 
 function addOffhandInput() {
@@ -94,7 +94,7 @@ function addOffhandInput() {
     removeInput.textContent = "x";
     addElem(removeInput, "click", () => {
         offhandInputs.removeChild(cluster);
-        refreshBuild();
+        updateBuild();
     });
 
     addListenersToInputCluster(cluster);
@@ -113,7 +113,7 @@ function toggleEffectToggle(e) {
         });
     }
 
-    refreshBuild();
+    updateBuild();
 }
 
 // TODO: move most to ability.js
@@ -132,7 +132,7 @@ function addAspectListeners() {
             } else {
                 numeral.classList.remove("Tier_" + decimalToRoman(numeral.dataset.tier - 1));
                 numeral.classList.add("Tier_" + decimalToRoman(numeral.dataset.tier));
-                refreshBuild();
+                updateBuild();
             }
             numeral.textContent = numbers.decimalToRoman(numeral.dataset.tier);
             return;
@@ -143,7 +143,7 @@ function addAspectListeners() {
                 numeral.classList.remove("Tier_" + numbers.decimalToRoman(numeral.dataset.tier));
                 numeral.dataset.tier -= 1;
                 numeral.classList.add("Tier_" + numbers.decimalToRoman(numeral.dataset.tier));
-                refreshBuild();
+                updateBuild();
             }
             numeral.textContent = numbers.decimalToRoman(numeral.dataset.tier);
             return;
@@ -171,7 +171,7 @@ function addAspectListeners() {
 
         if (active.childElementCount < 5) inactive.style.display = "inline-block";
 
-        refreshBuild();
+        updateBuild();
     });
 
     addElem(inactive, "click", (e) => {
@@ -197,6 +197,6 @@ function addAspectListeners() {
 
         if (active.childElementCount >= 5) inactive.style.display = "none";
 
-        refreshBuild();
+        updateBuild();
     });
 }

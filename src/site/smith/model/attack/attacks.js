@@ -1,4 +1,9 @@
-import {attackSpeedMultipliers, damageTypeNames, orderedAttackSpeed} from "../../../../data/small_stuff.js";
+import {
+    attackSpeedMultipliers,
+    damageTypeNames,
+    damageTypePrefixes,
+    orderedAttackSpeed
+} from "../../../../data/small_stuff.js";
 import {getPowder} from "../item/powders.js";
 import {SkillPointIndexes} from "../skill_points.js";
 import {newDamages, newMinMax} from "../ability/effect_parsing.js";
@@ -18,12 +23,21 @@ export const ExtremeNames = Object.freeze([
 export const neutral_index = 0;
 
 export default class Attacks {
-    conversions;
+    constructor(stats, weaponPowders) {
+        this.damageTicks = new DamageTicks(stats, weaponPowders);
+        this.damageVariants = new DamageVariants(this.damageTicks, stats.effects.variants);
+    }
+}
 
-    constructor(build/*TODO: likely shouldn't still be passed in this deep*/, stats) {
-        this.conversions = new Conversions(stats);
+class DamageTicks extends Array {
+    constructor(stats, weaponPowders) {
+        super();
+        const powders = weaponPowders.map(name => getPowder(name));
+        this.convertBases(stats, powders);
+        this.convertRaws(stats);
+        this.powderNeutralConversions(stats, powders);
 
-        applyPercents(build, stats);
+        this.applyPercents(stats.identifications, stats.effects.conversions);
         applyMasteries(build, stats);
         applySpellAttackSpeed(build, stats);
 
@@ -36,38 +50,39 @@ export default class Attacks {
         addAttackVariants(build, stats);
         zeroNegatives(build, stats);
     }
-}
 
-class Conversions {
-    constructor(stats, powders) {
-        this.convertBases(stats);
-        this.convertRaws(stats);
-        this.powderNeutralConversions(stats, powders);
-    }
-
-    convertBases(stats) {
-        const baseDamage = this.parseBase(stats.base);
+    convertBases(stats, powders) {
+        const baseDamage = this.parseBase(stats.base, powders);
         for (let i in stats.effects.conversions)
             this[i] = {base: this.convertBase(stats.effects.conversions[i], baseDamage), raw: null};
     }
 
-    parseBase = (base) => [
-        [
-            base.baseDamage.min,
-            base.baseEarthDamage.min,
-            base.baseThunderDamage.min,
-            base.baseWaterDamage.min,
-            base.baseFireDamage.min,
-            base.baseAirDamage.min
-        ], [
-            base.baseDamage.max,
-            base.baseEarthDamage.max,
-            base.baseThunderDamage.max,
-            base.baseWaterDamage.max,
-            base.baseFireDamage.max,
-            base.baseAirDamage.max
-        ]
-    ];
+    // assumes powder base is perfectly normal base
+    parseBase(base, powders) {
+        const result = [
+            [
+                base.baseDamage.min,
+                base.baseEarthDamage.min,
+                base.baseThunderDamage.min,
+                base.baseWaterDamage.min,
+                base.baseFireDamage.min,
+                base.baseAirDamage.min
+            ], [
+                base.baseDamage.max,
+                base.baseEarthDamage.max,
+                base.baseThunderDamage.max,
+                base.baseWaterDamage.max,
+                base.baseFireDamage.max,
+                base.baseAirDamage.max
+            ]
+        ];
+
+        for (let powder of powders)
+            for (let extreme in this.base)
+                result[extreme][damageTypeNames.indexOf(powder.element)] += powder.damage[extreme];
+
+        return result;
+    }
 
     convertBase(conversion, baseDamage) {
         const result = newMinMax();
@@ -134,7 +149,7 @@ class Conversions {
         let neutral = 100;
         let modifierPercents = [0, 0, 0, 0, 0, 0];
 
-        for (let powder of powders.map(name => getPowder(name))) {
+        for (let powder of powders) {
             const elementalIndex = damageTypeNames.indexOf(powder.element);
             const modPercent = Math.min(neutral, powder.conversion);
 
@@ -154,6 +169,38 @@ class Conversions {
                         this[i].base[extremeIndex][i] *= neutral / 100;
                     else
                         this[i].base[extremeIndex][i] += convertedDamages[extremeIndex][i];
+        }
+    }
+
+    applyPercents(ids, conversions) {
+
+        const percent = {
+            MainAttack: [],
+            Spell: []
+        };
+
+        damageTypePrefixes.forEach((prefix, i) => {
+            const type = damageTypePrefixes[i];
+            const typedDamage =
+                ids.damage + ids[type + "Damage"] + (i === neutral_index ? 0 : ids.elementalDamage);
+
+            this.percent.MainAttack[i] =
+                ids[type + "MainAttackDamage"] +
+                ids.mainAttackDamage +
+                typedDamage +
+                (i === neutral_index ? 0 : ids.elementalMainAttackDamage);
+
+            this.percent.Spell[i] =
+                ids[type + "SpellDamage"] +
+                ids.spellDamage +
+                typedDamage +
+                (i === neutral_index ? 0 : ids.elementalSpellDamage);
+        });
+
+        for (const i in this) {
+            const mults = percent[conversions[i].type];
+            for (const i in mults) for (const extreme of this[i].base)
+                extreme[i] *= mults[i] / 100 + 1;
         }
     }
 }
@@ -179,14 +226,6 @@ function applyMasteries(build) {
             }
         });
 
-    });
-}
-
-function applyPercents(build) {
-    build.attacks.forEach(attack => {
-        const mults = build.statArrays.percentDamages[attack.type];
-        for (let i in mults) for (const extreme in attack.base)
-            attack.base[extreme][i] *= mults[i] / 100 + 1;
     });
 }
 
@@ -307,4 +346,10 @@ function multiplyDamageByDPS(build, attack) {
 function zeroNegatives(build) {
     for (let attack of build.attacks) for (let extreme of attack.damage) for (let i in extreme)
         if (extreme[i] < 0) extreme[i] = 0;
+}
+
+class DamageVariants {
+    constructor(damageTicks, effectVariants) {
+        // TODO
+    }
 }

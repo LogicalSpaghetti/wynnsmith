@@ -1,4 +1,4 @@
-import {damage_type_count, DamageExtremes} from "./attack_calculations.js";
+import {damage_type_count, DamageExtremes} from "./attacks.js";
 import {minecraftAsElement} from "../../../common/minecraft_html.js";
 import {roundForDisplay} from "../../../common/numbers.js";
 import {SkillPointIndexes} from "../skill_points.js";

@@ -13,7 +13,7 @@ import {base64ToBinary} from "../../../common/numbers.js";
 const latestVersion = 0;
 const versionLength = 12;
 
-class Build {
+export class Build {
     version;
     level;
     items;

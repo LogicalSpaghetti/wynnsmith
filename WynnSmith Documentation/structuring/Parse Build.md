@@ -2,9 +2,8 @@ Input -> Read -> Permute -> Write
 ###### Listeners
 1. Modify a specific element.
 	- Extremely small modifications, anything complex should instead just toggle a flag which will be read and handled later.
-		- i.e. Clear tree errors just adds dataset.clear_errors="true" to the ability tree Element.
-2. Call `refreshBuild()`.
-###### `refreshBuild()`
+		- `updateBuild()`.
+###### `updateBuild()`
 1. read()
 2. permute()
 3. write()

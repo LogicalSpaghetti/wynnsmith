@@ -41,3 +41,8 @@
 5. Add tree cost modifiers
 6. Set to the max of itself and 1
 7. Apply Mask multipliers
+
+
+$$
+\sum_{n=0}^\infty(\frac 1{n!}-4\frac{(-1)^n}{2n+1})
+$$

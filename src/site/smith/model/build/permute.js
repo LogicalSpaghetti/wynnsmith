@@ -1,10 +1,10 @@
 import * as search from "../../control/database/item_search.js";
 import {calculateIdSkillPoints, getItemAddedSP, getSkillPointMultiplier} from "../skill_points.js";
-import * as effect_parsing from "../ability/effect_parsing.js"
+import * as effect_parsing from "../ability/effect_parsing.js";
 import {orderedAttackSpeed} from "../../../../data/small_stuff.js";
 import modifyIdentifications, {addBaseToObject} from "../item/identifications.js";
-import calculateStats from "./stat_calculations.js";
-import calculateDamageConversions from "../attack/attack_calculations.js";
+import calculateStats from "../stats/stat_calculations.js";
+import calculateDamageTicks from "../attack/attacks.js";
 
 export const emptyBaseString = JSON.stringify({
     // Health
@@ -25,7 +25,7 @@ export const emptyBaseString = JSON.stringify({
     // Charms
     leveledLootBonus: 0,
     damageFromMobs: 0,
-    leveledXpBonus: 0,
+    leveledXpBonus: 0
 });
 
 const emptyIdsString = JSON.stringify({
@@ -136,7 +136,7 @@ const emptyIdsString = JSON.stringify({
     "xpBonus": 0,
     // Debuffs
     "weakenEnemy": 0,
-    "slowEnemy": 0,
+    "slowEnemy": 0
 });
 
 export function getBuildsFromInput(input) {
@@ -157,8 +157,6 @@ function permuteBuild(build) {
     modifyIdentifications(build);
     calculateIdSkillPoints(build);
     calculateStats(build);
-
-    calculateDamageConversions(build);
 }
 
 class OldBuild {

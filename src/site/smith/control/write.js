@@ -4,7 +4,7 @@ import {damageTypePrefixes} from "../../../data/small_stuff.js";
 import {addWarning} from "./warnings.js";
 import {minecraftToHTML} from "../../common/minecraft_html.js";
 import {renderHighlights, setToggles, validateTree} from "../model/ability/ability.js";
-import {displayBuildStats, displayForDevelopment} from "../model/build/display_stats.js";
+import {displayStats, displayForDevelopment} from "../model/stats/display_stats.js";
 import addDamageDisplays from "../model/attack/attack_display.js";
 import * as codeDictionary from "../../../data/code_dictionary.js";
 
@@ -20,7 +20,7 @@ export function displayBuilds(input, builds) {
 
 function displayPrimaryBuild(build) {
     addDamageDisplays(build);
-    displayBuildStats(build);
+    displayStats(build);
     setToggles(build);
 
     displayForDevelopment(build);

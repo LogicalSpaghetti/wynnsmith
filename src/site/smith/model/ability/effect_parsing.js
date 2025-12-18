@@ -149,10 +149,12 @@ export function getSplitEffects(effects, toggles, wynnClass) {
     return splitEffects;
 }
 
+// TODO: rename to attack everywhere
 function parseConversionEffect(build, effect) {
     const conversion = getNamedEffect(build.conversions, effect.data.id);
     conversion.type = effect.data.type ?? conversion.type;
     conversion.is_melee = effect.data.is_melee ?? conversion.is_melee;
+    // TODO: revert name to attack.conversion
     conversion.ratios = sumConversions(conversion.ratios, effect.data.ratios);
 
     if (effect.data.extra_hits) conversion.extra_hits = (conversion.extra_hits ?? 0) + effect.data.extra_hits;

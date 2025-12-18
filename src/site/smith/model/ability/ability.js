@@ -1,6 +1,5 @@
 import punscake from "../../../../data/trees.js";
 import {maxPlayerLevel} from "../../../../data/small_stuff.js";
-import {refreshBuild} from "../../script.js";
 import {getHoverTextForAbility, minecraftToHTML} from "../../../common/minecraft_html.js";
 import aspect_descriptions from "../../../../data/aspects.js";
 import {decimalToRoman} from "../../../common/numbers.js";
@@ -8,6 +7,7 @@ import * as codeDictionary from "../../../../data/code_dictionary.js";
 import {addWarning} from "../../control/warnings.js";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../../common/tooltip.js";
 import classEffects from "../../../../data/effects.js";
+import {updateBuild} from "../../control/updateBuild";
 
 const treeColumns = 9;
 const abilityPointsAtLevel = [
@@ -29,7 +29,7 @@ export function treeClicked(e) {
     const target = e.target;
     if (target.dataset.type !== "ability") return;
     toggleNode(target);
-    refreshBuild();
+    updateBuild();
 }
 
 //region [Abilities]

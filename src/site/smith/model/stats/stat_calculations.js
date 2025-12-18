@@ -1,6 +1,6 @@
 import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../../../data/small_stuff.js";
 import {getSkillPointMultiplier, SkillPointIndexes} from "../skill_points.js";
-import {damage_type_count} from "../attack/attack_calculations.js";
+import {damage_type_count} from "../attack/attacks.js";
 
 export const player_bps = 5.612;
 const costNames = ["1st", "2nd", "3rd", "4th"];

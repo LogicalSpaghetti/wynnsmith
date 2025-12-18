@@ -1,8 +1,8 @@
 import * as settings from "../settings.js";
-import {refreshBuild} from "../../script.js";
 import {loadBoolean, toggleBoolean} from "../settings.js";
 import {add, dispatch} from "../../../common/event_listener.js";
 import runTests from "../../../../test/test.js";
+import {updateBuild} from "../updateBuild";
 
 export function addSettingsListeners() {
     initCheckbox("selvs");
@@ -28,7 +28,7 @@ export function addSettingsListeners() {
     add("run_tests", "click", runTests);
 }
 
-function initCheckbox(elementId, boolId = elementId, extraCode = () => refreshBuild()) {
+function initCheckbox(elementId, boolId = elementId, extraCode = () => updateBuild()) {
     const checkbox = document.getElementById(elementId);
     checkbox.addEventListener("click", () => {
         toggleBoolean(boolId);
