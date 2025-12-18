@@ -15,7 +15,7 @@
 	1. Only applied if its given type is present in the base conversion
 	2. If it's elemental/damage, then it's split across all non-zero elements in the same ratio as they appear in the base conversion.
 6. Powders convert neutral base damage into their element
-7. damage percents factored in
+7. damage percents apply
 8. Elemental Mastery Nodes
 	1. Only affects non-zero post-conversion elements
 	2. needs more testing to determine:

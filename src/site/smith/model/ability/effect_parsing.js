@@ -150,8 +150,8 @@ export function getSplitEffects(effects, toggles, wynnClass) {
 }
 
 // TODO: rename to attack everywhere
-function parseConversionEffect(build, effect) {
-    const conversion = getNamedEffect(build.conversions, effect.data.id);
+function parseConversionEffect(effects, effect) {
+    const conversion = getNamedEffect(effects.attacks, effect.data.id);
     conversion.type = effect.data.type ?? conversion.type;
     conversion.is_melee = effect.data.is_melee ?? conversion.is_melee;
     // TODO: revert name to attack.conversion
@@ -212,17 +212,20 @@ function parseIdRelativeHealEffect(build, effect) {
     createUnnamedEffect(build.heal_id_multipliers, effect.data);
 }
 
+// TODO: fuck internal_name
 function parseResistanceEffect(build, effect) {
     const resistance = getNamedEffect(build.resistances, effect.data.internal_name);
     resistance.multiplier = (resistance.multiplier ?? 0) + effect.data.multiplier;
 }
 
+// TODO: fuck internal_name
 function parseTeamDamageMultiplierEffect(build, effect) {
     const teamMultiplier = getNamedEffect(build.team_multipliers, effect.data.internal_name);
     teamMultiplier.multiplier = (teamMultiplier.multiplier ?? 0) + effect.data.multiplier;
     teamMultiplier.type = effect.data.type ?? teamMultiplier.type;
 }
 
+// TODO: fuck internal_name
 function parsePersonalDamageMultiplierEffect(build, effect) {
     const personalMultiplier = getNamedEffect(build.personal_multipliers, effect.data.internal_name);
     personalMultiplier.multiplier = (personalMultiplier.multiplier ?? 0) + effect.data.multiplier;

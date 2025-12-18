@@ -16,13 +16,14 @@ export const DamageExtremes = Object.freeze({
     MINC: 2,
     MAXC: 3
 });
-export const ExtremeNames = Object.freeze([
-    "min",
-    "max"
-]);
+
 export const neutral_index = 0;
 
 export default class Attacks {
+    damageTicks;
+    damageVariants;
+    damageDisplays;
+
     constructor(stats, weaponPowders) {
         this.damageTicks = new DamageTicks(stats, weaponPowders);
         this.damageVariants = new DamageVariants(this.damageTicks, stats.effects.variants);
@@ -32,29 +33,29 @@ export default class Attacks {
 class DamageTicks extends Array {
     constructor(stats, weaponPowders) {
         super();
+        const attackEffects = stats.effects.attacks;
         const powders = weaponPowders.map(name => getPowder(name));
-        this.convertBases(stats, powders);
-        this.convertRaws(stats);
-        this.powderNeutralConversions(stats, powders);
+        this.convertBases(stats.base, attackEffects, powders);
+        this.convertRaws(stats.identifications, attackEffects);
+        this.powderNeutralConversions(powders);
 
-        this.applyPercents(stats.identifications, stats.effects.conversions);
-        applyMasteries(build, stats);
-        applySpellAttackSpeed(build, stats);
+        this.applyPercents(stats.identifications, attackEffects);
+        this.applyMasteries(stats.effects.masteries);
+        this.applySpellAttackSpeed(stats.attackSpeed, attackEffects);
 
-        mergeAttackDamage(build, stats);
+        this.mergeAttackDamage();
 
-        applyPersonalDamageMultipliers(build, stats);
-        applyOverridingDamageMultipliers(build, stats);
-        applyStrDex(build, stats);
+        this.applyPersonalDamageMultipliers(stats.effects.personal_multipliers);
+        this.applyOverridingDamageMultipliers(stats.effects.team_multipliers);
+        this.applyStrDex(stats.identifications, stats.sp_multipliers);
 
-        addAttackVariants(build, stats);
-        zeroNegatives(build, stats);
+        this.zeroNegatives();
     }
 
     convertBases(stats, powders) {
         const baseDamage = this.parseBase(stats.base, powders);
         for (let i in stats.effects.conversions)
-            this[i] = {base: this.convertBase(stats.effects.conversions[i], baseDamage), raw: null};
+            this[i] = {base: this.convertBase(stats.effects.conversions[i], baseDamage), raw: null, damage: newMinMax()};
     }
 
     // assumes powder base is perfectly normal base
@@ -98,10 +99,9 @@ class DamageTicks extends Array {
         return result;
     }
 
-    convertRaws(stats) {
-        const raw = this.parseRaw(stats.identifications);
-        for (let i in stats.effects.conversions)
-            this[i].raw = this.convertRaw(stats.effects.conversions[i], stats.identifications, this[i].base, raw);
+    convertRaws(ids, attackEffects) {
+        const raw = this.parseRaw(ids);
+        for (let i in attackEffects) this[i].raw = this.convertRaw(attackEffects[i], ids, this[i].base, raw);
     }
 
     parseRaw(ids) {
@@ -145,7 +145,7 @@ class DamageTicks extends Array {
         return convertedRaw;
     }
 
-    powderNeutralConversions(stats, powders) {
+    powderNeutralConversions(powders) {
         let neutral = 100;
         let modifierPercents = [0, 0, 0, 0, 0, 0];
 
@@ -172,7 +172,7 @@ class DamageTicks extends Array {
         }
     }
 
-    applyPercents(ids, conversions) {
+    applyPercents(ids, attackEffects) {
 
         const percent = {
             MainAttack: [],
@@ -198,80 +198,83 @@ class DamageTicks extends Array {
         });
 
         for (const i in this) {
-            const mults = percent[conversions[i].type];
+            const mults = percent[attackEffects[i].type];
             for (const i in mults) for (const extreme of this[i].base)
                 extreme[i] *= mults[i] / 100 + 1;
         }
     }
-}
 
-function applySpellAttackSpeed(build) {
-    const attackSpeedMultiplier = attackSpeedMultipliers[orderedAttackSpeed[build.base.attackSpeed]];
+    applyMasteries(masteries) {
+        masteries.forEach(mastery => {
+            const elementIndex = damageTypeNames.indexOf(mastery.element);
 
-    for (let attack of build.attacks)
-        if (attack.type === "Spell")
-            for (let extreme of attack.base) for (let i in extreme)
-                extreme[i] *= attackSpeedMultiplier;
-}
-
-function applyMasteries(build) {
-    build.masteries.forEach(mastery => {
-        const elementIndex = damageTypeNames.indexOf(mastery.element);
-
-        build.attacks.forEach(attack => {
-            for (let extremeIndex in attack.base) {
-                if (attack.base[DamageExtremes.MAX][elementIndex] === 0) continue;
-                attack.base[extremeIndex][elementIndex] += mastery.base[extremeIndex];
-                attack.base[extremeIndex][elementIndex] *= 1 + (mastery.pct / 100);
+            for (const tick of this) for (let extremeIndex of tick.base) {
+                if (tick.base[DamageExtremes.MAX][elementIndex] === 0) continue;
+                extremeIndex[elementIndex] += mastery.base[extremeIndex];
+                extremeIndex[elementIndex] *= 1 + (mastery.pct / 100);
             }
         });
-
-    });
-}
-
-function mergeAttackDamage(build) {
-    build.attacks.forEach(attack => {
-        for (let extremeIndex in attack.damage) for (let i = 0; i < damage_type_count; i++)
-            attack.damage[extremeIndex][i] =
-                attack.base[extremeIndex][i] +
-                attack.raw[i];
-    });
-}
-
-function applyPersonalDamageMultipliers(build) {
-    for (let effect of build.personal_multipliers) for (let attack of build.attacks)
-        if (effect.target === "all" || effect.target === attack.internal_name)
-            for (let extreme of attack.damage) for (let i in extreme)
-                extreme[i] *= effect.multiplier;
-}
-
-function applyOverridingDamageMultipliers(build) {
-    let dmgUp = 1;
-    let vuln = 1;
-    for (let effect of build.team_multipliers) {
-        if (effect.type === "damage-boost")
-            dmgUp = Math.max(dmgUp, effect.multiplier);
-        else if (effect.type === "vulnerability")
-            vuln = Math.max(vuln, effect.multiplier);
-        else throw new Error("invalid overriding effect type: " + effect.type);
     }
-    for (let attack of build.attacks) for (let extreme of attack.damage) for (let i in extreme)
-        extreme[i] *= dmgUp * vuln;
-}
 
-function applyStrDex(build) {
-    const strength = 1 + build.sp_multipliers[SkillPointIndexes.Strength];
-    const dexterity = 1 + build.identifications.criticalDamageBonus / 100;
+    applySpellAttackSpeed(attackSpeed, attackEffects) {
+        const attackSpeedMultiplier = attackSpeedMultipliers[orderedAttackSpeed[attackSpeed]];
 
-    for (const attack of build.attacks) {
-        const damage = attack.damage = attack.damage.concat(newMinMax());
+        for (const i in this)
+            if (attackEffects[i].type === "Spell")
+                for (let extreme of this[i].base) for (let i in extreme)
+                    extreme[i] *= attackSpeedMultiplier;
+    }
 
-        for (let i = 0; i < damage_type_count; i++) {
-            damage[DamageExtremes.MINC][i] = damage[DamageExtremes.MIN][i] * (dexterity + strength);
-            damage[DamageExtremes.MAXC][i] = damage[DamageExtremes.MAX][i] * (dexterity + strength);
-            damage[DamageExtremes.MIN][i] *= strength;
-            damage[DamageExtremes.MAX][i] *= strength;
+    mergeAttackDamage() {
+        for (let tick of this) for (let extremeIndex in tick.base)
+            for (let i = 0; i < damage_type_count; i++)
+                tick.damage[extremeIndex][i] = tick.base[extremeIndex][i] + tick.raw[i];
+    }
+
+    applyPersonalDamageMultipliers(personal_multipliers) {
+        for (let personalMultiplier of personal_multipliers)
+            for (let id in this)
+                // TODO: fix targets referring to "internal_name"
+                if (personalMultiplier.target === "all" || personalMultiplier.target === id)
+                    for (let extreme of this[id].damage) for (let i in extreme)
+                        extreme[i] *= personalMultiplier.multiplier;
+    }
+
+    applyOverridingDamageMultipliers(team_multipliers) {
+        let dmgUp = 1;
+        let resDown = 1;
+        for (let effect of team_multipliers) {
+            if (effect.type === "damage-boost")
+                dmgUp = Math.max(dmgUp, effect.multiplier);
+            else if (effect.type === "vulnerability")
+                resDown = Math.max(resDown, effect.multiplier);
+            else throw new Error("invalid overriding effect type: " + effect.type);
         }
+        for (let tick of this) for (let extreme of tick.damage) for (let i in extreme)
+            extreme[i] *= dmgUp * resDown;
+    }
+
+    applyStrDex(identifications, sp_multipliers) {
+        const strength = 1 + sp_multipliers[SkillPointIndexes.Strength];
+        const dexterity = 1 + identifications.criticalDamageBonus / 100;
+
+        for (const tick of this) {
+            const damage = tick.damage = tick.damage.concat(newMinMax());
+
+            for (let i = 0; i < damage_type_count; i++) {
+                damage[DamageExtremes.MINC][i] = damage[DamageExtremes.MIN][i] * (dexterity + strength);
+                damage[DamageExtremes.MAXC][i] = damage[DamageExtremes.MAX][i] * (dexterity + strength);
+                damage[DamageExtremes.MIN][i] *= strength;
+                damage[DamageExtremes.MAX][i] *= strength;
+            }
+        }
+
+    }
+
+    zeroNegatives() {
+        for (let tick of this)
+            for (let extreme of tick.damage) for (let i in extreme)
+                if (extreme[i] < 0) extreme[i] = 0;
     }
 }
 
@@ -341,11 +344,6 @@ function multiplyDamageOverTime(build, attack) {
 function multiplyDamageByDPS(build, attack) {
     const multiplier = (attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]] : (1 / attack.frequency);
     return multiplyDamageByMultiplier(multiplyDamageByExtraHits(attack.damage, attack.extra_hits), multiplier);
-}
-
-function zeroNegatives(build) {
-    for (let attack of build.attacks) for (let extreme of attack.damage) for (let i in extreme)
-        if (extreme[i] < 0) extreme[i] = 0;
 }
 
 class DamageVariants {
