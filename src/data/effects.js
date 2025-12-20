@@ -7,12 +7,12 @@ export default {
                 "parents": [],
                 "blocks": [],
                 "requires_all": false,
-                "type": "conv",
+                "type": "attack",
                 "data": {
                     "internal_name": "melee",
                     "type": "MainAttack",
                     "is_melee": true,
-                    "ratios": [100, 0, 0, 0, 0, 0]
+                    "conversion": [100, 0, 0, 0, 0, 0]
                 }
             },
             "1": {
@@ -21,8 +21,8 @@ export default {
                 "parents": [{"section": "nodes", "id": "1"}],
                 "blocks": [],
                 "requires_all": false,
-                "type": "conv",
-                "data": {"internal_name": "arrow_bomb", "type": "Spell", "ratios": [140, 0, 0, 0, 20, 0]}
+                "type": "attack",
+                "data": {"internal_name": "arrow_bomb", "type": "Spell", "conversion": [140, 0, 0, 0, 20, 0]}
             },
             "2": {
                 "name": "Arrow Bomb Cost",
@@ -112,12 +112,12 @@ export default {
                 "parents": [{"section": "nodes", "id": "81"}],
                 "blocks": [],
                 "requires_all": true,
-                "type": "conv",
+                "type": "attack",
                 "data": {
                     "internal_name": "finality",
                     "type": "Spell",
                     "extra_hits": 7,
-                    "ratios": [4, 0, 0, 0, 0, 2]
+                    "conversion": [4, 0, 0, 0, 0, 2]
                 }
             },
             "2": {
@@ -126,12 +126,12 @@ export default {
                 "parents": [{"section": "nodes", "id": "6"}],
                 "blocks": [],
                 "requires_all": true,
-                "type": "conv",
+                "type": "attack",
                 "data": {
                     "internal_name": "multihit",
                     "type": "Spell",
                     "extra_hits": 7,
-                    "ratios": [30, 0, 0, 10, 0, 0]
+                    "conversion": [30, 0, 0, 10, 0, 0]
                 }
             },
             "3": {
@@ -197,12 +197,12 @@ export default {
                 "parents": [],
                 "blocks": [],
                 "requires_all": true,
-                "type": "conv",
+                "type": "attack",
                 "data": {
                     "internal_name": "melee",
                     "type": "MainAttack",
                     "is_melee": true,
-                    "ratios": [100, 0, 0, 0, 0, 0]
+                    "conversion": [100, 0, 0, 0, 0, 0]
                 }
             },
             "9": {
@@ -256,8 +256,8 @@ export default {
                 "parents": [{"section": "nodes", "id": "1"}],
                 "blocks": [],
                 "requires_all": true,
-                "type": "conv",
-                "data": {"id": "0", "type": "Spell", "frequency": 0.4, "duration": 30, "ratios": [6, 0, 0, 0, 0, 6]}
+                "type": "attack",
+                "data": {"id": "0", "type": "Spell", "frequency": 0.4, "duration": 30, "conversion": [6, 0, 0, 0, 0, 6]}
             },
             "1": {
                 "name": "Totem Cost",
@@ -292,8 +292,8 @@ export default {
                 "parents": [{"section": "nodes", "id": "4"}],
                 "blocks": [],
                 "requires_all": true,
-                "type": "conv",
-                "data": {"id": "4", "type": "Spell", "ratios": [120, 0, 0, 0, 30, 0]}
+                "type": "attack",
+                "data": {"id": "4", "type": "Spell", "conversion": [120, 0, 0, 0, 30, 0]}
             },
             "5": {
                 "name": "Smash Variant",
@@ -325,13 +325,13 @@ export default {
                 "parents": [],
                 "blocks": [],
                 "requires_all": true,
-                "type": "conv",
+                "type": "attack",
                 "data": {
                     "id": "7",
                     "type": "MainAttack",
                     "is_melee": true,
                     "extra_hits": 2,
-                    "ratios": [33.4, 0, 0, 0, 0, 0]
+                    "conversion": [33.4, 0, 0, 0, 0, 0]
                 }
             },
             "8": {
@@ -358,8 +358,8 @@ export default {
                 "parents": [{"section": "nodes", "id": "47"}],
                 "blocks": [],
                 "requires_all": true,
-                "type": "conv",
-                "data": {"id": "0", "ratios": [4, 0, 0, 0, 0, 0]}
+                "type": "attack",
+                "data": {"id": "0", "conversion": [4, 0, 0, 0, 0, 0]}
             },
             "11": {
                 "name": "Shatter Variant",

@@ -7,6 +7,7 @@ import {
 import {getPowder} from "../item/powders.js";
 import {SkillPointIndexes} from "../skill_points.js";
 import {newDamages, newMinMax} from "../ability/effect_parsing.js";
+import {DamageDisplays} from "./attack_display.js";
 
 
 export const damage_type_count = 6;
@@ -26,24 +27,25 @@ export default class Attacks {
 
     constructor(stats, weaponPowders) {
         this.damageTicks = new DamageTicks(stats, weaponPowders);
-        this.damageVariants = new DamageVariants(this.damageTicks, stats.effects.variants);
+        this.damageVariants = new DamageVariants(this.damageTicks, stats.effects.variants, stats.attackSpeed);
+        this.damageDisplays = new DamageDisplays(stats.effects.displays);
     }
 }
 
 class DamageTicks extends Array {
     constructor(stats, weaponPowders) {
         super();
-        const attackEffects = stats.effects.attacks;
         const powders = weaponPowders.map(name => getPowder(name));
-        this.convertBases(stats.base, attackEffects, powders);
-        this.convertRaws(stats.identifications, attackEffects);
+        this.initTicks(stats.effects.attacks);
+        this.convertBases(stats.base, powders);
+        this.convertRaws(stats.identifications);
         this.powderNeutralConversions(powders);
 
-        this.applyPercents(stats.identifications, attackEffects);
+        this.applyPercents(stats.identifications);
         this.applyMasteries(stats.effects.masteries);
-        this.applySpellAttackSpeed(stats.attackSpeed, attackEffects);
+        this.applySpellAttackSpeed(stats.baseAttackSpeed);
 
-        this.mergeAttackDamage();
+        this.mergeDamageTypes();
 
         this.applyPersonalDamageMultipliers(stats.effects.personal_multipliers);
         this.applyOverridingDamageMultipliers(stats.effects.team_multipliers);
@@ -52,10 +54,25 @@ class DamageTicks extends Array {
         this.zeroNegatives();
     }
 
-    convertBases(stats, powders) {
-        const baseDamage = this.parseBase(stats.base, powders);
-        for (let i in stats.effects.conversions)
-            this[i] = {base: this.convertBase(stats.effects.conversions[i], baseDamage), raw: null, damage: newMinMax()};
+    initTicks(attackEffects) {
+        for (let i in attackEffects) {
+            const a = attackEffects[i];
+            this[i] = {
+                base: null,
+                raw: null,
+                damage: null,
+                type: a.type,
+                is_melee: a.is_melee,
+                extra_hits: a.extra_hits,
+                frequency: a.frequency,
+                duration: a.duration
+            };
+        }
+    }
+
+    convertBases(base, attackEffects, powders) {
+        const baseDamage = this.parseBase(base, powders);
+        for (let tick of this) tick.base = this.convertBase(tick.conversion, baseDamage);
     }
 
     // assumes powder base is perfectly normal base
@@ -85,23 +102,16 @@ class DamageTicks extends Array {
         return result;
     }
 
-    convertBase(conversion, baseDamage) {
-        const result = newMinMax();
+    convertBase = (conversion, baseDamage) => baseDamage.map(extreme => {
+        const extremeTotal = extreme.reduce((a, b) => a + b);
+        return extreme.map((x, i) =>
+            (x * conversion[i] + (i !== neutral_index ? conversion[i] * extremeTotal : 0)) / 100
+        );
+    });
 
-        const neutralConversion = conversion.ratios[0] / 100;
-        for (let extremeIndex in result) {
-            const extremeTotal = baseDamage[extremeIndex].reduce((a, b) => a + b);
-            for (let i in result[extremeIndex]) result[extremeIndex][i] +=
-                baseDamage[extremeIndex][i] * neutralConversion +
-                (parseInt(i) !== neutral_index ? (conversion.ratios[i] / 100) * extremeTotal : 0);
-        }
-
-        return result;
-    }
-
-    convertRaws(ids, attackEffects) {
+    convertRaws(ids) {
         const raw = this.parseRaw(ids);
-        for (let i in attackEffects) this[i].raw = this.convertRaw(attackEffects[i], ids, this[i].base, raw);
+        for (let tick of this) tick.raw = this.convertRaw(tick, ids, tick.base, raw);
     }
 
     parseRaw(ids) {
@@ -116,31 +126,31 @@ class DamageTicks extends Array {
         return raw;
     }
 
-    convertRaw(conversion, ids, convertedBase, raw) {
+    convertRaw(attackEffect, ids, convertedBase, raw) {
         const convertedRaw = newDamages();
 
-        const conversionTotal = conversion.ratios.reduce((sum, a) => sum + parseInt(a), 0) / 100;
+        const conversionTotal = attackEffect.conversion.reduce((sum, a) => sum + parseInt(a), 0) / 100;
         const baseTotal = convertedBase.map(extreme =>
             extreme.reduce((a, b) => a + b))
             .reduce((a, b) => a + b);
-        const baseElementalTotal = conversion.base.map(extreme =>
+        const baseElementalTotal = convertedBase.map(extreme =>
             extreme.reduce((a, b, i) => a + (i === neutral_index ? 0 : b), 0))
             .reduce((a, b) => a + b);
-        const ratios = conversion.base[DamageExtremes.MIN].map((e, i) =>
-            (e + conversion.base[DamageExtremes.MAX][i]));
+        const minMaxSum = convertedBase[DamageExtremes.MIN].map((x, i) =>
+            (x + convertedBase[DamageExtremes.MAX][i]));
 
         for (let i in convertedRaw)
-            convertedRaw[i] = conversion.base[DamageExtremes.MAX][i] === 0 ? 0 : conversionTotal * (
+            convertedRaw[i] = convertedBase[DamageExtremes.MAX][i] === 0 ? 0 : conversionTotal * (
                 // NETWFA
-                raw[conversion.type][i]
+                raw[attackEffect.type][i]
                 // damage
-                + ids.rawDamage * (ratios[i] / baseTotal)
+                + ids.rawDamage * (minMaxSum[i] / baseTotal)
                 // ElementalDamage
                 + (i !== neutral_index ?
-                    (ids[`rawElemental${conversion.type}Damage`] + ids[`rawElementalDamage`]) *
-                    (ratios[i] / baseElementalTotal) : 0)
+                    (ids[`rawElemental${attackEffect.type}Damage`] + ids[`rawElementalDamage`]) *
+                    (minMaxSum[i] / baseElementalTotal) : 0)
                 // main/spell
-                + (ratios[i] / baseTotal) * ids[`raw${conversion.type}Damage`]);
+                + (minMaxSum[i] / baseTotal) * ids[`raw${attackEffect.type}Damage`]);
 
         return convertedRaw;
     }
@@ -172,7 +182,7 @@ class DamageTicks extends Array {
         }
     }
 
-    applyPercents(ids, attackEffects) {
+    applyPercents(ids) {
 
         const percent = {
             MainAttack: [],
@@ -197,9 +207,9 @@ class DamageTicks extends Array {
                 (i === neutral_index ? 0 : ids.elementalSpellDamage);
         });
 
-        for (const i in this) {
-            const mults = percent[attackEffects[i].type];
-            for (const i in mults) for (const extreme of this[i].base)
+        for (const tick of this) {
+            const mults = percent[tick.type];
+            for (const i in mults) for (const extreme of tick.base)
                 extreme[i] *= mults[i] / 100 + 1;
         }
     }
@@ -216,25 +226,26 @@ class DamageTicks extends Array {
         });
     }
 
-    applySpellAttackSpeed(attackSpeed, attackEffects) {
-        const attackSpeedMultiplier = attackSpeedMultipliers[orderedAttackSpeed[attackSpeed]];
+    applySpellAttackSpeed(baseAttackSpeed) {
+        const attackSpeedMultiplier = attackSpeedMultipliers[orderedAttackSpeed[baseAttackSpeed]];
 
-        for (const i in this)
-            if (attackEffects[i].type === "Spell")
-                for (let extreme of this[i].base) for (let i in extreme)
-                    extreme[i] *= attackSpeedMultiplier;
+        for (const tick of this.filter(tick => tick.type === "Spell"))
+            for (let extreme of tick.base) for (let i in extreme)
+                extreme[i] *= attackSpeedMultiplier;
     }
 
-    mergeAttackDamage() {
-        for (let tick of this) for (let extremeIndex in tick.base)
-            for (let i = 0; i < damage_type_count; i++)
-                tick.damage[extremeIndex][i] = tick.base[extremeIndex][i] + tick.raw[i];
+    mergeDamageTypes() {
+        for (let tick of this)
+            tick.damage = tick.base.map(extreme => extreme.map((x, i) => x + tick.raw[i]));
     }
+
 
     applyPersonalDamageMultipliers(personal_multipliers) {
         for (let personalMultiplier of personal_multipliers)
             for (let id in this)
-                // TODO: fix targets referring to "internal_name"
+                // TODO:
+                //  fix targets referring to "internal_name"
+                //  replace "all" with ""
                 if (personalMultiplier.target === "all" || personalMultiplier.target === id)
                     for (let extreme of this[id].damage) for (let i in extreme)
                         extreme[i] *= personalMultiplier.multiplier;
@@ -278,76 +289,64 @@ class DamageTicks extends Array {
     }
 }
 
-function addAttackVariants(build) {
-    for (let key in build.variants) {
-        const variant = build.variants[key];
+class DamageVariants {
+    constructor(damageTicks, variantEffects, attackSpeed) {
+        for (let key in variantEffects) {
+            const damageTick = damageTicks[variantEffects[key].attack];
+            if (!damageTick) continue;
+            // ?? -1 is to account for the 1 assumed hit, though this default should never be called in a good tree.
+            const secondTickHits = damageTicks[variantEffects[key].second_attack]?.extra_hits ?? -1;
 
-        const attack = build.attacks.find(attack => attack.internal_name === variant.attack);
-
-        if (!attack)
-            delete build.variants[key];
-        else
-            variant.damage = getVariantConversion(build, variant, attack);
+            this[key] = {damage: this.getVariantConversion(variantEffects[key], damageTick, secondTickHits, attackSpeed)};
+        }
     }
-}
 
-function getVariantConversion(build, variant, attack) {
-    const secondAttack = build.attacks.find(attack => attack.internal_name === variant.second_attack) ?? {extra_hits: 0};
-    // TODO: secondAttack.extraHits should never be called if secondAttack doesn't exist. pass build and get second attack in the next function?
-    //  (will matter greatly for Winded)
+    getVariantConversion(variant, tick, secondTickHits, attackSpeed) {
+        const damage = this.getBeforeMultiplying(variant, tick, secondTickHits, attackSpeed);
+        return variant.multiplier ? this.multiplyDamage(damage, variant.multiplier) : damage;
+    }
 
-
-    const damage = getBeforeMultiplying();
-
-    return variant.multiplier ? multiplyDamageByMultiplier(damage, variant.multiplier) : damage;
-
-    function getBeforeMultiplying() {
+    getBeforeMultiplying(variant, tick, secondTickHits, attackSpeed) {
         switch (variant.type) {
             case "hit":
-                return attack.damage;
+                return tick.damage;
             case "multi":
-                return multiplyDamageByExtraHits(attack.damage, attack.extra_hits);
+                return this.multiplyDamageByExtraHits(tick.damage, tick.extra_hits);
             case "dps":
-                return multiplyDamageByDPS(build, attack);
+                return this.multiplyDamageByDPS(tick.damage, tick.is_melee, tick.extra_hits, tick.frequency, attackSpeed);
             case "total":
-                return multiplyDamageOverTime(build, attack);
+                return this.multiplyDamageOverTime(tick.damage, tick.is_melee, tick.extra_hits, tick.frequency, attackSpeed, tick.duration);
             case "scaling-multi":
-                return multiplyScalingDamageByHits(attack.damage, attack.extra_hits, secondAttack?.extra_hits);
+                return this.multiplyScalingDamageByHits(tick.damage, tick.extra_hits, secondTickHits);
             case "hit-modifier":
-                return multiplyDamageByExtraHits(attack.damage, secondAttack?.extra_hits);
+                return this.multiplyDamageByExtraHits(tick.damage, secondTickHits);
             default:
                 throw new Error(`invalid variant type: ${variant.type}`);
         }
     }
-}
 
-function multiplyDamageByMultiplier(damage, multiplier) {
-    return damage.map(extreme => extreme.map(x => x * multiplier));
-}
+    multiplyDamage(damage, multiplier) {
+        return damage.map(extreme => extreme.map(x => x * multiplier));
+    }
 
-function multiplyDamageByExtraHits(damage, extra_hits) {
-    return multiplyDamageByMultiplier(damage, (1 + (extra_hits ?? 0)));
-}
+    multiplyDamageByExtraHits(damage, extra_hits) {
+        return this.multiplyDamage(damage, (1 + (extra_hits ?? 0)));
+    }
 
-function multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
-    const total_hits = 1 + (extra_hits ?? 0);
-    let multiplier = 0;
-    for (let n = 1; n < total_hits - 1; n++) multiplier += Math.min(n, scaling_cap);
+    multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
+        const total_hits = 1 + (extra_hits ?? 0);
+        let multiplier = 0;
+        for (let n = 1; n < total_hits - 1; n++) multiplier += Math.min(n, scaling_cap);
 
-    return multiplyDamageByMultiplier(damage, multiplier);
-}
+        return this.multiplyDamage(damage, multiplier);
+    }
 
-function multiplyDamageOverTime(build, attack) {
-    return multiplyDamageByMultiplier(multiplyDamageByDPS(build, attack), attack.duration);
-}
+    multiplyDamageOverTime(damage, is_melee, extra_hits, frequency, attackSpeed, duration) {
+        return this.multiplyDamage(this.multiplyDamageByDPS(damage, is_melee, extra_hits, frequency, attackSpeed), duration);
+    }
 
-function multiplyDamageByDPS(build, attack) {
-    const multiplier = (attack.is_melee) ? attackSpeedMultipliers[orderedAttackSpeed[build.stats.attackSpeed]] : (1 / attack.frequency);
-    return multiplyDamageByMultiplier(multiplyDamageByExtraHits(attack.damage, attack.extra_hits), multiplier);
-}
-
-class DamageVariants {
-    constructor(damageTicks, effectVariants) {
-        // TODO
+    multiplyDamageByDPS(damage, is_melee, extra_hits, frequency, attackSpeed) {
+        const multiplier = is_melee ? attackSpeedMultipliers[orderedAttackSpeed[attackSpeed]] : (1 / frequency);
+        return this.multiplyDamage(this.multiplyDamageByExtraHits(damage, extra_hits), multiplier);
     }
 }

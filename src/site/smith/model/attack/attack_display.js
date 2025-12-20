@@ -15,14 +15,14 @@ const damageColors = Object.freeze([
     "#fff"
 ]);
 
-export class DamageDisplays {
-    constructor(displayEffects, variants) {
-        // TODO
-    }
-}
-
 export function displayAttacks(attacks) {
     // TODO
+}
+
+export class DamageDisplays {
+    constructor(displayEffects, damageVariants) {
+        // TODO
+    }
 }
 
 export default function addDamageDisplays(build, attackDisplayId = "attack_display") {

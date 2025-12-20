@@ -5,6 +5,7 @@ export default class Stats {
     identifications; // identifications.health
     effects; // effects.effectType[i]
     sp_multipliers;
+    baseAttackSpeed;
     attackSpeed;
     ehp;
     // TODO

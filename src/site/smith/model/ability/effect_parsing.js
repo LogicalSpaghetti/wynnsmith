@@ -11,7 +11,7 @@ export function newDamages() {
 
 const EffectTypes = Object.freeze({
     EMPTY: "",
-    CONVERSION: "conv",
+    ATTACK: "attack",
     VARIANT: "variant",
     DISPLAY: "display",
     MASTERY: "mastery",
@@ -102,8 +102,8 @@ export function getSplitEffects(effects, toggles, wynnClass) {
         switch (effect.type) {
             case EffectTypes.EMPTY:
                 break;
-            case EffectTypes.CONVERSION:
-                parseConversionEffect(splitEffects, effect, effectId);
+            case EffectTypes.ATTACK:
+                parseAttackEffect(splitEffects, effect, effectId);
                 break;
             case EffectTypes.VARIANT:
                 parseVariantEffect(splitEffects, effect, effectId);
@@ -150,16 +150,16 @@ export function getSplitEffects(effects, toggles, wynnClass) {
 }
 
 // TODO: rename to attack everywhere
-function parseConversionEffect(effects, effect) {
-    const conversion = getNamedEffect(effects.attacks, effect.data.id);
-    conversion.type = effect.data.type ?? conversion.type;
-    conversion.is_melee = effect.data.is_melee ?? conversion.is_melee;
+function parseAttackEffect(effects, effect) {
+    const attack = getNamedEffect(effects.attacks, effect.data.id);
+    attack.type = effect.data.type ?? attack.type;
+    attack.is_melee = effect.data.is_melee ?? attack.is_melee;
     // TODO: revert name to attack.conversion
-    conversion.ratios = sumConversions(conversion.ratios, effect.data.ratios);
+    attack.conversion = sumConversions(attack.conversion, effect.data.conversion);
 
-    if (effect.data.extra_hits) conversion.extra_hits = (conversion.extra_hits ?? 0) + effect.data.extra_hits;
-    if (effect.data.frequency) conversion.frequency = (conversion.frequency ?? 1) * effect.data.frequency;
-    if (effect.data.duration) conversion.duration = (conversion.duration ?? 0) + effect.data.duration;
+    if (effect.data.extra_hits) attack.extra_hits = (attack.extra_hits ?? 0) + effect.data.extra_hits;
+    if (effect.data.frequency) attack.frequency = (attack.frequency ?? 1) * effect.data.frequency;
+    if (effect.data.duration) attack.duration = (attack.duration ?? 0) + effect.data.duration;
 }
 
 function sumConversions(conversionA, conversionB) {

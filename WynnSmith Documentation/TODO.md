@@ -189,6 +189,7 @@ see if inline latex is possible in Obsidian
 8. When reading from HTML, the slot order is assumed instead of being read.
 	- within an "Items" object, the order should always be consistent and empty slots should always be indicated, that way it can easily encode and decode without worrying about order.
 9. Assassin Aspect icon is the generic Aspect icon instead of the purple one it's meant to have.
+10. Attack Speed for spells is base attack speed
 ### Visual
 1. make elements look clickable or not
     1. pointer-events: none/initial;
