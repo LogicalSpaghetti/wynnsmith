@@ -17,7 +17,8 @@ import {
     snakeToTitle,
     upperFirst, wrapText
 } from "./display_item.js";
-import major_id_descriptions from "../../data/major_ids.js"
+import major_id_descriptions from "../../data/major_ids.js";
+import {objectFind} from "./object_search";
 
 export function minecraftAsElement(text, minecraftFont = false) {
     const htmlText = minecraftToHTML(text);
@@ -295,7 +296,8 @@ export function getHoverTextForItem(item, invalidityText = "") {
     if (item.majorIds) {
         let section = new Section();
         for (let name in item.majorIds)
-            section.add(wrapText(`§b+${name}: §3${major_id_descriptions.find(id => id.name = name).description}`));
+            section.add(wrapText(`§b+${name}: §3${
+                objectFind(major_id_descriptions, mId => mId.name = name).description}`));
         sections.add(section);
     }
 

@@ -186,8 +186,6 @@ function parseDisplayEffect(build, effect, effectId) {
 
     if (effect.data.spell) display.spell = effect.data.spell;
     if (effect.data.parent) display.parent = effect.data.parent;
-
-    display.children = {}; // TODO: remove
 }
 
 function parseMasteryEffect(build, effect) {

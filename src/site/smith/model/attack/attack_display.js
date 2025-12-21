@@ -20,8 +20,35 @@ export function displayAttacks(attacks) {
 }
 
 export class DamageDisplays {
-    constructor(displayEffects, damageVariants) {
-        // TODO
+    constructor(displayEffects, damageVariants, dexterity) {
+        for (let i in displayEffects) {
+            this[i] = new DamageDisplay(displayEffects[i], damageVariants, dexterity);
+        }
+    }
+}
+
+const exampleDisplayEffect = {
+    name: null,
+    variants: null,
+    label: null,
+    spell: "optional",
+    parent: "optional"
+}
+
+class DamageDisplay {
+    name;
+    label;
+
+    is_melee;
+
+    variants;
+
+    children;
+
+    constructor(displayEffect, damageVariants, dexterity) {
+        this.name = displayEffect.name;
+        this.label = displayEffect.label;
+
     }
 }
 

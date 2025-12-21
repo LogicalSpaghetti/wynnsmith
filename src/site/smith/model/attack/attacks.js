@@ -28,7 +28,7 @@ export default class Attacks {
     constructor(stats, weaponPowders) {
         this.damageTicks = new DamageTicks(stats, weaponPowders);
         this.damageVariants = new DamageVariants(this.damageTicks, stats.effects.variants, stats.attackSpeed);
-        this.damageDisplays = new DamageDisplays(stats.effects.displays);
+        this.damageDisplays = new DamageDisplays(stats.effects.displays, this.damageVariants, stats.sp_multipliers[SkillPointIndexes.Dexterity]);
     }
 }
 

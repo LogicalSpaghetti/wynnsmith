@@ -1263,4 +1263,3 @@ class EffectType {
         return Object.keys(object).map(key => `<option value="${object[key]}">${key}</option>`);
     }
 }
-
