@@ -289,6 +289,7 @@ class DamageTicks extends Array {
     }
 }
 
+// TODO: handle attack speed in display instead of variants
 class DamageVariants {
     constructor(damageTicks, variantEffects, attackSpeed) {
         for (let key in variantEffects) {
@@ -297,7 +298,10 @@ class DamageVariants {
             // ?? -1 is to account for the 1 assumed hit, though this default should never be called in a good tree.
             const secondTickHits = damageTicks[variantEffects[key].second_attack]?.extra_hits ?? -1;
 
-            this[key] = {damage: this.getVariantConversion(variantEffects[key], damageTick, secondTickHits, attackSpeed)};
+            this[key] = {
+                label: variantEffects[key].label,
+                damage: this.getVariantConversion(variantEffects[key], damageTick, secondTickHits, attackSpeed)
+            };
         }
     }
 
@@ -313,9 +317,9 @@ class DamageVariants {
             case "multi":
                 return this.multiplyDamageByExtraHits(tick.damage, tick.extra_hits);
             case "dps":
-                return this.multiplyDamageByDPS(tick.damage, tick.is_melee, tick.extra_hits, tick.frequency, attackSpeed);
+                return this.multiplyDamageByDPS(tick.damage, tick.extra_hits, tick.frequency);
             case "total":
-                return this.multiplyDamageOverTime(tick.damage, tick.is_melee, tick.extra_hits, tick.frequency, attackSpeed, tick.duration);
+                return this.multiplyDamageOverTime(tick.damage, tick.extra_hits, tick.frequency, tick.duration);
             case "scaling-multi":
                 return this.multiplyScalingDamageByHits(tick.damage, tick.extra_hits, secondTickHits);
             case "hit-modifier":
@@ -325,28 +329,20 @@ class DamageVariants {
         }
     }
 
-    multiplyDamage(damage, multiplier) {
-        return damage.map(extreme => extreme.map(x => x * multiplier));
-    }
+    multiplyDamage = (damage, multiplier) => damage.map(extreme => extreme.map(x => x * multiplier));
 
-    multiplyDamageByExtraHits(damage, extra_hits) {
-        return this.multiplyDamage(damage, (1 + (extra_hits ?? 0)));
-    }
+    multiplyDamageByExtraHits = (damage, extra_hits) => this.multiplyDamage(damage, (1 + (extra_hits ?? 0)));
 
-    multiplyScalingDamageByHits(damage, scaling_cap, extra_hits) {
-        const total_hits = 1 + (extra_hits ?? 0);
-        let multiplier = 0;
-        for (let n = 1; n < total_hits - 1; n++) multiplier += Math.min(n, scaling_cap);
+    // assuming extra hits is greater than or equal to scaling cap
+    // SUM_{n=1}^{total_hits}(min(n,hit_cap)) == hit_cap*(total_hits-hit_cap)+(hit_cap(hit_cap+1))/2
+    multiplyScalingDamageByHits = (damage, scaling_cap, extra_hits) =>
+        this.multiplyDamage(damage,
+            scaling_cap * ((extra_hits ?? 0) + 1 - scaling_cap) + (scaling_cap * (scaling_cap + 1)) / 2);
 
-        return this.multiplyDamage(damage, multiplier);
-    }
+    multiplyDamageOverTime = (damage, extra_hits, frequency, duration) =>
+        this.multiplyDamage(this.multiplyDamageByDPS(damage, extra_hits, frequency), duration);
 
-    multiplyDamageOverTime(damage, is_melee, extra_hits, frequency, attackSpeed, duration) {
-        return this.multiplyDamage(this.multiplyDamageByDPS(damage, is_melee, extra_hits, frequency, attackSpeed), duration);
-    }
 
-    multiplyDamageByDPS(damage, is_melee, extra_hits, frequency, attackSpeed) {
-        const multiplier = is_melee ? attackSpeedMultipliers[orderedAttackSpeed[attackSpeed]] : (1 / frequency);
-        return this.multiplyDamage(this.multiplyDamageByExtraHits(damage, extra_hits), multiplier);
-    }
+    multiplyDamageByDPS = (damage, extra_hits, frequency) =>
+        this.multiplyDamage(this.multiplyDamageByExtraHits(damage, extra_hits), 1 / frequency);
 }

@@ -73,6 +73,7 @@ function getEHpFactor(build) {
         (build.resistances).reduce((a, b) => a * (1 - b.multiplier), 1);
 }
 
+// TODO: add as effects
 const classBaseResistance = Object.freeze({
     "archer": 0.7,
     "assassin": 1,

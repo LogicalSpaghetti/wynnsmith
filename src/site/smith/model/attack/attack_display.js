@@ -3,7 +3,7 @@ import {minecraftAsElement} from "../../../common/minecraft_html.js";
 import {roundForDisplay} from "../../../common/numbers.js";
 import {SkillPointIndexes} from "../skill_points.js";
 import {newMinMax} from "../ability/effect_parsing.js";
-import * as settings from "../../control/settings.js"
+import * as settings from "../../control/settings.js";
 import * as codeDictionary from "../../../../data/code_dictionary.js";
 
 const damageColors = Object.freeze([
@@ -33,22 +33,32 @@ const exampleDisplayEffect = {
     label: null,
     spell: "optional",
     parent: "optional"
-}
+};
 
 class DamageDisplay {
     name;
     label;
-
-    is_melee;
+    parent;
+    spell;
 
     variants;
+    hidden_variants;
 
-    children;
-
-    constructor(displayEffect, damageVariants, dexterity) {
+    constructor(displayEffect, damageVariants, dexterity, attack_speed) {
         this.name = displayEffect.name;
         this.label = displayEffect.label;
+        this.spell = displayEffect.spell;
+        this.parent = displayEffect.parent;
 
+        this.variants = displayEffect.variants.map(variantId => damageVariants[variantId]);
+        this.hidden = displayEffect.hidden?.map(variantId => damageVariants[variantId]) ?? [];
+
+        this.damage = this.sumVariants();
+    }
+
+    sumVariants(variants) {
+        return variants.reduce((sum, variant) => sum.map((extreme, i) =>
+            extreme.map((x, j) => x + variant.damage[i][j])), newMinMax());
     }
 }
 
@@ -84,7 +94,7 @@ function createDisplayElement(display, children, variants, dexterity, spell_cost
     if (!isDisplayWorthShowing(data)) return null;
 
     const holder = document.createElement("div");
-    holder.classList.add("attack-group")
+    holder.classList.add("attack-group");
 
     holder.appendChild(getDamageElement(display, data.damage, data.spell_cost, dexterity));
 
