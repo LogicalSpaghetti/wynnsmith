@@ -1,8 +1,7 @@
-import {damage_type_count, DamageExtremes} from "./attacks.js";
+import {damage_type_count, DamageExtremes, MinMax} from "./attacks.js";
 import {minecraftAsElement} from "../../../common/minecraft_html.js";
 import {roundForDisplay} from "../../../common/numbers.js";
 import {SkillPointIndexes} from "../skill_points.js";
-import {newMinMax} from "../ability/effect_parsing.js";
 import * as settings from "../../control/settings.js";
 import * as codeDictionary from "../../../../data/code_dictionary.js";
 
@@ -53,12 +52,12 @@ class DamageDisplay {
         this.variants = displayEffect.variants.map(variantId => damageVariants[variantId]);
         this.hidden = displayEffect.hidden?.map(variantId => damageVariants[variantId]) ?? [];
 
-        this.damage = this.sumVariants();
+        this.damage = this.sumVariants(this.variants);
     }
 
     sumVariants(variants) {
         return variants.reduce((sum, variant) => sum.map((extreme, i) =>
-            extreme.map((x, j) => x + variant.damage[i][j])), newMinMax());
+            extreme.map((x, j) => x + variant.damage[i][j])), new MinMax());
     }
 }
 
@@ -109,7 +108,7 @@ function createDisplayElement(display, children, variants, dexterity, spell_cost
 function getDisplayData(display, variants, dexterity, spell_costs) {
     const displayVariants = getVariantsForDisplay(display, variants);
     const spell_cost = spell_costs[display.spell];
-    const damage = displayVariants.reduce((damage, variant) => variant ? sumDamages(damage, variant.damage) : damage, newMinMax().concat(newMinMax()));
+    const damage = displayVariants.reduce((damage, variant) => variant ? sumDamages(damage, variant.damage) : damage, new MinMax().concat(new MinMax()));
 
     return {
         variants: displayVariants,

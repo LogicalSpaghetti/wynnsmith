@@ -1,14 +1,6 @@
 import * as search from "../../control/database/item_search.js";
 import classEffects from "../../../../data/effects.js";
 
-export function newMinMax() {
-    return [newDamages(), newDamages()];
-}
-
-export function newDamages() {
-    return [0, 0, 0, 0, 0, 0];
-}
-
 const EffectTypes = Object.freeze({
     EMPTY: "",
     ATTACK: "attack",

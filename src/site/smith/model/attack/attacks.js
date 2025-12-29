@@ -6,7 +6,6 @@ import {
 } from "../../../../data/small_stuff.js";
 import {getPowder} from "../item/powders.js";
 import {SkillPointIndexes} from "../skill_points.js";
-import {newDamages, newMinMax} from "../ability/effect_parsing.js";
 import {DamageDisplays} from "./attack_display.js";
 
 
@@ -17,8 +16,55 @@ export const DamageExtremes = Object.freeze({
     MINC: 2,
     MAXC: 3
 });
+const DamageBreakdownIndexes = Object.freeze({
+    NON_CRIT: 0,
+    CRIT: 1,
+    AVERAGE: 2
+});
 
 export const neutral_index = 0;
+
+export class DamageArray extends Array {
+    constructor() {
+        super(6);
+        this.fill(0);
+    }
+}
+
+export class MinMax extends Array {
+    constructor() {
+        super();
+        this.push(new DamageArray(), new DamageArray());
+    }
+
+    multiply(multiplier) {
+        for (const extreme of this) for (const i in extreme)
+            extreme[i] *= multiplier;
+        return this;
+    }
+
+    toMultiply(multiplier) {
+        return this.map(extreme => extreme.map(x => x * multiplier));
+    }
+
+    addMinMax(minMax) {
+        for (const i in this) for (const j in this[i]) this[i][j] += minMax[i][j];
+        return this;
+    }
+
+    toAddMinMax(minMax) {
+        return this.map((extreme, i) => extreme.map((x, j) => x + minMax[i][j]));
+    }
+
+    addDamageArray(damageArray) {
+        for (const extreme of this) for (const i in extreme) extreme[i] += damageArray[i];
+        return this;
+    }
+
+    toAddDamageArray(damageArray) {
+        this.map((extreme) => extreme.map((x, i) => x + damageArray[i]));
+    }
+}
 
 export default class Attacks {
     damageTicks;
@@ -47,11 +93,11 @@ class DamageTicks extends Array {
 
         this.mergeDamageTypes();
 
+        this.zeroNegatives();
+
         this.applyPersonalDamageMultipliers(stats.effects.personal_multipliers);
         this.applyOverridingDamageMultipliers(stats.effects.team_multipliers);
         this.applyStrDex(stats.identifications, stats.sp_multipliers);
-
-        this.zeroNegatives();
     }
 
     initTicks(attackEffects) {
@@ -127,7 +173,7 @@ class DamageTicks extends Array {
     }
 
     convertRaw(attackEffect, ids, convertedBase, raw) {
-        const convertedRaw = newDamages();
+        const convertedRaw = new DamageArray();
 
         const conversionTotal = attackEffect.conversion.reduce((sum, a) => sum + parseInt(a), 0) / 100;
         const baseTotal = convertedBase.map(extreme =>
@@ -239,6 +285,11 @@ class DamageTicks extends Array {
             tick.damage = tick.base.map(extreme => extreme.map((x, i) => x + tick.raw[i]));
     }
 
+    zeroNegatives() {
+        for (let tick of this)
+            for (let extreme of tick.damage) for (let i in extreme)
+                if (extreme[i] < 0) extreme[i] = 0;
+    }
 
     applyPersonalDamageMultipliers(personal_multipliers) {
         for (let personalMultiplier of personal_multipliers)
@@ -268,81 +319,68 @@ class DamageTicks extends Array {
     applyStrDex(identifications, sp_multipliers) {
         const strength = 1 + sp_multipliers[SkillPointIndexes.Strength];
         const dexterity = 1 + identifications.criticalDamageBonus / 100;
+        const critChance = sp_multipliers[SkillPointIndexes.Dexterity];
 
         for (const tick of this) {
-            const damage = tick.damage = tick.damage.concat(newMinMax());
-
-            for (let i = 0; i < damage_type_count; i++) {
-                damage[DamageExtremes.MINC][i] = damage[DamageExtremes.MIN][i] * (dexterity + strength);
-                damage[DamageExtremes.MAXC][i] = damage[DamageExtremes.MAX][i] * (dexterity + strength);
-                damage[DamageExtremes.MIN][i] *= strength;
-                damage[DamageExtremes.MAX][i] *= strength;
-            }
+            const nonCrit = tick.damage.toMultiply(strength)
+            const crit = tick.damage.toMultiply(dexterity + strength);
+            tick.damages = {
+                nonCrit,
+                crit,
+                average: crit.toMultiply(critChance).addMinMax(nonCrit.toMultiply(1 - critChance))
+            };
         }
 
-    }
+        // TODO: switch all following code to use .damages instead of .damage, use for...of to iterate over.
 
-    zeroNegatives() {
-        for (let tick of this)
-            for (let extreme of tick.damage) for (let i in extreme)
-                if (extreme[i] < 0) extreme[i] = 0;
     }
 }
 
-// TODO: handle attack speed in display instead of variants
 class DamageVariants {
-    constructor(damageTicks, variantEffects, attackSpeed) {
+    constructor(damageTicks, variantEffects) {
         for (let key in variantEffects) {
             const damageTick = damageTicks[variantEffects[key].attack];
             if (!damageTick) continue;
-            // ?? -1 is to account for the 1 assumed hit, though this default should never be called in a good tree.
+            // ?? -1 is to account for the 1 assumed hit.
             const secondTickHits = damageTicks[variantEffects[key].second_attack]?.extra_hits ?? -1;
 
             this[key] = {
                 label: variantEffects[key].label,
-                damage: this.getVariantConversion(variantEffects[key], damageTick, secondTickHits, attackSpeed)
+                damage: this.getVariantConversion(variantEffects[key], damageTick, secondTickHits)
             };
         }
     }
 
-    getVariantConversion(variant, tick, secondTickHits, attackSpeed) {
-        const damage = this.getBeforeMultiplying(variant, tick, secondTickHits, attackSpeed);
-        return variant.multiplier ? this.multiplyDamage(damage, variant.multiplier) : damage;
-    }
+    getVariantConversion = (variant, tick, secondTickHits) =>
+        this.multiplyDamage(this.multiplyDamage(tick.damage, this.getVariantMultiplier(variant, tick, secondTickHits)), variant.multiplier);
 
-    getBeforeMultiplying(variant, tick, secondTickHits, attackSpeed) {
+    multiplyDamage = (damage, multiplier) => {
+        if (!multiplier || multiplier === 1) return damage;
+        return damage.map(extreme => extreme.map(x => x * multiplier));
+    };
+
+    getVariantMultiplier(variant, tick, secondTickHits) {
         switch (variant.type) {
             case "hit":
-                return tick.damage;
+                return 1;
             case "multi":
-                return this.multiplyDamageByExtraHits(tick.damage, tick.extra_hits);
+                return this.getHitsMultiplier(tick.extra_hits);
             case "dps":
-                return this.multiplyDamageByDPS(tick.damage, tick.extra_hits, tick.frequency);
+                return this.getDPSMultiplier(tick.extra_hits, tick.frequency);
             case "total":
-                return this.multiplyDamageOverTime(tick.damage, tick.extra_hits, tick.frequency, tick.duration);
+                return this.getDoTMultiplier(tick.extra_hits, tick.frequency, tick.duration);
             case "scaling-multi":
-                return this.multiplyScalingDamageByHits(tick.damage, tick.extra_hits, secondTickHits);
+                return this.getScalingMultiplier(tick.extra_hits, secondTickHits);
             case "hit-modifier":
-                return this.multiplyDamageByExtraHits(tick.damage, secondTickHits);
+                return this.getHitsMultiplier(secondTickHits);
             default:
                 throw new Error(`invalid variant type: ${variant.type}`);
         }
     }
 
-    multiplyDamage = (damage, multiplier) => damage.map(extreme => extreme.map(x => x * multiplier));
-
-    multiplyDamageByExtraHits = (damage, extra_hits) => this.multiplyDamage(damage, (1 + (extra_hits ?? 0)));
-
-    // assuming extra hits is greater than or equal to scaling cap
-    // SUM_{n=1}^{total_hits}(min(n,hit_cap)) == hit_cap*(total_hits-hit_cap)+(hit_cap(hit_cap+1))/2
-    multiplyScalingDamageByHits = (damage, scaling_cap, extra_hits) =>
-        this.multiplyDamage(damage,
-            scaling_cap * ((extra_hits ?? 0) + 1 - scaling_cap) + (scaling_cap * (scaling_cap + 1)) / 2);
-
-    multiplyDamageOverTime = (damage, extra_hits, frequency, duration) =>
-        this.multiplyDamage(this.multiplyDamageByDPS(damage, extra_hits, frequency), duration);
-
-
-    multiplyDamageByDPS = (damage, extra_hits, frequency) =>
-        this.multiplyDamage(this.multiplyDamageByExtraHits(damage, extra_hits), 1 / frequency);
+    getHitsMultiplier = (extra_hits) => 1 + extra_hits || 1;
+    getDPSMultiplier = (extra_hits, frequency) => this.getHitsMultiplier(extra_hits) * 1 / frequency;
+    getDoTMultiplier = (extra_hits, frequency, duration) => this.getDPSMultiplier(extra_hits, frequency) * duration;
+    // SUM_{n=1}^{total_hits}(min(n,hit_cap)) === c(2t-c+1)/2, t >= c
+    getScalingMultiplier = (scale_cap, extra_hits) => scale_cap * (2 * this.getHitsMultiplier(extra_hits) - scale_cap + 1) / 2;
 }
