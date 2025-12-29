@@ -10,31 +10,34 @@ import {DamageDisplays} from "./attack_display.js";
 
 
 export const damage_type_count = 6;
+
+// TODO: remove
 export const DamageExtremes = Object.freeze({
     MIN: 0,
     MAX: 1,
     MINC: 2,
     MAXC: 3
 });
-const DamageBreakdownIndexes = Object.freeze({
-    NON_CRIT: 0,
-    CRIT: 1,
-    AVERAGE: 2
-});
 
 export const neutral_index = 0;
 
 export class DamageArray extends Array {
-    constructor() {
+    constructor(...elements) {
         super(6);
         this.fill(0);
+        for (let i in elements) this[i] = elements[i];
+    }
+
+    summon() {
+        console.log("summon");
     }
 }
 
+// TODO: make use of methods instead of handling elsewhere
 export class MinMax extends Array {
-    constructor() {
+    constructor(damageArray1, damageArray2) {
         super();
-        this.push(new DamageArray(), new DamageArray());
+        this.push(damageArray1 ?? new DamageArray(), damageArray2 ?? new DamageArray());
     }
 
     multiply(multiplier) {
@@ -62,7 +65,11 @@ export class MinMax extends Array {
     }
 
     toAddDamageArray(damageArray) {
-        this.map((extreme) => extreme.map((x, i) => x + damageArray[i]));
+        return this.map((extreme) => extreme.map((x, i) => x + damageArray[i]));
+    }
+
+    affectEach(lambda) {
+        for (let i in this) for (let j in this[i]) lambda(this[i][j], i, j);
     }
 }
 
@@ -123,37 +130,38 @@ class DamageTicks extends Array {
 
     // assumes powder base is perfectly normal base
     parseBase(base, powders) {
-        const result = [
-            [
+        const baseDamage = new MinMax(
+            new DamageArray(
                 base.baseDamage.min,
                 base.baseEarthDamage.min,
                 base.baseThunderDamage.min,
                 base.baseWaterDamage.min,
                 base.baseFireDamage.min,
                 base.baseAirDamage.min
-            ], [
+            ), new DamageArray(
                 base.baseDamage.max,
                 base.baseEarthDamage.max,
                 base.baseThunderDamage.max,
                 base.baseWaterDamage.max,
                 base.baseFireDamage.max,
                 base.baseAirDamage.max
-            ]
-        ];
+            )
+        );
 
-        for (let powder of powders)
-            for (let extreme in this.base)
-                result[extreme][damageTypeNames.indexOf(powder.element)] += powder.damage[extreme];
+        for (let powder of powders) for (let i in baseDamage)
+            baseDamage[i][damageTypeNames.indexOf(powder.element)] += powder.damage[i];
 
-        return result;
+        return baseDamage;
     }
 
-    convertBase = (conversion, baseDamage) => baseDamage.map(extreme => {
-        const extremeTotal = extreme.reduce((a, b) => a + b);
-        return extreme.map((x, i) =>
-            (x * conversion[i] + (i !== neutral_index ? conversion[i] * extremeTotal : 0)) / 100
-        );
-    });
+    convertBase(conversion, baseDamage) {
+        return baseDamage.map(extreme => {
+            const extremeTotal = extreme.reduce((a, b) => a + b);
+            return extreme.map((x, i) =>
+                (x * conversion[i] + (i !== neutral_index ? conversion[i] * extremeTotal : 0)) / 100
+            );
+        });
+    };
 
     convertRaws(ids) {
         const raw = this.parseRaw(ids);
@@ -162,8 +170,8 @@ class DamageTicks extends Array {
 
     parseRaw(ids) {
         const raw = {
-            MainAttack: [],
-            Spell: []
+            MainAttack: new DamageArray(),
+            Spell: new DamageArray()
         };
 
         for (let i in damageTypeNames) for (let category in raw)
@@ -231,8 +239,8 @@ class DamageTicks extends Array {
     applyPercents(ids) {
 
         const percent = {
-            MainAttack: [],
-            Spell: []
+            MainAttack: new DamageArray(),
+            Spell: new DamageArray()
         };
 
         damageTypePrefixes.forEach((prefix, i) => {
@@ -281,8 +289,7 @@ class DamageTicks extends Array {
     }
 
     mergeDamageTypes() {
-        for (let tick of this)
-            tick.damage = tick.base.map(extreme => extreme.map((x, i) => x + tick.raw[i]));
+        for (let tick of this) tick.damage = tick.base.toAddDamageArray(tick.raw);
     }
 
     zeroNegatives() {
@@ -294,26 +301,21 @@ class DamageTicks extends Array {
     applyPersonalDamageMultipliers(personal_multipliers) {
         for (let personalMultiplier of personal_multipliers)
             for (let id in this)
-                // TODO:
-                //  fix targets referring to "internal_name"
-                //  replace "all" with ""
-                if (personalMultiplier.target === "all" || personalMultiplier.target === id)
+                // TODO: fix targets referring to "internal_name"
+                if (personalMultiplier.target === "" || personalMultiplier.target === id)
                     for (let extreme of this[id].damage) for (let i in extreme)
                         extreme[i] *= personalMultiplier.multiplier;
     }
 
     applyOverridingDamageMultipliers(team_multipliers) {
-        let dmgUp = 1;
-        let resDown = 1;
+        const mults = {};
         for (let effect of team_multipliers) {
-            if (effect.type === "damage-boost")
-                dmgUp = Math.max(dmgUp, effect.multiplier);
-            else if (effect.type === "vulnerability")
-                resDown = Math.max(resDown, effect.multiplier);
-            else throw new Error("invalid overriding effect type: " + effect.type);
+            if (!mults[effect.type]) mults[effect.type] = 1;
+            mults[effect.type] = Math.max(mults[effect.type], effect.multiplier);
         }
-        for (let tick of this) for (let extreme of tick.damage) for (let i in extreme)
-            extreme[i] *= dmgUp * resDown;
+        let multiplier = Object.keys(mults).reduce((a, b) => mults[a] * mults[b]);
+
+        for (let tick of this) tick.damage.multiply(multiplier);
     }
 
     applyStrDex(identifications, sp_multipliers) {
@@ -322,7 +324,7 @@ class DamageTicks extends Array {
         const critChance = sp_multipliers[SkillPointIndexes.Dexterity];
 
         for (const tick of this) {
-            const nonCrit = tick.damage.toMultiply(strength)
+            const nonCrit = tick.damage.toMultiply(strength);
             const crit = tick.damage.toMultiply(dexterity + strength);
             tick.damages = {
                 nonCrit,
@@ -330,23 +332,22 @@ class DamageTicks extends Array {
                 average: crit.toMultiply(critChance).addMinMax(nonCrit.toMultiply(1 - critChance))
             };
         }
-
-        // TODO: switch all following code to use .damages instead of .damage, use for...of to iterate over.
-
     }
 }
 
+// TODO: switch all following code to use .damages instead of .damage, use for...of to iterate over.
 class DamageVariants {
     constructor(damageTicks, variantEffects) {
         for (let key in variantEffects) {
-            const damageTick = damageTicks[variantEffects[key].attack];
+            const variantEffect = variantEffects[key];
+            const damageTick = damageTicks[variantEffect.attack];
             if (!damageTick) continue;
             // ?? -1 is to account for the 1 assumed hit.
-            const secondTickHits = damageTicks[variantEffects[key].second_attack]?.extra_hits ?? -1;
+            const secondTickHits = damageTicks[variantEffect.second_attack]?.extra_hits ?? -1;
 
             this[key] = {
-                label: variantEffects[key].label,
-                damage: this.getVariantConversion(variantEffects[key], damageTick, secondTickHits)
+                label: variantEffect.label,
+                damage: this.getVariantConversion(variantEffect, damageTick, secondTickHits)
             };
         }
     }

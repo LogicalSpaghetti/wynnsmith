@@ -989,7 +989,7 @@ class EffectType {
 
         holder.appendChild(document.createTextNode("Target Ability: "));
         const targetInput = holder.appendChild(document.createElement("input"));
-        targetInput.placeholder = "\"all\" for global multiplier";
+        targetInput.placeholder = "Leave empty for global multiplier";
         targetInput.value = this.data.target ?? "";
         targetInput.addEventListener("change", () => setData(this));
 
