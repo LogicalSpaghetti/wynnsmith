@@ -71,6 +71,10 @@ export class MinMax extends Array {
     affectEach(lambda) {
         for (let i in this) for (let j in this[i]) lambda(this[i][j], i, j);
     }
+
+    average() {
+        return this.reduce((x, e) => x + e.reduce((a, b) => a + b), 0) / 2;
+    }
 }
 
 export default class Attacks {
@@ -115,6 +119,7 @@ class DamageTicks extends Array {
                 raw: null,
                 damage: null,
                 type: a.type,
+                conversion: a.conversion,
                 is_melee: a.is_melee,
                 extra_hits: a.extra_hits,
                 frequency: a.frequency,
@@ -345,22 +350,34 @@ class DamageVariants {
             // ?? -1 is to account for the 1 assumed hit.
             const secondTickHits = damageTicks[variantEffect.second_attack]?.extra_hits ?? -1;
 
+            const multiplier = variantEffect.multiplier * this.getTypeMultiplier(variantEffect, damageTick, secondTickHits);
+            const damages = this.multiplyDamages(damageTick.damages, multiplier);
+            const averages = this.averageDamages(damages);
+
             this[key] = {
                 label: variantEffect.label,
-                damage: this.getVariantConversion(variantEffect, damageTick, secondTickHits)
+                damages,
+                conversion: damageTick.conversion.map(x => x * multiplier)
             };
         }
     }
 
-    getVariantConversion = (variant, tick, secondTickHits) =>
-        this.multiplyDamage(this.multiplyDamage(tick.damage, this.getVariantMultiplier(variant, tick, secondTickHits)), variant.multiplier);
-
-    multiplyDamage = (damage, multiplier) => {
-        if (!multiplier || multiplier === 1) return damage;
-        return damage.map(extreme => extreme.map(x => x * multiplier));
+    multiplyDamages(damages, multiplier) {
+        if (!multiplier || multiplier === 1) return damages;
+        return Object.keys(damages).map(key => damages[key].toMultiply(multiplier));
     };
 
-    getVariantMultiplier(variant, tick, secondTickHits) {
+    averageDamages(damages) {
+        const averages = {};
+        for (const key in damages) averages[key] = damages[key].average();
+        return averages;
+    }
+
+    getMultiplier(variant, tick, secondTickHits) {
+        return this.getTypeMultiplier(variant, tick, secondTickHits) * variant.multiplier;
+    }
+
+    getTypeMultiplier(variant, tick, secondTickHits) {
         switch (variant.type) {
             case "hit":
                 return 1;
