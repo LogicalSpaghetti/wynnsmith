@@ -18,7 +18,7 @@ import {
     upperFirst, wrapText
 } from "./display_item.js";
 import major_id_descriptions from "../../data/major_ids.js";
-import {objectFind} from "./object_search";
+import {objectFind} from "./object_search.js";
 
 export function minecraftAsElement(text, minecraftFont = false) {
     const htmlText = minecraftToHTML(text);

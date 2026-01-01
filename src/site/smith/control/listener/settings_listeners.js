@@ -1,8 +1,7 @@
 import * as settings from "../settings.js";
 import {loadBoolean, toggleBoolean} from "../settings.js";
 import {add, dispatch} from "../../../common/event_listener.js";
-import runTests from "../../../../test/test.js";
-import {updateBuild} from "../updateBuild";
+import updateBuild from "../update_build.js";
 
 export function addSettingsListeners() {
     initCheckbox("selvs");
@@ -24,8 +23,6 @@ export function addSettingsListeners() {
     add("opacity_slider", "input", (e) =>
         document.getElementById("miku").style.opacity = e.target.value + "%");
     dispatch("opacity_slider", "input");
-
-    add("run_tests", "click", runTests);
 }
 
 function initCheckbox(elementId, boolId = elementId, extraCode = () => updateBuild()) {

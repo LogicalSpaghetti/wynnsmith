@@ -7,9 +7,10 @@ import {balanceSP} from "../../model/skill_points.js";
 import {getHoverTextForItem} from "../../../common/minecraft_html.js";
 import {decimalToRoman} from "../../../common/numbers.js";
 import {add, addAll, addAllElem, addElem} from "../../../common/event_listener.js";
-import {updateBuild} from "../updateBuild";
+import updateBuild from "../update_build.js";
 
 export function addInputListeners() {
+    console.log("addInputListeners()");
     addTooltipListener();
 
     // Input:

@@ -1,7 +1,6 @@
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
-!**/src/test/**/out/
 
 ### Kotlin ###
 .kotlin
@@ -16,7 +15,6 @@ out/
 .sts4-cache
 bin/
 !**/src/main/**/bin/
-!**/src/test/**/bin/
 
 ### NetBeans ###
 /nbproject/private/

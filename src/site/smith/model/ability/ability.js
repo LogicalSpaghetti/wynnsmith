@@ -7,7 +7,7 @@ import * as codeDictionary from "../../../../data/code_dictionary.js";
 import {addWarning} from "../../control/warnings.js";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../../common/tooltip.js";
 import classEffects from "../../../../data/effects.js";
-import {updateBuild} from "../../control/updateBuild";
+import updateBuild from "../../control/update_build.js";
 
 const treeColumns = 9;
 const abilityPointsAtLevel = [
