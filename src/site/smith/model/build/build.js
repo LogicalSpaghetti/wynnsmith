@@ -6,7 +6,7 @@ import {
     getItemAddedSP,
     getSkillPointModifiers,
     skillPointNames
-} from "../skill_points.js";
+} from "../skill_point/skill_points.js";
 import {base64ToBinary} from "../../../common/numbers.js";
 
 // TODO: should be part of the database

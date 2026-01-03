@@ -1,5 +1,5 @@
 import * as search from "../../control/database/item_search.js";
-import {getItemAddedSP} from "../skill_points.js";
+import {getItemAddedSP} from "../skill_point/skill_points.js";
 import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../../../data/small_stuff.js";
 import {getPowder} from "./powders.js";
 import {addIdsToObject} from "../build/permute.js"; // TODO: move all related from permute.js to here

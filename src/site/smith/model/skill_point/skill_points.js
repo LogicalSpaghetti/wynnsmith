@@ -1,4 +1,4 @@
-import {damageTypePrefixes} from "../../../data/small_stuff.js";
+import {damageTypePrefixes} from "../../../../data/small_stuff.js";
 
 const sp_cap = 150;
 

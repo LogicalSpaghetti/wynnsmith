@@ -1,5 +1,5 @@
 import * as search from "../../control/database/item_search.js";
-import {calculateIdSkillPoints, getItemAddedSP, getSkillPointMultiplier} from "../skill_points.js";
+import {calculateIdSkillPoints, getItemAddedSP, getSkillPointMultiplier} from "../skill_point/skill_points.js";
 import * as effect_parsing from "../ability/effect_parsing.js";
 import {orderedAttackSpeed} from "../../../../data/small_stuff.js";
 import modifyIdentifications, {addBaseToObject} from "../item/identifications.js";

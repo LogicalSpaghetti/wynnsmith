@@ -1,4 +1,4 @@
-import {skillPointNames} from "../smith/model/skill_points.js";
+import {skillPointNames} from "../smith/model/skill_point/skill_points.js";
 import punscake from "../../data/trees.js";
 import {attackSpeedMap} from "../../data/small_stuff.js";
 import * as codeDictionary from "../../data/code_dictionary.js";

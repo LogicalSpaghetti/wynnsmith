@@ -3,7 +3,7 @@ import * as numbers from "../../../common/numbers.js";
 import {getItemByName} from "../database/item_search.js";
 import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "../../../common/tooltip.js";
 import copyTreeAsANSI from "../../model/ability/ansi_tree.js";
-import {balanceSP} from "../../model/skill_points.js";
+import {balanceSP} from "../../model/skill_point/skill_points.js";
 import {getHoverTextForItem} from "../../../common/minecraft_html.js";
 import {decimalToRoman} from "../../../common/numbers.js";
 import {add, addAll, addAllElem, addElem} from "../../../common/event_listener.js";

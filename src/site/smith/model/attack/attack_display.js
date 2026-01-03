@@ -1,7 +1,7 @@
 import {damage_type_count, DamageExtremes, MinMax} from "./attacks.js";
 import {minecraftAsElement} from "../../../common/minecraft_html.js";
 import {roundForDisplay} from "../../../common/numbers.js";
-import {SkillPointIndexes} from "../skill_points.js";
+import {SkillPointIndexes} from "../skill_point/skill_points.js";
 import * as settings from "../../control/settings.js";
 import * as codeDictionary from "../../../../data/code_dictionary.js";
 

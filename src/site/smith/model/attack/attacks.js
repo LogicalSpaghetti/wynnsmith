@@ -5,7 +5,7 @@ import {
     orderedAttackSpeed
 } from "../../../../data/small_stuff.js";
 import {getPowder} from "../item/powders.js";
-import {SkillPointIndexes} from "../skill_points.js";
+import {SkillPointIndexes} from "../skill_point/skill_points.js";
 import {DamageDisplays} from "./attack_display.js";
 
 
