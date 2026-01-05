@@ -1,49 +1,44 @@
-/**
- * Calls a defined callback function on each element of an array, and returns an array that contains the results.
- * @param items :{}[] sorted by slot
- * @param i :number simulated for() index
- * @param verify :boolean simulated while() condition
- * @param usableArmor :boolean[] booleans representing whether the equipment in the corresponding slot has been equipped
- * @param order :number[]
- * @param assignedSP :number[]
- * @param givenSP :number[]
- * @param spCap :number[]
- * @param spTotalFloor :number[]
- */
-function findOrder(items, i = 0, verify = true, usableArmor = new Array(items.length).fill(false),
+const arr = [];
+
+function findOrder(items, index = 0, verify = true, usableArmor = new Array(items.length).fill(false),
                    order = [], assignedSP = [0, 0, 0, 0, 0], givenSP = [0, 0, 0, 0, 0], spCap = [150, 150, 150, 150, 150], spTotalFloor = [0, 0, 0, 0, 0]/*Ensures an item will never unequip after being equipped*/) {
-    if (i >= items.length)
-        return (verify) ? reLoop() : null;
-    else if (i === 0) verify = false;
+    if (index >= items.length)
+        return (verify) ? findOrder(items, 0, false, usableArmor, order, assignedSP, givenSP, spCap) : null;
+    else if (index === 0) verify = false;
 
-    if (usableArmor[i]) return incrementLoop();
+    if (usableArmor[index]) return findOrder(items, index + 1, verify, usableArmor, order, assignedSP, givenSP, spCap);
 
-    const item = items[i];
+    const item = items[index];
     if (itemCanEquip(item, assignedSP, givenSP)) {
-        order.push(i);
+        order.push(index);
         if (order.length >= items.length) return {order, assignedSP}; // SUCCESS!
         verify = true;
-        usableArmor[i] = true;
+        usableArmor[index] = true;
         givenSP = givenSP.map((x, i) => x + item.given[i]);
+        return findOrder(items, index + 1, verify, usableArmor, order, assignedSP, givenSP, spCap);
     } else {
-        branches++;
-        const newCap = spCap.map((x, i) => item.cost[i] <= 0 ? x : Math.min(x, item.cost[i] - givenSP[i] - 1));
-        const loweredCap = findOrder(items, i + 1, verify, [...usableArmor], order, assignedSP, givenSP, newCap);
+        // try equip
+        const newAssign = assignedSP.map((x, i) => item.cost[i] > 0 ? Math.max(x, item.cost[i] - givenSP[i]) : x);
+        const isWithinBounds = newAssign.reduce((withinBounds, x, i) => withinBounds && x <= spCap[i], true);
+        let bestBranch = isWithinBounds ? findOrder(items, index, verify, [...usableArmor], [...order], newAssign, [...givenSP], [...spCap])
+            : null;
 
-        const newAssign = assignedSP.map((x, i) => Math.max(x, item.cost[i] - givenSP[i]));
-        const raisedAssign = findOrder(items, i, verify, [...usableArmor], [...order], newAssign, [...givenSP], [...spCap]);
+        // try preventing equip
+        const loweredCaps = item.cost.map((cost, i) => item.cost[i] <= 0 || item.cost[i] - assignedSP[i] - givenSP[i] <= 0 ? null :
+            spCap.map((x, k) => k === i ? Math.max(0, Math.min(x, cost - givenSP[i] - 1)) : x))
+            .filter(cap => cap != null)
+            .filter((cap, i, arr) =>
+                cap === arr.find((capB) => cap.join(",") === capB.join(",")));
 
-        return getLowestCap(loweredCap, raisedAssign);
-    }
+        for (const newCap of loweredCaps) {
+            branches++;
+            if (null == newCap.find((x, i) => x !== spCap[i])) continue;
+            const loweredCap = findOrder(items, index + 1, verify, [...usableArmor], [...order], [...assignedSP], [...givenSP], newCap);
+            bestBranch = getLowestCap(bestBranch, loweredCap);
 
-    return incrementLoop();
+        }
 
-    function reLoop() {
-        return findOrder(items, 0, false, usableArmor, order, assignedSP, givenSP, spCap);
-    }
-
-    function incrementLoop() {
-        return findOrder(items, i + 1, verify, usableArmor, order, assignedSP, givenSP, spCap);
+        return bestBranch;
     }
 }
 
@@ -109,6 +104,7 @@ for (const inputItems of testCases) {
 
     console.log(result, validation.indexOf(false) ? "valid!" : `invalid: ${validation}`);
     console.log("Elapsed:", t2 - t1, "branches:", branches, "checks:", checks);
+    console.log(arr);
 }
 
 function validate(assigned, items) {
