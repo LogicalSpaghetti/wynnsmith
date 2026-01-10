@@ -7,6 +7,7 @@ import {wynnValidate} from "./verifier.js";
 
 // TODO: Set bonuses
 export function minimizeRequiredSP(items, initialAssignedSP = [0, 0, 0, 0, 0]) {
+    let count = 0;
     let optimalAssigned;
     let optimalOrder;
     let minimumSPTotal = Infinity;
@@ -18,10 +19,11 @@ export function minimizeRequiredSP(items, initialAssignedSP = [0, 0, 0, 0, 0]) {
     function tryOrder(orderedIndexes) {
         assignedSP.set(initialAssignedSP);
         givenSP.fill(0);
-        minimumSP.fill(0);
+        minimumSP.fill(0); // TODO
         let totalSP = initialAssignedSP.reduce((a, b) => a + b);
 
         for (let i = 0; i < orderedIndexes.length; i++) {
+            count++;
             const item = items[orderedIndexes[i]];
 
             let canEquip = true;
@@ -56,6 +58,6 @@ export function minimizeRequiredSP(items, initialAssignedSP = [0, 0, 0, 0, 0]) {
 
     // calls tryOrder with every possible ordering of 0 through items.length
     permuteOrders(items.length, items.length, tryOrder);
-
+    console.log("h:", count);
     return {assignedSP: optimalAssigned ?? [0, 0, 0, 0, 0], order: optimalOrder};
 }

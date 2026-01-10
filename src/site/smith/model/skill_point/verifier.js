@@ -2,23 +2,24 @@ import permuteOrders from "../../../common/permutation.js";
 
 // TODO: set bonuses
 
-export let branches;
+let validations;
 let checks;
 
 export function testOptimizer(solverFunction, testCases) {
     for (const inputItems of testCases) {
-        branches = 1;
+        validations = 0;
         checks = 0;
 
         const t1 = performance.now();
         const result = solverFunction(inputItems);
         const t2 = performance.now();
         const resultChecks = checks;
+        const resultValidations = validations;
 
         const valid = properValidate(result.assignedSP, inputItems);
 
         console.log(result, valid ?? "Invalid ");
-        console.log("Elapsed:", t2 - t1, "branches:", branches, "checks:", resultChecks);
+        console.log("Elapsed: (ms)", t2 - t1, "validations:", resultValidations, "checks:", resultChecks);
     }
 }
 
@@ -40,38 +41,36 @@ export function properValidate(assigned, items) {
     return order;
 }
 
+let given = new Int16Array(5);
+
+
 // TODO: Set Bonuses
 export function wynnValidate(assigned, items) {
+    validations++;
     let modified = true;
-    let usable = new Array(items.length).fill(false);
-    let given = new Array(5).fill(0);
+    let usable = new Int8Array(items.length).fill(false);
+    given.fill(0);
     while (modified) {
         modified = false;
         for (let i = 0; i < items.length; ++i) {
-            if (usable[i]) {
-                continue;
-            }
+            if (usable[i]) continue;
+
             if (itemCanEquip(items[i], assigned, given)) {
-                given = given.map((x, j) => x + items[i].given[j]);
+                for (let j = 0; j < 5; j++)
+                    given[j] += items[i].given[j];
                 usable[i] = true;
                 modified = true;
             }
         }
     }
 
-    modified = true;
-    while (modified) {
-        modified = false;
-        for (let i = 0; i < items.length; i++) {
-            if (usable[i] && !itemCanEquip(items[i], assigned, given)) {
-                modified = true;
-                usable[i] = false;
-                given = given.map((x, j) => x - items[i].given[j]);
-            }
-        }
-    }
+    if (usable.includes(false)) return false;
 
-    return !(usable.includes(false));
+    for (let i = 0; i < items.length; i++)
+        if (!itemCanEquip(items[i], assigned, given))
+            return false;
+
+    return true;
 }
 
 export function itemCanEquip(item, assignedSP, givenSP) {

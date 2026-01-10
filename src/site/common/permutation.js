@@ -5,7 +5,7 @@ export default function permutation(pick, max, usePermutation) {
     if (pick <= 0) return console.error("Pick must be 1 or more.");
     if (max <= 0) return console.error("Max must be 1 or more.");
 
-    const i = new Array(pick);
+    const i = new Int8Array(pick);
     loopOneIndex(i, pick, max, 0, usePermutation);
 }
 
