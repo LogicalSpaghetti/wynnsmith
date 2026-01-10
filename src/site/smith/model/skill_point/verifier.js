@@ -13,11 +13,12 @@ export function testOptimizer(solverFunction, testCases) {
         const t1 = performance.now();
         const result = solverFunction(inputItems);
         const t2 = performance.now();
+        const resultChecks = checks;
 
         const valid = properValidate(result.assignedSP, inputItems);
 
-        console.log(result, valid);
-        console.log("Elapsed:", t2 - t1, "branches:", branches, "checks:", checks);
+        console.log(result, valid ?? "Invalid ");
+        console.log("Elapsed:", t2 - t1, "branches:", branches, "checks:", resultChecks);
     }
 }
 
@@ -39,6 +40,7 @@ export function properValidate(assigned, items) {
     return order;
 }
 
+// TODO: Set Bonuses
 export function wynnValidate(assigned, items) {
     let modified = true;
     let usable = new Array(items.length).fill(false);
