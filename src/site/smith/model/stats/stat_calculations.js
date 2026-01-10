@@ -1,4 +1,9 @@
-import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../../../data/small_stuff.js";
+import {
+    attackSpeedMultipliers,
+    damageTypeNames,
+    damageTypePrefixes,
+    orderedAttackSpeed
+} from "../../../../data/small_stuff.js";
 import {getSkillPointMultiplier, SkillPointIndexes} from "../skill_point/skill_points.js";
 import {damage_type_count} from "../attack/attacks.js";
 
@@ -92,7 +97,7 @@ function calculateSpellCosts(build) {
     for (let i in spell_costs) {
         let cost = spell_costs[i];
 
-        cost *= 1 - (0.5 * (build.sp_multipliers[SkillPointIndexes.Intelligence] / getSkillPointMultiplier(150, SkillPointIndexes.Intelligence)));
+        cost *= getIntModifier(build.sp_multipliers);
 
         cost += build.identifications["raw" + costNames[i] + "SpellCost"];
 
@@ -107,6 +112,10 @@ function calculateSpellCosts(build) {
 
     for (const data of build.spell_cost_multipliers)
         spell_costs[data.spell_number] *= data.cost_multiplier;
+}
+
+function getIntModifier(sp_multipliers) {
+    return 1 - (0.5 * (sp_multipliers[SkillPointIndexes.Intelligence] / getSkillPointMultiplier(150, SkillPointIndexes.Intelligence)));
 }
 
 function computeHpr(base, percent) {

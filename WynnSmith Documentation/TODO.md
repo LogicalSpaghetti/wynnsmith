@@ -41,6 +41,7 @@
 		2. Escape or tabbing after the end closes and returns selection to the original element
 18.  Add more than just abilities to the effect builder
 19. Melee display DPS and per-hit.
+20. + sign on negative spell costs
 ### Major
 1. Build link generation/parsing
 2. Build comparison

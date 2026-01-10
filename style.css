@@ -498,12 +498,12 @@ td {
 }
 
 .aspect_up {
-    background-image: url(img/buttons/page_up.png);
+    background-image: url(assets/img/buttons/page_up.png);
     translate: -5.4px 0;
 }
 
 .aspect_down {
-    background-image: url(img/buttons/page_down.png);
+    background-image: url(assets/img/buttons/page_down.png);
     translate: -5.4px 13.5px;
 }
 
@@ -597,7 +597,7 @@ td {
 
 @font-face {
     font-family: 'minecraft';
-    src: url('font/minecraft.woff');
+    src: url('assets/font/minecraft.woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -605,7 +605,7 @@ td {
 
 @font-face {
     font-family: 'icons';
-    src: url('font/icons.woff');
+    src: url('assets/font/icons.woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -613,7 +613,7 @@ td {
 
 @font-face {
     font-family: 'minecraft';
-    src: url('font/minecraft_bold.woff');
+    src: url('assets/font/minecraft_bold.woff');
     font-weight: 900;
     font-style: normal;
     font-display: block;
@@ -621,7 +621,7 @@ td {
 
 @font-face {
     font-family: 'mojangles';
-    src: url('font/mojangles.otf');
+    src: url('assets/font/mojangles.otf');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -629,7 +629,7 @@ td {
 
 @font-face {
     font-family: 'unifont';
-    src: url('font/unifont.otf');
+    src: url('assets/font/unifont.otf');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -637,7 +637,7 @@ td {
 
 @font-face {
     font-family: 'unifontEmoji';
-    src: url('font/unifontEmoji.otf');
+    src: url('assets/font/unifontEmoji.otf');
     font-weight: normal;
     font-style: normal;
     font-display: block;
