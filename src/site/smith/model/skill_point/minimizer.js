@@ -3,7 +3,7 @@
 // run through properValidate, and if it works
 
 import permuteOrders from "../../../common/permutation.js";
-import {itemCanEquip, properValidate} from "./verifier.js";
+import {properValidate} from "./verifier.js";
 
 // TODO: Set bonuses
 export function minimizeRequiredSP(items, initialAssignedSP = [0, 0, 0, 0, 0]) {
@@ -20,15 +20,6 @@ export function minimizeRequiredSP(items, initialAssignedSP = [0, 0, 0, 0, 0]) {
 
         for (let i = 0; i < orderedIndexes.length; i++) {
             const item = items[orderedIndexes[i]];
-
-            let minimumIncrease = 0;
-            for (let j = 0; j < 5; j++) {
-                const needed = item.cost[j] - givenSP[j];
-                if (needed > assignedSP[j])
-                    minimumIncrease += needed - assignedSP[j];
-            }
-
-            if (totalSP + minimumIncrease >= minimumSPTotal) return;
 
             let canEquip = true;
             for (let i = 0; i < 5; i++)
