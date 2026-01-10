@@ -108,6 +108,6 @@ export async function preLoadAssets() {
             image.src = src;
         });
 
-    const prefix = "./img/";
+    const prefix = "./assets/img/";
     await Promise.all(abilityImages.map(x => preloadImage(prefix + x)));
 }

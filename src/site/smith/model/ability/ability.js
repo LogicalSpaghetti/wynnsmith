@@ -215,7 +215,7 @@ function mapHTML(tree, abilityTree, wynnClass) {
         if (ability.abilityID == null) {
             const dirs = ability.travelNode;
             cell.dataset.type = "connector";
-            cell.style["background-image"] = "url(img/branch/" + dirs.up + dirs.down + dirs.left + dirs.right + ".png)";
+            cell.style["background-image"] = "url(assets/img/branch/" + dirs.up + dirs.down + dirs.left + dirs.right + ".png)";
             continue;
         }
         cell.dataset.type = "node";
@@ -479,7 +479,7 @@ export function renderHighlights() {
 
         const img = connector.appendChild(document.createElement("img"));
 
-        img.src = "img/branch/" + connector.dataset.highlights + ".png";
+        img.src = "assets/img/branch/" + connector.dataset.highlights + ".png";
         img.style.display = "block";
         img.ondragstart = () => false;
     }
