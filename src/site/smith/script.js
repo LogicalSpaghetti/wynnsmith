@@ -1,7 +1,7 @@
 import {preLoadAssets} from "./control/preloading.js";
 import {addInputListeners} from "./control/listener/input_listeners.js";
 import {addSettingsListeners} from "./control/listener/settings_listeners.js";
-import {properValidate, testOptimizer} from "./model/skill_point/verifier.js";
+import {properValidate, testOptimizer, wynnValidate} from "./model/skill_point/verifier.js";
 import {minimizeRequiredSP} from "./model/skill_point/minimizer.js";
 
 // code entry point:
@@ -19,12 +19,12 @@ function loadSite() {
     addSettingsListeners();
 }
 
-console.log(properValidate([15, 0, 0, 0, 0], [
-    {cost: [10, 0, 0, 0, 0], given: [2, 0, 0, 0, 0]},
-    {cost: [15, 0, 0, 0, 0], given: [3, 0, 0, 0, 0]},
-    {cost: [10, 0, 0, 0, 0], given: [-10, 0, 0, 0, 0]},
-    {cost: [7, 0, 0, 0, 0], given: [6, 0, 0, 0, 0]}
-]));
+// console.log(properValidate([15, 0, 0, 0, 0], [
+//     {cost: [10, 0, 0, 0, 0], given: [2, 0, 0, 0, 0]},
+//     {cost: [15, 0, 0, 0, 0], given: [3, 0, 0, 0, 0]},
+//     {cost: [10, 0, 0, 0, 0], given: [-10, 0, 0, 0, 0]},
+//     {cost: [7, 0, 0, 0, 0], given: [6, 0, 0, 0, 0]}
+// ]));
 
 const testCases = [[
     {cost: [8, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
@@ -60,19 +60,19 @@ const testCases = [[
     {cost: [2, 0, 0, 0, 0], given: [0, -10, 0, 0, 0]},
     {cost: [0, 2, 0, 0, 0], given: [0, 10, 0, 0, 0]}
 ], [
-    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
-    {cost: [0, 50, 0, 0, 50], given: [0, 0, -30, 8, 0]},
-    {cost: [40, 40, 0, 40, 40], given: [0, 0, -20, 0, 0]},
     {cost: [0, 0, 0, 0, 60], given: [0, 20, 0, 0, 0]},
+    {cost: [40, 40, 0, 40, 40], given: [0, 0, -20, 0, 0]},
+    {cost: [0, 50, 0, 0, 50], given: [0, 0, -30, 8, 0]},
+    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
     {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
     {cost: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
     {cost: [0, 100, 0, 0, 0], given: [0, 60, 0, 0, 0]},
     {cost: [0, 0, 0, 0, 0], given: [3, 3, 3, 3, 3]}
 ], [
-    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]}, // TODO: case returning 49 62 0 0 62 instead of 49 62 0 0 59
-    {cost: [0, 45, 0, 0, 55], given: [0, 0, 0, 0, 0]},
-    {cost: [0, 60, 0, 0, 60], given: [0, 12, 0, 0, 12]},
     {cost: [0, 0, 0, 0, 0], given: [-7, -7, -7, -7, -7]},
+    {cost: [0, 60, 0, 0, 60], given: [0, 12, 0, 0, 12]},
+    {cost: [0, 45, 0, 0, 55], given: [0, 0, 0, 0, 0]},
+    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
     {cost: [55, 0, 0, 0, 55], given: [0, 3, 2, 3, 0]},
     {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
     {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 3]},
@@ -82,14 +82,24 @@ const testCases = [[
 
 testOptimizer(minimizeRequiredSP, testCases);
 
-
-console.log(properValidate([49, 62, 0, 0, 59], [
-    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
-    {cost: [0, 45, 0, 0, 55], given: [0, 0, 0, 0, 0]},
+const edgeCase = [
+    {cost: [0, 0, 0, 0, 0], given: [-7, -7, -7, -7, -7]}, // TODO: case returning 49 62 0 0 62 instead of 49 62 0 0 59
     {cost: [0, 60, 0, 0, 60], given: [0, 12, 0, 0, 12]},
-    {cost: [0, 0, 0, 0, 0], given: [-7, -7, -7, -7, -7]},
+    {cost: [0, 45, 0, 0, 55], given: [0, 0, 0, 0, 0]},
+    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
     {cost: [55, 0, 0, 0, 55], given: [0, 3, 2, 3, 0]},
     {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
     {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 3]},
     {cost: [0, 0, 0, 0, 20], given: [0, 5, 0, 0, 5]}
-]));
+];
+const edgeCaseSP = [49, 62, 0, 0, 59];
+
+// console.log(properValidate(edgeCaseSP, edgeCase));
+//
+// const orderedIndexes = [3, 5, 6, 7, 2, 1, 0, 4];
+// for (let i = 0; i < orderedIndexes.length; i++) {
+//     const equippedItems = edgeCase.filter((x, j) => orderedIndexes.indexOf(j) <= i);
+//     if (!wynnValidate(edgeCaseSP, equippedItems)) console.log(`failed at ${i}`)
+//     else console.log(`succeeded at ${i}`)
+// }
+console.log(wynnValidate([49, 60, 0, 0, 60], edgeCase));

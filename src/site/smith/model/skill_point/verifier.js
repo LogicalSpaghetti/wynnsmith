@@ -48,7 +48,7 @@ let given = new Int16Array(5);
 export function wynnValidate(assigned, items) {
     validations++;
     let modified = true;
-    let usable = new Int8Array(items.length).fill(false);
+    let usable = new Array(items.length).fill(false);
     given.fill(0);
     while (modified) {
         modified = false;
@@ -67,7 +67,7 @@ export function wynnValidate(assigned, items) {
     if (usable.includes(false)) return false;
 
     for (let i = 0; i < items.length; i++)
-        if (!itemCanEquip(items[i], assigned, given))
+        if (!itemCanEquip(items[i], assigned, given.map((x, j) => x - items[i].given[j])))
             return false;
 
     return true;
