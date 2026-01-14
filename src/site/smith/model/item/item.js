@@ -235,5 +235,15 @@ export class Item {
     }
 }
 
+export class ItemData {
+    reqs;
+    given;
+
+
+    constructor(item) {
+
+    }
+}
+
 // TODO: crafted/modified/custom items
 // TODO: stop exporting once old link syntax is removed.

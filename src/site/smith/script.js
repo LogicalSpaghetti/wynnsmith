@@ -3,6 +3,7 @@ import {addInputListeners} from "./control/listener/input_listeners.js";
 import {addSettingsListeners} from "./control/listener/settings_listeners.js";
 import {properValidate, testOptimizer, wynnValidate} from "./model/skill_point/verifier.js";
 import {minimizeRequiredSP} from "./model/skill_point/minimizer.js";
+import {WEOMinimizer} from "./model/skill_point/second_minimizer.js";
 
 // code entry point:
 window.addEventListener("load", loadSite);
@@ -19,87 +20,88 @@ function loadSite() {
     addSettingsListeners();
 }
 
-// console.log(properValidate([15, 0, 0, 0, 0], [
-//     {cost: [10, 0, 0, 0, 0], given: [2, 0, 0, 0, 0]},
-//     {cost: [15, 0, 0, 0, 0], given: [3, 0, 0, 0, 0]},
-//     {cost: [10, 0, 0, 0, 0], given: [-10, 0, 0, 0, 0]},
-//     {cost: [7, 0, 0, 0, 0], given: [6, 0, 0, 0, 0]}
-// ]));
-
 const testCases = [[
-    {cost: [8, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
-    {cost: [7, 7, 0, 0, 0], given: [1, 1, 1, 1, 1]},
-    {cost: [6, 6, 6, 0, 0], given: [1, 1, 1, 1, 1]},
-    {cost: [5, 5, 5, 5, 0], given: [1, 1, 1, 1, 1]},
-    {cost: [4, 4, 4, 4, 4], given: [1, 1, 1, 1, 1]},
-    {cost: [3, 3, 3, 3, 3], given: [1, 1, 1, 1, 1]},
-    {cost: [2, 2, 2, 2, 2], given: [1, 1, 1, 1, 1]},
-    {cost: [1, 1, 1, 1, 1], given: [1, 1, 1, 1, 1]},
-    {cost: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]}
+    {reqs: [8, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
+    {reqs: [7, 7, 0, 0, 0], given: [1, 1, 1, 1, 1]},
+    {reqs: [6, 6, 6, 0, 0], given: [1, 1, 1, 1, 1]},
+    {reqs: [5, 5, 5, 5, 0], given: [1, 1, 1, 1, 1]},
+    {reqs: [4, 4, 4, 4, 4], given: [1, 1, 1, 1, 1]},
+    {reqs: [3, 3, 3, 3, 3], given: [1, 1, 1, 1, 1]},
+    {reqs: [2, 2, 2, 2, 2], given: [1, 1, 1, 1, 1]},
+    {reqs: [1, 1, 1, 1, 1], given: [1, 1, 1, 1, 1]},
+    {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]}
 ], [
-    {cost: [18, 0, 0, 0, 0], given: [0, 0, 0, 1, 0]},
-    {cost: [7, 7, 0, 0, 0], given: [1, 1, 1, 1, 1]},
-    {cost: [6, 6, 1, 6, 0], given: [1, 1, 1, 0, 1]},
-    {cost: [5, 1, 5, 5, 0], given: [1, 3, 1, 3, 1]},
-    {cost: [4, 7, 0, 4, 4], given: [0, 1, 0, 0, 0]},
-    {cost: [3, 3, 7, 3, 3], given: [3, 0, 0, 1, 1]},
-    {cost: [2, 2, 2, 20, 2], given: [1, 1, 1, 1, 1]},
-    {cost: [1, 1, 1, 1, 8], given: [1, 1, 1, 1, 1]},
-    {cost: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]}
+    {reqs: [18, 0, 0, 0, 0], given: [0, 0, 0, 1, 0]},
+    {reqs: [7, 7, 0, 0, 0], given: [1, 1, 1, 1, 1]},
+    {reqs: [6, 6, 1, 6, 0], given: [1, 1, 1, 0, 1]},
+    {reqs: [5, 1, 5, 5, 0], given: [1, 3, 1, 3, 1]},
+    {reqs: [4, 7, 0, 4, 4], given: [0, 1, 0, 0, 0]},
+    {reqs: [3, 3, 7, 3, 3], given: [3, 0, 0, 1, 1]},
+    {reqs: [2, 2, 2, 20, 2], given: [1, 1, 1, 1, 1]},
+    {reqs: [1, 1, 1, 1, 8], given: [1, 1, 1, 1, 1]},
+    {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]}
 ], [
-    {cost: [1, 4, 0, 0, 0], given: [2, 1, 0, 0, 0]},
-    {cost: [0, 0, 3, 1, 0], given: [0, 0, 0, 3, 0]},
-    {cost: [0, 0, 0, 0, 1], given: [0, 1, 0, 0, 0]},
-    {cost: [0, 0, 0, 6, 1], given: [0, 0, 0, 1, 5]},
-    {cost: [4, 0, 0, 0, 0], given: [1, 0, 0, 0, 0]},
-    {cost: [0, 0, 1, 0, 0], given: [0, 0, 1, 0, 0]},
-    {cost: [0, 0, 0, 1, 0], given: [0, 0, 0, 1, 0]},
-    {cost: [0, 1, 0, 0, 7], given: [0, 1, 0, 0, 0]},
-    {cost: [5, 8, 0, 0, 0], given: [0, 0, 3, 0, 1]}
+    {reqs: [1, 4, 0, 0, 0], given: [2, 1, 0, 0, 0]},
+    {reqs: [0, 0, 3, 1, 0], given: [0, 0, 0, 3, 0]},
+    {reqs: [0, 0, 0, 0, 1], given: [0, 1, 0, 0, 0]},
+    {reqs: [0, 0, 0, 6, 1], given: [0, 0, 0, 1, 5]},
+    {reqs: [4, 0, 0, 0, 0], given: [1, 0, 0, 0, 0]},
+    {reqs: [0, 0, 1, 0, 0], given: [0, 0, 1, 0, 0]},
+    {reqs: [0, 0, 0, 1, 0], given: [0, 0, 0, 1, 0]},
+    {reqs: [0, 1, 0, 0, 7], given: [0, 1, 0, 0, 0]},
+    {reqs: [5, 8, 0, 0, 0], given: [0, 0, 3, 0, 1]}
 ], [
-    {cost: [2, 0, 0, 0, 0], given: [0, -10, 0, 0, 0]},
-    {cost: [0, 2, 0, 0, 0], given: [0, 10, 0, 0, 0]}
+    {reqs: [2, 0, 0, 0, 0], given: [0, -10, 0, 0, 0]},
+    {reqs: [0, 2, 0, 0, 0], given: [0, 10, 0, 0, 0]}
 ], [
-    {cost: [0, 0, 0, 0, 60], given: [0, 20, 0, 0, 0]},
-    {cost: [40, 40, 0, 40, 40], given: [0, 0, -20, 0, 0]},
-    {cost: [0, 50, 0, 0, 50], given: [0, 0, -30, 8, 0]},
-    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
-    {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
-    {cost: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
-    {cost: [0, 100, 0, 0, 0], given: [0, 60, 0, 0, 0]},
-    {cost: [0, 0, 0, 0, 0], given: [3, 3, 3, 3, 3]}
+    {reqs: [0, 0, 0, 0, 60], given: [0, 20, 0, 0, 0]},
+    {reqs: [40, 40, 0, 40, 40], given: [0, 0, -20, 0, 0]},
+    {reqs: [0, 50, 0, 0, 50], given: [0, 0, -30, 8, 0]},
+    {reqs: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
+    {reqs: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
+    {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
+    {reqs: [0, 100, 0, 0, 0], given: [0, 60, 0, 0, 0]},
+    {reqs: [0, 0, 0, 0, 0], given: [3, 3, 3, 3, 3]}
 ], [
-    {cost: [0, 0, 0, 0, 0], given: [-7, -7, -7, -7, -7]},
-    {cost: [0, 60, 0, 0, 60], given: [0, 12, 0, 0, 12]},
-    {cost: [0, 45, 0, 0, 55], given: [0, 0, 0, 0, 0]},
-    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
-    {cost: [55, 0, 0, 0, 55], given: [0, 3, 2, 3, 0]},
-    {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
-    {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 3]},
-    {cost: [0, 0, 0, 0, 20], given: [0, 5, 0, 0, 5]}
+    {reqs: [0, 0, 0, 0, 0], given: [-7, -7, -7, -7, -7]},
+    {reqs: [0, 60, 0, 0, 60], given: [0, 12, 0, 0, 12]},
+    {reqs: [0, 45, 0, 0, 55], given: [0, 0, 0, 0, 0]},
+    {reqs: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
+    {reqs: [55, 0, 0, 0, 55], given: [0, 3, 2, 3, 0]},
+    {reqs: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
+    {reqs: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 3]},
+    {reqs: [0, 0, 0, 0, 20], given: [0, 5, 0, 0, 5]}
+], [
+    {reqs: [4, 0, 0, 0, 0], given: [10, 0, 0, 0, 0]},
+    {reqs: [4, 0, 0, 0, 0], given: [10, 0, 0, 0, 0]},
+    {reqs: [0, 0, 0, 0, 0], given: [-7, 0, 0, 0, 0]},
+    {reqs: [0, 0, 0, 0, 0], given: [4, 0, 0, 0, 0]}
+], [
+    {reqs: [50, 0, 0, 0, 40], given: [9, 0, 0, 0, 8]}, // leggings
+    {reqs: [75, 0, 0, 0, 0], given: [0, 0, 0, 0, 10]}, // chest
+    {reqs: [50, 0, 0, 0, 0], given: [7, 0, 0, 0, -3]} // bracelet
+], [
+    {reqs: [1, 0, 0, 0, 1], given: [1, 0, 0, 0, 1]}, // leggings
+    {reqs: [3, 0, 0, 0, 0], given: [0, 0, 0, 0, 1]}, // chest
+    {reqs: [1, 0, 0, 0, 0], given: [1, 0, 0, 0, -1]} // bracelet
 ]
 ];
 
-testOptimizer(minimizeRequiredSP, testCases);
+// testOptimizer(minimizeRequiredSP, testCases);
+console.log(properValidate([59, 0, 0, 0, 40], [
+    {reqs: [50, 0, 0, 0, 40], given: [9, 0, 0, 0, 8]}, // leggings
+    {reqs: [75, 0, 0, 0, 0], given: [0, 0, 0, 0, 10]}, // chest
+    {reqs: [50, 0, 0, 0, 0], given: [7, 0, 0, 0, -3]} // bracelet
+]));
+console.log(wynnValidate([59, 0, 0, 0, 40], [
+    {reqs: [50, 0, 0, 0, 40], given: [9, 0, 0, 0, 8]}, // leggings
+    {reqs: [75, 0, 0, 0, 0], given: [0, 0, 0, 0, 10]}, // chest
+    {reqs: [50, 0, 0, 0, 0], given: [7, 0, 0, 0, -3]} // bracelet
+]));
+// console.log(wynnValidate([1, 0, 0, 0, 1], [
+//     {reqs: [1, 0, 0, 0, 1], given: [1, 0, 0, 0, 1]}, // leggings
+//     {reqs: [3, 0, 0, 0, 0], given: [0, 0, 0, 0, 1]}, // chest
+//     {reqs: [1, 0, 0, 0, 0], given: [1, 0, 0, 0, -1]} // bracelet
+// ]));
 
-const edgeCase = [
-    {cost: [0, 0, 0, 0, 0], given: [-7, -7, -7, -7, -7]}, // TODO: case returning 49 62 0 0 62 instead of 49 62 0 0 59
-    {cost: [0, 60, 0, 0, 60], given: [0, 12, 0, 0, 12]},
-    {cost: [0, 45, 0, 0, 55], given: [0, 0, 0, 0, 0]},
-    {cost: [40, 70, 0, 0, 0], given: [13, 0, -50, 0, 0]},
-    {cost: [55, 0, 0, 0, 55], given: [0, 3, 2, 3, 0]},
-    {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
-    {cost: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 3]},
-    {cost: [0, 0, 0, 0, 20], given: [0, 5, 0, 0, 5]}
-];
-const edgeCaseSP = [49, 62, 0, 0, 59];
-
-// console.log(properValidate(edgeCaseSP, edgeCase));
-//
-// const orderedIndexes = [3, 5, 6, 7, 2, 1, 0, 4];
-// for (let i = 0; i < orderedIndexes.length; i++) {
-//     const equippedItems = edgeCase.filter((x, j) => orderedIndexes.indexOf(j) <= i);
-//     if (!wynnValidate(edgeCaseSP, equippedItems)) console.log(`failed at ${i}`)
-//     else console.log(`succeeded at ${i}`)
-// }
-console.log(wynnValidate([49, 60, 0, 0, 60], edgeCase));
+testOptimizer(WEOMinimizer, testCases);

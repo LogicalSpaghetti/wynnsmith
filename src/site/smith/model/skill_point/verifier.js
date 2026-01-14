@@ -1,30 +1,38 @@
 import permuteOrders from "../../../common/permutation.js";
+import {sp_indexes} from "./skill_points.js";
 
 // TODO: set bonuses
 
 let validations;
 let checks;
+let branches = 0;
+export function increaseBranchCount() {
+    branches++;
+    return branches;
+}
 
 export function testOptimizer(solverFunction, testCases) {
+    console.log(`Testing optimizer function: ${solverFunction.name}`);
     for (const inputItems of testCases) {
-        validations = 0;
         checks = 0;
+        branches = 0;
 
         const t1 = performance.now();
         const result = solverFunction(inputItems);
         const t2 = performance.now();
-        const resultChecks = checks;
-        const resultValidations = validations;
 
         const valid = properValidate(result.assignedSP, inputItems);
+        const softValid = wynnValidate(result.assignedSP, inputItems);
 
-        console.log(result, valid ?? "Invalid ");
-        console.log("Elapsed: (ms)", t2 - t1, "validations:", resultValidations, "checks:", resultChecks);
+        console.log("assigned SP:", result.assignedSP);
+        console.log(valid ? "Valid" : "No valid equip order!");
+        if (!valid) console.log(softValid ? "Passes WEO" : "Fails WEO");
+        console.log("Elapsed: (ms)", t2 - t1, "branches:", branches);
     }
 }
 
 export function properValidate(assigned, items) {
-    let order = false;
+    let order;
 
     function tryOrder(orderedIndexes) {
         if (order) return;
@@ -67,15 +75,15 @@ export function wynnValidate(assigned, items) {
     if (usable.includes(false)) return false;
 
     for (let i = 0; i < items.length; i++)
-        if (!itemCanEquip(items[i], assigned, given.map((x, j) => x - items[i].given[j])))
+        if (!itemCanEquip(items[i], assigned, given, true))
             return false;
 
     return true;
 }
 
-export function itemCanEquip(item, assignedSP, givenSP) {
+export function itemCanEquip(item, assignedSP, givenSP, subtractItemSP = false) {
     checks++;
-    for (let i = 0; i < item.cost.length; i++)
-        if (item.cost[i] > 0 && item.cost[i] - assignedSP[i] - givenSP[i] > 0) return false;
+    for (let i = 0; i < sp_indexes; i++)
+        if (item.reqs[i] > 0 && item.reqs[i] > assignedSP[i] + givenSP[i] - (subtractItemSP ? item.given[i] : 0)) return false;
     return true;
 }

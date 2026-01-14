@@ -1,8 +1,9 @@
 import {damageTypePrefixes} from "../../../../data/small_stuff.js";
 
+export const sp_indexes = 5;
 const sp_cap = 150;
 
-const spMultipliers = [
+const sp_multipliers = [
     0,
     0.00989964625160766,
     0.0197155089482952,
@@ -167,10 +168,10 @@ export const SkillPointIndexes = Object.freeze({
     Agility: 4
 });
 
-export function getSkillPointMultiplier(points, i) {
-    let mlt = spMultipliers[capSkillPoint(points)];
-    if (i === SkillPointIndexes.Defence) mlt *= 0.867;
-    if (i === SkillPointIndexes.Agility) mlt *= 0.951;
+export function getSkillPointMultiplier(points, index) {
+    let mlt = sp_multipliers[capSkillPoint(points)];
+    if (index === SkillPointIndexes.Defence) mlt *= 0.867;
+    if (index === SkillPointIndexes.Agility) mlt *= 0.951;
 
     return mlt;
 }
