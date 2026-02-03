@@ -1,0 +1,47 @@
+[
+  {
+    "dropMeta": {
+      "name": "The Qira Hive",
+      "coordinates": [
+        373,
+        64,
+        -5497
+      ],
+      "type": "boss"
+    },
+    "armourMaterial": "leather",
+    "internalName": "Inhibitor",
+    "dropRestriction": "never",
+    "requirements": {
+      "level": 100
+    },
+    "armourColor": "rgb(160,101,64)",
+    "name": "Inhibitor",
+    "restrictions": "untradable",
+    "subType": "chestplate",
+    "type": "armour",
+    "identifications": {
+      "spellDamage": {
+        "min": -390,
+        "max": -210
+      },
+      "mainAttackDamage": {
+        "min": -390,
+        "max": -210
+      },
+      "rawSpellDamage": {
+        "min": -5200,
+        "max": -2800
+      },
+      "manaRegen": {
+        "min": -23,
+        "max": -12
+      },
+      "rawMainAttackDamage": {
+        "min": -6500,
+        "max": -3500
+      }
+    },
+    "rarity": "fabled"
+  }
+]

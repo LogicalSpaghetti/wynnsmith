@@ -3,83 +3,103 @@ import file.readStringFromFile
 import file.writeStringToFile
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.Integer.parseInt
-import kotlin.math.max
 
 fun item() {
     // get the new state of each item
-    val apiItems = getJSONFromAPI("https://api.wynncraft.com/v3/item/database?fullResult")
-    writeStringToFile("database/api/items.json", apiItems.toString())
+    val apiObject = getJSONFromAPI("https://api.wynncraft.com/v3/item/database?fullResult")
+    writeStringToFile("database/api/items.json", apiObject.toString())
 
-    transposeSubtyping(apiItems)
-    addNameToItems(apiItems)
+    val apiItems = apiToArray(apiObject)
 
-    val itemData = JSONObject(readStringFromFile("database/items.json"))
-    val groupData = JSONObject(readStringFromFile("database/groups.json"))
-    // major ids are in an array since the descriptions have to be manually updated, and this is just to auto-index them.
+    val nonApiItems = JSONArray(readStringFromFile("database/manually_added.json"))
+    val itemData = JSONArray(readStringFromFile("database/items.json"))
+    val groupIndexes = JSONObject(readStringFromFile("database/group_indexes.json"))
     val majorIds = JSONArray(readStringFromFile("database/majorIds.json"))
 
-    var nextIndex: Int = parseInt(
-        itemData.names()
-            .reduce { x, y ->
-                max(parseInt(x as String), parseInt(y as String)).toString()
-            } as String) + 1
-    for (fakeName in apiItems.names()) {
-        val item = apiItems.getJSONObject(fakeName as String)
-        val internalName = item.getString("internalName")
+    removeItems(apiItems, nonApiItems, itemData, groupIndexes)
 
-        val id = parseInt(
-            itemData.names().find { id ->
-                itemData.getJSONObject(id as String).getString("internalName") == internalName
-            } as String?
-                ?: nextIndex.toString())
-        itemData.put(id.toString(), item)
-        if (id == nextIndex) nextIndex++
-
-        for (groupTag in arrayOf("type", "subType")) {
-            if (!item.has(groupTag)) continue
-            val group = item.getString(groupTag)
-            if (!groupData.has(group)) groupData.put(group, JSONArray())
-            val groupArray = groupData.getJSONArray(group)
-            if (groupArray.indexOf(internalName) == -1) groupArray.put(internalName)
-        }
-
-        if (item.has("majorIds")) {
-            for (majorId in item.getJSONObject("majorIds").names())
-                if (majorIds.indexOf(majorId as String) == -1) majorIds.put(majorId)
-
-            item.put("majorIds", item.getJSONObject("majorIds").names().map {name -> majorIds.indexOf(name)})
-        }
-    }
+    for (item in nonApiItems)
+        addItem(item as JSONObject, itemData, groupIndexes, majorIds)
+    for (item in apiItems)
+        addItem(item, itemData, groupIndexes, majorIds)
 
     writeStringToFile("database/items.json", "$itemData")
     writeStringToFile("database/js/items.js", "export default $itemData")
     writeStringToFile("database/formatted/items.json", itemData.toString(2))
-    writeStringToFile("database/groups.json", "$groupData")
-    writeStringToFile("database/js/groups.js", "export default $groupData")
-    writeStringToFile("database/formatted/groups.json", groupData.toString(2))
+    writeStringToFile("database/group_indexes.json", "$groupIndexes")
+    writeStringToFile("database/js/group_indexes.js", "export default $groupIndexes")
+    writeStringToFile("database/formatted/group_indexes.json", groupIndexes.toString(2))
     writeStringToFile("database/majorIds.json", "$majorIds")
     writeStringToFile("database/formatted/majorIds.json", majorIds.toString(2))
 }
 
-fun addNameToItems(allItems: JSONObject) {
-    for (itemName in allItems.names())
-        allItems.getJSONObject(itemName as String).put("name", itemName)
-}
+fun removeItems(apiItems: List<JSONObject>, nonApiItems: JSONArray, itemData: JSONArray, groupIndexes: JSONObject) {
+    val apiNames = apiItems.map { item -> item.getString("internalName") }
+    val nonApiNames = nonApiItems.map { item -> (item as JSONObject).getString("internalName") }
 
-fun transposeSubtyping(allItems: JSONObject) {
-    for (name in allItems.names()) {
-        val item = allItems.getJSONObject(name as String?)
-        item.put("name", name)
-
-        // reformat the subtype
-        if (item.has("type")) {
-            val subType = "${item.getString("type")}Type"
-
-            if (item.has(subType)) {
-                item.put("subType", item.getString(subType))
-                item.remove(subType)
-            }
+    for (i in 0..<itemData.length()) {
+        val item = itemData.getJSONObject(i)
+        val itemName = item.getString("internalName")
+        if (apiNames.indexOf(itemName) > -1 || nonApiNames.indexOf(itemName) > -1) continue
+        itemData.put(i, JSONObject.NULL)
+        for (groupKey in arrayOf("type", "subType")) {
+            if (!item.has(groupKey)) continue
+            val group = groupIndexes.getJSONArray(item.getString(groupKey))
+            val nameIndex = group.indexOf(itemName)
+            if (nameIndex != -1)
+                group.put(nameIndex, JSONObject.NULL)
         }
     }
+}
+
+fun addItem(item: JSONObject, itemData: JSONArray, groupIndexes: JSONObject, majorIds: JSONArray) {
+    val internalName = item.getString("internalName")
+
+    // adding to itemData
+    var index = itemData.indexOf { x: JSONObject -> x.getString("internalName") == internalName }
+    if (index < 0) index = itemData.length()
+    itemData.put(index, item)
+
+    // adding to groupIndexes
+    for (groupKey in arrayOf("type", "subType")) {
+        if (!item.has(groupKey)) continue
+        val groupName = item.getString(groupKey)
+        if (!groupIndexes.has(groupName)) groupIndexes.put(groupName, JSONArray())
+        val groupArray = groupIndexes.getJSONArray(groupName)
+        if (groupArray.indexOf(internalName) == -1)
+            groupArray.put(internalName)
+    }
+
+    // adding to and updating majorIds
+    if (item.has("majorIds")) {
+        val itemMajorIds = item.getJSONObject("majorIds")
+        for (majorIdName in itemMajorIds.names()) {
+            majorIdName as String
+            var index = majorIds.indexOfFirst { majorId -> (majorId as JSONObject).getString("name") == majorIdName }
+            if (index == -1) {
+                index = majorIds.length()
+                majorIds.put(
+                    JSONObject().put("name", majorIdName).put("description", "§kMajor Id Description incomplete!")
+                )
+            }
+            majorIds.getJSONObject(index).put("apiDescription", itemMajorIds.getString(majorIdName)
+                .replace("(<[^>]*>)|(\\+[^:]*: )".toRegex(), ""))
+        }
+    }
+}
+
+fun apiToArray(apiObject: JSONObject): List<JSONObject> {
+    return apiObject.names()
+        .map { name ->
+            val item = apiObject.getJSONObject(name as String).put("name", name)
+            if (!item.has("type")) return@map item
+
+            val subType = "${item.getString("type")}Type"
+            if (!item.has(subType)) return@map item
+
+            item.put("subType", item.getString(subType))
+            item.remove(subType)
+
+            return@map item
+        }
 }

@@ -3453,6 +3453,37 @@
       "rarity": "mythic",
       "requiredClass": "archer"
     },
+    "Aspect of Extreme Firepower": {
+      "tiers": {
+        "1": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+0.5<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
+          "threshold": 1
+        },
+        "2": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+0.85<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
+          "threshold": 5
+        },
+        "3": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+1.2<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
+          "threshold": 30
+        },
+        "4": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+1.5<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
+          "threshold": 150
+        }
+      },
+      "name": "Aspect of Extreme Firepower",
+      "icon": {
+        "format": "attribute",
+        "value": {
+          "customModelData": {"rangeDispatch": [208]},
+          "name": "abilityTree.aspectArcher",
+          "id": "minecraft:potion"
+        }
+      },
+      "rarity": "legendary",
+      "requiredClass": "archer"
+    },
     "Aspect of Further Horizons": {
       "tiers": {
         "1": {
@@ -3493,37 +3524,6 @@
         }
       },
       "name": "Aspect of Further Horizons",
-      "icon": {
-        "format": "attribute",
-        "value": {
-          "customModelData": {"rangeDispatch": [208]},
-          "name": "abilityTree.aspectArcher",
-          "id": "minecraft:potion"
-        }
-      },
-      "rarity": "legendary",
-      "requiredClass": "archer"
-    },
-    "Aspect of Extreme Firepower": {
-      "tiers": {
-        "1": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+0.5<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
-          "threshold": 1
-        },
-        "2": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+0.85<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
-          "threshold": 5
-        },
-        "3": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+1.2<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
-          "threshold": 30
-        },
-        "4": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Arrow Bomb<span class='font-ascii' style='color:#AAAAAA'> gains <\/span><span class='font-ascii' style='color:#FFFFFF'>+1.5<\/span><span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span><\/span>"],
-          "threshold": 150
-        }
-      },
-      "name": "Aspect of Extreme Firepower",
       "icon": {
         "format": "attribute",
         "value": {

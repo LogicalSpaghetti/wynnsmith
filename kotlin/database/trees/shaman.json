@@ -3362,6 +3362,49 @@
       "rarity": "fabled",
       "requiredClass": "shaman"
     },
+    "Aspect of Reverberation": {
+      "tiers": {
+        "1": {
+          "description": [
+            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
+            "<span class='font-ascii' style='color:#FFFFFF'>+1.25<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
+          ],
+          "threshold": 1
+        },
+        "2": {
+          "description": [
+            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
+            "<span class='font-ascii' style='color:#FFFFFF'>+2.25<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
+          ],
+          "threshold": 5
+        },
+        "3": {
+          "description": [
+            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
+            "<span class='font-ascii' style='color:#FFFFFF'>+3.25<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
+          ],
+          "threshold": 30
+        },
+        "4": {
+          "description": [
+            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
+            "<span class='font-ascii' style='color:#FFFFFF'>+4<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
+          ],
+          "threshold": 150
+        }
+      },
+      "name": "Aspect of Reverberation",
+      "icon": {
+        "format": "attribute",
+        "value": {
+          "customModelData": {"rangeDispatch": [214]},
+          "name": "abilityTree.aspectShaman",
+          "id": "minecraft:potion"
+        }
+      },
+      "rarity": "legendary",
+      "requiredClass": "shaman"
+    },
     "Aspect of Lashing Fire": {
       "tiers": {
         "1": {
@@ -3406,49 +3449,6 @@
         }
       },
       "name": "Aspect of Lashing Fire",
-      "icon": {
-        "format": "attribute",
-        "value": {
-          "customModelData": {"rangeDispatch": [214]},
-          "name": "abilityTree.aspectShaman",
-          "id": "minecraft:potion"
-        }
-      },
-      "rarity": "legendary",
-      "requiredClass": "shaman"
-    },
-    "Aspect of Reverberation": {
-      "tiers": {
-        "1": {
-          "description": [
-            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
-            "<span class='font-ascii' style='color:#FFFFFF'>+1.25<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
-          ],
-          "threshold": 1
-        },
-        "2": {
-          "description": [
-            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
-            "<span class='font-ascii' style='color:#FFFFFF'>+2.25<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
-          ],
-          "threshold": 5
-        },
-        "3": {
-          "description": [
-            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
-            "<span class='font-ascii' style='color:#FFFFFF'>+3.25<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
-          ],
-          "threshold": 30
-        },
-        "4": {
-          "description": [
-            "<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Totemic Smash<span class='font-ascii' style='color:#AAAAAA'> gains<\/span><\/span><\/span>",
-            "<span class='font-ascii' style='color:#FFFFFF'>+4<span class='font-ascii' style='color:#AAAAAA'> <span class='font-ascii' style='color:#00AAAA'><span class='font-common'><\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Area of Effect.<\/span><\/span><\/span><\/span>"
-          ],
-          "threshold": 150
-        }
-      },
-      "name": "Aspect of Reverberation",
       "icon": {
         "format": "attribute",
         "value": {
@@ -3711,37 +3711,6 @@
       "rarity": "legendary",
       "requiredClass": "shaman"
     },
-    "Aspect of Empathy": {
-      "tiers": {
-        "1": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.2%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
-          "threshold": 1
-        },
-        "2": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.3%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
-          "threshold": 5
-        },
-        "3": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.4%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
-          "threshold": 30
-        },
-        "4": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.5%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
-          "threshold": 150
-        }
-      },
-      "name": "Aspect of Empathy",
-      "icon": {
-        "format": "attribute",
-        "value": {
-          "customModelData": {"rangeDispatch": [214]},
-          "name": "abilityTree.aspectShaman",
-          "id": "minecraft:potion"
-        }
-      },
-      "rarity": "legendary",
-      "requiredClass": "shaman"
-    },
     "Aspect of Surging Presence": {
       "tiers": {
         "1": {
@@ -3762,6 +3731,37 @@
         }
       },
       "name": "Aspect of Surging Presence",
+      "icon": {
+        "format": "attribute",
+        "value": {
+          "customModelData": {"rangeDispatch": [214]},
+          "name": "abilityTree.aspectShaman",
+          "id": "minecraft:potion"
+        }
+      },
+      "rarity": "legendary",
+      "requiredClass": "shaman"
+    },
+    "Aspect of Empathy": {
+      "tiers": {
+        "1": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.2%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
+          "threshold": 1
+        },
+        "2": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.3%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
+          "threshold": 5
+        },
+        "3": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.4%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
+          "threshold": 30
+        },
+        "4": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Twisted Tether<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.5%<\/span><span class='font-ascii' style='color:#AAAAAA'> Health lost to activate.<\/span><\/span><\/span>"],
+          "threshold": 150
+        }
+      },
+      "name": "Aspect of Empathy",
       "icon": {
         "format": "attribute",
         "value": {

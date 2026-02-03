@@ -3149,37 +3149,6 @@
       "rarity": "fabled",
       "requiredClass": "warrior"
     },
-    "Aspect of Bovine Inspiration": {
-      "tiers": {
-        "1": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+2% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
-          "threshold": 1
-        },
-        "2": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+3% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
-          "threshold": 5
-        },
-        "3": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+4% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
-          "threshold": 30
-        },
-        "4": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+5% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
-          "threshold": 150
-        }
-      },
-      "name": "Aspect of Bovine Inspiration",
-      "icon": {
-        "format": "attribute",
-        "value": {
-          "customModelData": {"rangeDispatch": [216]},
-          "name": "abilityTree.aspectWarrior",
-          "id": "minecraft:potion"
-        }
-      },
-      "rarity": "legendary",
-      "requiredClass": "warrior"
-    },
     "Aspect of Earthshaking": {
       "tiers": {
         "1": {
@@ -3200,6 +3169,37 @@
         }
       },
       "name": "Aspect of Earthshaking",
+      "icon": {
+        "format": "attribute",
+        "value": {
+          "customModelData": {"rangeDispatch": [216]},
+          "name": "abilityTree.aspectWarrior",
+          "id": "minecraft:potion"
+        }
+      },
+      "rarity": "legendary",
+      "requiredClass": "warrior"
+    },
+    "Aspect of Bovine Inspiration": {
+      "tiers": {
+        "1": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+2% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
+          "threshold": 1
+        },
+        "2": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+3% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
+          "threshold": 5
+        },
+        "3": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+4% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
+          "threshold": 30
+        },
+        "4": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Emboldening Cry<span class='font-ascii' style='color:#AAAAAA'> grants <\/span><span class='font-ascii' style='color:#FFFFFF'>+5% <\/span><span class='font-ascii' style='color:#55FF55'><span class='font-default'><\/span>❁<\/span> <\/span><span class='font-ascii' style='color:#AAAAAA'>Resistance to Allies.<\/span><\/span><\/span>"],
+          "threshold": 150
+        }
+      },
+      "name": "Aspect of Bovine Inspiration",
       "icon": {
         "format": "attribute",
         "value": {
@@ -3333,37 +3333,6 @@
       "rarity": "fabled",
       "requiredClass": "warrior"
     },
-    "Aspect of Overflowing Hope": {
-      "tiers": {
-        "1": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.75% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
-          "threshold": 1
-        },
-        "2": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-1.5% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
-          "threshold": 5
-        },
-        "3": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-2% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
-          "threshold": 30
-        },
-        "4": {
-          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-2.5% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
-          "threshold": 150
-        }
-      },
-      "name": "Aspect of Overflowing Hope",
-      "icon": {
-        "format": "attribute",
-        "value": {
-          "customModelData": {"rangeDispatch": [216]},
-          "name": "abilityTree.aspectWarrior",
-          "id": "minecraft:potion"
-        }
-      },
-      "rarity": "legendary",
-      "requiredClass": "warrior"
-    },
     "Aspect of Maniacal Frisson": {
       "tiers": {
         "1": {
@@ -3384,6 +3353,37 @@
         }
       },
       "name": "Aspect of Maniacal Frisson",
+      "icon": {
+        "format": "attribute",
+        "value": {
+          "customModelData": {"rangeDispatch": [216]},
+          "name": "abilityTree.aspectWarrior",
+          "id": "minecraft:potion"
+        }
+      },
+      "rarity": "legendary",
+      "requiredClass": "warrior"
+    },
+    "Aspect of Overflowing Hope": {
+      "tiers": {
+        "1": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-0.75% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
+          "threshold": 1
+        },
+        "2": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-1.5% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
+          "threshold": 5
+        },
+        "3": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-2% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
+          "threshold": 30
+        },
+        "4": {
+          "description": ["<span class='font-ascii' style='color:#AAAAAA'><span class='font-ascii' style='text-decoration: underline'>Sparkling Hope<span class='font-ascii' style='color:#AAAAAA'> requires <\/span><span class='font-ascii' style='color:#FFFFFF'>-2.5% <\/span><span class='font-ascii' style='color:#AAAAAA'>healing to activate.<\/span><\/span><\/span>"],
+          "threshold": 150
+        }
+      },
+      "name": "Aspect of Overflowing Hope",
       "icon": {
         "format": "attribute",
         "value": {
