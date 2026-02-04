@@ -1,55 +1,37 @@
-# copied from https://medium.com/@irina.grigoryan97/automatically-deploy-files-from-github-to-a-server-using-sftp-and-github-actions-d1c7761f5d97
-
-# This is a basic workflow to upload files
-# from GitHub to server via GitHub Actions
 name: Update personal website with changes.
 
-# Controls when the workflow will run
 on:
-    # Triggers the workflow on push request event
-    # but only for the specific branch
-    push:
-        branches: [main]
+  push:
+    branches: [main]
 
-# A workflow run is made up of one or more jobs
-# that can run sequentially or in parallel
 jobs:
-    # This workflow contains a single job called "SFTP-Deploy-Action"
-    SFTP-Deploy-Action:
-        name: SFTP-Deploy-Action
+  SFTP-Deploy-Action:
+    runs-on: ubuntu-latest
 
-        # The type of runner that the job will run on
-        # (depends on server but usually this value is works)
-        runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        # Steps represent a sequence of tasks
-        # that will be executed as part of the job
-        steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE,
-            # so your job can access it
-            - name: Checkout
-              uses: actions/checkout@v3
-              with:
-                  # Fetch all history for all tags and branches
-                  fetch-depth: 0
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
 
-                  # Checkout a specific branch
-                  ref: main
+      - name: Install dependencies
+        run: npm ci
 
-            # This is a composite GitHub Action (Linux runner)
-            # for deploying repository content to remote server
-            - name: SFTP-Deploy-Action
-              uses: milanmk/actions-file-deployer@master
-              with:
-                  remote-protocol: sftp
+      - name: Build Vite site
+        run: npm run build
 
-                  # Credentials for SFTP access to server using GitHub secrets
-                  remote-host: ${{ secrets.FTP_HOST }}
-                  remote-user: ${{ secrets.FTP_USER }}
-                  remote-password: ${{ secrets.FTP_PASSWORD }}
+      - name: SFTP-Deploy-Action
+        uses: milanmk/actions-file-deployer@master
+        with:
+          remote-protocol: sftp
+          remote-host: ${{ secrets.FTP_HOST }}
+          remote-user: ${{ secrets.FTP_USER }}
+          remote-password: ${{ secrets.FTP_PASSWORD }}
 
-                  # Path for specific folder on server for files deployment
-                  remote-path: /wynnsmith
-
-                  # Port for SFTP access to server
-                  remote-port: 22
+          local-path: dist # compiled output
+          remote-path: /wynnsmith
+          remote-port: 22

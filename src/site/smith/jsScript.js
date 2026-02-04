@@ -1,4 +1,4 @@
-import {preLoadAssets} from "./control/preloading.js";
+// import {preLoadAssets} from "./control/preloading.ts";
 import {addInputListeners} from "./control/listener/input_listeners.js";
 import {addSettingsListeners} from "./control/listener/settings_listeners.js";
 import {testSP} from "./model/skill_point/skill_points.test.js";
@@ -7,9 +7,7 @@ import {testSP} from "./model/skill_point/skill_points.test.js";
 window.addEventListener("load", loadSite);
 
 function loadSite() {
-    console.log("loadSite");
-    // noinspection JSIgnoredPromiseFromCall
-    preLoadAssets();
+    console.log("loadJS");
     // TODO:
     //  read Link
     //  parse Build from Link
