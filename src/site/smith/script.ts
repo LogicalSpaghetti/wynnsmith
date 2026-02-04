@@ -7,8 +7,7 @@ import {preLoadAssets} from "./control/preloading";
 window.addEventListener("load", loadSite);
 
 function loadSite() {
-    console.log("loadTS");
-    // noinspection JSIgnoredPromiseFromCall
+    console.log("loading project");
     preLoadAssets();
     // TODO:
     //  read Link

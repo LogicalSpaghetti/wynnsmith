@@ -12,45 +12,51 @@ export function increaseBranchCount() {
     return branches;
 }
 
-export function testOptimizer(solverFunction, testCases, verifyOptimal = true) {
-    console.log(`Testing optimizer function: ${solverFunction.name} ${verifyOptimal ? "and comparing against exact results" : ""}`);
-    for (const inputItems of testCases) {
-        checks = 0;
-        branches = 0;
+// TODO: test returned order
+export function testOptimizerPerformance(solverFunction, inputItems, verifyOptimal = true) {
+    checks = 0;
+    branches = 0;
 
-        const t1 = performance.now();
-        const result = solverFunction(inputItems);
-        const t2 = performance.now();
-        // console.log(result.assignedSP)
+    const result = solverFunction(inputItems);
 
-        const valid = properValidate(result.assignedSP, inputItems);
-        const softValid = wynnValidate(result.assignedSP, inputItems);
+    const valid = properValidate(result.assignedSP, inputItems);
+    const softValid = wynnValidate(result.assignedSP, inputItems);
 
-        if (valid) {
-            if (verifyOptimal) {
-                const minimumAssigned = minimizeRequiredSP(inputItems).assignedSP;
-                const trueMinimum = minimumAssigned.reduce((a, b) => a + b);
-                const resultMinimum = result.assignedSP.reduce((a, b) => a + b);
-                if (resultMinimum < trueMinimum)
-                    console.log(`Error! function "${solverFunction.name}" somehow found a solution better than the perfect optimizer!`);
-                else if (resultMinimum > trueMinimum)
-                    console.log(`Failure! Generated ${JSON.stringify(result.assignedSP)} (${resultMinimum}) when the optimal result is ${JSON.stringify(minimumAssigned)} (${trueMinimum})`);
-            }
-            console.log("Success", "Elapsed: (ms)", t2 - t1, "branches:", branches);
-        } else if (softValid) {
-            if (verifyOptimal) {
-                const minimalWEO = WEOMinimizer(inputItems).assignedSP;
-                const minimumTotal = minimalWEO.reduce((a, b) => a + b);
-                const resultMinimum = result.assignedSP.reduce((a, b) => a + b);
-                if (resultMinimum < minimumTotal)
-                    console.log(`Error! function "${solverFunction.name}" somehow found a WEO solution better than the perfect WEO!`);
-                else if (resultMinimum > minimumTotal)
-                    console.log(`Failure! Generated ${JSON.stringify(result.assignedSP)} (${resultMinimum}) when the optimal WEO is ${JSON.stringify(minimalWEO)} (${minimumTotal})`);
-            }
-            console.log(`Invalid, Passes WEO`);
-        } else
-            console.log(`Failure for function "${solverFunction.name}", assigned SP:`, result.assignedSP);
+    if (valid) {
+        if (!verifyOptimal) return true;
+        const minimumAssigned = minimizeRequiredSP(inputItems).assignedSP;
+        const trueMinimum = minimumAssigned.reduce((a, b) => a + b);
+        const resultMinimum = result.assignedSP.reduce((a, b) => a + b);
+        if (resultMinimum < trueMinimum)
+            console.log(`Error! function "${solverFunction.name}" somehow found a solution better than the perfect optimizer!`);
+        else if (resultMinimum > trueMinimum)
+            console.log(`Failure! Generated ${JSON.stringify(result.assignedSP)} (${resultMinimum}) when the optimal result is ${JSON.stringify(minimumAssigned)} (${trueMinimum})`);
     }
+    if (softValid) {
+        if (verifyOptimal) {
+            const minimalWEO = WEOMinimizer(inputItems).assignedSP;
+            const minimumTotal = minimalWEO.reduce((a, b) => a + b);
+            const resultMinimum = result.assignedSP.reduce((a, b) => a + b);
+            if (resultMinimum < minimumTotal)
+                console.log(`Error! function "${solverFunction.name}" somehow found a WEO solution better than the perfect WEO!`);
+            else if (resultMinimum > minimumTotal)
+                console.log(`Failure! Generated ${JSON.stringify(result.assignedSP)} (${resultMinimum}) when the optimal WEO is ${JSON.stringify(minimalWEO)} (${minimumTotal})`);
+        }
+        console.log(`Invalid, Passes WEO`);
+    } else
+        console.log(`Failure for function "${solverFunction.name}", assigned SP:`, result.assignedSP);
+}
+
+export function testOptimizer(solverFunction, inputItems, verify, verifyOptimal = true) {
+    const result = solverFunction(inputItems);
+
+    const valid = properValidate(result.assignedSP, inputItems);
+    const weoValid = wynnValidate(result.assignedSP, inputItems);
+
+    return valid ? verifyOptimal ? optimalVerification(result.assignedSP, inputItems) : true
+        : weoValid ? verifyOptimal ? weoVerification(result.assignedSP, inputItems)
+                : `Invalid assignment ${JSON.stringify(result.assignedSP)}, Passes WEO`
+            : `Complete failure of assignment ${JSON.stringify(result.assignedSP)}`;
 }
 
 export function properValidate(assigned, items) {
@@ -71,8 +77,23 @@ export function properValidate(assigned, items) {
     return order;
 }
 
-let given = new Int16Array(5);
+function optimalVerification(assignedSP, inputItems) {
+    const minimumAssigned = minimizeRequiredSP(inputItems).assignedSP;
+    const trueMinimum = minimumAssigned.reduce((a, b) => a + b);
+    const resultMinimum = assignedSP.reduce((a, b) => a + b);
+    return resultMinimum === trueMinimum ? true
+        : `Failure! Generated ${JSON.stringify(assignedSP)} (${resultMinimum}) when the optimal result is ${JSON.stringify(minimumAssigned)} (${trueMinimum})`;
+}
 
+function weoVerification(assignedSP, inputItems) {
+    const minimalWEO = WEOMinimizer(inputItems).assignedSP;
+    const minimumTotal = minimalWEO.reduce((a, b) => a + b);
+    const resultMinimum = assignedSP.reduce((a, b) => a + b);
+    return resultMinimum === minimumTotal ? `Failure! Passed WEO but failed order verification`
+        : `Failure! Generated ${JSON.stringify(assignedSP)} (${resultMinimum}) when the optimal WEO is ${JSON.stringify(minimalWEO)} (${minimumTotal})`;
+}
+
+let given = new Int16Array(5);
 
 // TODO: Set Bonuses
 export function wynnValidate(assigned, items) {

@@ -1,6 +1,6 @@
-import {itemCanEquip, testOptimizer} from "./verifier.js";
-import {WEOMinimizer} from "./weo_minimizer.js";
+import {testOptimizer} from "./verifier.js";
 import {minimizeRequiredSP} from "./minimizer.js";
+import {expect, test} from 'vitest';
 
 const testCases = [[
     {reqs: [8, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
@@ -11,7 +11,7 @@ const testCases = [[
     {reqs: [3, 3, 3, 3, 3], given: [1, 1, 1, 1, 1]},
     {reqs: [2, 2, 2, 2, 2], given: [1, 1, 1, 1, 1]},
     {reqs: [1, 1, 1, 1, 1], given: [1, 1, 1, 1, 1]},
-    {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]}
+    {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
 ], [
     {reqs: [18, 0, 0, 0, 0], given: [0, 0, 0, 1, 0]},
     {reqs: [7, 7, 0, 0, 0], given: [1, 1, 1, 1, 1]},
@@ -21,7 +21,7 @@ const testCases = [[
     {reqs: [3, 3, 7, 3, 3], given: [3, 0, 0, 1, 1]},
     {reqs: [2, 2, 2, 20, 2], given: [1, 1, 1, 1, 1]},
     {reqs: [1, 1, 1, 1, 8], given: [1, 1, 1, 1, 1]},
-    {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]}
+    {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
 ], [
     {reqs: [1, 4, 0, 0, 0], given: [2, 1, 0, 0, 0]},
     {reqs: [0, 0, 3, 1, 0], given: [0, 0, 0, 3, 0]},
@@ -31,10 +31,10 @@ const testCases = [[
     {reqs: [0, 0, 1, 0, 0], given: [0, 0, 1, 0, 0]},
     {reqs: [0, 0, 0, 1, 0], given: [0, 0, 0, 1, 0]},
     {reqs: [0, 1, 0, 0, 7], given: [0, 1, 0, 0, 0]},
-    {reqs: [5, 8, 0, 0, 0], given: [0, 0, 3, 0, 1]}
+    {reqs: [5, 8, 0, 0, 0], given: [0, 0, 3, 0, 1]},
 ], [
     {reqs: [2, 0, 0, 0, 0], given: [0, -10, 0, 0, 0]},
-    {reqs: [0, 2, 0, 0, 0], given: [0, 10, 0, 0, 0]}
+    {reqs: [0, 2, 0, 0, 0], given: [0, 10, 0, 0, 0]},
 ], [
     {reqs: [0, 0, 0, 0, 60], given: [0, 20, 0, 0, 0]},
     {reqs: [40, 40, 0, 40, 40], given: [0, 0, -20, 0, 0]},
@@ -43,7 +43,7 @@ const testCases = [[
     {reqs: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
     {reqs: [0, 0, 0, 0, 0], given: [1, 1, 1, 1, 1]},
     {reqs: [0, 100, 0, 0, 0], given: [0, 60, 0, 0, 0]},
-    {reqs: [0, 0, 0, 0, 0], given: [3, 3, 3, 3, 3]}
+    {reqs: [0, 0, 0, 0, 0], given: [3, 3, 3, 3, 3]},
 ], [
     {reqs: [0, 0, 0, 0, 0], given: [-7, -7, -7, -7, -7]},
     {reqs: [0, 60, 0, 0, 60], given: [0, 12, 0, 0, 12]},
@@ -52,24 +52,25 @@ const testCases = [[
     {reqs: [55, 0, 0, 0, 55], given: [0, 3, 2, 3, 0]},
     {reqs: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 0]},
     {reqs: [0, 0, 0, 0, 0], given: [0, 0, 0, 0, 3]},
-    {reqs: [0, 0, 0, 0, 20], given: [0, 5, 0, 0, 5]}
+    {reqs: [0, 0, 0, 0, 20], given: [0, 5, 0, 0, 5]},
 ], [
     {reqs: [4, 0, 0, 0, 0], given: [10, 0, 0, 0, 0]},
     {reqs: [4, 0, 0, 0, 0], given: [10, 0, 0, 0, 0]},
     {reqs: [0, 0, 0, 0, 0], given: [-7, 0, 0, 0, 0]},
-    {reqs: [0, 0, 0, 0, 0], given: [4, 0, 0, 0, 0]}
+    {reqs: [0, 0, 0, 0, 0], given: [4, 0, 0, 0, 0]},
 ], [
     {reqs: [50, 0, 0, 0, 40], given: [9, 0, 0, 0, 8]}, // leggings
     {reqs: [75, 0, 0, 0, 0], given: [0, 0, 0, 0, 10]}, // chest
-    {reqs: [50, 0, 0, 0, 0], given: [7, 0, 0, 0, -3]} // bracelet
+    {reqs: [50, 0, 0, 0, 0], given: [7, 0, 0, 0, -3]}, // bracelet
 ], [
     {reqs: [1, 0, 0, 0, 1], given: [1, 0, 0, 0, 1]}, // leggings
     {reqs: [3, 0, 0, 0, 0], given: [0, 0, 0, 0, 1]}, // chest
-    {reqs: [1, 0, 0, 0, 0], given: [1, 0, 0, 0, -1]} // bracelet
-]
+    {reqs: [1, 0, 0, 0, 0], given: [1, 0, 0, 0, -1]}, // bracelet
+],
 ];
 
-export function testSP() {
-    // testOptimizer(minimizeRequiredSP, testCases, true);
-    // testOptimizer(WEOMinimizer, testCases, false);
-}
+test('resting SP optimizers', () => {
+    for (const inputItems of testCases) {
+        expect(testOptimizer(minimizeRequiredSP, inputItems, true)).toBe(true)
+    }
+});

@@ -99,19 +99,14 @@ const abilityImages = [
     "aspect/warrior.png",
 ];
 
-// TODO: likely way too bloated and may not even need async
-export async function preLoadAssets() {
-    console.log("preload assets!");
+const prefix = "./assets/img/";
 
-    const prefix = "./img/";
-    await Promise.all(abilityImages.map(x => preloadImage(prefix + x)));
-}
+export function preLoadAssets() {
+    console.log("preloading images");
 
-function preloadImage(src: string) {
-    return new Promise((resolve, reject) => {
+    abilityImages.forEach(x => {
         const image = new Image();
-        image.onload = resolve;
-        image.onerror = reject;
-        image.src = src;
+        image.onerror = () => console.log("error loading image: ", x);
+        image.src = prefix + x;
     });
 }
