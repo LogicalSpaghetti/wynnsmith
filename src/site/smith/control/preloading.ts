@@ -103,7 +103,7 @@ const abilityImages = [
 export async function preLoadAssets() {
     console.log("preload assets!");
 
-    const prefix = "./assets/img/";
+    const prefix = "./img/";
     await Promise.all(abilityImages.map(x => preloadImage(prefix + x)));
 }
 
