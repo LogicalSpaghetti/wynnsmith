@@ -71,6 +71,6 @@ const testCases = [[
 
 test('resting SP optimizers', () => {
     for (const inputItems of testCases) {
-        expect(testOptimizer(minimizeRequiredSP, inputItems, true)).toBe(true)
+        expect(testOptimizer(minimizeRequiredSP, inputItems, true)).toBe(true);
     }
 });

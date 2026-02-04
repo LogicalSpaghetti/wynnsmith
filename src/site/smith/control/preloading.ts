@@ -99,7 +99,7 @@ const abilityImages = [
     "aspect/warrior.png",
 ];
 
-const prefix = "./assets/img/";
+const prefix = "img/";
 
 export function preLoadAssets() {
     console.log("preloading images");
