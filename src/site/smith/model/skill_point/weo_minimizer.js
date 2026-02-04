@@ -28,7 +28,7 @@ export function WEOMinimizer(items, initialAssignedSP = new Int16Array(sp_indexe
 /**
  * @description Given a set of items, follows the Wynncraft Equip Order to find the minimum skill points necessary to assign to equip all items.
  * @param items
- * @param {*} assignedSP
+ * @param {Int16Array} assignedSP
  * @param {*} givenSP
  * @param verify
  * @param currentIndex
@@ -49,42 +49,15 @@ function WEOMinimizerLoop(items, assignedSP = new Int16Array(sp_indexes), givenS
 
             const item = items[currentIndex];
 
-            if (itemCanEquip(item, assignedSP, givenSP)) {
+            if (itemCanEquip(item, assignedSP, givenSP))
                 equipItem();
-            } else {
+            else {
                 increaseBranchCount();
 
-                let loweredBoundBranch;
-                let raisedAssignBranch;
-
-                // Add Upper Bound Branch:
-                const newUpperBound = new Int16Array(sp_indexes);
-                for (let i = 0; i < sp_indexes; i++) if (item.reqs[i] > 0 && item.reqs[i] > assignedSP[i] + givenSP[i])
-                    newUpperBound[i] = item.reqs[i] - givenSP[i] - 1; // TODO: what if the item's req is 1 away from the current assigned+given?
-                loweredBoundBranch = WEOMinimizerLoop(items, [...assignedSP], [...givenSP], verify, currentIndex + 1, [...equipped], [...upperBounds, newUpperBound]);
-
-                // Raise Assigned Branch:
-                const newAssigned = new Int16Array(sp_indexes);
-                for (let i = 0; i < sp_indexes; i++)
-                    newAssigned[i] = Math.max(assignedSP[i], item.reqs[i] - givenSP[i]);
-                let validAssigned = true;
-                for (let i = 0; i < upperBounds.length; i++)
-
-                    if (validAssigned) {
-                        for (let j = 0; j < sp_indexes; j++)
-                            // invalid only if all checks are false
-                            if (upperBounds[i][j] >= newAssigned[j]) break;
-                        validAssigned = false;
-                    }
-
-                if (validAssigned)
-                    raisedAssignBranch = WEOMinimizerLoop(items, newAssigned, [...givenSP], verify, currentIndex, [...equipped], [...upperBounds]);
-
-                if (!loweredBoundBranch) return raisedAssignBranch;
-                if (!raisedAssignBranch) return loweredBoundBranch;
-                const loweredExcess = loweredBoundBranch.assignedSP.reduce((x, y) => x + y) - raisedAssignBranch.assignedSP.reduce((x, y) => x + y);
-                if (loweredExcess <= 0) return loweredBoundBranch;
-                return raisedAssignBranch;
+                return minimalBranch(
+                    addUpperBound(item, items, assignedSP, givenSP, verify, currentIndex, equipped, upperBounds),
+                    raiseAssigned(item, items, assignedSP, givenSP, verify, currentIndex, equipped, upperBounds),
+                );
             }
         }
     }
@@ -98,4 +71,35 @@ function WEOMinimizerLoop(items, assignedSP = new Int16Array(sp_indexes), givenS
         for (let i = 0; i < sp_indexes; i++)
             givenSP[i] += items[currentIndex].given[i];
     }
+}
+
+function minimalBranch(a, b) {
+    if (!a) return b;
+    if (!b) return a;
+    const aPar = a.assignedSP.reduce((a, b) => a + b) - b.assignedSP.reduce((a, b) => a + b);
+    return aPar < 0 ? a : b;
+}
+
+function addUpperBound(item, items, assignedSP, givenSP, verify, currentIndex, equipped, upperBounds) {
+    const newUpperBound = item.reqs.map((req, i) =>
+        (req > 0 && req > assignedSP[i] + givenSP[i])
+            ? req - givenSP[i] - 1 : -1);
+    return WEOMinimizerLoop(items, [...assignedSP], [...givenSP], verify, currentIndex + 1, [...equipped], [...upperBounds, newUpperBound]);
+}
+
+function raiseAssigned(item, items, assignedSP, givenSP, verify, currentIndex, equipped, upperBounds) {
+    const newAssigned = item.reqs.map((req, i) => {
+        return req === 0 ? assignedSP[i] : Math.max(assignedSP[i], req - givenSP[i]);
+    });
+
+    boundLoop: for (let i = 0; i < upperBounds.length; i++) {
+        for (let j = 0; j < sp_indexes; j++) {
+            if (upperBounds[i][j] === -1) continue;
+            if (upperBounds[i][j] >= newAssigned[j])
+                continue boundLoop;
+        }
+        return null;
+    }
+
+    return WEOMinimizerLoop(items, newAssigned, [...givenSP], verify, currentIndex, [...equipped], [...upperBounds]);
 }

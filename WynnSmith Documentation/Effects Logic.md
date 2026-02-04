@@ -1,3 +1,4 @@
+
 $$
 \frac{\text{hp}}{2-\text{baseRes\%}}
 *

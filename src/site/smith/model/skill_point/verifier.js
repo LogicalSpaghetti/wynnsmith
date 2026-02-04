@@ -1,18 +1,19 @@
 import permuteOrders from "../../../common/permutation.js";
 import {sp_indexes} from "./skill_points.js";
-
-// TODO: set bonuses
+import {minimizeRequiredSP} from "./minimizer.js";
+import {WEOMinimizer} from "./weo_minimizer.js";
 
 let validations;
 let checks;
 let branches = 0;
+
 export function increaseBranchCount() {
     branches++;
     return branches;
 }
 
-export function testOptimizer(solverFunction, testCases) {
-    console.log(`Testing optimizer function: ${solverFunction.name}`);
+export function testOptimizer(solverFunction, testCases, verifyOptimal = true) {
+    console.log(`Testing optimizer function: ${solverFunction.name} ${verifyOptimal ? "and comparing against exact results" : ""}`);
     for (const inputItems of testCases) {
         checks = 0;
         branches = 0;
@@ -20,14 +21,35 @@ export function testOptimizer(solverFunction, testCases) {
         const t1 = performance.now();
         const result = solverFunction(inputItems);
         const t2 = performance.now();
+        // console.log(result.assignedSP)
 
         const valid = properValidate(result.assignedSP, inputItems);
         const softValid = wynnValidate(result.assignedSP, inputItems);
 
-        console.log("assigned SP:", result.assignedSP);
-        console.log(valid ? "Valid" : "No valid equip order!");
-        if (!valid) console.log(softValid ? "Passes WEO" : "Fails WEO");
-        console.log("Elapsed: (ms)", t2 - t1, "branches:", branches);
+        if (valid) {
+            if (verifyOptimal) {
+                const minimumAssigned = minimizeRequiredSP(inputItems).assignedSP;
+                const trueMinimum = minimumAssigned.reduce((a, b) => a + b);
+                const resultMinimum = result.assignedSP.reduce((a, b) => a + b);
+                if (resultMinimum < trueMinimum)
+                    console.log(`Error! function "${solverFunction.name}" somehow found a solution better than the perfect optimizer!`);
+                else if (resultMinimum > trueMinimum)
+                    console.log(`Failure! Generated ${JSON.stringify(result.assignedSP)} (${resultMinimum}) when the optimal result is ${JSON.stringify(minimumAssigned)} (${trueMinimum})`);
+            }
+            console.log("Success", "Elapsed: (ms)", t2 - t1, "branches:", branches);
+        } else if (softValid) {
+            if (verifyOptimal) {
+                const minimalWEO = WEOMinimizer(inputItems).assignedSP;
+                const minimumTotal = minimalWEO.reduce((a, b) => a + b);
+                const resultMinimum = result.assignedSP.reduce((a, b) => a + b);
+                if (resultMinimum < minimumTotal)
+                    console.log(`Error! function "${solverFunction.name}" somehow found a WEO solution better than the perfect WEO!`);
+                else if (resultMinimum > minimumTotal)
+                    console.log(`Failure! Generated ${JSON.stringify(result.assignedSP)} (${resultMinimum}) when the optimal WEO is ${JSON.stringify(minimalWEO)} (${minimumTotal})`);
+            }
+            console.log(`Invalid, Passes WEO`);
+        } else
+            console.log(`Failure for function "${solverFunction.name}", assigned SP:`, result.assignedSP);
     }
 }
 
