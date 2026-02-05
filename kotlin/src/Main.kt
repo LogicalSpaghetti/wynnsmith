@@ -1,5 +1,5 @@
 fun main() {
-//    item()
-//    tree()
+    item()
+    tree()
     typeGen()
 }
