@@ -1,7 +1,7 @@
 import * as search from "../../control/item_search.js";
 import {getItemAddedSP} from "../skill_point/skill_points.js";
 import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../../../data/small_stuff.ts";
-import {getPowder} from "./powders.ts";
+import {getPowderData} from "./powders.ts";
 import {addIdsToObject} from "../build/permute.js"; // TODO: move all related from permute.js to here
 
 const radianceExcludedIds = Object.freeze([
@@ -46,7 +46,7 @@ function addBasePlayerStats(build) {
 
 function addPowderDefences(build) {
     for (let equipment of build.equipment) if (equipment)
-        for (let powder of equipment.powders.map(name => getPowder(name))) for (let i in powder.def)
+        for (let powder of equipment.powders.map(name => getPowderData(name))) for (let i in powder.def)
             addBaseToObject(build.base, `base${damageTypeNames[i]}Defence`, powder.def[i]);
 }
 

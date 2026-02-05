@@ -1,33 +1,21 @@
 import {BitReader, decimalToBinary} from "../../../common/numbers.ts";
-import type {CapitalizedElement, ElementalArray} from "../../../../data/small_stuff.ts";
+import {
+    type CapitalizedElement,
+    type ElementalArray,
+    elementTypeCount,
+    type PowderPrefix, powderPrefixes,
+} from "../../../../data/small_stuff.ts";
 
 
-type PowderPrefix = "e" | "t" | "w" | "f" | "a"
-type PowderTier = 0 | 1 | 2 | 3 | 4 | 5
 type PowderData = {
     [key in PowderPrefix]: [PowderEntry, PowderEntry, PowderEntry, PowderEntry, PowderEntry, PowderEntry];
 };
-
 type PowderEntry = {
     element: CapitalizedElement
     damage: [number, number]
     conversion: number
     def: ElementalArray
 }
-
-type PowderSpecialType = "weapon" | "armour"
-// 0-indexed because I hate myself
-type PowderSpecialTier = 0 | 1 | 2 | 3 | 4
-
-const PowderSpecialTypes = {
-    WEAPON: "weapon",
-    ARMOUR: "armour",
-} as const;
-
-const powderSpecialNames = {
-    weapon: ["Quake", "Chain Lightning", "Curse", "Courage", "Wind Prison"],
-    armour: ["Rage", "Kill Streak", "Concentration", "Endurance", "Dodge"],
-} as const;
 
 const powders: PowderData = {
     e: [{
@@ -187,93 +175,68 @@ const powders: PowderData = {
     }],
 } as const;
 
-export class Powder {
-    static readonly powderPrefixes: PowderPrefix[] = ["e", "t", "w", "f", "a"] as const;
-    static readonly prefixCount = Powder.powderPrefixes.length;
-    static readonly shorthandToElement: { [key in PowderPrefix]: CapitalizedElement } = {
-        e: "Earth",
-        t: "Thunder",
-        w: "Water",
-        f: "Fire",
-        a: "Air",
-    } as const;
+type PowderTier = 0 | 1 | 2 | 3 | 4 | 5
 
-    static readonly maxTier = 5;
+export class Powder {
     // 0-indexed to increase confusion
-    static readonly maxPowderTier = 5;
+    static readonly maxTier = 5;
     // 0-indexed to increase confusion
     static readonly lowestSpecialTier = 3;
 
     element;
     tier;
 
-    constructor(element: CapitalizedElement, tier: PowderTier) {
+    constructor(element: PowderPrefix, tier: PowderTier) {
         this.element = element;
         this.tier = tier;
     }
 
-    static toBinary(powder: PowderKeyPair) {
-        if (Powder.isMaxTier(powder))
-            return decimalToBinary(powderPrefixes.indexOf(powder[PowderIndex.ELEMENT]), powderTypeCount);
-        else return (
-            decimalToBinary(powderTypeCount) +
-            decimalToBinary(powderPrefixes.indexOf(powder[PowderIndex.ELEMENT]), powderTypeCount) +
-            decimalToBinary(powder[PowderIndex.TIER], maxPowderTier));
+    toBinary() {
+        return this.isMaxTier()
+            ? decimalToBinary(powderPrefixes.indexOf(this.element) - 1, elementTypeCount)
+            : decimalToBinary(elementTypeCount) +
+            decimalToBinary(powderPrefixes.indexOf(this.element), elementTypeCount) +
+            decimalToBinary(this.tier, Powder.maxTier);
     }
 
     static fromBinary(binary: BitReader): Powder {
-        const type = binary.readNumber(powderTypeCount + 1);
+        const type = binary.readNumber(elementTypeCount + 1);
         let element;
         let tier: PowderTier;
-        if (type < powderTypeCount) {
+        if (type < elementTypeCount) {
             element = powderPrefixes[type];
-            tier = maxPowderTier;
-        } else if (type === powderTypeCount) {
-            element = powderPrefixes[binary.readNumber(powderTypeCount + 1)];
-            tier = binary.readNumber(maxPowderTier) as PowderTier;
+            tier = Powder.maxTier;
+        } else if (type === elementTypeCount) {
+            element = powderPrefixes[binary.readNumber(elementTypeCount + 1)];
+            tier = binary.readNumber(Powder.maxTier) as PowderTier;
         } else throw new Error(`Powder.fromBinary() is broken!`);
-        return [element, tier];
+        return new Powder(element, tier);
     }
 
-    private static isMaxTier(powder: PowderKeyPair) {
-        return powder[PowderIndex.TIER] = maxPowderTier;
-    }
-
-    static getElementByShorthand(char: string) {
-        if (char.length !== 1) throw new Error("char length should be 1");
-        return shorthandElements[char] || null;
+    isMaxTier() {
+        return this.tier = Powder.maxTier;
     }
 }
-
 
 export class Powders {
     powders;
 
-    constructor(powders: PowderKeyPair[] = []) {
-        this.powders = powders;
+    constructor(powders: Powder[] = []) {
+        this.powders = Powders.sortPowderArray(powders);
     }
 
     static fromCluster(cluster: HTMLElement, powderSlots = 0, fixCluster = true) {
         const powdersString = (cluster.querySelector(".powder_input") as HTMLInputElement)?.value;
         if (!powdersString) return new Powders();
 
-        const powderArr: PowderKeyPair[] = [];
-        for (let i = 0; i < powdersString.length / 2; i++) {
-            const powderName = [powdersString[i * 2], powdersString[i * 2 + 1]];
-            if (!(powderPrefixes as string[]).includes(powderName[PowderIndex.ELEMENT])) break;
-            if (!(powderTiers as number[]).includes(parseInt(powderName[PowderIndex.TIER]))) break;
-            powderArr.push(powderName as PowderKeyPair);
-        }
-        Powders.sortPowderArray(powderArr);
-
         if (fixCluster) Powders.setPowderSlots(cluster, powderSlots);
 
-        return new Powders(powderArr);
+        return Powders.fromString(powdersString);
     }
 
     // hasPowders must already be evaluated to true
     static fromBinary(binary: BitReader) {
-        const powderArr: PowderKeyPair[] = [];
+        const powderArr: Powder[] = [];
 
         let morePowders;
         let repeatPowder = false;
@@ -285,8 +248,6 @@ export class Powders {
             if (!repeatPowder) morePowders = binary.readFlag();
         } while (morePowders);
 
-        Powders.sortPowderArray(powderArr);
-
         return new Powders(powderArr);
     }
 
@@ -297,7 +258,7 @@ export class Powders {
 
         let repeatPowder = false;
         for (let i = 0; i < this.powders.length; i++) {
-            binary += repeatPowder ? this.powders.length - 1 === i : ("1" + Powder.toBinary(this.powders[i]));
+            binary += repeatPowder ? this.powders.length - 1 === i : ("1" + this.powders[i].toBinary());
             repeatPowder = this.powders[i] === this.powders[i + 1];
             binary += repeatPowder ? "1" : "0";
         }
@@ -305,26 +266,27 @@ export class Powders {
         return binary;
     }
 
-    getSpecial(isWeapon: boolean): PowderSpecialKeyPair | null {
+    getSpecial(isWeapon: boolean): PowderSpecial | null {
         const tiered = this.powders.filter(powder =>
-            powder[PowderIndex.TIER] >= lowestSpecialTier);
+            powder.tier >= Powder.lowestSpecialTier);
         let first = tiered[0];
         for (let i = 1; i < tiered.length; i++) {
-            if (tiered[i][PowderIndex.ELEMENT] === first[PowderIndex.ELEMENT]) {
+            if (tiered[i].element === first.element) {
                 const name =
-                    getPowderSpecialName(isWeapon ? PowderSpecialTypes.WEAPON : PowderSpecialTypes.ARMOUR, first[0]);
-                const tier = tiered[i][PowderIndex.TIER] + first[PowderIndex.TIER] - lowestSpecialTier * 2 as PowderSpecialTier;
-                return {name, tier};
+                    PowderSpecial.nameFromPrefix(isWeapon ? PowderSpecialTypes.WEAPON : PowderSpecialTypes.ARMOUR, first.element);
+                const tier = tiered[i].tier + first.tier - Powder.lowestSpecialTier * 2 as PowderSpecialTier;
+                return new PowderSpecial(name, tier);
             } else first = tiered[i];
         }
         return null;
     }
 
     // Sorts powders the same way Wynncraft does, by type but not tier.
-    static sortPowderArray(powderArray: PowderKeyPair[]) {
+    static sortPowderArray(powderArray: Powder[]) {
         const order: PowderPrefix[] = [];
-        for (const powder of powderArray) if (order.indexOf(powder[0]) === -1) order.push(powder[0]);
-        powderArray.sort((a: PowderKeyPair, b: PowderKeyPair) => order.indexOf(a[0]) - order.indexOf(b[0]));
+        for (const powder of powderArray) if (order.indexOf(powder.element) === -1) order.push(powder.element);
+        powderArray.sort((a: Powder, b: Powder) => order.indexOf(a.element) - order.indexOf(b.element));
+        return powderArray;
     }
 
     private static setPowderSlots(cluster: HTMLElement, powderSlots: number) {
@@ -345,18 +307,56 @@ export class Powders {
         if (powderInput.value.length > powderInput.maxLength)
             powderInput.value = powderInput.value.substring(0, powderInput.maxLength);
     }
+
+    static fromString(powdersString: string): Powders {
+        const powderArr: Powder[] = [];
+        for (let i = 0; i < powdersString.length / 2; i++) {
+            const element = powdersString[i * 2];
+            const tier = parseInt(powdersString[i * 2 + 1]);
+            if (!(powderPrefixes).find(x => x === element)) break;
+            if (tier > 0 && tier <= Powder.maxTier) break;
+            powderArr.push(new Powder(element as PowderPrefix, tier as PowderTier));
+        }
+        Powders.sortPowderArray(powderArr);
+        return new Powders(powderArr);
+    }
+
+    toString() {
+        return this.powders.map(powder => powder.toString()).join("");
+    }
 }
+
+type PowderSpecialType = "weapon" | "armour"
+// 0-indexed because I hate myself
+type PowderSpecialTier = 0 | 1 | 2 | 3 | 4
+type WeaponSpecialName = typeof PowderSpecial.names.weapon[number];
+type ArmourSpecialName = typeof PowderSpecial.names.armour[number];
+
+const PowderSpecialTypes = {
+    WEAPON: "weapon",
+    ARMOUR: "armour",
+} as const;
 
 export class PowderSpecial {
-    name;
-    tier;
 
+    static readonly names = {
+        weapon: ["Quake", "Chain Lightning", "Curse", "Courage", "Wind Prison"],
+        armour: ["Rage", "Kill Streak", "Concentration", "Endurance", "Dodge"],
+    } as const;
+
+    name: WeaponSpecialName | ArmourSpecialName;
+    tier: PowderSpecialTier;
+
+    constructor(name: WeaponSpecialName | ArmourSpecialName, tier: PowderSpecialTier) {
+        this.name = name
+        this.tier = tier;
+    }
+
+    static nameFromPrefix(section: PowderSpecialType, prefix: PowderPrefix) {
+        return PowderSpecial.names[section][powderPrefixes.indexOf(prefix)];
+    }
 }
 
-export function getPowder(powderShorthand: PowderKeyPair): PowderEntry {
-    return powders[powderShorthand[PowderIndex.ELEMENT]][powderShorthand[PowderIndex.TIER]];
-}
-
-function getPowderSpecialName(section: PowderSpecialType, prefix: PowderPrefix) {
-    return powderSpecialNames[section][powderPrefixes.indexOf(prefix)];
+export function getPowderData(powder: Powder): PowderEntry {
+    return powders[powder.element][powder.tier];
 }

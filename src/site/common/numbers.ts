@@ -1,5 +1,3 @@
-import type {StringTo} from "./util.ts";
-
 const base64Values = [
     "0", "1", "2", "3", "4", "5", "6", "7",
     "8", "9", "a", "b", "c", "d", "e", "f",
@@ -72,7 +70,7 @@ export function decimalToRoman(num: number) {
 
 const validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/;
 const token = /[MDLV]|C[MD]?|X[CL]?|I[XV]?/g;
-const romanToDecimalKey: StringTo<number>
+const romanToDecimalKey: {[key: string]: number}
     = {M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1};
 
 export function romanToDecimal(str: string) {

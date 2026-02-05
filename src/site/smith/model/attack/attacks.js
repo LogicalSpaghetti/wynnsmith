@@ -4,7 +4,7 @@ import {
     damageTypePrefixes,
     orderedAttackSpeed
 } from "../../../../data/small_stuff.ts";
-import {getPowder} from "../item/powders.ts";
+import {getPowderData} from "../item/powders.ts";
 import {SkillPointIndexes} from "../skill_point/skill_points.js";
 import {DamageDisplays} from "./attack_display.js";
 
@@ -92,7 +92,7 @@ export default class Attacks {
 class DamageTicks extends Array {
     constructor(stats, weaponPowders) {
         super();
-        const powders = weaponPowders.map(name => getPowder(name));
+        const powders = weaponPowders.map(name => getPowderData(name));
         this.initTicks(stats.effects.attacks);
         this.convertBases(stats.base, powders);
         this.convertRaws(stats.identifications);
