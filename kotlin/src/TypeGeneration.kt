@@ -35,7 +35,7 @@ fun typeGen() {
                 .forEach { if (ids.indexOf(it as String) == -1) ids.put(it) }
         if (item.has("base"))
             item.getJSONObject("base").names()
-                .forEach { if (ids.indexOf(it as String) == -1) base.put(it) }
+                .forEach { if (base.indexOf(it as String) == -1) base.put(it) }
     }
 
     data.put("base", base)
