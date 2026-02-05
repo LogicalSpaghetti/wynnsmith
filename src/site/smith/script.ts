@@ -1,7 +1,5 @@
 import {preLoadAssets} from "./control/preloading";
-// import {addInputListeners} from "./control/listener/input_listeners.js";
-// import {addSettingsListeners} from "./control/listener/settings_listeners.js";
-// import {testSP} from "./model/skill_point/skill_points.test.js";
+import {addInputListeners, addSettingsListeners} from "./control/input_listeners";
 
 // code entry point:
 window.addEventListener("load", loadSite);
@@ -13,8 +11,8 @@ function loadSite() {
     //  read Link
     //  parse Build from Link
     //  Initialize Input HTML values from Link
-    // addInputListeners();
-    // addSettingsListeners();
+    addInputListeners();
+    addSettingsListeners();
 }
 
 // testSP()

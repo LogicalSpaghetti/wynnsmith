@@ -1,7 +1,7 @@
-import * as search from "../../control/database/item_search.js";
-import {getItem} from "../../control/database/item_search.js";
+import * as search from "../../control/item_search.js";
+import {getItem} from "../../control/item_search.js";
 import indexedInternalNameGroups from "../../../../data/indexed_names.js";
-import {binaryToDecimal, decimalToBinary, flag, getBinaryLength, spliceOffNumber} from "../../../common/numbers.js";
+import {binaryToDecimal, decimalToBinary, getBinaryLength} from "../../../common/numbers.ts";
 import {Powders} from "./powders.js";
 
 const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"];
@@ -130,9 +130,15 @@ const SlotTypes = {
     MODIFIED: 3
 };
 
+type ItemData = {
+
+}
+type ItemType = ""
+
 export class Item {
-    data;
-    type;
+    static EMPTY = new Item)
+    data: ItemData;
+    type: ItemType;
     powders;
 
     constructor(data, powders, type) {

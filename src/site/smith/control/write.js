@@ -1,6 +1,6 @@
 import {getItemAddedSP, getSkillPointName} from "../model/skill_point/skill_points.js";
-import * as search from "./database/item_search.js";
-import {damageTypePrefixes} from "../../../data/small_stuff.js";
+import * as search from "./item_search.js";
+import {damageTypePrefixes} from "../../../data/small_stuff.ts";
 import {addWarning} from "./warnings.js";
 import {minecraftToHTML} from "../../common/minecraft_html.js";
 import {renderHighlights, setToggles, validateTree} from "../model/ability/ability.js";

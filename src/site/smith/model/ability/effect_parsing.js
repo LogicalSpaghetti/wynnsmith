@@ -1,4 +1,4 @@
-import * as search from "../../control/database/item_search.js";
+import * as search from "../../control/item_search.js";
 import classEffects from "../../../../data/effects.js";
 
 const EffectTypes = Object.freeze({

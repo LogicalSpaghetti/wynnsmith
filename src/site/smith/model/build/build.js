@@ -1,9 +1,9 @@
-import {Items} from "../item/item.js";
-import {maxPlayerLevel} from "../../../../data/small_stuff.js";
+import {Items} from "../item/item.ts";
+import {maxPlayerLevel} from "../../../../data/small_stuff.ts";
 import {Abilities} from "../ability/ability.js";
-import * as search from "../../control/database/item_search.js";
+import * as search from "../../control/item_search.js";
 import {getItemAddedSP, getSkillPointModifiers, skillPointNames} from "../skill_point/skill_points.js";
-import {base64ToBinary} from "../../../common/numbers.js";
+import {base64ToBinary} from "../../../common/numbers.ts";
 import permuteOrders from "../../../common/permutation.js";
 
 // TODO: should be part of the database

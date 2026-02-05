@@ -1,6 +1,6 @@
 import * as codeDictionary from "../../data/code_dictionary.js";
-import {attackSpeedMultipliers, damageTypeNames} from "../../data/small_stuff.js";
-import {roundForDisplay} from "./numbers.js";
+import {attackSpeedMultipliers, damageTypeNames} from "../../data/small_stuff.ts";
+import {roundForDisplay} from "./numbers.ts";
 import {stripMinecraftFormatting} from "./minecraft_html.js";
 
 const classSpellNames = {

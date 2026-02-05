@@ -1,5 +1,5 @@
-import allItems from "../../../../data/items.js";
-import {snakeToTitle} from "../../../common/display_item.js";
+import allItems from "../../../data/items.js";
+import {snakeToTitle} from "../../common/display_item.js";
 
 // TODO: merge into item.js and database.js
 

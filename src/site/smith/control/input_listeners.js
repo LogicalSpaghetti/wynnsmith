@@ -1,16 +1,19 @@
-import * as ability_tree from "../../model/ability/ability.js";
-import * as numbers from "../../../common/numbers.js";
-import {getItemByName} from "../database/item_search.js";
-import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "../../../common/tooltip.js";
-import copyTreeAsANSI from "../../model/ability/ansi_tree.js";
-import {balanceSP} from "../../model/skill_point/skill_points.js";
-import {getHoverTextForItem} from "../../../common/minecraft_html.js";
-import {decimalToRoman} from "../../../common/numbers.js";
-import {add, addAll, addAllElem, addElem} from "../../../common/event_listener.js";
-import updateBuild from "../update_build.js";
+import * as ability_tree from "../model/ability/ability.js";
+import * as numbers from "../../common/numbers.ts";
+import {getItemByName} from "./item_search.js";
+import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip.js";
+import copyTreeAsANSI from "../model/ability/ansi_tree.js";
+import {balanceSP} from "../model/skill_point/skill_points.js";
+import {getHoverTextForItem} from "../../common/minecraft_html.js";
+import {decimalToRoman} from "../../common/numbers.ts";
+import {add, addAll, addAllElem, addElem, dispatch} from "../../common/event_listener.js";
+import updateBuild from "./update_build.js";
+import * as settings from "./settings.js";
+import {loadBoolean, toggleBoolean} from "./settings.js";
 
 export function addInputListeners() {
-    console.log("addInputListeners()");
+    console.log("adding input Listeners");
+
     addTooltipListener();
 
     // Input:
@@ -200,4 +203,37 @@ function addAspectListeners() {
 
         updateBuild();
     });
+}
+
+export function addSettingsListeners() {
+    console.log("adding settings listeners");
+
+    initCheckbox("selvs");
+    initCheckbox("detailed_damage");
+
+    const miku = document.getElementById("miku");
+    miku.src = settings.loadString("miku");
+    add("gif_input", "change", (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const src = reader.result;
+            miku.src = src;
+            settings.saveString("miku", src);
+        };
+    });
+
+    add("opacity_slider", "input", (e) =>
+        document.getElementById("miku").style.opacity = e.target.value + "%");
+    dispatch("opacity_slider", "input");
+}
+
+function initCheckbox(elementId, boolId = elementId, extraCode = () => updateBuild()) {
+    const checkbox = document.getElementById(elementId);
+    checkbox.addEventListener("click", () => {
+        toggleBoolean(boolId);
+        extraCode();
+    });
+    checkbox.checked = loadBoolean(boolId);
 }

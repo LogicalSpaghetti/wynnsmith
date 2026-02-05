@@ -3,7 +3,7 @@ import {
     damageTypeNames,
     damageTypePrefixes,
     orderedAttackSpeed
-} from "../../../../data/small_stuff.js";
+} from "../../../../data/small_stuff.ts";
 import {getSkillPointMultiplier, SkillPointIndexes} from "../skill_point/skill_points.js";
 import {damage_type_count} from "../attack/attacks.js";
 

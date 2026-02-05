@@ -1,5 +1,5 @@
-import {roundForDisplay} from "../../../common/numbers.js";
-import {attackSpeedMap, orderedAttackSpeed} from "../../../../data/small_stuff.js";
+import {roundForDisplay} from "../../../common/numbers.ts";
+import {attackSpeedMap, orderedAttackSpeed} from "../../../../data/small_stuff.ts";
 import {minecraftToHTML} from "../../../common/minecraft_html.js";
 import {player_bps} from "./stat_calculations.js";
 import * as codeDictionary from "../../../../data/code_dictionary.js";
