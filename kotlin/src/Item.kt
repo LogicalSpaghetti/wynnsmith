@@ -24,13 +24,8 @@ fun item() {
         addItem(item, itemData, groupIndexes, majorIds)
 
     writeStringToFile("database/items.json", "$itemData")
-    writeStringToFile("database/js/items.js", "export default $itemData")
-    writeStringToFile("database/formatted/items.json", itemData.toString(2))
     writeStringToFile("database/group_indexes.json", "$groupIndexes")
-    writeStringToFile("database/js/group_indexes.js", "export default $groupIndexes")
-    writeStringToFile("database/formatted/group_indexes.json", groupIndexes.toString(2))
     writeStringToFile("database/majorIds.json", "$majorIds")
-    writeStringToFile("database/formatted/majorIds.json", majorIds.toString(2))
 }
 
 fun removeItems(apiItems: List<JSONObject>, nonApiItems: JSONArray, itemData: JSONArray, groupIndexes: JSONObject) {
