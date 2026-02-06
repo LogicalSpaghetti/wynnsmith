@@ -10,22 +10,23 @@ fun typeGen() {
 
     // metadata:
 
-    val metadata = getJSONFromAPI("https://api.wynncraft.com/v3/item/metadata")
-    val filters = metadata.getJSONObject("filters")
-    val advanced = filters.getJSONObject("advanced")
-    val itemType = filters.getJSONArray("type")
-
-    data.put("itemType", itemType)
-    val subTypes = JSONArray()
-    for (key in itemType.filter { it as String !== "tool" && advanced.has(it) }) {
-        val subType = advanced.getJSONArray(key as String);
-        data.put("${key}Sub", advanced.getJSONArray(key))
-        subTypes.putAll(subType)
-    }
-    data.put("itemSub", subTypes)
-
-    data.put("attackSpeed", advanced.getJSONArray("attackSpeed"))
-    data.put("crafting", advanced.getJSONArray("crafting"))
+    // TODO: Tome subTypes use a different format, commented out so I don't forget.
+//    val metadata = getJSONFromAPI("https://api.wynncraft.com/v3/item/metadata")
+//    val filters = metadata.getJSONObject("filters")
+//    val advanced = filters.getJSONObject("advanced")
+//    val itemType = filters.getJSONArray("type")
+//
+//    data.put("itemType", itemType)
+//    val subTypes = JSONArray()
+//    for (key in itemType.filter { it as String !== "tool" && advanced.has(it) }) {
+//        val subType = advanced.getJSONArray(key as String);
+//        data.put("${key}Sub", advanced.getJSONArray(key))
+//        subTypes.putAll(subType)
+//    }
+//    data.put("itemSub", subTypes)
+//
+//    data.put("attackSpeed", advanced.getJSONArray("attackSpeed"))
+//    data.put("crafting", advanced.getJSONArray("crafting"))
 
     // base/ids:
 

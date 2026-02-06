@@ -3,6 +3,10 @@ import {attackSpeedMultipliers, damageTypeNames} from "../../data/small_stuff.ts
 import {roundForDisplay} from "./numbers.ts";
 import {stripMinecraftFormatting} from "./minecraft_html.js";
 
+const allItems = getItems().finally(() => {
+
+})
+
 const classSpellNames = {
     archer: ["Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"],
     assassin: ["Spin Attack", "Dash", "Multihit", "Smoke Bomb"],
