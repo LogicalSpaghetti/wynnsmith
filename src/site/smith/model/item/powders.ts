@@ -1,10 +1,5 @@
 import {BitReader, decimalToBinary} from "../../../common/numbers.ts";
-import {
-    type CapitalizedElement,
-    type ElementalArray,
-    elementTypeCount,
-    type PowderPrefix, powderPrefixes,
-} from "../../../../data/small_stuff.ts";
+import {type CapitalizedElement, type ElementalArray, elementTypeCount} from "../../../../data/small_stuff.ts";
 
 
 type PowderData = {
@@ -175,7 +170,13 @@ const powders: PowderData = {
     }],
 } as const;
 
+export function getPowderData(powder: Powder): PowderEntry {
+    return powders[powder.element][powder.tier];
+}
+
 type PowderTier = 0 | 1 | 2 | 3 | 4 | 5
+export type PowderPrefix = typeof powderPrefixes[number]
+const powderPrefixes = ["e", "t", "w", "f", "a"] as const;
 
 export class Powder {
     // 0-indexed to increase confusion
@@ -281,7 +282,7 @@ export class Powders {
         return null;
     }
 
-    // Sorts powders the same way Wynncraft does, by type but not tier.
+    // Sorts powders the same way Wynncraft does, by element but not tier.
     static sortPowderArray(powderArray: Powder[]) {
         const order: PowderPrefix[] = [];
         for (const powder of powderArray) if (order.indexOf(powder.element) === -1) order.push(powder.element);
@@ -348,15 +349,11 @@ export class PowderSpecial {
     tier: PowderSpecialTier;
 
     constructor(name: WeaponSpecialName | ArmourSpecialName, tier: PowderSpecialTier) {
-        this.name = name
+        this.name = name;
         this.tier = tier;
     }
 
     static nameFromPrefix(section: PowderSpecialType, prefix: PowderPrefix) {
         return PowderSpecial.names[section][powderPrefixes.indexOf(prefix)];
     }
-}
-
-export function getPowderData(powder: Powder): PowderEntry {
-    return powders[powder.element][powder.tier];
 }

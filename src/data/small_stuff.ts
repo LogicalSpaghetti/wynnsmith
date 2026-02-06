@@ -3,10 +3,8 @@ export type ElementalArray = [number, number, number, number, number, number]
 export const damageTypeCount = 6;
 export const elementTypeCount = 5;
 
-export type PowderPrefix = typeof powderPrefixes[number]
 export type LowerCaseElement = typeof damageTypePrefixes[number]
 export type CapitalizedElement = typeof damageTypeNames[number]
-export const powderPrefixes = ["e", "t", "w", "f", "a"] as const;
 export const damageTypePrefixes = ["neutral", "earth", "thunder", "water", "fire", "air"] as const;
 export const damageTypeNames = ["Neutral", "Earth", "Thunder", "Water", "Fire", "Air"] as const;
 
@@ -38,7 +36,6 @@ export const attackSpeedMultipliers = {
     superSlow: 0.51,
 };
 
-export type AttackSpeed = keyof typeof attackSpeedMap;
 export const attackSpeedMap = {
     superFast: "Super Fast",
     veryFast: "Very Fast",
@@ -56,7 +53,7 @@ export const orderedAttackSpeed = [
     "fast",
     "veryFast",
     "superFast",
-] as const satisfies readonly AttackSpeed[];
+] as const;
 
 export const maxPlayerLevel = 106;
 

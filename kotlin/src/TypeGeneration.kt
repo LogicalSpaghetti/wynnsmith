@@ -3,6 +3,7 @@ import file.writeStringToFile
 import org.json.JSONArray
 import org.json.JSONObject
 
+// Used to keep ids type and similar updated automatically
 // TODO: make the generated file not have random ordering.
 fun typeGen() {
     val data = JSONObject()
@@ -14,9 +15,14 @@ fun typeGen() {
     val advanced = filters.getJSONObject("advanced")
     val itemType = filters.getJSONArray("type")
 
-    data.put("item", itemType)
-    for (key in itemType.filter { it as String !== "tool" && advanced.has(it) })
-        data.put((key as String), advanced.getJSONArray(key))
+    data.put("itemType", itemType)
+    val subTypes = JSONArray()
+    for (key in itemType.filter { it as String !== "tool" && advanced.has(it) }) {
+        val subType = advanced.getJSONArray(key as String);
+        data.put("${key}Sub", advanced.getJSONArray(key))
+        subTypes.putAll(subType)
+    }
+    data.put("itemSub", subTypes)
 
     data.put("attackSpeed", advanced.getJSONArray("attackSpeed"))
     data.put("crafting", advanced.getJSONArray("crafting"))
@@ -49,10 +55,10 @@ fun typeGen() {
         val typeName = "${key.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }}Type"
         val typeData = entry.joinToString(" | ") { "\"$it\"" }
 
-        str += "const ${key}Types = $entry\n"
-        str += "type $typeName = $typeData\n"
+        str += "export const ${key}Types = $entry\n"
+        str += "export type $typeName = $typeData\n"
     }
 
-
-    writeStringToFile("database/item_types.ts", str)
+    // exported as a .txt to prevent it from being accidentally imported from.
+    writeStringToFile("database/generated_item_types.txt", str)
 }

@@ -96,5 +96,5 @@ fun apiToArray(apiObject: JSONObject): List<JSONObject> {
             item.remove(subType)
 
             return@map item
-        }
+        }.filter { !it.has("type") || it.getString("type") !== "tool" }
 }
