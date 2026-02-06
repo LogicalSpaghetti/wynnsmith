@@ -21,10 +21,10 @@ export function getItem(internalName): NormalItemType | null {
     return allItems.find((item) => simplifyString(item.internalName) === internalName);
 }
 
-export function getItemInGroup(groupName, itemName): NormalItemType | null {
+export function getItemInGroup(groupName: string, itemName: string): NormalItemType | null {
     const item = getItemByName(itemName);
-    if (!item) return null;
-    if (item.subType === groupName || item.type === groupName) return item;
+    return item?.subType === groupName || item?.type === groupName
+        ? item : null;
 }
 
 export function searchForItemsInCategory(search, category): (NormalItemType | null)[] {

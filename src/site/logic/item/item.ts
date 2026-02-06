@@ -40,15 +40,18 @@ export class NormalItem implements GenericItem {
     }
 
     static fromCluster(cluster: HTMLElement, fixCluster = true) {
-        const slot = cluster.dataset.slot;
+        const slot = cluster.dataset.slot as string;
+        const inputValue = (cluster.querySelector(".item_input") as HTMLInputElement).value
 
-        const itemData = (search.getItemInGroup(slot, cluster.querySelector(".item_input") as HTMLInputElement)?.value);
-        const itemPowders = Powders.fromCluster(cluster, itemData?.powderSlots ?? 0, fixCluster);
+        const itemData = search.getItemInGroup(slot, inputValue);
+        if (!itemData) return null;
+        const powderSlots = ("powderSlots" in itemData ? itemData.powderSlots : 0) ?? 0
+        const itemPowders = Powders.fromCluster(cluster, powderSlots, fixCluster);
 
         if (fixCluster) {
-            if (slot === "weapon") NormalItem.#setWeaponIcon(cluster, itemData?.requirements?.classRequirement);
-            NormalItem.#colorSlot(cluster, itemData?.rarity);
-            NormalItem.#setLink(cluster, itemData?.name);
+            if (slot === "weapon") NormalItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement  : "archer");
+            NormalItem.#colorSlot(cluster, "rarity" in itemData ? itemData.rarity : "");
+            NormalItem.#setLink(cluster, itemData.name);
         }
 
         return new NormalItem(itemData, itemPowders);
@@ -58,7 +61,7 @@ export class NormalItem implements GenericItem {
     static fromBinary(binary: BitReader, category: ItemCategory) {
 
         const itemIndex = binary.readNumber(indexedInternalNameGroups[category].length + 1) - 1;
-        if (itemIndex < 0) return null
+        if (itemIndex < 0) return null;
 
         const internalName = indexedInternalNameGroups[category][itemIndex];
 
@@ -101,7 +104,7 @@ export class NormalItem implements GenericItem {
         return byInternalName ? search.getItem(name) : search.getItemByName(name);
     }
 
-    static #colorSlot(cluster, rarity) {
+    static #colorSlot(cluster, rarity: string) {
         const input = cluster.querySelector(".item_input");
         input.dataset.rarity = rarity;
     }
@@ -121,9 +124,21 @@ export class NormalItem implements GenericItem {
     }
 }
 
-const Item = {
+// TODO: this is absolutely the correct way to handle items type-safely
+export class HelmetItem {
 
 }
+
+export interface Encodable {
+    toBinary(): string;
+    fromBinary(binary: BitReader): Item;
+}
+
+abstract class Item implements Encodable {
+    abstract toBinary(): string
+    abstract fromBinary(binary: BitReader): Item;
+}
+
 
 export class Items {
     weapon;
