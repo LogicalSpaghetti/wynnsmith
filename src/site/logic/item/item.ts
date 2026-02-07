@@ -12,22 +12,15 @@ const tomeSlots = ["guild", "lootrun", "armour", "armour", "armour", "armour", "
 const morph = ["Morph-Stardust", "Morph-Steel", "Morph-Iron", "Morph-Gold", "Morph-Topaz", "Morph-Emerald", "Morph-Amethyst", "Morph-Ruby"];
 const maxOffhandCount = 7;
 
+const typesOfItemEncodings = 4;
 const ItemTypes = {
-    EMPTY: 0,
-    NORMAL: 1,
-    CRAFTED: 2,
-    CUSTOM: 3,
-    MODIFIED: 4,
+    NORMAL: 0,
+    CRAFTED: 1,
+    CUSTOM: 2,
+    MODIFIED: 3,
 };
 
 type ItemCategory = ItemTypeType | ItemSubType
-
-// TODO: crafted/modified/custom items
-export interface GenericItem {
-    data: AnyItemType;
-    type: number;
-    powders: Powders;
-}
 
 export class NormalItem implements GenericItem {
     data: NormalItemType;
@@ -41,15 +34,15 @@ export class NormalItem implements GenericItem {
 
     static fromCluster(cluster: HTMLElement, fixCluster = true) {
         const slot = cluster.dataset.slot as string;
-        const inputValue = (cluster.querySelector(".item_input") as HTMLInputElement).value
+        const inputValue = (cluster.querySelector(".item_input") as HTMLInputElement).value;
 
         const itemData = search.getItemInGroup(slot, inputValue);
         if (!itemData) return null;
-        const powderSlots = ("powderSlots" in itemData ? itemData.powderSlots : 0) ?? 0
+        const powderSlots = ("powderSlots" in itemData ? itemData.powderSlots : 0) ?? 0;
         const itemPowders = Powders.fromCluster(cluster, powderSlots, fixCluster);
 
         if (fixCluster) {
-            if (slot === "weapon") NormalItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement  : "archer");
+            if (slot === "weapon") NormalItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement : "archer");
             NormalItem.#colorSlot(cluster, "rarity" in itemData ? itemData.rarity : "");
             NormalItem.#setLink(cluster, itemData.name);
         }
@@ -111,7 +104,7 @@ export class NormalItem implements GenericItem {
 
     static #setLink(cluster, itemName) {
         cluster.querySelector(".item_link")
-            .href = itemName ? "./item/?" + itemName ?? "" : "";
+            .href = itemName ? "./item/?" + (itemName ?? "") : "";
     }
 
     static #setWeaponIcon(cluster, classReq) {
@@ -124,20 +117,40 @@ export class NormalItem implements GenericItem {
     }
 }
 
-// TODO: this is absolutely the correct way to handle items type-safely
-export class HelmetItem {
+abstract class GenericItem {
+    data: NormalItemType;
+    type;
+    powders;
+
+    constructor(data: NormalItemType, type: number, powders: Powders = new Powders()) {
+        this.data = data;
+        this.type = type;
+        this.powders = powders;
+    }
+
+    toBinary(): string {
+    }
+
+    static fromBinary(binary: BitReader, category: ItemCategory): GenericItem {
+
+        const type = binary.readNumber(typesOfItemEncodings - 1);
+        const data = type === ItemTypes.NORMAL ? GenericItem.normalFromBinary(binary, category) : null;
+        const powders;
+
+        return new GenericItem();
+    }
+
+    static normalFromBinary(binary: BitReader, category: ItemCategory): NormalItem {
+
+    }
+}
+
+// TODO: implement
+export class HelmetItem extends GenericItem {
 
 }
 
-export interface Encodable {
-    toBinary(): string;
-    fromBinary(binary: BitReader): Item;
-}
-
-abstract class Item implements Encodable {
-    abstract toBinary(): string
-    abstract fromBinary(binary: BitReader): Item;
-}
+// ...
 
 
 export class Items {

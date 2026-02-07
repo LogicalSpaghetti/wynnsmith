@@ -1,9 +1,36 @@
-import allItems from "../../../data/items.js";
 import {snakeToTitle} from "../../common/display_item.js";
 import type {NormalItemType} from "./item_types.ts";
+import {loadItems} from "../database/database.ts";
+
+class ItemDatabase {
+    private items: NormalItemType[];
+
+    private constructor(items: NormalItemType[]) {
+        this.items = items;
+    }
+
+    static async create(version?: number): Promise<ItemDatabase> {
+        const items = await loadItems(version);
+        return new ItemDatabase(items);
+    }
+
+    get(): NormalItemType[] {
+        return this.items;
+    }
+
+    async set(version: number | undefined) {
+        return this.items = await loadItems(version);
+    }
+
+    size(): number {
+        return this.items.length;
+    }
+}
+
+const itemDatabase = ItemDatabase.create();
 
 export function getItemFromSearch(search: string): NormalItemType | null {
-    if (!search) return null
+    if (!search) return null;
     let cleanSearch = snakeToTitle(search.substring(1, search.length)
         .replaceAll("%20", " ")
         .replaceAll("%27", "'")
@@ -17,7 +44,7 @@ export function getItemByName(itemName: string): NormalItemType | null {
     return allItems.find(item => simplifyString(item.name) === itemName);
 }
 
-export function getItem(internalName): NormalItemType | null {
+export function getItem(internalName: string): NormalItemType | null {
     return allItems.find((item) => simplifyString(item.internalName) === internalName);
 }
 
@@ -41,6 +68,6 @@ function simplifyString(string): string {
     return removeInvalidCharacters(string.toLowerCase()).trim();
 }
 
-function removeInvalidCharacters(string) {
+function removeInvalidCharacters(string: string) {
     return string.replace(/[^A-Za-z0-9\-]/g, '');
 }

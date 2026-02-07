@@ -9,7 +9,7 @@ Map ids and such to short-hands to reduce `item.json`'s file size
 
 ### Small
 1. Noxious debuff based on enemy debuffs
-	1. "enemy debuff" needs to be an effect type? 
+	1. "enemy debuff" needs to be an effect type?
 2. popups
 	1. one element covers the whole screen with fixed positioning
 		1. n% transparent
