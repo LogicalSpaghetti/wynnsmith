@@ -17,7 +17,6 @@ fun item() {
     val majorIds = JSONArray(readStringFromFile("database/majorIds.json"))
 
     removeItems(apiItems, nonApiItems, itemData, groupIndexes)
-
     for (item in nonApiItems)
         addItem(item as JSONObject, itemData, groupIndexes, majorIds)
     for (item in apiItems)
@@ -49,9 +48,8 @@ fun removeItems(apiItems: List<JSONObject>, nonApiItems: JSONArray, itemData: JS
 
 fun addItem(item: JSONObject, itemData: JSONArray, groupIndexes: JSONObject, majorIds: JSONArray) {
     val internalName = item.getString("internalName")
-
     // adding to itemData
-    var index = itemData.indexOf { x: JSONObject -> x.getString("internalName") == internalName }
+    var index = itemData.indexOfFirst { x -> (x as JSONObject).getString("internalName") == internalName }
     if (index < 0) index = itemData.length()
     itemData.put(index, item)
 
@@ -77,8 +75,10 @@ fun addItem(item: JSONObject, itemData: JSONArray, groupIndexes: JSONObject, maj
                     JSONObject().put("name", majorIdName).put("description", "§kMajor Id Description incomplete!")
                 )
             }
-            majorIds.getJSONObject(index).put("apiDescription", itemMajorIds.getString(majorIdName)
-                .replace("(<[^>]*>)|(\\+[^:]*: )".toRegex(), ""))
+            majorIds.getJSONObject(index).put(
+                "apiDescription", itemMajorIds.getString(majorIdName)
+                    .replace("(<[^>]*>)|(\\+[^:]*: )".toRegex(), "")
+            )
         }
     }
 }
