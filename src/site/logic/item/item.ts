@@ -1,5 +1,5 @@
 import * as search from "./item_search.js";
-import {getItem} from "./item_search.js";
+import {getItem, itemDatabase} from "./item_search.js";
 import indexedInternalNameGroups from "../../../data/indexed_names.js";
 import {binaryToDecimal, BitReader, decimalToBinary, getBinaryLength} from "../../common/numbers.ts";
 import {Powders} from "./powders.js";
@@ -117,7 +117,7 @@ export class NormalItem implements GenericItem {
     }
 }
 
-abstract class GenericItem {
+class GenericItem {
     data: NormalItemType;
     type;
     powders;
@@ -131,17 +131,25 @@ abstract class GenericItem {
     toBinary(): string {
     }
 
-    static fromBinary(binary: BitReader, category: ItemCategory): GenericItem {
-
+    static fromBinary(binary: BitReader, category: ItemCategory): GenericItem | null {
         const type = binary.readNumber(typesOfItemEncodings - 1);
-        const data = type === ItemTypes.NORMAL ? GenericItem.normalFromBinary(binary, category) : null;
-        const powders;
+        let data;
+        switch (type) {
+            case ItemTypes.NORMAL:
+                data = GenericItem.normalDataFromBinary(binary, category);
+                break;
+        }
+        if (!data) return null;
 
-        return new GenericItem();
+        const powders = Powders.fromBinary(binary);
+
+        return new GenericItem(data, type, powders);
     }
 
-    static normalFromBinary(binary: BitReader, category: ItemCategory): NormalItem {
-
+    static normalDataFromBinary(binary: BitReader, category: ItemCategory): NormalItemType | null {
+        const id = binary.readNumber(itemDatabase.getSize() + 1) - 1;
+        if (id < 0) return null;
+        return itemDatabase.getItemById(id);
     }
 }
 

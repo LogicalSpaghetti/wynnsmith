@@ -498,12 +498,12 @@ td {
 }
 
 .aspect_up {
-    background-image: url(assets/img/buttons/page_up.png);
+    background-image: url(public/img/buttons/page_up.png);
     translate: -5.4px 0;
 }
 
 .aspect_down {
-    background-image: url(assets/img/buttons/page_down.png);
+    background-image: url(public/img/buttons/page_down.png);
     translate: -5.4px 13.5px;
 }
 

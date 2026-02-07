@@ -14,5 +14,3 @@ function loadSite() {
     addInputListeners();
     addSettingsListeners();
 }
-
-// testSP()

@@ -1,70 +1,72 @@
 import {snakeToTitle} from "../../common/display_item.js";
 import type {NormalItemType} from "./item_types.ts";
-import {loadItems} from "../database/database.ts";
+import {Database} from "../database/database.ts";
+import type {ItemSubType, ItemTypeType} from "../../../generated/item_types.ts";
 
-class ItemDatabase {
-    private items: NormalItemType[];
+class ItemSearch extends Database<NormalItemType[]> {
+    private static readonly filePath = "items.json";
 
     private constructor(items: NormalItemType[]) {
-        this.items = items;
+        super(items, ItemSearch.filePath);
     }
 
-    static async create(version?: number): Promise<ItemDatabase> {
-        const items = await loadItems(version);
-        return new ItemDatabase(items);
+    static async create(): Promise<ItemSearch> {
+        const db = await Database.init<NormalItemType[]>(ItemSearch.filePath);
+        return new ItemSearch(db.get());
     }
 
-    get(): NormalItemType[] {
-        return this.items;
+    find(str: string, byName: boolean) {
+        str = simplifyString(str);
+        return this.items.find(item =>
+            simplifyString(byName ? item.name : item.internalName) === str) ?? null;
     }
 
-    async set(version: number | undefined) {
-        return this.items = await loadItems(version);
+    getItemByName(search: string): NormalItemType | null {
+        if (!search) return null;
+        let cleanSearch = snakeToTitle(search.substring(1, search.length)
+            .replaceAll("%20", " ")
+            .replaceAll("%27", "'")
+            .replaceAll("+", " "));
+        return this.getItemByExactName(cleanSearch) ?? this.getItemByExactName(search);
     }
 
-    size(): number {
+    getItem(internalName: string): NormalItemType | null {
+        return this.find(internalName, false);
+    }
+
+    getItemByExactName(itemName: string): NormalItemType | null {
+        return this.find(itemName, true);
+    }
+
+    getItemById(id: number): NormalItemType | null {
+        if (id < 0 || id >= this.items.length) return null
+        return this.items[id]
+    }
+
+    getItemInGroup(groupName: string, itemName: string): NormalItemType | null {
+        const item = this.getItemByExactName(itemName);
+        return item?.subType === groupName || item?.type === groupName
+            ? item : null;
+    }
+
+    getItemsInCategory(search: string, category: ItemTypeType | ItemSubType): NormalItemType[] {
+        return this.getItems(search).filter(item => item.type === category || item.subType === category);
+    }
+
+    getItems(search: string): NormalItemType[] {
+        if (search == null) return [];
+        const simplifiedSearch = simplifyString(search);
+        return this.items.filter((item) => simplifyString(item.name).includes(simplifiedSearch));
+    }
+
+    getSize() {
         return this.items.length;
     }
 }
 
-const itemDatabase = ItemDatabase.create();
+export const itemDatabase = await ItemSearch.create();
 
-export function getItemFromSearch(search: string): NormalItemType | null {
-    if (!search) return null;
-    let cleanSearch = snakeToTitle(search.substring(1, search.length)
-        .replaceAll("%20", " ")
-        .replaceAll("%27", "'")
-        .replaceAll("+", " "));
-    return getItemByName(cleanSearch) ?? getItemByName(search);
-}
-
-export function getItemByName(itemName: string): NormalItemType | null {
-    if (!itemName) return null;
-    itemName = simplifyString(itemName);
-    return allItems.find(item => simplifyString(item.name) === itemName);
-}
-
-export function getItem(internalName: string): NormalItemType | null {
-    return allItems.find((item) => simplifyString(item.internalName) === internalName);
-}
-
-export function getItemInGroup(groupName: string, itemName: string): NormalItemType | null {
-    const item = getItemByName(itemName);
-    return item?.subType === groupName || item?.type === groupName
-        ? item : null;
-}
-
-export function searchForItemsInCategory(search, category): (NormalItemType | null)[] {
-    return searchForItems(search).filter(item => item.type === category || item.subType === category);
-}
-
-export function searchForItems(search): (NormalItemType | null)[] {
-    if (search == null) return [];
-    const simplifiedSearch = simplifyString(search);
-    return allItems.filter((item) => simplifyString(item.name).includes(simplifiedSearch));
-}
-
-function simplifyString(string): string {
+function simplifyString(string: string): string {
     return removeInvalidCharacters(string.toLowerCase()).trim();
 }
 
