@@ -1,5 +1,5 @@
 import * as search from "../item/item_search.ts";
-import classEffects from "../../../data/effects.js";
+import classEffects from "../../../js_data/effects.js";
 
 const EffectTypes = Object.freeze({
     EMPTY: "",

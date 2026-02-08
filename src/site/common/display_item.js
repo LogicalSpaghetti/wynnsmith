@@ -1,5 +1,5 @@
-import * as codeDictionary from "../../data/code_dictionary.js";
-import {attackSpeedMultipliers, damageTypeNames} from "../../data/small_stuff.ts";
+import * as codeDictionary from "../../js_data/code_dictionary.js";
+import {attackSpeedMultipliers, damageTypeNames} from "./small_stuff.ts";
 import {roundForDisplay} from "./numbers.ts";
 import {stripMinecraftFormatting} from "./minecraft_html.js";
 

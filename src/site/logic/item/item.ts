@@ -1,6 +1,6 @@
 import * as search from "./item_search.js";
 import {itemDatabase} from "./item_search.js";
-import indexedInternalNameGroups from "../../../data/indexed_names.js";
+import indexedInternalNameGroups from "../../../js_data/indexed_names.js";
 import {binaryToDecimal, BitReader, decimalToBinaryByMaximum, getBinaryLength} from "../../common/numbers.ts";
 import {Powders} from "./powders.js";
 import type {NormalItemType, WeaponItemType} from "./item_types.ts";

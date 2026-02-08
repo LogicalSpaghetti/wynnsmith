@@ -1,6 +1,6 @@
 import * as search from "./item_search.ts";
 import {getItemAddedSP} from "../skill_point/skill_points.js";
-import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../../data/small_stuff.ts";
+import {attackSpeedMultipliers, damageTypeNames, damageTypePrefixes, orderedAttackSpeed} from "../../common/small_stuff.ts";
 import {getPowderData} from "./powders.ts";
 import {addIdsToObject} from "../build/permute.js"; // TODO: move all related from permute.js to here
 

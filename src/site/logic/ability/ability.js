@@ -1,12 +1,12 @@
-import punscake from "../../../data/trees.js";
-import {maxPlayerLevel} from "../../../data/small_stuff.ts";
+import punscake from "../../../js_data/trees.js";
+import {maxPlayerLevel} from "../../common/small_stuff.ts";
 import {getHoverTextForAbility, minecraftToHTML} from "../../common/minecraft_html.js";
-import aspect_descriptions from "../../../data/aspects.js";
+import aspect_descriptions from "../../../js_data/aspects.js";
 import {decimalToRoman} from "../../common/numbers.ts";
-import * as codeDictionary from "../../../data/code_dictionary.js";
+import * as codeDictionary from "../../../js_data/code_dictionary.js";
 import {addWarning} from "../../smith/warnings.js";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip.js";
-import classEffects from "../../../data/effects.js";
+import classEffects from "../../../js_data/effects.js";
 import updateBuild from "../../smith/update_build.js";
 
 const treeColumns = 9;

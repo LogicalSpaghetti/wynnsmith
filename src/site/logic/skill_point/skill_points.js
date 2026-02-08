@@ -1,4 +1,4 @@
-import {damageTypePrefixes} from "../../../data/small_stuff.ts";
+import {damageTypePrefixes} from "../../common/small_stuff.ts";
 
 export const sp_indexes = 5;
 const sp_cap = 150;

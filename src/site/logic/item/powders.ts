@@ -1,5 +1,5 @@
 import {BitReader, decimalToBinary} from "../../common/numbers.ts";
-import {type CapitalizedElement, type ElementalArray, elementTypeCount} from "../../../data/small_stuff.ts";
+import {type CapitalizedElement, type ElementalArray, elementTypeCount} from "../../common/small_stuff.ts";
 
 
 type PowderData = {

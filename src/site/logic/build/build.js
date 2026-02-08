@@ -1,5 +1,5 @@
 import {Items} from "../item/item.ts";
-import {maxPlayerLevel} from "../../../data/small_stuff.ts";
+import {maxPlayerLevel} from "../../common/small_stuff.ts";
 import {Abilities} from "../ability/ability.js";
 import * as search from "../item/item_search.ts";
 import {getItemAddedSP, getSkillPointModifiers, skillPointNames} from "../skill_point/skill_points.js";

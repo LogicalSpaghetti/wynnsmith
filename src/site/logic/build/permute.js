@@ -1,7 +1,7 @@
 import * as search from "../item/item_search.ts";
 import {calculateIdSkillPoints, getItemAddedSP, getSkillPointMultiplier} from "../skill_point/skill_points.js";
 import * as effect_parsing from "../ability/effect_parsing.js";
-import {orderedAttackSpeed} from "../../../data/small_stuff.ts";
+import {orderedAttackSpeed} from "../../common/small_stuff.ts";
 import modifyIdentifications, {addBaseToObject} from "../item/identifications.js";
 import calculateStats from "../stats/stat_calculations.js";
 import calculateDamageTicks from "../attack/attacks.js";

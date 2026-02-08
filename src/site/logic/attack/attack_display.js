@@ -3,7 +3,7 @@ import {minecraftAsElement} from "../../common/minecraft_html.js";
 import {roundForDisplay} from "../../common/numbers.ts";
 import {SkillPointIndexes} from "../skill_point/skill_points.js";
 import * as settings from "../../smith/settings.js";
-import * as codeDictionary from "../../../data/code_dictionary.js";
+import * as codeDictionary from "../../../js_data/code_dictionary.js";
 
 const damageColors = Object.freeze([
     "#fca800",

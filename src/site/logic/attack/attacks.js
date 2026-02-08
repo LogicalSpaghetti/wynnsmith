@@ -3,7 +3,7 @@ import {
     damageTypeNames,
     damageTypePrefixes,
     orderedAttackSpeed
-} from "../../../data/small_stuff.ts";
+} from "../../common/small_stuff.ts";
 import {getPowderData} from "../item/powders.ts";
 import {SkillPointIndexes} from "../skill_point/skill_points.js";
 import {DamageDisplays} from "./attack_display.js";
