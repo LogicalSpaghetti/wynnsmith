@@ -20,9 +20,9 @@ const ItemTypes = {
     CUSTOM: 3,
 };
 
-type ItemCategory = ItemTypeType | ItemSubType
+export type ItemCategory = ItemTypeType | ItemSubType
 
-export class NormalItem implements GenericItem {
+export class BadItem {
     data: NormalItemType;
     type = ItemTypes.NORMAL;
     powders;
@@ -42,12 +42,12 @@ export class NormalItem implements GenericItem {
         const itemPowders = Powders.fromCluster(cluster, powderSlots, fixCluster);
 
         if (fixCluster) {
-            if (slot === "weapon") NormalItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement : "archer");
-            NormalItem.#colorSlot(cluster, "rarity" in itemData ? itemData.rarity : "");
-            NormalItem.#setLink(cluster, itemData.name);
+            if (slot === "weapon") BadItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement : "archer");
+            BadItem.#colorSlot(cluster, "rarity" in itemData ? itemData.rarity : "");
+            BadItem.#setLink(cluster, itemData.name);
         }
 
-        return new NormalItem(itemData, itemPowders);
+        return new BadItem(itemData, itemPowders);
     }
 
     // assumed to already have evaluated the type flag
@@ -63,7 +63,7 @@ export class NormalItem implements GenericItem {
         const hasPowders = binary.readFlag();
         const powders = hasPowders ? Powders.fromBinary(binary) : undefined;
 
-        return new NormalItem(data, powders);
+        return new BadItem(data, powders);
     }
 
     toBinary(category = this.data.type) {
@@ -117,7 +117,7 @@ export class NormalItem implements GenericItem {
     }
 }
 
-class GenericItem {
+export class Item {
     data: NormalItemType;
     type;
     powders;
@@ -131,19 +131,19 @@ class GenericItem {
     toBinary(): string {
     }
 
-    static fromBinary(binary: BitReader, category: ItemCategory): GenericItem | null {
+    static fromBinary(binary: BitReader, category: ItemCategory): Item | null {
         const type = binary.readNumberByMaximum(typesOfItemEncodings - 1);
         let data;
         switch (type) {
             case ItemTypes.NORMAL:
-                data = GenericItem.normalDataFromBinary(binary, category);
+                data = Item.normalDataFromBinary(binary, category);
                 break;
         }
         if (!data) return null;
 
         const powders = Powders.fromBinary(binary);
 
-        return new GenericItem(data, type, powders);
+        return new Item(data, type, powders);
     }
 
     static normalDataFromBinary(binary: BitReader, category: ItemCategory): NormalItemType | null {
@@ -151,15 +151,12 @@ class GenericItem {
         if (id < 0) return null;
         return itemDatabase.getItemById(id);
     }
+
+    static fromString(input: string, category = "") {
+        // TODO: handle non-normal items
+
+    }
 }
-
-// TODO: implement
-export class HelmetItem extends GenericItem {
-
-}
-
-// ...
-
 
 export class Items {
     weapon;
@@ -189,24 +186,24 @@ export class Items {
     static #readOffhands(binary) {
         const offhands = [];
         const offhandCount = spliceOffNumber(binary, maxOffhandCount);
-        for (let i = 0; i < offhandCount; i++) offhands.push(NormalItem.fromBinary(binary, weaponCategory));
+        for (let i = 0; i < offhandCount; i++) offhands.push(BadItem.fromBinary(binary, weaponCategory));
         return offhands;
     }
 
     static #readWeapon(binary) {
-        return NormalItem.fromBinary(binary, weaponCategory);
+        return BadItem.fromBinary(binary, weaponCategory);
     }
 
     static #readEquipment(binary) {
         const equipment = [];
-        for (const slot of slots) equipment.push(NormalItem.fromBinary(binary, slot));
+        for (const slot of slots) equipment.push(BadItem.fromBinary(binary, slot));
         return equipment;
     }
 
     static #readTomes(binary) {
         if (!flag(binary)) return new Array(tomeSlots.length).fill(null);
         const tomes = [];
-        for (let slot of tomeSlots) tomes.push(NormalItem.fromBinary(binary, `${slot}_tome`));
+        for (let slot of tomeSlots) tomes.push(BadItem.fromBinary(binary, `${slot}_tome`));
         return tomes;
     }
 
@@ -242,7 +239,7 @@ export class Items {
     static #getWeapon() {
         const itemInputs = document.getElementById("item_inputs");
         const weaponCluster = itemInputs.querySelector(`.primary_weapon_cluster`);
-        return NormalItem.fromCluster(weaponCluster);
+        return BadItem.fromCluster(weaponCluster);
     }
 
     static #getEquipment(item_input_id = "item_inputs") {
@@ -270,6 +267,6 @@ export class Items {
     }
 
     static #getItemsFromClusters(clusters) {
-        return Array.from(clusters).map(cluster => NormalItem.fromCluster(cluster));
+        return Array.from(clusters).map(cluster => BadItem.fromCluster(cluster));
     }
 }

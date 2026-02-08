@@ -235,7 +235,8 @@ export class Powder {
 export class Powders {
     powders;
 
-    constructor(powders: Powder[] = []) {
+    constructor(powders: Powder[] | string = []) {
+        if (typeof powders === "string") powders = Powders.stringToArr(powders)
         this.powders = Powders.sortPowderArray(powders);
     }
 
@@ -327,20 +328,30 @@ export class Powders {
     }
 
     static fromString(powdersString: string): Powders {
+        return new Powders(this.stringToArr(powdersString));
+    }
+
+    static stringToArr(powdersString: string): Powder[] {
         const powderArr: Powder[] = [];
         for (let i = 0; i < powdersString.length / 2; i++) {
             const element = powdersString[i * 2];
             if (!(powderPrefixes).find(x => x === element)) break;
             const tier = parseInt(powdersString[i * 2 + 1]) - 1;
-            if (isNaN(tier) || tier > Powder.maxTier) break
+            if (isNaN(tier) || tier > Powder.maxTier) break;
             powderArr.push(new Powder(element as PowderPrefix, tier as PowderTier));
         }
-        Powders.sortPowderArray(powderArr);
-        return new Powders(powderArr);
+        return powderArr;
     }
 
     toString() {
         return this.powders.map(powder => powder.toString()).join("");
+    }
+
+    equals(powders: Powders) {
+        if (this.powders.length !== powders.powders.length) return false;
+        for (let i = 0; i < this.powders.length; i++)
+            if (!this.powders[i].equals(powders.powders[i])) return false;
+        return true;
     }
 }
 

@@ -59,7 +59,7 @@ export type GenericGearItemType = GenericItemType & {
         defence?: number
         agility?: number
         quest?: string
-        class_requirement?: string
+        classRequirement?: string
     }
 }
 
