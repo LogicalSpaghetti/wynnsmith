@@ -3,6 +3,8 @@ import {Powder, Powders} from "./powders.ts";
 import {BitReader} from "../../common/numbers.ts";
 
 test("powders", () => {
+    expect(new Powder("f", 5).equals(new Powder("f", 5))).toEqual(true)
+    expect(new Powder("f", 0).equals(new Powder("f", 5))).toEqual(false)
     const powderTestCases = [
         "000",
         "001",
@@ -22,4 +24,7 @@ test("powders", () => {
     ];
     for (const test of testCases)
         expect(Powders.fromBinary(new BitReader(test, false)).toBinary()).equals(test);
+    expect(Powders.fromString("").toString()).toEqual("")
+    expect(Powders.fromString("b2").toString()).toEqual("")
+    expect(Powders.fromString("f6").toString()).toEqual("f6")
 });

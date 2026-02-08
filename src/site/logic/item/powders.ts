@@ -189,6 +189,7 @@ export class Powder {
     tier;
 
     constructor(element: PowderPrefix, tier: PowderTier) {
+        if (tier > Powder.maxTier) throw new RangeError(`Tier ${tier} is greater than the maximum of ${Powder.maxTier}`);
         this.element = element;
         this.tier = tier;
     }
@@ -219,6 +220,15 @@ export class Powder {
 
     isMaxTier() {
         return this.tier === Powder.maxTier;
+    }
+
+
+    equals(powder: Powder) {
+        return this.tier === powder.tier && this.element === powder.element;
+    }
+
+    toString() {
+        return this.element + (this.tier + 1);
     }
 }
 
@@ -266,7 +276,7 @@ export class Powders {
         for (let i = 0; i < this.powders.length; i++) {
             binary += repeatPowder ? "" : (this.powders[i].toBinary());
 
-            repeatPowder = this.powders[i] === this.powders[i + 1];
+            repeatPowder = i !== this.powders.length - 1 && this.powders[i].equals(this.powders[i + 1]);
             binary += repeatPowder ? "1" : "0";
             if (!repeatPowder)
                 binary += i < this.powders.length - 1 ? "1" : "0"; // morePowders
@@ -320,9 +330,9 @@ export class Powders {
         const powderArr: Powder[] = [];
         for (let i = 0; i < powdersString.length / 2; i++) {
             const element = powdersString[i * 2];
-            const tier = parseInt(powdersString[i * 2 + 1]);
             if (!(powderPrefixes).find(x => x === element)) break;
-            if (tier > 0 && tier <= Powder.maxTier) break;
+            const tier = parseInt(powdersString[i * 2 + 1]) - 1;
+            if (isNaN(tier) || tier > Powder.maxTier) break
             powderArr.push(new Powder(element as PowderPrefix, tier as PowderTier));
         }
         Powders.sortPowderArray(powderArr);
