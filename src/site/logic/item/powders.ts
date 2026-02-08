@@ -183,6 +183,7 @@ export class Powder {
     static readonly maxTier = 5;
     // 0-indexed to increase confusion
     static readonly lowestSpecialTier = 3;
+    static readonly bitsPerEncoding = 3;
 
     element;
     tier;
@@ -193,29 +194,31 @@ export class Powder {
     }
 
     toBinary() {
-        return this.isMaxTier()
-            ? decimalToBinary(powderPrefixes.indexOf(this.element) - 1, elementTypeCount)
-            : decimalToBinary(elementTypeCount) +
-            decimalToBinary(powderPrefixes.indexOf(this.element), elementTypeCount) +
-            decimalToBinary(this.tier, Powder.maxTier);
+        return (this.isMaxTier()) ?
+            decimalToBinary(powderPrefixes.indexOf(this.element), Powder.bitsPerEncoding)
+            : (
+                decimalToBinary(elementTypeCount, Powder.bitsPerEncoding) +
+                decimalToBinary(powderPrefixes.indexOf(this.element), Powder.bitsPerEncoding) +
+                decimalToBinary(this.tier, Powder.bitsPerEncoding)
+            );
     }
 
     static fromBinary(binary: BitReader): Powder {
-        const type = binary.readNumber(elementTypeCount + 1);
+        const type = binary.readNumber(Powder.bitsPerEncoding);
         let element;
         let tier: PowderTier;
         if (type < elementTypeCount) {
             element = powderPrefixes[type];
             tier = Powder.maxTier;
         } else if (type === elementTypeCount) {
-            element = powderPrefixes[binary.readNumber(elementTypeCount + 1)];
-            tier = binary.readNumber(Powder.maxTier) as PowderTier;
-        } else throw new Error(`Powder.fromBinary() is broken!`);
+            element = powderPrefixes[binary.readNumber(Powder.bitsPerEncoding)];
+            tier = binary.readNumber(Powder.bitsPerEncoding) as PowderTier;
+        } else throw new Error(`${type} is outside of allowed range!`);
         return new Powder(element, tier);
     }
 
     isMaxTier() {
-        return this.tier = Powder.maxTier;
+        return this.tier === Powder.maxTier;
     }
 }
 
@@ -235,19 +238,21 @@ export class Powders {
         return Powders.fromString(powdersString);
     }
 
-    // hasPowders must already be evaluated to true
     static fromBinary(binary: BitReader) {
         const powderArr: Powder[] = [];
 
-        let morePowders;
+        const hasPowders = binary.readFlag();
+        if (!hasPowders) return new Powders();
+
+        let morePowders = true;
         let repeatPowder = false;
-        do {
+        while (morePowders) {
             powderArr.push(repeatPowder
                 ? powderArr[powderArr.length - 1]
                 : Powder.fromBinary(binary));
             repeatPowder = binary.readFlag();
             if (!repeatPowder) morePowders = binary.readFlag();
-        } while (morePowders);
+        }
 
         return new Powders(powderArr);
     }
@@ -255,15 +260,17 @@ export class Powders {
     toBinary() {
         if (!this.powders.length) return "0";
 
-        let binary = "";
+        let binary = "1";
 
         let repeatPowder = false;
         for (let i = 0; i < this.powders.length; i++) {
-            binary += repeatPowder ? this.powders.length - 1 === i : ("1" + this.powders[i].toBinary());
+            binary += repeatPowder ? "" : (this.powders[i].toBinary());
+
             repeatPowder = this.powders[i] === this.powders[i + 1];
             binary += repeatPowder ? "1" : "0";
+            if (!repeatPowder)
+                binary += i < this.powders.length - 1 ? "1" : "0"; // morePowders
         }
-        binary += "0";
         return binary;
     }
 

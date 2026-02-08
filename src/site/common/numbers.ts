@@ -45,12 +45,12 @@ export function binaryToDecimal(binary: string) {
     return parseInt(binary, 2);
 }
 
-export function decimalToBinary(decimal: number, maxDecimal = 1) {
-    return decimalToPaddedBinary(decimal, decimalToPaddedBinary(maxDecimal).length);
+export function decimalToBinaryByMaximum(decimal: number, maxDecimal = 1) {
+    return decimalToBinary(decimal, decimalToBinary(maxDecimal).length);
 }
 
-function decimalToPaddedBinary(decimal: number, paddingLength = 1) {
-    return (decimal >>> 0).toString(2).padStart(paddingLength, "0");
+export function decimalToBinary(decimal: number, length = 1) {
+    return (decimal >>> 0).toString(2).padStart(length, "0");
 }
 
 const decimalToRomanKey = [
@@ -97,7 +97,7 @@ export class BitReader {
     index = 0;
     bitString;
 
-    constructor(data: string, isBase64: boolean = true) {
+    constructor(data: string, isBase64: boolean) {
         this.bitString = isBase64 ? base64ToBinary(data) : data;
     }
 
@@ -109,21 +109,24 @@ export class BitReader {
         return this.bitString[this.index++] === "1";
     }
 
-    readNumber(maximumValue: number): number {
-        const bitCount = decimalToBinary(maximumValue).length;
-        return this.readBits(bitCount);
+    readNumberByMaximum(maximumValue: number): number {
+        return this.readNumber(decimalToBinary(maximumValue).length);
     }
 
-    readBits(bitCount: number): number {
+    readNumber(bitCount: number): number {
+        return binaryToDecimal(this.readBits(bitCount));
+    }
+
+    readBits(bitCount: number): string {
         if (bitCount <= 0 || bitCount > 32) throw new RangeError("bitCount must be between 1 and 32");
         const binary = this.previewBits(bitCount);
         this.index += bitCount;
-        return binaryToDecimal(binary);
+        return binary;
     }
 
     previewBits(count: number): string {
         if (count > this.bitsRemaining()) throw new RangeError(`count ${count} is out of bounds for BitReader of length ${this.bitString.length} at index ${this.index}`);
-        return this.bitString.substring(this.index, this.index + count + 1);
+        return this.bitString.substring(this.index, this.index + count);
     }
 
     previewRemainingBits(): string {

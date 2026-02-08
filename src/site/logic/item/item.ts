@@ -1,9 +1,9 @@
 import * as search from "./item_search.js";
-import {getItem, itemDatabase} from "./item_search.js";
+import {itemDatabase} from "./item_search.js";
 import indexedInternalNameGroups from "../../../data/indexed_names.js";
-import {binaryToDecimal, BitReader, decimalToBinary, getBinaryLength} from "../../common/numbers.ts";
+import {binaryToDecimal, BitReader, decimalToBinaryByMaximum, getBinaryLength} from "../../common/numbers.ts";
 import {Powders} from "./powders.js";
-import type {AnyItemType, NormalItemType, WeaponItemType} from "./item_types.ts";
+import type {NormalItemType, WeaponItemType} from "./item_types.ts";
 import type {ItemSubType, ItemTypeType} from "../../../generated/item_types.ts";
 
 const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"];
@@ -16,8 +16,8 @@ const typesOfItemEncodings = 4;
 const ItemTypes = {
     NORMAL: 0,
     CRAFTED: 1,
-    CUSTOM: 2,
-    MODIFIED: 3,
+    MODIFIED: 2,
+    CUSTOM: 3,
 };
 
 type ItemCategory = ItemTypeType | ItemSubType
@@ -53,12 +53,12 @@ export class NormalItem implements GenericItem {
     // assumed to already have evaluated the type flag
     static fromBinary(binary: BitReader, category: ItemCategory) {
 
-        const itemIndex = binary.readNumber(indexedInternalNameGroups[category].length + 1) - 1;
+        const itemIndex = binary.readNumberByMaximum(indexedInternalNameGroups[category].length + 1) - 1;
         if (itemIndex < 0) return null;
 
         const internalName = indexedInternalNameGroups[category][itemIndex];
 
-        const data = getItem(internalName);
+        const data = itemDatabase.getItem(internalName);
 
         const hasPowders = binary.readFlag();
         const powders = hasPowders ? Powders.fromBinary(binary) : undefined;
@@ -70,7 +70,7 @@ export class NormalItem implements GenericItem {
         let binary = "";
 
         if (this.type === ItemTypes.NORMAL) {
-            binary += "0" + decimalToBinary(indexedInternalNameGroups[category].indexOf(this.data.internalName) + 1,
+            binary += "0" + decimalToBinaryByMaximum(indexedInternalNameGroups[category].indexOf(this.data.internalName) + 1,
                 indexedInternalNameGroups[category].length + 1);
         } else if (this.type === ItemTypes.CRAFTED) {
             throw new Error("Code for crafted items not yet added!");
@@ -132,7 +132,7 @@ class GenericItem {
     }
 
     static fromBinary(binary: BitReader, category: ItemCategory): GenericItem | null {
-        const type = binary.readNumber(typesOfItemEncodings - 1);
+        const type = binary.readNumberByMaximum(typesOfItemEncodings - 1);
         let data;
         switch (type) {
             case ItemTypes.NORMAL:
@@ -147,7 +147,7 @@ class GenericItem {
     }
 
     static normalDataFromBinary(binary: BitReader, category: ItemCategory): NormalItemType | null {
-        const id = binary.readNumber(itemDatabase.getSize() + 1) - 1;
+        const id = binary.readNumberByMaximum(itemDatabase.getSize() + 1) - 1;
         if (id < 0) return null;
         return itemDatabase.getItemById(id);
     }
@@ -211,7 +211,7 @@ export class Items {
     }
 
     #encodeOffhands() {
-        let binary = decimalToBinary(this.offhands.length);
+        let binary = decimalToBinaryByMaximum(this.offhands.length);
         for (let offhand of this.offhands) binary += offhand.toBinary(weaponCategory);
         return binary;
     }

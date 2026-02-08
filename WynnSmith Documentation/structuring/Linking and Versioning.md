@@ -40,7 +40,7 @@ keep outdated information stored in a place that's only sent to the client if th
 				 - 101 for element xxx and tier \_\_\_xxx (0-5)
 				 - 110 and 111 unused
 			 - flag: repeat powder
-				 - flag: end powders for item, (only if not repeated)
+				 - flag: more powders - (only if not repeated)
 	4. Abilities
 		1. Aspects
 			- flag: has aspects
