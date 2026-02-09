@@ -1,6 +1,9 @@
 import connectionsUrl from "../../../assets/img/ability/connections.png";
 
-type dir = 0 | 1
+type dir = number
+
+export type Cell = { travelNode: TravelNode, abilityID?: string }
+export type CellMap = { [key: string | number]: Cell }
 export type TravelNode = { up: dir, down: dir, left: dir, right: dir }
 
 export class TreeCanvas {
@@ -15,16 +18,16 @@ export class TreeCanvas {
 
     loadingComplete: boolean = false;
 
-    state: TravelNode[];
+    state: CellMap;
 
-    constructor(initialState: TravelNode[]) {
+    constructor(initialState: CellMap) {
         this.state = initialState;
 
         this.canvas = document.createElement("canvas");
         this.canvas.width = TreeCanvas.tileSize * TreeCanvas.columns;
         this.canvas.height = TreeCanvas.tileSize * TreeCanvas.rows;
 
-        this.ctx = this.canvas.getContext('2d')!
+        this.ctx = this.canvas.getContext('2d')!;
 
         this.connections = new Image();
         this.connections.src = connectionsUrl;
@@ -46,8 +49,10 @@ export class TreeCanvas {
         }
     }
 
-    changeState(state: TravelNode[]) {
+    changeState(state: CellMap) {
+        this.erasePrevious();
         this.state = state;
+        this.tryDraw();
     }
 
     static spritePositionToImagePosition({up, down, left, right}: TravelNode) {
@@ -57,19 +62,19 @@ export class TreeCanvas {
         };
     }
 
-    private draw() {
-        let row = -1;
-        for (let i = 0; i < this.state.length; i++) {
-            if (i % TreeCanvas.columns === 0) row++;
-            let col = i % TreeCanvas.columns;
-
-            this.drawConnection(row, col, this.state[i]);
+    private tryDraw() {
+        if (this.loadingComplete) {
+            this.draw();
         }
+    }
+
+    private draw() {
+        this.iter((row, col, cell) =>
+            this.drawConnection(row, col, cell.travelNode));
     }
 
     private drawConnection(row: number, col: number, travelNode: TravelNode) {
         const position = TreeCanvas.spritePositionToImagePosition(travelNode);
-        console.log(position.x, position.y);
 
         const size = TreeCanvas.tileSize;
         const dx = size * col;
@@ -81,5 +86,27 @@ export class TreeCanvas {
             position.x, position.y, size, size,
             dx, dy, size, size,
         );
+    }
+
+    private erasePrevious() {
+        this.iter((row, col) => this.eraseConnection(row, col));
+    }
+
+    private eraseConnection(row: number, col: number) {
+        const size = TreeCanvas.tileSize;
+        const dx = size * col;
+        const dy = size * row;
+
+        this.ctx.clearRect(dx, dy, size, size);
+    }
+
+    private iter(fun: (row: number, col: number, cell: Cell) => void) {
+        for (const key in this.state) {
+            const index = parseInt(key) - 1;
+            let row = Math.floor(index / TreeCanvas.columns);
+            let col = index % TreeCanvas.columns;
+
+            fun(row, col, this.state[key]);
+        }
     }
 }

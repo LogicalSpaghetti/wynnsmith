@@ -18,10 +18,6 @@
 7. damage percents apply
 8. Elemental Mastery Nodes
 	1. Only affects non-zero post-conversion elements
-	2. needs more testing to determine:
-		1. is the base from this affected by % ids, and/or the % from the node itself
-		2. is the % from the node added to %s from ids
-		3. Effect of weapon base attack speed
 9. Spells have their base damage multiplied by the weapon's **base** attack speed
 10. raw Damage is added to base damage
 11. Damage multipliers

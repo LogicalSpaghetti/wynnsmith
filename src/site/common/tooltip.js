@@ -16,6 +16,7 @@ function initTooltip() {
         cursorTooltip.hidden = true;
         document.body.appendChild(cursorTooltip);
     }
+    return cursorTooltip;
 }
 
 function moveTooltip(X, Y, checkHidden = false) {
@@ -42,8 +43,8 @@ function moveTooltip(X, Y, checkHidden = false) {
     cursorTooltip.style.left = `${leftOffset}px`;
 }
 
-export function renderHoverTooltip(innerHTML = "", container_id = "cursorTooltip") {
-    const container = document.getElementById(container_id);
+export function  renderHoverTooltip(innerHTML = "", container_id = "cursorTooltip") {
+    const container = document.getElementById(container_id) ?? initTooltip();
 
     if (innerHTML === "") return;
 

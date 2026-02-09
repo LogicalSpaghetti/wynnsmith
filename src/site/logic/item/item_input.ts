@@ -3,6 +3,8 @@ import {snakeToTitle} from "../../common/display_item";
 import {itemDatabase} from "./item_search.ts";
 import type {NormalItemType} from "./item_types.ts";
 import {Powders} from "./powders.ts";
+import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip";
+import {getHoverTextForItem} from "../../common/minecraft_html";
 
 export class ItemInput {
     static readonly defaultWeaponIcon = "archer";
@@ -10,7 +12,9 @@ export class ItemInput {
     readonly container;
     readonly link;
     readonly icon: HTMLImageElement;
+    readonly inputContainer;
     readonly input: HTMLInputElement;
+    readonly selector;
     readonly powderInput?: HTMLInputElement;
 
     readonly category;
@@ -29,22 +33,36 @@ export class ItemInput {
         const container = this.container = document.createElement("div");
         container.classList.add("input_cluster");
 
-        container.appendChild(this.link = this.initLink());
-        this.link.appendChild(this.icon = this.initIcon());
 
-        container.appendChild(this.input = this.initInput(category));
+        const link = container.appendChild(this.link = this.initLink());
+        link.appendChild(this.icon = this.initIcon());
+
+        const inputContainer = container.appendChild(this.inputContainer = this.initInputContainer());
+
+        inputContainer.appendChild(this.input = this.initInput(category));
+        inputContainer.appendChild(document.createElement("br"));
+        inputContainer.appendChild(this.selector = this.initSelector());
+
         if (hasPowders) container.appendChild(this.powderInput = this.initPowderInput());
+    }
+
+    private initInputContainer() {
+        return document.createElement("span");
     }
 
     private initLink() {
         const link = document.createElement("a");
         link.target = "_blank";
         link.tabIndex = -1;
+        link.addEventListener("mouseover", () => renderHoverTooltip(getHoverTextForItem(this.itemData, "Invalid Item!")));
+        link.addEventListener("mouseout", () => hideHoverAbilityTooltip());
+
         return link;
     }
 
     private initIcon() {
         const img = document.createElement("img");
+        img.style.paddingRight = "1px";
         img.src = `img/cat_icon/${this.category}.png`;
         return img;
     }
@@ -66,6 +84,19 @@ export class ItemInput {
         return powderInput;
     }
 
+    private initSelector() {
+        const selector = document.createElement("ul");
+        selector.classList.add("slot_ul");
+        selector.style.position = "absolute";
+        const li = document.createElement("li")
+        li.classList.add("slot_li");
+
+        li.textContent = "hello"
+        li.dataset.rarity = "mythic"
+        selector.appendChild(li);
+        return selector;
+    }
+
     private changeInput() {
         const newData = itemDatabase.getItemByName(this.input.value);
         if (newData === this.itemData) return;
@@ -74,6 +105,7 @@ export class ItemInput {
             this.updateWeaponIcon(newData);
             this.updatePowderSlots(newData);
         }
+        this.updateRarity(newData);
         this.onChange();
     }
 
@@ -93,7 +125,11 @@ export class ItemInput {
         this.icon.src = `img/cat_icon/${name}.png`;
     }
 
-    updatePowderSlots(newData: NormalItemType) {
+    private updateRarity(newData: NormalItemType | null) {
+        this.input.dataset.rarity = newData && "rarity" in newData ? newData.rarity : "";
+    }
+
+    private updatePowderSlots(newData: NormalItemType) {
         const powderInput = this.powderInput;
         if (!powderInput) return;
         const powderSlots = "powderSlots" in newData ? newData.powderSlots! : 0;
