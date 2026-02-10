@@ -1,4 +1,4 @@
-import {Items} from "../item/item.ts";
+import {OldItems} from "../item/item.ts";
 import {maxPlayerLevel} from "../../common/small_stuff.ts";
 import {Abilities} from "../ability/ability.js";
 import * as search from "../item/item_search.ts";
@@ -40,7 +40,7 @@ export class Build {
     static fromHTML() {
         // TODO
         const level = document.getElementById("level_input").value;
-        const items = Items.fromHTML();
+        const items = OldItems.fromHTML();
         const modifiedSP = getSkillPointModifiers();
         const abilities = Abilities.fromHTML();
         return new Build(latestVersion, level, items, modifiedSP, abilities);

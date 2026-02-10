@@ -7,6 +7,7 @@ import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip"
 import {getHoverTextForItem} from "../../common/minecraft_html";
 import {mod} from "../../common/numbers.ts";
 
+// TODO: add indicator for powder special
 export class ItemInput {
     static readonly defaultWeaponIcon = "archer";
     static readonly maximumOptions = 4;
@@ -131,7 +132,7 @@ export class ItemInput {
 
     private changeInput() {
         this.updateSearch();
-        const newData = itemDatabase.getItemByName(this.input.value);
+        const newData = itemDatabase.getItemInGroup(this.input.value, this.category);
         if (newData === this.itemData) return;
         this.itemData = newData;
         if (newData) {

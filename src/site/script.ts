@@ -2,6 +2,7 @@ import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
 import {ItemInput} from "./logic/item/item_input.ts";
 import {type CellMap, TreeCanvas} from "./render/canvas.ts";
 import trees from "../js_data/trees.js"
+import {ItemInputs} from "./logic/item/item_inputs.ts";
 
 // code entry point:
 if (document.readyState === "loading") {
@@ -21,12 +22,8 @@ function loadSite() {
     addSettingsListeners();
 }
 
-// TODO: add a <ul> of <li>s for the search
-const itemInput = new ItemInput("weapon", true, true,
-    () => {})
-document.getElementById("skib")?.appendChild(itemInput.container);
-const helmetInput = new ItemInput("helmet", true, false, () => {}, () => helmetInput.container.remove());
-document.getElementById("skib")?.appendChild(helmetInput.container);
+const inputs = new ItemInputs(() => console.log("hello!"));
+document.getElementById("skib")?.appendChild(inputs.container);
 
 const state: CellMap = trees.archer.cellMap
 const treeCanvas = new TreeCanvas(state)

@@ -193,9 +193,9 @@ input[type="checkbox"] {
 .slot_ul {
   list-style-type: none;
   margin-top: 0;
-  padding: 0.25rem 0 0;
+  padding: 0;
   line-height: 1;
-  width: 12rem;
+  width: 16rem;
   border: 1px solid var(--ls-trim);
   border-radius: 0.25rem;
   overflow-y: scroll;
@@ -423,7 +423,6 @@ canvas {
   right: 0;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-crisp-edges;
-  image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 

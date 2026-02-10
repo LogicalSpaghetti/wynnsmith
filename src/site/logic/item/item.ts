@@ -22,7 +22,7 @@ const ItemTypes = {
 
 export type ItemCategory = ItemTypeType | ItemSubType
 
-export class BadItem {
+export class OldItem {
     data: NormalItemType;
     type = ItemTypes.NORMAL;
     powders;
@@ -42,12 +42,12 @@ export class BadItem {
         const itemPowders = Powders.fromCluster(cluster, powderSlots, fixCluster);
 
         if (fixCluster) {
-            if (slot === "weapon") BadItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement : "archer");
-            BadItem.#colorSlot(cluster, "rarity" in itemData ? itemData.rarity : "");
-            BadItem.#setLink(cluster, itemData.name);
+            if (slot === "weapon") OldItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement : "archer");
+            OldItem.#colorSlot(cluster, "rarity" in itemData ? itemData.rarity : "");
+            OldItem.#setLink(cluster, itemData.name);
         }
 
-        return new BadItem(itemData, itemPowders);
+        return new OldItem(itemData, itemPowders);
     }
 
     // assumed to already have evaluated the type flag
@@ -63,7 +63,7 @@ export class BadItem {
         const hasPowders = binary.readFlag();
         const powders = hasPowders ? Powders.fromBinary(binary) : undefined;
 
-        return new BadItem(data, powders);
+        return new OldItem(data, powders);
     }
 
     toBinary(category = this.data.type) {
@@ -129,6 +129,7 @@ export class Item {
     }
 
     toBinary(): string {
+        return "";
     }
 
     static fromBinary(binary: BitReader, category: ItemCategory): Item | null {
@@ -158,7 +159,28 @@ export class Item {
     }
 }
 
+export type Equipment = {
+    helmet: Item;
+    chestplate: Item;
+    leggings: Item;
+    ring1: Item;
+    ring2: Item;
+    bracelet: Item;
+    necklace: Item;
+}
+
+type Tomes = {
+    // TODO
+}
+
 export class Items {
+    weapon: Item;
+    offhands: Item[];
+    equipment: Equipment;
+    tomes: Tomes;
+}
+
+export class OldItems {
     weapon;
     offhands = [];
     equipment = [];
@@ -172,10 +194,10 @@ export class Items {
     }
 
     static fromHTML = () =>
-        new Items(Items.#getOffhands(), Items.#getWeapon(), Items.#getEquipment(), Items.#getTomes());
+        new OldItems(OldItems.#getOffhands(), OldItems.#getWeapon(), OldItems.#getEquipment(), OldItems.#getTomes());
 
     static fromBinary = (binary) =>
-        new Items(this.#readOffhands(binary), this.#readWeapon(binary), this.#readEquipment(binary), this.#readTomes());
+        new OldItems(this.#readOffhands(binary), this.#readWeapon(binary), this.#readEquipment(binary), this.#readTomes());
 
     toBinary = () =>
         this.#encodeOffhands() +
@@ -186,24 +208,24 @@ export class Items {
     static #readOffhands(binary) {
         const offhands = [];
         const offhandCount = spliceOffNumber(binary, maxOffhandCount);
-        for (let i = 0; i < offhandCount; i++) offhands.push(BadItem.fromBinary(binary, weaponCategory));
+        for (let i = 0; i < offhandCount; i++) offhands.push(OldItem.fromBinary(binary, weaponCategory));
         return offhands;
     }
 
     static #readWeapon(binary) {
-        return BadItem.fromBinary(binary, weaponCategory);
+        return OldItem.fromBinary(binary, weaponCategory);
     }
 
     static #readEquipment(binary) {
         const equipment = [];
-        for (const slot of slots) equipment.push(BadItem.fromBinary(binary, slot));
+        for (const slot of slots) equipment.push(OldItem.fromBinary(binary, slot));
         return equipment;
     }
 
     static #readTomes(binary) {
         if (!flag(binary)) return new Array(tomeSlots.length).fill(null);
         const tomes = [];
-        for (let slot of tomeSlots) tomes.push(BadItem.fromBinary(binary, `${slot}_tome`));
+        for (let slot of tomeSlots) tomes.push(OldItem.fromBinary(binary, `${slot}_tome`));
         return tomes;
     }
 
@@ -233,13 +255,13 @@ export class Items {
     static #getOffhands() {
         const itemInputs = document.getElementById("item_inputs");
         const offhandClusters = itemInputs.querySelector(`.offhands`).querySelectorAll(`.input_cluster`);
-        return Items.#getItemsFromClusters(offhandClusters);
+        return OldItems.#getItemsFromClusters(offhandClusters);
     }
 
     static #getWeapon() {
         const itemInputs = document.getElementById("item_inputs");
         const weaponCluster = itemInputs.querySelector(`.primary_weapon_cluster`);
-        return BadItem.fromCluster(weaponCluster);
+        return OldItem.fromCluster(weaponCluster);
     }
 
     static #getEquipment(item_input_id = "item_inputs") {
@@ -247,9 +269,9 @@ export class Items {
         const weaponInput = inputs.querySelector(`.primary_weapon_cluster > .item_input`);
         const gearClusters = inputs.querySelectorAll(`.input_cluster[data-group="gear"]`);
 
-        Items.#morphify(weaponInput, gearClusters);
+        OldItems.#morphify(weaponInput, gearClusters);
 
-        return Items.#getItemsFromClusters(gearClusters);
+        return OldItems.#getItemsFromClusters(gearClusters);
     }
 
     static #morphify(weaponInput, gearClusters) {
@@ -263,10 +285,10 @@ export class Items {
     static #getTomes() {
         const tomeClusters = document.getElementById("tome_inputs")
             .querySelectorAll(".input_cluster");
-        return Items.#getItemsFromClusters(tomeClusters);
+        return OldItems.#getItemsFromClusters(tomeClusters);
     }
 
     static #getItemsFromClusters(clusters) {
-        return Array.from(clusters).map(cluster => BadItem.fromCluster(cluster));
+        return Array.from(clusters).map(cluster => OldItem.fromCluster(cluster));
     }
 }

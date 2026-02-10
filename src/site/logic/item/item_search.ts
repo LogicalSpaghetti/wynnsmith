@@ -1,7 +1,7 @@
 import {snakeToTitle} from "../../common/display_item.js";
 import type {NormalItemType} from "./item_types.ts";
 import {Database} from "../database/database.ts";
-import type {ItemSubType, ItemTypeType} from "../../../generated/item_types.ts";
+import type {ItemCategory} from "./item.ts";
 
 class ItemSearch extends Database<NormalItemType[]> {
     private static readonly filePath = "items.json";
@@ -43,13 +43,13 @@ class ItemSearch extends Database<NormalItemType[]> {
         return this.items[id]
     }
 
-    getItemInGroup(groupName: string, itemName: string): NormalItemType | null {
-        const item = this.getItemByExactName(itemName);
-        return item?.subType === groupName || item?.type === groupName
+    getItemInGroup(search: string, category: ItemCategory): NormalItemType | null {
+        const item = this.getItemByExactName(search);
+        return item?.subType === category || item?.type === category
             ? item : null;
     }
 
-    getItemsInCategory(search: string, category: ItemTypeType | ItemSubType): NormalItemType[] {
+    getItemsInCategory(search: string, category: ItemCategory): NormalItemType[] {
         return this.getItems(search).filter(item => item.type === category || item.subType === category);
     }
 
