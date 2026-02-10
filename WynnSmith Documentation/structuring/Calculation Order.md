@@ -37,7 +37,9 @@
 5. Add tree cost modifiers
 6. Set to the max of itself and 1
 7. Apply Mask multipliers
-
+$$
+\begin{bsmallmatrix} n\\ e\\ t\\ w\\ f\\ a \end{bsmallmatrix}\odot
+$$
 
 $$
 \sum_{n=0}^\infty(\frac 1{n!}-4\frac{(-1)^n}{2n+1})

@@ -19,6 +19,8 @@
   --wy-backbround: #82654c;
   --wy-slot: #cda870;
   --ls-ability_background: #373943;
+  --ls-warning: #afaf00;
+  --ls-error: #e00000;
 
   --wy-neutral: #fca800;
   --wy-earth: #00aa00;
@@ -191,19 +193,53 @@ input[type="checkbox"] {
 .slot_ul {
   list-style-type: none;
   margin-top: 0;
-  padding: 0.2rem 0 0;
+  padding: 0.25rem 0 0;
   line-height: 1;
   width: 12rem;
-  border: 1px solid var(--ls-background);
+  border: 1px solid var(--ls-trim);
+  border-radius: 0.25rem;
+  overflow-y: scroll;
+  max-height: 5.5rem;
+  background: var(--ls-background);
 }
 
 .slot_li {
   color: inherit;
-  background-color: var(--ls-background2);
-  /*border: 1px solid var(--ls-background);*/
   cursor: pointer;
   padding: 2px 2px 2px 1rem;
   border-radius: 0.25rem;
+}
+
+.slot_li:hover {
+  background-color: var(--ls-background2);
+}
+
+.slot_li[data-selected="true"] {
+  background-color: var(--ls-background3);
+}
+
+input:disabled {
+  background-color: var(--ls-background);
+  color: #aaa;
+  opacity: 1;
+}
+
+input:not(:disabled):hover {
+  border: 1px solid var(--ls-trim-hover);
+  background-color: var(--ls-background-hover);
+}
+
+input[data-warning="true"] {
+  border-color: var(--ls-warning);
+}
+
+input[data-error="true"] {
+  border-color: var(--ls-error);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--ls-trim-hover);
 }
 
 .tome_input {
@@ -240,17 +276,6 @@ input[type="checkbox"] {
 
 .powder_input {
   width: 4rem;
-}
-
-.toggle:hover,
-input:hover {
-  border: 1px solid var(--ls-trim-hover);
-  background-color: var(--ls-background-hover);
-}
-
-input:focus {
-  outline: none;
-  border: 1px solid var(--ls-orange);
 }
 
 .sp_input {

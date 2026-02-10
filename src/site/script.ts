@@ -25,6 +25,8 @@ function loadSite() {
 const itemInput = new ItemInput("weapon", true, true,
     () => {})
 document.getElementById("skib")?.appendChild(itemInput.container);
+const helmetInput = new ItemInput("helmet", true, false, () => {}, () => helmetInput.container.remove());
+document.getElementById("skib")?.appendChild(helmetInput.container);
 
 const state: CellMap = trees.archer.cellMap
 const treeCanvas = new TreeCanvas(state)

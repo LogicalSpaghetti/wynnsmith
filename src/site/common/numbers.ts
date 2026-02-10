@@ -145,3 +145,7 @@ export class BitReader {
         return this.bitString;
     }
 }
+
+export function mod(value: number, modulo: number): number {
+    return ((value % modulo) + modulo) % modulo;
+}

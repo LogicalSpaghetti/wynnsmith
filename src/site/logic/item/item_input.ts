@@ -5,17 +5,20 @@ import type {NormalItemType} from "./item_types.ts";
 import {Powders} from "./powders.ts";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip";
 import {getHoverTextForItem} from "../../common/minecraft_html";
+import {mod} from "../../common/numbers.ts";
 
 export class ItemInput {
     static readonly defaultWeaponIcon = "archer";
+    static readonly maximumOptions = 4;
 
     readonly container;
     readonly link;
     readonly icon: HTMLImageElement;
     readonly inputContainer;
     readonly input: HTMLInputElement;
-    readonly selector;
+    readonly search;
     readonly powderInput?: HTMLInputElement;
+    readonly deleteButton?: HTMLButtonElement;
 
     readonly category;
     readonly onChange;
@@ -25,14 +28,16 @@ export class ItemInput {
     powders: Powders = new Powders();
     private powderSlots = 0;
 
-    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, onChange: () => void) {
+    private selection = -1;
+    private options = 0;
+
+    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, onChange: () => void, selfDelete?: () => void) {
         this.category = category;
         this.onChange = onChange;
         this.isWeapon = isWeapon;
 
         const container = this.container = document.createElement("div");
         container.classList.add("input_cluster");
-
 
         const link = container.appendChild(this.link = this.initLink());
         link.appendChild(this.icon = this.initIcon());
@@ -41,9 +46,11 @@ export class ItemInput {
 
         inputContainer.appendChild(this.input = this.initInput(category));
         inputContainer.appendChild(document.createElement("br"));
-        inputContainer.appendChild(this.selector = this.initSelector());
+        inputContainer.appendChild(this.search = this.initSearch());
 
         if (hasPowders) container.appendChild(this.powderInput = this.initPowderInput());
+
+        if (selfDelete) container.appendChild(this.deleteButton = this.initDeleteButton(selfDelete))
     }
 
     private initInputContainer() {
@@ -72,6 +79,19 @@ export class ItemInput {
         input.classList.add("slot_input");
         input.placeholder = snakeToTitle(category);
         input.addEventListener("input", () => this.changeInput());
+        input.addEventListener("blur", () => {
+            this.hideSearch();
+            this.clipPowders();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                this.moveSelection(e.key);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                this.selectLi();
+            }
+        });
         return input;
     }
 
@@ -80,40 +100,45 @@ export class ItemInput {
         powderInput.classList.add("powder_input");
         powderInput.placeholder = "No Slots";
         powderInput.disabled = true;
-        powderInput.addEventListener("input", () => this.changePowders());
+        powderInput.addEventListener("input", () => {
+            this.changePowders();
+            this.updatePowderHighlight();
+        });
         return powderInput;
     }
 
-    private initSelector() {
-        const selector = document.createElement("ul");
-        selector.classList.add("slot_ul");
-        selector.style.position = "absolute";
-        const li = document.createElement("li")
+    private initSearch() {
+        const search = document.createElement("ul");
+        search.classList.add("slot_ul");
+        search.style.position = "absolute";
+        search.hidden = true;
+        const li = document.createElement("li");
         li.classList.add("slot_li");
 
-        li.textContent = "hello"
-        li.dataset.rarity = "mythic"
-        selector.appendChild(li);
-        return selector;
+        li.textContent = "hello";
+        li.dataset.rarity = "mythic";
+        search.appendChild(li);
+        return search;
+    }
+
+    private initDeleteButton(selfDelete: () => void) {
+        const button = document.createElement("button");
+        button.textContent = "x";
+        button.title = "Remove offhand";
+        button.addEventListener("click", () => selfDelete())
+        return button;
     }
 
     private changeInput() {
+        this.updateSearch();
         const newData = itemDatabase.getItemByName(this.input.value);
         if (newData === this.itemData) return;
         this.itemData = newData;
         if (newData) {
             this.updateWeaponIcon(newData);
-            this.updatePowderSlots(newData);
         }
+        this.updatePowderSlots(newData);
         this.updateRarity(newData);
-        this.onChange();
-    }
-
-    private changePowders() {
-        if (!this.powderInput) return;
-        const newPowders = new Powders(this.powderInput.value);
-        if (this.powders.equals(newPowders)) return;
-        this.powders = newPowders;
         this.onChange();
     }
 
@@ -129,28 +154,105 @@ export class ItemInput {
         this.input.dataset.rarity = newData && "rarity" in newData ? newData.rarity : "";
     }
 
-    private updatePowderSlots(newData: NormalItemType) {
+    private changePowders() {
+        if (!this.powderInput) return;
+        const newPowders = new Powders(this.powderInput.value.substring(0, this.powderSlots * 2));
+        this.powderError(newPowders);
+        if (this.powders.equals(newPowders)) return;
+        this.powders = newPowders;
+        this.onChange();
+    }
+
+    private powderError(powders = this.powders) {
+        if (!this.powderInput) return;
+        this.powderInput.dataset.error = String(powders.powders.length * 2 !== this.powderInput.value.length);
+    }
+
+    private updatePowderSlots(newData: NormalItemType | null) {
         const powderInput = this.powderInput;
         if (!powderInput) return;
-        const powderSlots = "powderSlots" in newData ? newData.powderSlots! : 0;
+        const powderSlots = newData && "powderSlots" in newData ? newData.powderSlots! : 0;
         if (powderSlots === this.powderSlots) return;
         this.powderSlots = powderSlots;
 
-        if (powderSlots === 0) {
-            powderInput.placeholder = "No Slots";
-            powderInput.maxLength = 0;
-            powderInput.value = "";
-            powderInput.disabled = true;
+        powderInput.placeholder = `${powderSlots || "No"} Slots`;
+        powderInput.maxLength = powderSlots * 2;
+        powderInput.disabled = powderSlots === 0;
+
+        this.updatePowderHighlight();
+    }
+
+    private updatePowderHighlight() {
+        if (!this.powderInput) return;
+        this.powderInput.dataset.warning = String(this.powderInput.value.length !== this.powderSlots * 2);
+        this.powderError();
+    }
+
+    private clipPowders() {
+        if (!this.powderInput) return;
+        if (this.powderInput.value.length > this.powderSlots * 2) {
+            this.powderInput.value = this.powderInput.value.substring(0, this.powderSlots * 2);
+        }
+        this.changePowders();
+        this.updatePowderHighlight();
+    }
+
+    private updateSearch() {
+        this.search.hidden = false;
+        const possibilities = itemDatabase.getItemsInCategory(this.input.value, this.category);
+        this.options = possibilities.length;
+        this.selection = -1;
+        if (!possibilities.length) {
+            const li = document.createElement("li");
+            li.classList.add("slot_li");
+            li.textContent = "No results!";
+            this.search.replaceChildren(li);
             return;
         }
 
-        powderInput.disabled = false;
+        this.search.replaceChildren(...possibilities
+            .map((itemData, i) => this.newSearchElement(itemData, i)));
+    }
 
-        powderInput.placeholder = `${powderSlots} Slots`;
+    private newSearchElement(itemData: NormalItemType, index: number) {
+        if (!("rarity" in itemData)) return "";
+        const li = document.createElement("li");
+        li.classList.add("slot_li");
+        li.dataset.rarity = itemData.rarity;
+        li.dataset.name = itemData.name;
+        li.textContent = itemData.name;
+        li.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            this.selectLi(index);
+        });
+        return li;
+    }
 
-        const maxLen = powderSlots * 2;
-        powderInput.maxLength = maxLen;
-        if (powderInput.value.length > maxLen)
-            powderInput.value = powderInput.value.substring(0, maxLen);
+    private hideSearch() {
+        this.search.hidden = true;
+    }
+
+    private moveSelection(key: string) {
+        if (this.options === 0) return;
+        this.selection = mod(this.selection + (key === "ArrowUp" ? -1 : 1), this.options);
+        console.log(this.selection);
+        for (let i = 0; i < this.search.children.length; i++) {
+            const element = this.search.children[i] as HTMLElement;
+            element.dataset.selected = String(i === this.selection);
+            if (i === this.selection) {
+                element.scrollIntoView({
+                    behavior: "instant",
+                    block: "nearest",
+                    inline: "nearest",
+                });
+            }
+        }
+    }
+
+    private selectLi(index: number = this.selection) {
+        if (index === -1) return;
+        this.input.value = (this.search.children[index] as HTMLElement).dataset.name ?? "Error, please report";
+        this.changeInput();
+        this.hideSearch();
     }
 }
