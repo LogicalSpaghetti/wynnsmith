@@ -1,22 +1,24 @@
-import {type Equipment, type ItemCategory} from "./item.ts";
-import {ItemInput} from "./item_input.ts";
+import {ItemInput, WeaponInput} from "./item_input.ts";
 
-const equipmentData: { category: ItemCategory, slot: keyof Equipment, hasPowders: boolean }[] = [
-    {category: "helmet", slot: "helmet", hasPowders: true},
-    {category: "chestplate", slot: "chestplate", hasPowders: true},
-    {category: "leggings", slot: "leggings", hasPowders: true},
-    {category: "boots", slot: "boots", hasPowders: true},
-    {category: "ring", slot: "ring1", hasPowders: false},
-    {category: "ring", slot: "ring2", hasPowders: false},
-    {category: "bracelet", slot: "bracelet", hasPowders: false},
-    {category: "necklace", slot: "necklace", hasPowders: false},
-];
+export type EquipmentInputs = [
+    ItemInput, // helmet
+    ItemInput, // chestplate
+    ItemInput, // leggings
+    ItemInput, // boots
+    ItemInput, // ring
+    ItemInput, // ring
+    ItemInput, // bracelet
+    ItemInput, // necklace
+]
 
+const morph = ["Morph-Stardust", "Morph-Steel", "Morph-Iron", "Morph-Gold", "Morph-Topaz", "Morph-Emerald", "Morph-Amethyst", "Morph-Ruby"];
+
+// TODO: Morph-
 export class ItemInputs {
     container;
 
     weapon: ItemInput;
-    equipment: Equipment;
+    equipment: EquipmentInputs;
     // offhands: Item[];
 
     onChange;
@@ -26,23 +28,31 @@ export class ItemInputs {
 
         const container = this.container = document.createElement("div");
         this.equipment = this.initEquipment();
-        for (const key in this.equipment)
-            container.appendChild(this.equipment[key as keyof Equipment].container);
+        for (const input of this.equipment)
+            container.appendChild(input.container);
 
         const weapon = this.weapon = this.initWeapon();
         container.appendChild(weapon.container);
     }
 
-    private initEquipment(): Equipment {
-        const equipment = {} as Equipment;
-
-        for (const entry of equipmentData)
-            equipment[entry.slot] = new ItemInput(entry.category, entry.hasPowders, false, this.onChange);
-
-        return equipment;
+    private initEquipment(): EquipmentInputs {
+        return [
+            new ItemInput("helmet", true, false, this.onChange),
+            new ItemInput("chestplate", true, false, this.onChange),
+            new ItemInput("leggings", true, false, this.onChange),
+            new ItemInput("boots", true, false, this.onChange),
+            new ItemInput("ring", false, false, this.onChange),
+            new ItemInput("ring", false, false, this.onChange),
+            new ItemInput("bracelet", false, false, this.onChange),
+            new ItemInput("necklace", false, false, this.onChange),
+        ]
     }
 
     private initWeapon() {
-        return new ItemInput("weapon", true, true, this.onChange);
+        return new WeaponInput("weapon", true, true, this.onChange, this.onMorph);
+    }
+
+    private onMorph = () => {
+        this.equipment.forEach((input, i) => input.changeInput(morph[i], false))
     }
 }

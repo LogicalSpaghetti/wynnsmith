@@ -3,7 +3,7 @@ import {itemDatabase} from "./item_search.js";
 import indexedInternalNameGroups from "../../../js_data/indexed_names.js";
 import {binaryToDecimal, BitReader, decimalToBinaryByMaximum, getBinaryLength} from "../../common/numbers.ts";
 import {Powders} from "./powders.js";
-import type {NormalItemType, WeaponItemType} from "./item_types.ts";
+import type {NormalItemData, WeaponItemType} from "./item_types.ts";
 import type {ItemSubType, ItemTypeType} from "../../../generated/item_types.ts";
 
 const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"];
@@ -23,11 +23,11 @@ const ItemTypes = {
 export type ItemCategory = ItemTypeType | ItemSubType
 
 export class OldItem {
-    data: NormalItemType;
+    data: NormalItemData;
     type = ItemTypes.NORMAL;
     powders;
 
-    constructor(data: NormalItemType, powders: Powders = new Powders()) {
+    constructor(data: NormalItemData, powders: Powders = new Powders()) {
         this.data = data;
         this.powders = powders;
     }
@@ -118,11 +118,11 @@ export class OldItem {
 }
 
 export class Item {
-    data: NormalItemType;
+    data: NormalItemData;
     type;
     powders;
 
-    constructor(data: NormalItemType, type: number, powders: Powders = new Powders()) {
+    constructor(data: NormalItemData, type: number, powders: Powders = new Powders()) {
         this.data = data;
         this.type = type;
         this.powders = powders;
@@ -147,7 +147,7 @@ export class Item {
         return new Item(data, type, powders);
     }
 
-    static normalDataFromBinary(binary: BitReader, category: ItemCategory): NormalItemType | null {
+    static normalDataFromBinary(binary: BitReader, category: ItemCategory): NormalItemData | null {
         const id = binary.readNumberByMaximum(itemDatabase.getSize() + 1) - 1;
         if (id < 0) return null;
         return itemDatabase.getItemById(id);
@@ -159,15 +159,16 @@ export class Item {
     }
 }
 
-export type Equipment = {
-    helmet: Item;
-    chestplate: Item;
-    leggings: Item;
-    ring1: Item;
-    ring2: Item;
-    bracelet: Item;
-    necklace: Item;
-}
+type Equipment = [
+    Item, // helmet
+    Item, // chestplate
+    Item, // leggings
+    Item, // boots
+    Item, // ring
+    Item, // ring
+    Item, // bracelet
+    Item, // necklace
+]
 
 type Tomes = {
     // TODO

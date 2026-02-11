@@ -3,51 +3,46 @@
 - Reformat all images as sprite sheets so they don't need pre-loading or `public/`
 - Things like Ability Tree, Aspects, MaIds, Ultimates, etc. should be abstracted as a dependency that can almost be imported and exported from, that way them and anything else added later already has a system in place of mutual reliance.
 - Re-add `tsc &&` to the build script once TypeScript has been made happy.
+
 # Bug-fix:
 
 # Move:
 
 ### Small
-1. popups
-	1. one element covers the whole screen with fixed positioning
-		1. n% transparent
-		2. when clicked, (if the target is itself), send a custom close event to the child
-	2. a sub-element is centered within that, holding the content
-		1. when escape is pressed, close
-2. comparison needs:
+1. comparison needs:
 	1. An input for the link, and a selector for offhand
 	2. A display of the build's items if different
 	3. a section for sliders 
-3. to get the input data, either:
+2. to get the input data, either:
 	1. generate from link
 		1. string class
 		2. flag write to all inputs
 		3. flag 
 	2. use classes like `input_1` to locate the correct elements to read from
 	3. give both, along with flags for which to draw from
-4. to get the build data, either:
+3. to get the build data, either:
 	1. grab from input
 	2. grab from two inputs, along with flags for
-5. second build needs toggles and sliders
-6. init should have flags passed in for all values directing it to take from primary or secondary build.
-7. empty slots
-8. cap offhands to 7
-9. we need to store old version's section length variables too.
-10. repurpose `getabilities.html` for Aspects
-11. Test if Radiance affects Skill Points.
-12. Detailed damage
-13. Tome SP doesn't work
+4. second build needs toggles and sliders
+5. init should have flags passed in for all values directing it to take from primary or secondary build.
+6. empty slots
+7. cap offhands to 7
+8. we need to store old version's section length variables too.
+9. repurpose `getabilities.html` for Aspects
+10. Test if Radiance affects Skill Points.
+11. Detailed damage
+12. Tome SP doesn't work
 	1. calc added SP per-build after Radiance applies.
-14. Dynamic node displays, (Archetype requirements, required ability)
+13. Dynamic node displays, (Archetype requirements, required ability)
 	1. Archetype highlighting
-15. Identification editing
-16. Small Tome selector
+14. Identification editing
+15. Small Tome selector
 	1. popup Zen-style text box when tab selected
 		1. tabbing from there cycles through aspects/tomes by icon
 		2. Escape or tabbing after the end closes and returns selection to the original element
-17.  Add more than just abilities to the effect builder
-18. Melee display DPS and per-hit.
-19. + sign on negative spell costs
+16.  Add more than just abilities to the effect builder
+17. Melee display DPS and per-hit.
+18. + sign on negative spell costs
 ### Major
 1. Build link generation/parsing
 2. Build comparison

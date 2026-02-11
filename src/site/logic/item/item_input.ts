@@ -1,7 +1,7 @@
 import {type ItemCategory} from "./item.ts";
 import {snakeToTitle} from "../../common/display_item";
 import {itemDatabase} from "./item_search.ts";
-import type {NormalItemType} from "./item_types.ts";
+import type {NormalItemData} from "./item_types.ts";
 import {Powders} from "./powders.ts";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip";
 import {getHoverTextForItem} from "../../common/minecraft_html";
@@ -25,7 +25,7 @@ export class ItemInput {
     readonly onChange;
     readonly isWeapon;
 
-    itemData: NormalItemType | null = null;
+    itemData: NormalItemData | null = null;
     powders: Powders = new Powders();
     private powderSlots = 0;
 
@@ -87,7 +87,7 @@ export class ItemInput {
         input.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
-                this.moveSelection(e.key);
+                this.shiftSelection(e.key);
             } else if (e.key === 'Enter') {
                 e.preventDefault();
                 this.selectLi();
@@ -130,8 +130,9 @@ export class ItemInput {
         return button;
     }
 
-    private changeInput() {
-        this.updateSearch();
+    changeInput(newValue?: string, updateSearch = true) {
+        if (newValue) this.input.value = newValue;
+        if (updateSearch) this.updateSearch();
         const newData = itemDatabase.getItemInGroup(this.input.value, this.category);
         if (newData === this.itemData) return;
         this.itemData = newData;
@@ -143,7 +144,7 @@ export class ItemInput {
         this.onChange();
     }
 
-    private updateWeaponIcon(newData: NormalItemType) {
+    private updateWeaponIcon(newData: NormalItemData) {
         if (!this.isWeapon) return;
         const name = "requirements" in newData && "classRequirement" in newData.requirements
             ? newData.requirements.classRequirement!
@@ -151,7 +152,7 @@ export class ItemInput {
         this.icon.src = `img/cat_icon/${name}.png`;
     }
 
-    private updateRarity(newData: NormalItemType | null) {
+    private updateRarity(newData: NormalItemData | null) {
         this.input.dataset.rarity = newData && "rarity" in newData ? newData.rarity : "";
     }
 
@@ -169,7 +170,7 @@ export class ItemInput {
         this.powderInput.dataset.error = String(powders.powders.length * 2 !== this.powderInput.value.length);
     }
 
-    private updatePowderSlots(newData: NormalItemType | null) {
+    private updatePowderSlots(newData: NormalItemData | null) {
         const powderInput = this.powderInput;
         if (!powderInput) return;
         const powderSlots = newData && "powderSlots" in newData ? newData.powderSlots! : 0;
@@ -200,7 +201,7 @@ export class ItemInput {
 
     private updateSearch() {
         this.search.hidden = false;
-        const possibilities = itemDatabase.getItemsInCategory(this.input.value, this.category);
+        const possibilities = itemDatabase.searchItemsInGroup(this.input.value, this.category);
         this.options = possibilities.length;
         this.selection = -1;
         if (!possibilities.length) {
@@ -215,7 +216,7 @@ export class ItemInput {
             .map((itemData, i) => this.newSearchElement(itemData, i)));
     }
 
-    private newSearchElement(itemData: NormalItemType, index: number) {
+    private newSearchElement(itemData: NormalItemData, index: number) {
         if (!("rarity" in itemData)) return "";
         const li = document.createElement("li");
         li.classList.add("slot_li");
@@ -226,6 +227,9 @@ export class ItemInput {
             e.preventDefault();
             this.selectLi(index);
         });
+        li.addEventListener("mousemove", () => {
+            this.moveSelection(index)
+        })
         return li;
     }
 
@@ -233,27 +237,46 @@ export class ItemInput {
         this.search.hidden = true;
     }
 
-    private moveSelection(key: string) {
+    private shiftSelection(key: string) {
         if (this.options === 0) return;
-        this.selection = mod(this.selection + (key === "ArrowUp" ? -1 : 1), this.options);
-        console.log(this.selection);
+        this.moveSelection(mod(this.selection + (key === "ArrowUp" ? -1 : 1), this.options));
+    }
+
+    private moveSelection(index: number) {
+        this.selection = index;
         for (let i = 0; i < this.search.children.length; i++) {
             const element = this.search.children[i] as HTMLElement;
             element.dataset.selected = String(i === this.selection);
-            if (i === this.selection) {
+            if (i === this.selection)
                 element.scrollIntoView({
                     behavior: "instant",
                     block: "nearest",
                     inline: "nearest",
                 });
-            }
         }
     }
 
     private selectLi(index: number = this.selection) {
         if (index === -1) return;
-        this.input.value = (this.search.children[index] as HTMLElement).dataset.name ?? "Error, please report";
-        this.changeInput();
+        this.changeInput((this.search.children[index] as HTMLElement).dataset.name ?? "Error, please report");
         this.hideSearch();
+    }
+}
+
+export class WeaponInput extends ItemInput {
+    onMorph;
+
+    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, onChange: () => void, onMorph: () => void) {
+        super(category, hasPowders, isWeapon, onChange);
+        this.onMorph = onMorph;
+    }
+
+    override changeInput(newValue?: string) {
+        if (newValue) this.input.value = newValue;
+        if (this.input.value.toLowerCase().includes("morph-")) {
+            this.input.value = this.input.value.replace(/morph-/i, "");
+            this.onMorph();
+        }
+        super.changeInput();
     }
 }

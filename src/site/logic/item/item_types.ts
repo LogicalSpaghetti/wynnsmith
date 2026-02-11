@@ -8,15 +8,12 @@ import type {
     WeaponSubType,
 } from "../../../generated/item_types.ts";
 
-export type AnyItemType = NonEmptyItemType | EmptyItemType
+export type ItemData = NormalItemData | CraftedItemData | CustomItemData | ModifiedItemData
 
-export type NonEmptyItemType = NormalItemType | CraftedItemType | CustomItemType | ModifiedItemType
-export type EmptyItemType = null
-
-export type NormalItemType = WeaponItemType | ArmourItemType | AccessoryItemType | TomeItemType | IngredientType | CharmType | MaterialType
-export type CraftedItemType = null // TODO
-export type CustomItemType = null // TODO
-export type ModifiedItemType = null // TODO
+export type NormalItemData = WeaponItemType | ArmourItemType | AccessoryItemType | TomeItemType | IngredientType | CharmType | MaterialType
+export type CraftedItemData = null // TODO
+export type CustomItemData = null // TODO
+export type ModifiedItemData = null // TODO
 
 export type GenericItemType = {
     name: string

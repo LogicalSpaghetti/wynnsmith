@@ -210,10 +210,6 @@ input[type="checkbox"] {
   border-radius: 0.25rem;
 }
 
-.slot_li:hover {
-  background-color: var(--ls-background2);
-}
-
 .slot_li[data-selected="true"] {
   background-color: var(--ls-background3);
 }
@@ -433,7 +429,6 @@ canvas {
   padding: 8px;
   transform-origin: top left;
   /*scale: 0.85;*/ /* TODO: reasonable size, needs to not keep taking up space */
-  width: fit-content;
 }
 
 /*  */
