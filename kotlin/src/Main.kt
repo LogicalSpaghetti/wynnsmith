@@ -2,5 +2,6 @@ fun main() {
 //    item()
 //    tree()
 //    typeGen()
-    buildSpriteSheet(18, "image_manipulation", "connections.png")
+//    buildConnectionSheet(18, "images/connections", "connections.png")
+//    buildNodeSheet("images/nodes", "ability_icons.png")
 }
