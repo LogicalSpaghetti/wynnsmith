@@ -6,9 +6,19 @@ import {Powders} from "./powders.ts";
 import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip";
 import {getHoverTextForItem} from "../../common/minecraft_html";
 import {mod} from "../../common/numbers.ts";
+import {TypedEventTarget} from "../../common/event.ts";
+
+type ItemInputEvents = {
+    change: void,
+    delete: void,
+}
+
+type WeaponInputEvents = ItemInputEvents & {
+    morph: void
+}
 
 // TODO: add indicator for powder special
-export class ItemInput {
+export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends TypedEventTarget<Events> {
     static readonly defaultWeaponIcon = "archer";
     static readonly maximumOptions = 4;
 
@@ -22,7 +32,6 @@ export class ItemInput {
     readonly deleteButton?: HTMLButtonElement;
 
     readonly category;
-    readonly onChange;
     readonly isWeapon;
 
     itemData: NormalItemData | null = null;
@@ -32,9 +41,9 @@ export class ItemInput {
     private selection = -1;
     private options = 0;
 
-    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, onChange: () => void, selfDelete?: () => void) {
+    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, removeable = false) {
+        super();
         this.category = category;
-        this.onChange = onChange;
         this.isWeapon = isWeapon;
 
         const container = this.container = document.createElement("div");
@@ -51,7 +60,7 @@ export class ItemInput {
 
         if (hasPowders) container.appendChild(this.powderInput = this.initPowderInput());
 
-        if (selfDelete) container.appendChild(this.deleteButton = this.initDeleteButton(selfDelete))
+        if (removeable) container.appendChild(this.deleteButton = this.initDeleteButton());
     }
 
     private initInputContainer() {
@@ -122,26 +131,16 @@ export class ItemInput {
         return search;
     }
 
-    private initDeleteButton(selfDelete: () => void) {
-        const button = document.createElement("button");
-        button.textContent = "x";
-        button.title = "Remove offhand";
-        button.addEventListener("click", () => selfDelete())
-        return button;
-    }
-
     changeInput(newValue?: string, updateSearch = true) {
         if (newValue) this.input.value = newValue;
         if (updateSearch) this.updateSearch();
         const newData = itemDatabase.getItemInGroup(this.input.value, this.category);
         if (newData === this.itemData) return;
         this.itemData = newData;
-        if (newData) {
-            this.updateWeaponIcon(newData);
-        }
+        if (newData) this.updateWeaponIcon(newData);
         this.updatePowderSlots(newData);
         this.updateRarity(newData);
-        this.onChange();
+        this.dispatchEvent("change");
     }
 
     private updateWeaponIcon(newData: NormalItemData) {
@@ -162,7 +161,7 @@ export class ItemInput {
         this.powderError(newPowders);
         if (this.powders.equals(newPowders)) return;
         this.powders = newPowders;
-        this.onChange();
+        this.dispatchEvent("change");
     }
 
     private powderError(powders = this.powders) {
@@ -228,8 +227,8 @@ export class ItemInput {
             this.selectLi(index);
         });
         li.addEventListener("mousemove", () => {
-            this.moveSelection(index)
-        })
+            this.moveSelection(index);
+        });
         return li;
     }
 
@@ -261,22 +260,28 @@ export class ItemInput {
         this.changeInput((this.search.children[index] as HTMLElement).dataset.name ?? "Error, please report");
         this.hideSearch();
     }
+
+    private initDeleteButton() {
+        const button = document.createElement("button");
+        button.textContent = "x";
+        button.title = "Remove offhand";
+        button.addEventListener("click", () => this.dispatchEvent("delete"));
+        return button;
+    }
 }
 
-export class WeaponInput extends ItemInput {
-    onMorph;
-
-    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, onChange: () => void, onMorph: () => void) {
-        super(category, hasPowders, isWeapon, onChange);
-        this.onMorph = onMorph;
+export class WeaponInput extends ItemInput<WeaponInputEvents> {
+    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, removeable = false) {
+        super(category, hasPowders, isWeapon, removeable);
     }
 
     override changeInput(newValue?: string) {
         if (newValue) this.input.value = newValue;
-        if (this.input.value.toLowerCase().includes("morph-")) {
-            this.input.value = this.input.value.replace(/morph-/i, "");
-            this.onMorph();
-        }
+        if (!this.deleteButton) // Ensures morphing only applies to primary weapon inputs.
+            if (this.input.value.toLowerCase().includes("morph-")) {
+                this.input.value = this.input.value.replace(/morph-/i, "");
+                this.dispatchEvent("morph");
+            }
         super.changeInput();
     }
 }

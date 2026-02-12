@@ -1,5 +1,4 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
-import {ItemInput} from "./logic/item/item_input.ts";
 import {type CellMap, TreeCanvas} from "./render/canvas.ts";
 import trees from "../js_data/trees.js"
 import {ItemInputs} from "./logic/item/item_inputs.ts";
@@ -22,8 +21,9 @@ function loadSite() {
     addSettingsListeners();
 }
 
-const inputs = new ItemInputs(() => console.log("hello!"));
-document.getElementById("skib")?.appendChild(inputs.container);
+const inputs = new ItemInputs();
+inputs.addEventListener("change", () => console.log("hello"))
+document.getElementById("item_inputs")?.prepend(inputs.container);
 
 const state: CellMap = trees.archer.cellMap
 const treeCanvas = new TreeCanvas(state)

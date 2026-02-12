@@ -19,8 +19,6 @@ export function addInputListeners() {
     // Input:
     document.querySelectorAll(".input_cluster").forEach((cluster) => addListenersToInputCluster(cluster));
 
-    add("add_offhand", "click", addOffhandInput);
-
     add("level_input", "input", updateBuild);
     const treeElement = document.getElementById("ability_tree");
 

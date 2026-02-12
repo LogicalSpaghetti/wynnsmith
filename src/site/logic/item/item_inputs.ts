@@ -1,4 +1,5 @@
 import {ItemInput, WeaponInput} from "./item_input.ts";
+import {TypedEventTarget} from "../../common/event.ts";
 
 export type EquipmentInputs = [
     ItemInput, // helmet
@@ -13,46 +14,92 @@ export type EquipmentInputs = [
 
 const morph = ["Morph-Stardust", "Morph-Steel", "Morph-Iron", "Morph-Gold", "Morph-Topaz", "Morph-Emerald", "Morph-Amethyst", "Morph-Ruby"];
 
-// TODO: Morph-
-export class ItemInputs {
+type ItemInputsEvents = {
+    change: void
+}
+
+export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> extends TypedEventTarget<Events> {
     container;
 
-    weapon: ItemInput;
+    weapon: WeaponInput;
     equipment: EquipmentInputs;
-    // offhands: Item[];
 
-    onChange;
+    offhands: WeaponInput[] = [];
+    addOffhandButton = this.initAddOffhand();
+    offhandContainer;
+    static readonly offhandLabel = "Offhands: "
 
-    constructor(onChange: () => void) {
-        this.onChange = onChange;
+    constructor() {
+        super();
+        this.container = this.initContainer();
 
-        const container = this.container = document.createElement("div");
         this.equipment = this.initEquipment();
         for (const input of this.equipment)
-            container.appendChild(input.container);
+            this.container.appendChild(input.container);
 
-        const weapon = this.weapon = this.initWeapon();
-        container.appendChild(weapon.container);
+        this.weapon = this.initWeapon();
+        this.container.appendChild(this.weapon.container);
+
+        this.container.appendChild(document.createTextNode(ItemInputs.offhandLabel));
+        this.addOffhandButton = this.initAddOffhand();
+        this.container.appendChild(this.addOffhandButton);
+        this.offhandContainer = this.initOffhandContainer();
+        this.container.appendChild(this.offhandContainer);
+
+    }
+
+
+    private initContainer() {
+        return document.createElement("div");
     }
 
     private initEquipment(): EquipmentInputs {
         return [
-            new ItemInput("helmet", true, false, this.onChange),
-            new ItemInput("chestplate", true, false, this.onChange),
-            new ItemInput("leggings", true, false, this.onChange),
-            new ItemInput("boots", true, false, this.onChange),
-            new ItemInput("ring", false, false, this.onChange),
-            new ItemInput("ring", false, false, this.onChange),
-            new ItemInput("bracelet", false, false, this.onChange),
-            new ItemInput("necklace", false, false, this.onChange),
-        ]
+            new ItemInput("helmet", true, false),
+            new ItemInput("chestplate", true, false),
+            new ItemInput("leggings", true, false),
+            new ItemInput("boots", true, false),
+            new ItemInput("ring", false, false),
+            new ItemInput("ring", false, false),
+            new ItemInput("bracelet", false, false),
+            new ItemInput("necklace", false, false),
+        ];
     }
 
     private initWeapon() {
-        return new WeaponInput("weapon", true, true, this.onChange, this.onMorph);
+        const input = new WeaponInput("weapon", true, true);
+        input.addEventListener("morph", () => this.onMorph());
+        input.addEventListener("change", () => this.onChange());
+        return input;
     }
 
     private onMorph = () => {
-        this.equipment.forEach((input, i) => input.changeInput(morph[i], false))
+        this.equipment.forEach((input, i) => input.changeInput(morph[i], false));
+    };
+
+    private onChange() {
+        this.dispatchEvent("change");
+    }
+
+    private initOffhandContainer() {
+        return document.createElement("div");
+    }
+
+    private initAddOffhand(): HTMLButtonElement {
+        const button = document.createElement("button");
+        button.textContent = "+"
+        button.addEventListener("click", () => this.addOffhand())
+        return button;
+    }
+
+    public addOffhand() {
+        const input = new WeaponInput("weapon", true, true, true);
+        this.offhands.push(input);
+        this.offhandContainer.appendChild(input.container)
+        input.addEventListener("change", () => this.onChange());
+        input.addEventListener("delete", () => {
+            this.offhands = this.offhands.filter((i) => i !== input);
+            input.container.remove();
+        });
     }
 }
