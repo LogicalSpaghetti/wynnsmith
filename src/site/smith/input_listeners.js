@@ -1,7 +1,7 @@
 import * as ability_tree from "../logic/ability/ability.js";
 import * as numbers from "../common/numbers.ts";
 import {itemDatabase} from "../logic/item/item_search.ts";
-import {addTooltipListener, hideHoverAbilityTooltip, renderHoverTooltip} from "../common/tooltip.js";
+import {addTooltipListener, hideHoverTooltip, renderHoverTooltip} from "../common/tooltip.js";
 import copyTreeAsANSI from "../logic/ability/ansi_tree.js";
 import {balanceSP} from "../logic/skill_point/skill_points.js";
 import {getHoverTextForItem} from "../common/minecraft_html.js";
@@ -62,7 +62,7 @@ function addListenersToInputCluster(cluster) {
     const inputs = cluster.querySelectorAll(".input");
 
     addElem(link, "mouseover", () => renderHoverTooltip(getHoverTextForItem(itemDatabase.getItemByName(input.value))));
-    addElem(link, "mouseout", () => hideHoverAbilityTooltip());
+    addElem(link, "mouseout", () => hideHoverTooltip());
     addAllElem(inputs, "input", updateBuild);
 }
 

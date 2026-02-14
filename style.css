@@ -422,13 +422,10 @@ canvas {
   image-rendering: crisp-edges;
 }
 
-#ability_tree {
+.ability-tree {
   image-rendering: pixelated;
   background-color: var(--ls-ability_background);
   border: #4f5466 2px solid;
-  padding: 8px;
-  transform-origin: top left;
-  /*scale: 0.85;*/ /* TODO: reasonable size, needs to not keep taking up space */
 }
 
 /*  */

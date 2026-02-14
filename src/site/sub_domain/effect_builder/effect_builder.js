@@ -2,7 +2,7 @@
 import punscake from "../../../js_data/trees.ts";
 import {getHoverTextForAbility, minecraftAsElement, minecraftToHTML} from "../../common/minecraft_html.js";
 import * as codeDictionary from "../../../js_data/code_dictionary.js";
-import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip.js";
+import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip.js";
 
 export class Editor {
     effect;
@@ -343,7 +343,7 @@ class Ability {
             renderHoverTooltip(getHoverTextForAbility(this.id, this.tree.wynnClass));
         });
         nameplate.addEventListener("mouseout", () => {
-            hideHoverAbilityTooltip();
+            hideHoverTooltip();
         });
 
         const add = top.appendChild(document.createElement("button"));

@@ -1,49 +1,9 @@
 import connectionsUrl from "../../../../assets/img/ability/connections.png";
 import nodesUrl from "../../../../assets/img/ability/nodes.png";
 import {ImageLoader} from "../../common/image_loader.ts";
-
-type dir = number
-
-export const wynnClasses = ["archer", "assassin", "mage", "shaman", "warrior"] as const;
-
-export type TreeData = { abilities: TreeAbilities, cellMap: CellMap, properties: TreeProperties };
-
-export type CellMap = { [key: string | number]: Cell }
-export type Cell = { travelNode: TravelNode, abilityID?: string }
-export type TravelNode = { up: dir, down: dir, left: dir, right: dir }
-
-
-export type TreeAbilities = {
-    [key: string | number]: TreeAbility
-}
-
-export type TreeAbility = {
-    readonly name: string,
-    readonly _plainname: string,
-    readonly description: string,
-    readonly unlockingWillBlock: readonly number[],
-    readonly archetype: string,
-    readonly pointsRequired: number,
-    readonly archetypePointsRequired: number,
-    readonly type: typeof treeAbilityTypes[number],
-    readonly requires: number
-}
-
-const treeAbilityTypes = ["white", "yellow", "purple", "blue", "red", "skill"] as const;
-const nodeTypes = ["white", "yellow", "purple", "blue", "red", "archer", "assassin", "mage", "shaman", "warrior"] as const;
-
-export type TreeProperties = {
-    classs: ClassName,
-    maxAbilityPoints: number,
-    pages: number,
-    horizontalPages: number,
-    rowsPerPage: number,
-    loopTree: boolean,
-    bTravesableUp: boolean,
-    useAlternativeAbilityIcons: boolean,
-}
-
-type ClassName = typeof wynnClasses[number];
+import {getHoverTextForAbility} from "./ability_description.ts";
+import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip";
+import {type Cell, nodeTypes, type TravelNode, type TreeData} from "./ability_tree.ts";
 
 export class TreeCanvas {
     static readonly columns = 9;
@@ -51,6 +11,7 @@ export class TreeCanvas {
     static readonly nodeSize = 32;
     static readonly padding = 7;
 
+    container;
     canvas;
     ctx;
 
@@ -58,11 +19,18 @@ export class TreeCanvas {
     nodes?: HTMLImageElement;
 
     tree: TreeData;
+    selectedAbilities: string[] = [];
 
-    constructor(initialState: TreeData) {
+    private readonly rotate: boolean;
+
+    constructor(initialState: TreeData, rotate = false) {
         this.tree = initialState;
+        this.rotate = rotate;
+
+        this.container = this.initContainer();
 
         this.canvas = this.initCanvas();
+        this.container.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d')!;
 
         void this.loadAssets();
@@ -78,9 +46,22 @@ export class TreeCanvas {
         }
     }
 
+    private initContainer() {
+        const container = document.createElement("div");
+        container.classList.add("ability-tree");
+        return container;
+    }
+
     private initCanvas() {
         const canvas = document.createElement("canvas");
         canvas.width = TreeCanvas.cellSize * TreeCanvas.columns + TreeCanvas.padding * 2;
+        canvas.addEventListener("mousemove", (e) => {
+            const tooltip = this.getHoverText(e.clientX, e.clientY);
+            if (tooltip) renderHoverTooltip(tooltip);
+            else hideHoverTooltip();
+        });
+        canvas.addEventListener("mouseleave", () => hideHoverTooltip());
+        canvas.addEventListener("click", (e) => this.mouseClick(e.clientX, e.clientY));
         return canvas;
     }
 
@@ -96,14 +77,57 @@ export class TreeCanvas {
 
         this.clearCanvas();
 
-        this.canvas.height = this.tree.properties.pages * this.tree.properties.rowsPerPage * TreeCanvas.cellSize + TreeCanvas.padding * 2;
+        const totalRows = this.totalRows();
+        const totalCols = TreeCanvas.columns;
+
+        const columnPx = totalRows * TreeCanvas.cellSize + TreeCanvas.padding * 2;
+        const rowPx = totalCols * TreeCanvas.cellSize + TreeCanvas.padding * 2;
+
+        if (this.rotate) {
+            this.canvas.width = columnPx;
+            this.canvas.height = rowPx;
+        } else {
+            this.canvas.width = rowPx;
+            this.canvas.height = columnPx;
+        }
 
         this.iter((row, col, cell) => {
-            this.drawConnection(connections, row, col, cell.travelNode);
+            const t = this.transform(row, col);
+            const rotatedTravel = this.transformTravelNode(cell.travelNode);
+            this.drawConnection(connections, t.row, t.col, rotatedTravel);
         });
         this.iter((row, col, cell) => {
-            this.drawNode(nodes, row, col, cell);
+            const t = this.transform(row, col);
+            this.drawNode(nodes, t.row, t.col, cell);
         });
+    }
+
+
+    private transform(row: number, col: number): { row: number, col: number } {
+        if (!this.rotate) return {row, col};
+        return {
+            row: TreeCanvas.columns - 1 - col,
+            col: row,
+        };
+    }
+
+    private inverseTransform(row: number, col: number): { row: number, col: number } {
+        if (!this.rotate) return {row, col};
+        return {
+            row: col,
+            col: TreeCanvas.columns - 1 - row,
+        };
+    }
+
+    private transformTravelNode(node: TravelNode): TravelNode {
+        if (!this.rotate) return node;
+
+        return {
+            up: node.right,
+            right: node.down,
+            down: node.left,
+            left: node.up,
+        };
     }
 
     private drawConnection(
@@ -169,5 +193,65 @@ export class TreeCanvas {
 
             fun(row, col, this.tree.cellMap[key]);
         }
+    }
+
+    private totalRows(): number {
+        return this.tree.properties.pages *
+            this.tree.properties.rowsPerPage;
+    }
+
+    private getHoverText(mouseX: number, mouseY: number) {
+        const abilityID = this.getIDAtLocation(mouseX, mouseY);
+        if (!abilityID) return;
+        return getHoverTextForAbility(this.tree.abilities, abilityID);
+    }
+
+    private mouseClick(mouseX: number, mouseY: number) {
+        const abilityID = this.getIDAtLocation(mouseX, mouseY);
+        if (!abilityID) return;
+        // TODO, use AbilityTree
+        if (this.selectedAbilities.includes(abilityID))
+            this.selectedAbilities = this.selectedAbilities.filter(a => a !== abilityID);
+        else this.selectedAbilities.push(abilityID);
+        console.log(this.selectedAbilities)
+    }
+
+    private getIDAtLocation(mouseX: number, mouseY: number) {
+        const position = this.mouseToCell(mouseX, mouseY);
+        if (!position) return;
+
+        const index = position.row * 9 + position.col + 1;
+        const cell = this.tree.cellMap[index];
+        if (!cell || !cell.abilityID) return;
+        return cell.abilityID;
+    }
+
+    private mouseToCell(mouseX: number, mouseY: number) {
+        const visualPosition = this.mouseToVisualCell(mouseX, mouseY);
+        if (!visualPosition) return;
+
+        return this.inverseTransform(visualPosition.row, visualPosition.col);
+    }
+
+    private mouseToVisualCell(mouseX: number, mouseY: number): { row: number, col: number } | null {
+        const rect = this.canvas.getBoundingClientRect();
+
+        let x = mouseX - rect.left - TreeCanvas.padding;
+        let y = mouseY - rect.top - TreeCanvas.padding;
+
+        if (x < 0 || y < 0) return null;
+
+        const col = Math.floor(x / TreeCanvas.cellSize);
+        const row = Math.floor(y / TreeCanvas.cellSize);
+
+        if (!this.rotate) {
+            if (col >= TreeCanvas.columns) return null;
+            if (row >= this.totalRows()) return null;
+        } else {
+            if (col >= this.totalRows()) return null;
+            if (row >= TreeCanvas.columns) return null;
+        }
+
+        return {row, col};
     }
 }

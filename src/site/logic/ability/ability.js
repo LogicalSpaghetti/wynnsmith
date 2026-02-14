@@ -5,7 +5,7 @@ import aspect_descriptions from "../../../js_data/aspects.js";
 import {decimalToRoman} from "../../common/numbers.ts";
 import * as codeDictionary from "../../../js_data/code_dictionary.js";
 import {addWarning} from "../../smith/warnings.js";
-import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip.js";
+import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip.js";
 import classEffects from "../../../js_data/effects.js";
 import updateBuild from "../../smith/update_build.js";
 
@@ -241,7 +241,7 @@ function mapHTML(tree, abilityTree, wynnClass) {
             renderHoverTooltip(getHoverTextForAbility(ability.abilityID, wynnClass));
         });
         img.addEventListener("mouseout", () => {
-            hideHoverAbilityTooltip();
+            hideHoverTooltip();
         });
 
         cell.appendChild(img);

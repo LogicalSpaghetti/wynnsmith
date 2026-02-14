@@ -26,5 +26,5 @@ inputs.addEventListener("change", () => console.log("hello"))
 document.getElementById("item_inputs")?.prepend(inputs.container);
 
 const tree: TreeData = trees.shaman
-const treeCanvas = new TreeCanvas(tree)
-document.getElementById("ability_tree")?.appendChild(treeCanvas.canvas);
+const treeCanvas = new TreeCanvas(tree, true)
+document.getElementById("ability_tree")?.appendChild(treeCanvas.container);

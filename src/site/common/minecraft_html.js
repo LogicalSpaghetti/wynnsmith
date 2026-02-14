@@ -199,7 +199,7 @@ export function getHoverTextForAbility(abilityID, wynnClass) {
     const abilities = punscake[wynnClass].abilities;
     const ability = abilities[abilityID];
 
-    const sections = new Sections();
+    const sections = new TextSections();
 
     sections.addByLine(ability.name);
 
@@ -207,7 +207,7 @@ export function getHoverTextForAbility(abilityID, wynnClass) {
     sections.addByLine(ability.description);
 
     if (ability.unlockingWillBlock.length) {
-        let blockSection = new Section("§cUnlocking will block:");
+        let blockSection = new TextSection("§cUnlocking will block:");
 
         for (let id of ability.unlockingWillBlock)
             blockSection.add(`§c- §7${abilities[id]._plainname}`);
@@ -216,7 +216,7 @@ export function getHoverTextForAbility(abilityID, wynnClass) {
 
     if (ability.archetype) sections.addByLine(`${ability.archetype} Archetype`);
 
-    const footer = new Section(`§7Ability points: §f${ability.pointsRequired}`);
+    const footer = new TextSection(`§7Ability points: §f${ability.pointsRequired}`);
 
     if (ability.requires !== -1)
         footer.add(`§7Required Ability: §f${abilities[ability.requires]._plainname}`);
@@ -232,19 +232,19 @@ export function getHoverTextForAbility(abilityID, wynnClass) {
 export function getHoverTextForItem(item, invalidityText = "") {
     if (!item) return invalidityText;
 
-    const sections = new Sections();
+    const sections = new TextSections();
 
-    const header = new Section(codeDictionary.rarityColor[item.rarity] + item.name);
+    const header = new TextSection(codeDictionary.rarityColor[item.rarity] + item.name);
     if (item.type === "weapon") header.add(`§7${attackSpeedMap[item.attackSpeed]} Attack Speed`);
 
     sections.add(header);
 
     if (item.base) {
-        let section = new Section();
+        let section = new TextSection();
         for (let stat of orderedBaseStats) {
             if (!stat) {
                 sections.add(section);
-                section = new Section();
+                section = new TextSection();
                 continue;
             }
             section.add(getFormattedBase(stat, item.base[stat], base_stats, false));
@@ -254,7 +254,7 @@ export function getHoverTextForItem(item, invalidityText = "") {
         sections.add(section);
     }
 
-    const reqs = new Section();
+    const reqs = new TextSection();
 
     const checkMark = codeDictionary.reqIndicators[false];
 
@@ -274,16 +274,16 @@ export function getHoverTextForItem(item, invalidityText = "") {
     sections.add(reqs);
 
     if (item.identifications) {
-        const spSection = new Section();
+        const spSection = new TextSection();
         for (let point of orderedSkillPointIds)
             spSection.add(getFormattedSP(point, item.identifications[point], identifications));
         sections.add(spSection);
 
-        let idSection = new Section();
+        let idSection = new TextSection();
         for (let id of orderedRegularIds) {
             if (!id) {
                 sections.add(idSection);
-                idSection = new Section();
+                idSection = new TextSection();
                 continue;
             }
             idSection.add(getFormattedId(id, item.identifications[id], identifications,
@@ -294,14 +294,14 @@ export function getHoverTextForItem(item, invalidityText = "") {
 
     // TODO: map item database entries to use Major Id ids.
     if (item.majorIds) {
-        let section = new Section();
+        let section = new TextSection();
         for (let name in item.majorIds)
             section.add(wrapText(`§b+${name}: §3${
                 objectFind(major_id_descriptions, mId => mId.name = name).description}`));
         sections.add(section);
     }
 
-    const footer = new Section();
+    const footer = new TextSection();
 
     if (item.powderSlots > 0) footer.add(`§7[0/${item.powderSlots}] Powder Slots []`);
 
@@ -324,11 +324,11 @@ export function getHoverTextForItem(item, invalidityText = "") {
     return minecraftToHTML(sections.toString());
 }
 
-class Sections {
+export class TextSections {
     sections = [];
 
     addByLine(line) {
-        this.add(new Section(line));
+        this.add(new TextSection(line));
     }
 
     add(section) {
@@ -340,7 +340,7 @@ class Sections {
     }
 }
 
-class Section {
+export class TextSection {
     lines = [];
 
     constructor(string) {

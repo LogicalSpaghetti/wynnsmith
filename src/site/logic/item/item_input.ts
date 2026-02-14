@@ -3,7 +3,7 @@ import {snakeToTitle} from "../../common/display_item";
 import {itemDatabase} from "./item_search.ts";
 import type {NormalItemData} from "./item_types.ts";
 import {Powders} from "./powders.ts";
-import {hideHoverAbilityTooltip, renderHoverTooltip} from "../../common/tooltip";
+import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip";
 import {getHoverTextForItem} from "../../common/minecraft_html";
 import {mod} from "../../common/numbers.ts";
 import {TypedEventTarget} from "../../common/event.ts";
@@ -72,7 +72,7 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
         link.target = "_blank";
         link.tabIndex = -1;
         link.addEventListener("mouseover", () => renderHoverTooltip(getHoverTextForItem(this.itemData, "Invalid Item!")));
-        link.addEventListener("mouseout", () => hideHoverAbilityTooltip());
+        link.addEventListener("mouseout", () => hideHoverTooltip());
 
         return link;
     }

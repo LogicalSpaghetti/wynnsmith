@@ -4,7 +4,7 @@ export function addTooltipListener() {
     initTooltip();
 
     addElem(document, "mousemove", (e) => moveTooltip(e.clientX, e.clientY, true));
-    addElem(document, "wheel", () => hideHoverAbilityTooltip());
+    addElem(document, "wheel", () => hideHoverTooltip());
 }
 
 function initTooltip() {
@@ -53,7 +53,7 @@ export function  renderHoverTooltip(innerHTML = "", container_id = "cursorToolti
     container.innerHTML = innerHTML;
 }
 
-export function hideHoverAbilityTooltip(container_id = "cursorTooltip") {
+export function hideHoverTooltip(container_id = "cursorTooltip") {
     const container = document.getElementById(container_id);
 
     container.hidden = true;
