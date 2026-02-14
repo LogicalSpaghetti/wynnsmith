@@ -17,7 +17,7 @@ class ItemSearch extends Database<(NormalItemData | null)[]> {
 
     find(str: string, byName: boolean) {
         str = simplifyString(str);
-        return this.items.find(item => item &&
+        return this.entries.find(item => item &&
             simplifyString(byName ? item.name : item.internalName) === str) ?? null;
     }
 
@@ -39,8 +39,8 @@ class ItemSearch extends Database<(NormalItemData | null)[]> {
     }
 
     getItemById(id: number): NormalItemData | null {
-        if (id < 0 || id >= this.items.length) return null
-        return this.items[id]
+        if (id < 0 || id >= this.entries.length) return null
+        return this.entries[id]
     }
 
     getItemInGroup(search: string, category: ItemCategory): NormalItemData | null {
@@ -56,12 +56,12 @@ class ItemSearch extends Database<(NormalItemData | null)[]> {
     searchItems(search: string): NormalItemData[] {
         if (search == null) return [];
         const simplifiedSearch = simplifyString(search);
-        return this.items.filter((item): item is NormalItemData =>
+        return this.entries.filter((item): item is NormalItemData =>
             item !== null && simplifyString(item.name).includes(simplifiedSearch));
     }
 
     getSize() {
-        return this.items.length;
+        return this.entries.length;
     }
 }
 

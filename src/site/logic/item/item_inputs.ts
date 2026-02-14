@@ -12,6 +12,23 @@ export type EquipmentInputs = [
     ItemInput, // necklace
 ]
 
+export type TomeInputsType = [
+    ItemInput, // guild
+    ItemInput, // lootrun
+    ItemInput, // armour
+    ItemInput, // armour
+    ItemInput, // armour
+    ItemInput, // armour
+    ItemInput, // mysticism
+    ItemInput, // mysticism
+    ItemInput, // weapon
+    ItemInput, // weapon
+    ItemInput, // expertise
+    ItemInput, // expertise
+    ItemInput, // marathon
+    ItemInput, // marathon
+]
+
 const morph = ["Morph-Stardust", "Morph-Steel", "Morph-Iron", "Morph-Gold", "Morph-Topaz", "Morph-Emerald", "Morph-Amethyst", "Morph-Ruby"];
 
 type ItemInputsEvents = {
@@ -101,5 +118,42 @@ export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
             this.offhands = this.offhands.filter((i) => i !== input);
             input.container.remove();
         });
+    }
+}
+
+export class TomeInputs<Events extends ItemInputsEvents = ItemInputsEvents> extends TypedEventTarget<Events> {
+    container;
+
+    tomes: TomeInputsType;
+
+    constructor() {
+        super();
+        this.container = this.initContainer();
+        this.tomes = this.initTomes();
+        for (const input of this.tomes)
+            this.container.appendChild(input.container);
+    }
+
+    private initContainer() {
+        return document.createElement("div");
+    }
+
+    private initTomes(): TomeInputsType {
+        return [
+            new ItemInput("guild_tome", false, false),
+            new ItemInput("lootrun_tome", false, false),
+            new ItemInput("armour_tome", false, false),
+            new ItemInput("armour_tome", false, false),
+            new ItemInput("armour_tome", false, false),
+            new ItemInput("armour_tome", false, false),
+            new ItemInput("mysticism_tome", false, false),
+            new ItemInput("mysticism_tome", false, false),
+            new ItemInput("weapon_tome", false, false),
+            new ItemInput("weapon_tome", false, false),
+            new ItemInput("expertise_tome", false, false),
+            new ItemInput("expertise_tome", false, false),
+            new ItemInput("marathon_tome", false, false),
+            new ItemInput("marathon_tome", false, false),
+        ];
     }
 }

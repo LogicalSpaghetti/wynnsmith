@@ -1,7 +1,6 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
-import {TreeCanvas, type TreeData} from "./logic/ability/tree_canvas.ts";
-import trees from "../js_data/trees.ts"
-import {ItemInputs} from "./logic/item/item_inputs.ts";
+import {TreeCanvas} from "./logic/ability/tree_canvas.ts";
+import {ItemInputs, TomeInputs} from "./logic/item/item_inputs.ts";
 
 // code entry point:
 if (document.readyState === "loading") {
@@ -25,6 +24,9 @@ const inputs = new ItemInputs();
 inputs.addEventListener("change", () => console.log("hello"))
 document.getElementById("item_inputs")?.prepend(inputs.container);
 
-const tree: TreeData = trees.shaman
-const treeCanvas = new TreeCanvas(tree, true)
+const tomeInputs = new TomeInputs();
+tomeInputs.addEventListener("change", () => console.log("hello"))
+document.getElementById("tome_inputs")?.prepend(tomeInputs.container);
+
+const treeCanvas = new TreeCanvas("shaman", true)
 document.getElementById("ability_tree")?.appendChild(treeCanvas.container);

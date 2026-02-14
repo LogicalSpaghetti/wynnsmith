@@ -1,5 +1,5 @@
 import {minecraftToHTML, stripMinecraftFormatting, TextSection, TextSections} from "../../common/minecraft_html";
-import type {TreeAbilities} from "./tree_canvas.ts";
+import type {TreeAbilities} from "./ability_tree.ts";
 
 export function getHoverTextForAbility(abilities: TreeAbilities, abilityID: string) {
     const ability = abilities[abilityID];

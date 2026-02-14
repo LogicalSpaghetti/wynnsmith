@@ -10,11 +10,11 @@ async function loadJson<T>(fileName: string, version: number = latestDBVersion):
 }
 
 export class Database<T> {
-    protected items: T;
+    protected entries: T;
     private readonly path: string;
 
     protected constructor(items: T, path: string) {
-        this.items = items;
+        this.entries = items;
         this.path = path;
     }
 
@@ -24,11 +24,11 @@ export class Database<T> {
     }
 
     get(): T {
-        return this.items;
+        return this.entries;
     }
 
     async set(version?: number): Promise<T> {
-        this.items = await loadJson<T>(this.path, version);
-        return this.items;
+        this.entries = await loadJson<T>(this.path, version);
+        return this.entries;
     }
 }

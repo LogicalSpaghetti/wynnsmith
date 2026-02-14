@@ -3,11 +3,15 @@ import nodesUrl from "../../../../assets/img/ability/nodes.png";
 import {ImageLoader} from "../../common/image_loader.ts";
 import {getHoverTextForAbility} from "./ability_description.ts";
 import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip";
-import {type Cell, nodeTypes, type TravelNode, type TreeData} from "./ability_tree.ts";
+import {AbilityTree, type Cell, nodeTypes, type TravelNode} from "./ability_tree.ts";
 
 export class TreeCanvas {
     static readonly columns = 9;
+
+    static readonly scalar = 1.5;
     static readonly cellSize = 18;
+
+    static readonly connectorSize = 18;
     static readonly nodeSize = 32;
     static readonly padding = 7;
 
@@ -18,13 +22,12 @@ export class TreeCanvas {
     connections?: HTMLImageElement;
     nodes?: HTMLImageElement;
 
-    tree: TreeData;
-    selectedAbilities: string[] = [];
+    tree: AbilityTree;
 
     private readonly rotate: boolean;
 
-    constructor(initialState: TreeData, rotate = false) {
-        this.tree = initialState;
+    constructor(wynnClass: string, rotate = false) {
+        this.tree = new AbilityTree(wynnClass);
         this.rotate = rotate;
 
         this.container = this.initContainer();
@@ -54,7 +57,6 @@ export class TreeCanvas {
 
     private initCanvas() {
         const canvas = document.createElement("canvas");
-        canvas.width = TreeCanvas.cellSize * TreeCanvas.columns + TreeCanvas.padding * 2;
         canvas.addEventListener("mousemove", (e) => {
             const tooltip = this.getHoverText(e.clientX, e.clientY);
             if (tooltip) renderHoverTooltip(tooltip);
@@ -65,8 +67,8 @@ export class TreeCanvas {
         return canvas;
     }
 
-    changeState(state: TreeData) {
-        this.tree = state;
+    changeState(wynnClass: string) {
+        this.tree.changeClass(wynnClass);
         this.tryDraw();
     }
 
@@ -80,8 +82,8 @@ export class TreeCanvas {
         const totalRows = this.totalRows();
         const totalCols = TreeCanvas.columns;
 
-        const columnPx = totalRows * TreeCanvas.cellSize + TreeCanvas.padding * 2;
-        const rowPx = totalCols * TreeCanvas.cellSize + TreeCanvas.padding * 2;
+        const columnPx = (totalRows * TreeCanvas.cellSize + TreeCanvas.padding * 2) * TreeCanvas.scalar;
+        const rowPx = (totalCols * TreeCanvas.cellSize + TreeCanvas.padding * 2) * TreeCanvas.scalar;
 
         if (this.rotate) {
             this.canvas.width = columnPx;
@@ -136,7 +138,7 @@ export class TreeCanvas {
         travelNode: TravelNode,
     ) {
         const position = this.connectionSheetOffset(travelNode);
-        this.drawToCell(connections, row, col, position, TreeCanvas.cellSize);
+        this.drawToCell(connections, row, col, position, TreeCanvas.connectorSize);
     }
 
     private drawNode(
@@ -155,14 +157,15 @@ export class TreeCanvas {
         sheetOffset: { x: number, y: number },
         iconSize: number,
     ) {
-        const size = TreeCanvas.cellSize;
-        const offset = (iconSize - size) / 2;
+        const finalSize = iconSize * TreeCanvas.scalar;
+        const size = TreeCanvas.cellSize * TreeCanvas.scalar;
+        const offset = (finalSize - size) / 2;
         const dx = size * col;
         const dy = size * row;
         this.ctx.drawImage(
             spriteSheet,
             sheetOffset.x * iconSize, sheetOffset.y * iconSize, iconSize, iconSize,
-            dx - offset + TreeCanvas.padding, dy - offset + TreeCanvas.padding, iconSize, iconSize,
+            dx - offset + TreeCanvas.padding, dy - offset + TreeCanvas.padding, finalSize, finalSize,
         );
     }
 
@@ -174,10 +177,10 @@ export class TreeCanvas {
     }
 
     private abilityNodeSheetOffset(abilityID: string) {
-        const nodeType = this.tree.abilities[abilityID].type;
+        const nodeType = this.tree.data.abilities[abilityID].type;
         return {
-            x: nodeTypes.indexOf((nodeType !== "skill") ? nodeType : this.tree.properties.classs),
-            y: 2,
+            x: nodeTypes.indexOf((nodeType !== "skill") ? nodeType : this.tree.data.properties.classs),
+            y: this.tree.selectedAbilities.includes(abilityID) ? 4 : 2,
         };
     }
 
@@ -186,34 +189,38 @@ export class TreeCanvas {
     }
 
     private iter(fun: (row: number, col: number, cell: Cell) => void) {
-        for (const key in this.tree.cellMap) {
+        for (const key in this.tree.data.cellMap) {
             const index = parseInt(key) - 1;
             let row = Math.floor(index / TreeCanvas.columns);
             let col = index % TreeCanvas.columns;
 
-            fun(row, col, this.tree.cellMap[key]);
+            if (this.isSkippedRow(row)) continue;
+            const visualRow = this.toVisualRow(row);
+
+            fun(visualRow, col, this.tree.data.cellMap[key]);
         }
     }
 
     private totalRows(): number {
-        return this.tree.properties.pages *
-            this.tree.properties.rowsPerPage;
+        const total =
+            this.tree.data.properties.pages *
+            this.tree.data.properties.rowsPerPage;
+
+        const skipped = Math.floor((total - 1) / this.tree.data.properties.rowsPerPage);
+        return total - skipped;
     }
 
     private getHoverText(mouseX: number, mouseY: number) {
         const abilityID = this.getIDAtLocation(mouseX, mouseY);
         if (!abilityID) return;
-        return getHoverTextForAbility(this.tree.abilities, abilityID);
+        return getHoverTextForAbility(this.tree.data.abilities, abilityID);
     }
 
     private mouseClick(mouseX: number, mouseY: number) {
         const abilityID = this.getIDAtLocation(mouseX, mouseY);
         if (!abilityID) return;
-        // TODO, use AbilityTree
-        if (this.selectedAbilities.includes(abilityID))
-            this.selectedAbilities = this.selectedAbilities.filter(a => a !== abilityID);
-        else this.selectedAbilities.push(abilityID);
-        console.log(this.selectedAbilities)
+        this.tree.selectAbility(abilityID);
+        this.tryDraw();
     }
 
     private getIDAtLocation(mouseX: number, mouseY: number) {
@@ -221,7 +228,7 @@ export class TreeCanvas {
         if (!position) return;
 
         const index = position.row * 9 + position.col + 1;
-        const cell = this.tree.cellMap[index];
+        const cell = this.tree.data.cellMap[index];
         if (!cell || !cell.abilityID) return;
         return cell.abilityID;
     }
@@ -230,14 +237,23 @@ export class TreeCanvas {
         const visualPosition = this.mouseToVisualCell(mouseX, mouseY);
         if (!visualPosition) return;
 
-        return this.inverseTransform(visualPosition.row, visualPosition.col);
+        let row = visualPosition.row;
+        let col = visualPosition.col;
+
+        if (!this.rotate) {
+            row = this.toDataRow(row);
+        } else {
+            col = this.toDataRow(col);
+        }
+
+        return this.inverseTransform(row, col);
     }
 
     private mouseToVisualCell(mouseX: number, mouseY: number): { row: number, col: number } | null {
         const rect = this.canvas.getBoundingClientRect();
 
-        let x = mouseX - rect.left - TreeCanvas.padding;
-        let y = mouseY - rect.top - TreeCanvas.padding;
+        let x = (mouseX - rect.left - TreeCanvas.padding) / TreeCanvas.scalar;
+        let y = (mouseY - rect.top - TreeCanvas.padding) / TreeCanvas.scalar;
 
         if (x < 0 || y < 0) return null;
 
@@ -253,5 +269,25 @@ export class TreeCanvas {
         }
 
         return {row, col};
+    }
+
+    private toDataRow(visualRow: number): number {
+        if (visualRow <= (this.tree.data.properties.rowsPerPage - 1)) return visualRow;
+
+        const skippedBefore = Math.floor((visualRow - 1) / (this.tree.data.properties.rowsPerPage - 1));
+        return visualRow + skippedBefore;
+    }
+
+
+    private toVisualRow(row: number): number {
+        if (row === 0) return 0;
+
+        // number of skipped rows before this row
+        const skippedBefore = Math.floor(row / this.tree.data.properties.rowsPerPage);
+        return row - skippedBefore;
+    }
+
+    private isSkippedRow(row: number): boolean {
+        return row !== 0 && row % this.tree.data.properties.rowsPerPage === 0;
     }
 }

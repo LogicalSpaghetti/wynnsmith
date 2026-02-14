@@ -1,3 +1,5 @@
+import {treeDatabase} from "./tree_database.ts";
+
 type dir = number
 
 export const wynnClasses = ["archer", "assassin", "mage", "shaman", "warrior"] as const;
@@ -41,9 +43,25 @@ export type TreeProperties = {
 
 type ClassName = typeof wynnClasses[number];
 
+// Handles node selection and tallying for ability trees
 export class AbilityTree {
-    treeData: TreeData;
+    data: TreeData;
+
+    selectedAbilities: string[] = [];
+    archetypePoints: { [key: string]: number } = {};
 
     constructor(wynnClass: string) {
+        this.data = treeDatabase.getTree(wynnClass);
+    }
+
+    changeClass(wynnClass: string) {
+        this.data = treeDatabase.getTree(wynnClass);
+        // TODO: refresh
+    }
+
+    selectAbility(abilityID: string) {
+        if (this.selectedAbilities.includes(abilityID))
+            this.selectedAbilities = this.selectedAbilities.filter(a => a !== abilityID);
+        else this.selectedAbilities.push(abilityID);
     }
 }
