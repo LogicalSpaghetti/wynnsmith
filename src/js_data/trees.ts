@@ -1,4 +1,4 @@
-export default Object.freeze({
+export default{
     archer: {
         "properties": {
             "classs": "archer",
@@ -5442,4 +5442,4 @@ export default Object.freeze({
         "abilityTrees": {},
         "selectedTree": "Default"
     }
-});
+} as const;

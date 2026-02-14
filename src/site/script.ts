@@ -1,6 +1,6 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
-import {type CellMap, TreeCanvas} from "./render/canvas.ts";
-import trees from "../js_data/trees.js"
+import {TreeCanvas, type TreeData} from "./logic/ability/tree_canvas.ts";
+import trees from "../js_data/trees.ts"
 import {ItemInputs} from "./logic/item/item_inputs.ts";
 
 // code entry point:
@@ -25,6 +25,6 @@ const inputs = new ItemInputs();
 inputs.addEventListener("change", () => console.log("hello"))
 document.getElementById("item_inputs")?.prepend(inputs.container);
 
-const state: CellMap = trees.archer.cellMap
-const treeCanvas = new TreeCanvas(state)
+const tree: TreeData = trees.shaman
+const treeCanvas = new TreeCanvas(tree)
 document.getElementById("ability_tree")?.appendChild(treeCanvas.canvas);

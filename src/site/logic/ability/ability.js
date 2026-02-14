@@ -1,4 +1,4 @@
-import punscake from "../../../js_data/trees.js";
+import punscake from "../../../js_data/trees.ts";
 import {maxPlayerLevel} from "../../common/small_stuff.ts";
 import {getHoverTextForAbility, minecraftToHTML} from "../../common/minecraft_html.js";
 import aspect_descriptions from "../../../js_data/aspects.js";

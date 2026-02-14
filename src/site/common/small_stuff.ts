@@ -56,7 +56,3 @@ export const orderedAttackSpeed = [
 ] as const;
 
 export const maxPlayerLevel = 106;
-
-export const wynnClasses = [
-    "archer", "assassin", "mage", "shaman", "warrior",
-];
