@@ -1,5 +1,5 @@
 import {ItemInput, WeaponInput} from "./item_input.ts";
-import {TypedEventTarget} from "../../common/event.ts";
+import {HistoryLedger, TypedEventTarget} from "../../common/history.ts";
 
 export type EquipmentInputs = [
     ItemInput, // helmet
@@ -36,15 +36,16 @@ type ItemInputsEvents = {
 }
 
 export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> extends TypedEventTarget<Events> {
-    container;
-
-    weapon: WeaponInput;
-    equipment: EquipmentInputs;
-
-    offhands: WeaponInput[] = [];
-    addOffhandButton = this.initAddOffhand();
-    offhandContainer;
     static readonly offhandLabel = "Offhands: "
+
+    private readonly container;
+
+    private readonly weapon: WeaponInput;
+    private readonly equipment: EquipmentInputs;
+
+    private offhands: WeaponInput[] = [];
+    private readonly addOffhandButton;
+    private readonly offhandContainer;
 
     constructor() {
         super();
@@ -64,7 +65,6 @@ export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
         this.container.appendChild(this.offhandContainer);
 
     }
-
 
     private initContainer() {
         return document.createElement("div");
@@ -88,6 +88,10 @@ export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
         input.addEventListener("morph", () => this.onMorph());
         input.addEventListener("change", () => this.onChange());
         return input;
+    }
+
+    holder() {
+        return this.container;
     }
 
     private onMorph = () => {
@@ -119,12 +123,18 @@ export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
             input.container.remove();
         });
     }
+
+    registerTo(ledger: HistoryLedger) {
+        ledger.register(this.weapon);
+        for (let slot of this.equipment)
+            ledger.register(slot);
+    }
 }
 
 export class TomeInputs<Events extends ItemInputsEvents = ItemInputsEvents> extends TypedEventTarget<Events> {
-    container;
+    private readonly container;
 
-    tomes: TomeInputsType;
+    private readonly tomes: TomeInputsType;
 
     constructor() {
         super();
@@ -132,6 +142,10 @@ export class TomeInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
         this.tomes = this.initTomes();
         for (const input of this.tomes)
             this.container.appendChild(input.container);
+    }
+
+    holder() {
+        return this.container;
     }
 
     private initContainer() {

@@ -6,19 +6,25 @@ import {Powders} from "./powders.ts";
 import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip";
 import {getHoverTextForItem} from "../../common/minecraft_html";
 import {mod} from "../../common/numbers.ts";
-import {TypedEventTarget} from "../../common/event.ts";
+import {type HistoryEvents, HistoryTarget} from "../../common/history.ts";
 
 type ItemInputEvents = {
     change: void,
     delete: void,
-}
+} & HistoryEvents
 
 type WeaponInputEvents = ItemInputEvents & {
     morph: void
 }
 
+interface ItemInputState {
+    inputValue: string;
+    powderValue?: string;
+}
+
 // TODO: add indicator for powder special
-export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends TypedEventTarget<Events> {
+export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends HistoryTarget<Events> {
+
     static readonly defaultWeaponIcon = "archer";
     static readonly maximumOptions = 4;
 
@@ -41,6 +47,8 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
     private selection = -1;
     private options = 0;
 
+    private lastState: ItemInputState;
+
     constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, removeable = false) {
         super();
         this.category = category;
@@ -61,6 +69,8 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
         if (hasPowders) container.appendChild(this.powderInput = this.initPowderInput());
 
         if (removeable) container.appendChild(this.deleteButton = this.initDeleteButton());
+
+        this.lastState = this.getState();
     }
 
     private initInputContainer() {
@@ -132,15 +142,39 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
     }
 
     changeInput(newValue?: string, updateSearch = true) {
-        if (newValue) this.input.value = newValue;
+        const before = this.lastState;
+        const beforeItemData = this.itemData;
+
+        this.applyInputValue(newValue, updateSearch);
+
+        const after = this.getState();
+        this.lastState = after;
+
+        if (
+            beforeItemData?.name === this.itemData?.name
+            && before.powderValue === after.powderValue
+        ) return;
+
+        this.dispatchEvent("log", {
+            undo: () => this.applyState(before),
+            redo: () => this.applyState(after),
+        });
+
+        this.dispatchEvent("change");
+    }
+
+    private applyInputValue(newValue?: string, updateSearch = true) {
+        if (newValue !== undefined) this.input.value = newValue;
+
         if (updateSearch) this.updateSearch();
+
         const newData = itemDatabase.getItemInGroup(this.input.value, this.category);
-        if (newData === this.itemData) return;
+
         this.itemData = newData;
+
         if (newData) this.updateWeaponIcon(newData);
         this.updatePowderSlots(newData);
         this.updateRarity(newData);
-        this.dispatchEvent("change");
     }
 
     private updateWeaponIcon(newData: NormalItemData) {
@@ -157,12 +191,35 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
 
     private changePowders() {
         if (!this.powderInput) return;
-        const newPowders = new Powders(this.powderInput.value.substring(0, this.powderSlots * 2));
-        this.powderError(newPowders);
-        if (this.powders.equals(newPowders)) return;
-        this.powders = newPowders;
+
+        const before = this.lastState
+        const beforePowders = this.powders;
+
+        this.applyPowderValue(this.powderInput.value);
+
+        const after = this.getState();
+        this.lastState = after;
+
+        if (this.powders.equals(beforePowders)) return;
+
+        this.dispatchEvent("log", {
+            undo: () => this.applyState(before),
+            redo: () => this.applyState(after),
+        });
+
         this.dispatchEvent("change");
     }
+
+    private applyPowderValue(value: string) {
+        if (!this.powderInput) return;
+
+        this.powderInput.value = value;
+
+        this.powders = new Powders(value.substring(0, this.powderSlots * 2));
+
+        this.updatePowderHighlight();
+    }
+
 
     private powderError(powders = this.powders) {
         if (!this.powderInput) return;
@@ -268,20 +325,35 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
         button.addEventListener("click", () => this.dispatchEvent("delete"));
         return button;
     }
+
+    private getState(): ItemInputState {
+        return {
+            inputValue: this.itemData?.name ?? "",
+            powderValue: this.powders.toString(),
+        };
+    }
+
+    private applyState(state: ItemInputState) {
+        this.applyInputValue(state.inputValue,
+            false); // document.activeElement === this.input || document.activeElement === this.powderInput
+        if (this.powderInput && state.powderValue !== undefined)
+            this.applyPowderValue(state.powderValue);
+    }
 }
 
 export class WeaponInput extends ItemInput<WeaponInputEvents> {
-    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, removeable = false) {
-        super(category, hasPowders, isWeapon, removeable);
+    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, removable = false) {
+        super(category, hasPowders, isWeapon, removable);
     }
 
     override changeInput(newValue?: string) {
-        if (newValue) this.input.value = newValue;
-        if (!this.deleteButton) // Ensures morphing only applies to primary weapon inputs.
-            if (this.input.value.toLowerCase().includes("morph-")) {
-                this.input.value = this.input.value.replace(/morph-/i, "");
-                this.dispatchEvent("morph");
-            }
-        super.changeInput();
+        let value = newValue ?? this.input.value;
+
+        if (!this.deleteButton && value.toLowerCase().includes("morph-")) {
+            value = value.replace(/morph-/i, "");
+            this.dispatchEvent("morph");
+        }
+
+        super.changeInput(value);
     }
 }

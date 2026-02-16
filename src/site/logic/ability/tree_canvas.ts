@@ -15,14 +15,14 @@ export class TreeCanvas {
     static readonly nodeSize = 32;
     static readonly padding = 7;
 
-    container;
-    canvas;
-    ctx;
+    private readonly container;
+    private readonly canvas;
+    private ctx;
 
-    connections?: HTMLImageElement;
-    nodes?: HTMLImageElement;
+    private connections?: HTMLImageElement;
+    private nodes?: HTMLImageElement;
 
-    tree: AbilityTree;
+    private tree: AbilityTree;
 
     private readonly rotate: boolean;
 
@@ -65,6 +65,10 @@ export class TreeCanvas {
         canvas.addEventListener("mouseleave", () => hideHoverTooltip());
         canvas.addEventListener("click", (e) => this.mouseClick(e.clientX, e.clientY));
         return canvas;
+    }
+
+    holder() {
+        return this.container;
     }
 
     changeState(wynnClass: string) {
