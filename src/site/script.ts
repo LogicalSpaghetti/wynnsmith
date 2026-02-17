@@ -22,23 +22,21 @@ function loadSite() {
 }
 
 const inputs = new ItemInputs();
-inputs.addEventListener("change", () => console.log("hello"));
 document.getElementById("item_inputs")?.prepend(inputs.holder());
 
 const tomeInputs = new TomeInputs();
-tomeInputs.addEventListener("change", () => console.log("hello"));
 document.getElementById("tome_inputs")?.prepend(tomeInputs.holder());
 
 const treeCanvas = new TreeCanvas("shaman", false);
 document.getElementById("ability_tree")?.appendChild(treeCanvas.holder());
 
-const ledger = new HistoryLedger(20);
+const ledger = new HistoryLedger(100);
 inputs.registerTo(ledger);
+treeCanvas.registerTo(ledger);
 
 function handler(e: KeyboardEvent) {
     if ((e.target as HTMLElement).classList.contains("allow-undo")) return;
-    const isMac = navigator.platform.toUpperCase().includes("MAC");
-    const ctrl = isMac ? e.metaKey : e.ctrlKey;
+    const ctrl = e.metaKey || e.ctrlKey;
 
     if (!ctrl) return;
 

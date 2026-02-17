@@ -4,7 +4,8 @@ import nodesUrl from "../../../../assets/img/ability/nodes.png";
 import {ImageLoader} from "../../common/image_loader.ts";
 import {getHoverTextForAbility} from "./ability_description.ts";
 import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip";
-import {AbilityTree, type Cell, nodeTypes, type TravelNode} from "./ability_tree.ts";
+import {AbilityTree, type Cell, type ClassName, nodeTypes, type TravelNode} from "./ability_tree.ts";
+import {HistoryLedger} from "../../common/history.ts";
 
 const nodeStateOffsets = ["blocked", "unavailable", "available", "error", "selected"] as const;
 
@@ -32,6 +33,7 @@ export class TreeCanvas {
 
     constructor(wynnClass: string, rotate = false) {
         this.tree = new AbilityTree(wynnClass, 106);
+        this.tree.addEventListener("change", () => this.tryDraw());
         this.rotate = rotate;
 
         this.container = this.initContainer();
@@ -75,7 +77,7 @@ export class TreeCanvas {
         return this.container;
     }
 
-    changeState(wynnClass: string) {
+    changeState(wynnClass: ClassName) {
         this.tree.changeClass(wynnClass);
         this.tryDraw();
     }
@@ -240,7 +242,6 @@ export class TreeCanvas {
         const abilityID = this.getIDAtLocation(mouseX, mouseY);
         if (!abilityID) return;
         this.tree.selectAbility(abilityID);
-        this.tryDraw();
     }
 
     private getIDAtLocation(mouseX: number, mouseY: number) {
@@ -309,5 +310,9 @@ export class TreeCanvas {
 
     private isSkippedRow(row: number): boolean {
         return row !== 0 && row % this.tree.data.properties.rowsPerPage === 0;
+    }
+
+    registerTo(ledger: HistoryLedger) {
+        ledger.register(this.tree);
     }
 }

@@ -1,5 +1,5 @@
 import {treeDatabase} from "./tree_database.ts";
-import {TypedEventTarget} from "../../common/history.ts";
+import {type HistoryEvents, HistoryTarget} from "../../common/history.ts";
 
 const abilityPointsAtLevel = [
     0,
@@ -17,6 +17,7 @@ const abilityPointsAtLevel = [
 ];
 
 export const wynnClasses = ["archer", "assassin", "mage", "shaman", "warrior"] as const;
+export type ClassName = typeof wynnClasses[number];
 
 const directions = ["up", "down", "left", "right"] as const;
 const inverseDirs: Record<Direction, Direction> = {
@@ -68,8 +69,6 @@ export type TreeProperties = {
     useAlternativeAbilityIcons: boolean,
 }
 
-type ClassName = typeof wynnClasses[number];
-
 type BranchState = {
     up?: boolean
     down?: boolean
@@ -89,12 +88,12 @@ type NodeStates = { [key: string | number]: NodeState }
 
 type TreeEvents = {
     change: void
-}
+} & HistoryEvents
 
 export type NodeHighlight = "selected" | "error" | "blocked" | "available" | "unavailable"
 
 // Handles node selection and tallying for ability trees
-export class AbilityTree<Events extends TreeEvents = TreeEvents> extends TypedEventTarget<Events> {
+export class AbilityTree<Events extends TreeEvents = TreeEvents> extends HistoryTarget<Events> {
     static readonly columns = 9;
     static readonly dirOffsets = {
         up: -AbilityTree.columns,
@@ -103,6 +102,7 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends TypedEv
         right: 1,
     } as const;
     data: TreeData;
+    wynnClass;
     level;
 
     private usedAP = 0;
@@ -117,20 +117,45 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends TypedEv
     constructor(wynnClass: string, level: number) {
         super();
         this.level = level;
-        this.data = this.changeClass(wynnClass);
-    }
-
-    changeClass(wynnClass: string) {
         this.data = treeDatabase.getTree(wynnClass);
-        this.selectedAbilities = [];
+        this.wynnClass = this.data.properties.classs;
         this.updateStates();
-        return this.data;
     }
 
-    changeLevel(level: number) {
+    public changeLevel(level: number) {
         this.level = level;
         this.updateStates();
-        return this.level;
+    }
+
+    public changeClass(wynnClass: ClassName) {
+        this.changeState(() => this.setClass(wynnClass));
+    }
+
+    private setClass(wynnClass: ClassName) {
+        if (wynnClass === this.wynnClass) return;
+        this.wynnClass = wynnClass;
+        this.data = treeDatabase.getTree(wynnClass);
+        this.selectedAbilities = [];
+    }
+
+    public selectAbility(abilityID: string) {
+        this.changeState(() => this.modifySelectedAbilities(abilityID));
+    }
+
+    public clearSelection() {
+        this.changeState(() => this.selectedAbilities = []);
+    }
+
+    public clearErrors() {
+        this.changeState(() => {
+            this.selectedAbilities = this.selectedAbilities.filter(abilityID => this.nodeStates[abilityID] !== "error");
+        });
+    }
+
+    private modifySelectedAbilities(abilityID: string) {
+        if (this.selectedAbilities.includes(abilityID))
+            this.selectedAbilities = this.selectedAbilities.filter(a => a !== abilityID);
+        else this.selectedAbilities.push(abilityID);
     }
 
     public getAPState() {
@@ -146,13 +171,6 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends TypedEv
 
     public getStateOfConnection(cellIndex: string | number) {
         return this.connectionHighlights[cellIndex];
-    }
-
-    selectAbility(abilityID: string) {
-        if (this.selectedAbilities.includes(abilityID))
-            this.selectedAbilities = this.selectedAbilities.filter(a => a !== abilityID);
-        else this.selectedAbilities.push(abilityID);
-        this.updateStates();
     }
 
     private updateStates() {
@@ -214,6 +232,34 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends TypedEv
 
     private abilityMeetsReq(ability: TreeAbility) {
         return ability.archetypePointsRequired <= 0 || ability.archetypePointsRequired <= this.archetypePoints[ability.archetype];
+    }
+
+    private changeState(changeFunction: () => void) {
+        const before = this.getState();
+        changeFunction();
+        const after = this.getState();
+
+        if (before.wynnClass === after.wynnClass && stringArraysEqual(before.selectedAbilities, after.selectedAbilities)) return;
+
+        this.dispatchEvent("log", {
+            undo: () => this.applyState(before),
+            redo: () => this.applyState(after),
+        });
+
+        this.updateStates();
+    }
+
+    private getState() {
+        return {
+            wynnClass: this.wynnClass,
+            selectedAbilities: [...this.selectedAbilities],
+        };
+    }
+
+    private applyState(state: { wynnClass: ClassName, selectedAbilities: string[] }) {
+        this.setClass(state.wynnClass);
+        this.selectedAbilities = state.selectedAbilities;
+        this.updateStates();
     }
 }
 
@@ -318,7 +364,7 @@ class MapState {
     };
 
     private abilityHasParent(abilityID: string, selectedAbilities: string[]) {
-        const req = this.tree.abilities[abilityID].requires
+        const req = this.tree.abilities[abilityID].requires;
         return req === -1 || selectedAbilities.includes(String(req));
     }
 
@@ -371,4 +417,9 @@ class MapState {
         if (node.reachable) return "available";
         return "unavailable";
     }
+}
+
+function stringArraysEqual(a: string[], b: string[]) {
+    return a.length === b.length &&
+        a.every((value, index) => value === b[index]);
 }
