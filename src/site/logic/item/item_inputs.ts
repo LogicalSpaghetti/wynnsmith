@@ -36,7 +36,8 @@ type ItemInputsEvents = {
 }
 
 export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> extends TypedEventTarget<Events> {
-    static readonly offhandLabel = "Offhands: "
+    static readonly offhandLabel = "Offhands: ";
+    static readonly maxOffhands = 7;
 
     private readonly container;
 
@@ -44,6 +45,7 @@ export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
     private readonly equipment: EquipmentInputs;
 
     private offhands: WeaponInput[] = [];
+    private readonly addOffhandContainer;
     private readonly addOffhandButton;
     private readonly offhandContainer;
 
@@ -58,9 +60,11 @@ export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
         this.weapon = this.initWeapon();
         this.container.appendChild(this.weapon.container);
 
-        this.container.appendChild(document.createTextNode(ItemInputs.offhandLabel));
+        this.addOffhandContainer = document.createElement("div");
+        this.container.appendChild(this.addOffhandContainer);
+        this.addOffhandContainer.appendChild(document.createTextNode(ItemInputs.offhandLabel));
         this.addOffhandButton = this.initAddOffhand();
-        this.container.appendChild(this.addOffhandButton);
+        this.addOffhandContainer.appendChild(this.addOffhandButton);
         this.offhandContainer = this.initOffhandContainer();
         this.container.appendChild(this.offhandContainer);
 
@@ -108,20 +112,24 @@ export class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> exte
 
     private initAddOffhand(): HTMLButtonElement {
         const button = document.createElement("button");
-        button.textContent = "+"
-        button.addEventListener("click", () => this.addOffhand())
+        button.textContent = "+";
+        button.addEventListener("click", () => this.addOffhand());
         return button;
     }
 
     public addOffhand() {
+        if (this.offhands.length >= ItemInputs.maxOffhands) return;
         const input = new WeaponInput("weapon", true, true, true);
         this.offhands.push(input);
-        this.offhandContainer.appendChild(input.container)
+        this.offhandContainer.appendChild(input.container);
         input.addEventListener("change", () => this.onChange());
         input.addEventListener("delete", () => {
             this.offhands = this.offhands.filter((i) => i !== input);
             input.container.remove();
+            this.addOffhandContainer.hidden = false;
         });
+        if (this.offhands.length >= ItemInputs.maxOffhands)
+            this.addOffhandContainer.hidden = true;
     }
 
     registerTo(ledger: HistoryLedger) {
