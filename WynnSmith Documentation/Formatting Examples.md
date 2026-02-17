@@ -36,6 +36,7 @@ the first champion, this idol
 emboldens you to best your
 greatest opponent: yourself.
 ```
+
 ```
 §5Acolyte's Embodiment of Unwavering Adherence
 

@@ -29,7 +29,7 @@ const tomeInputs = new TomeInputs();
 tomeInputs.addEventListener("change", () => console.log("hello"));
 document.getElementById("tome_inputs")?.prepend(tomeInputs.holder());
 
-const treeCanvas = new TreeCanvas("shaman", true);
+const treeCanvas = new TreeCanvas("shaman", false);
 document.getElementById("ability_tree")?.appendChild(treeCanvas.holder());
 
 const ledger = new HistoryLedger(20);

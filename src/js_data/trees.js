@@ -5442,4 +5442,4 @@ export default{
         "abilityTrees": {},
         "selectedTree": "Default"
     }
-} as const;
+};

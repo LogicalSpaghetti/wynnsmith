@@ -1,5 +1,5 @@
 import {skillPointNames} from "../logic/skill_point/skill_points.js";
-import punscake from "../../js_data/trees.ts";
+import punscake from "../../js_data/trees.js";
 import {attackSpeedMap} from "./small_stuff.ts";
 import * as codeDictionary from "../../js_data/code_dictionary.js";
 import {

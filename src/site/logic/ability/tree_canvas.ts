@@ -1,14 +1,17 @@
 import connectionsUrl from "../../../../assets/img/ability/connections.png";
+import activeUrl from "../../../../assets/img/ability/active_connections.png";
 import nodesUrl from "../../../../assets/img/ability/nodes.png";
 import {ImageLoader} from "../../common/image_loader.ts";
 import {getHoverTextForAbility} from "./ability_description.ts";
 import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip";
 import {AbilityTree, type Cell, nodeTypes, type TravelNode} from "./ability_tree.ts";
 
+const nodeStateOffsets = ["blocked", "unavailable", "available", "error", "selected"] as const;
+
 export class TreeCanvas {
     static readonly columns = 9;
 
-    static readonly scalar = 1.5;
+    static readonly scalar = 1;
     static readonly cellSize = 18;
 
     static readonly connectorSize = 18;
@@ -20,6 +23,7 @@ export class TreeCanvas {
     private ctx;
 
     private connections?: HTMLImageElement;
+    private activeConnections?: HTMLImageElement;
     private nodes?: HTMLImageElement;
 
     private tree: AbilityTree;
@@ -27,7 +31,7 @@ export class TreeCanvas {
     private readonly rotate: boolean;
 
     constructor(wynnClass: string, rotate = false) {
-        this.tree = new AbilityTree(wynnClass);
+        this.tree = new AbilityTree(wynnClass, 106);
         this.rotate = rotate;
 
         this.container = this.initContainer();
@@ -41,8 +45,8 @@ export class TreeCanvas {
 
     private async loadAssets() {
         try {
-            [this.connections, this.nodes] = await ImageLoader.loadMany(
-                [connectionsUrl, nodesUrl]);
+            [this.connections, this.activeConnections, this.nodes] = await ImageLoader.loadMany(
+                [connectionsUrl, activeUrl, nodesUrl]);
             this.tryDraw();
         } catch (err) {
             console.error("Failed to load assets", err);
@@ -77,8 +81,9 @@ export class TreeCanvas {
     }
 
     private tryDraw() {
-        if (!this.connections || !this.nodes) return;
+        if (!this.connections || !this.nodes || !this.activeConnections) return;
         const connections = this.connections;
+        const selected = this.activeConnections;
         const nodes = this.nodes;
 
         this.clearCanvas();
@@ -101,6 +106,17 @@ export class TreeCanvas {
             const t = this.transform(row, col);
             const rotatedTravel = this.transformTravelNode(cell.travelNode);
             this.drawConnection(connections, t.row, t.col, rotatedTravel);
+        });
+        this.iter((row, col, _, cellKey) => {
+            const cell = this.tree.getStateOfConnection(cellKey);
+            const t = this.transform(row, col);
+            const rotatedTravel = this.transformTravelNode({
+                up: cell.up ? 1 : 0,
+                down: cell.down ? 1 : 0,
+                left: cell.left ? 1 : 0,
+                right: cell.right ? 1 : 0,
+            });
+            this.drawConnection(selected, t.row, t.col, rotatedTravel);
         });
         this.iter((row, col, cell) => {
             const t = this.transform(row, col);
@@ -175,8 +191,8 @@ export class TreeCanvas {
 
     private connectionSheetOffset({up, down, left, right}: TravelNode) {
         return {
-            x: (up + 2 * down),
-            y: (left + 2 * right),
+            x: (2 * left + right),
+            y: (2 * up + down),
         };
     }
 
@@ -184,7 +200,7 @@ export class TreeCanvas {
         const nodeType = this.tree.data.abilities[abilityID].type;
         return {
             x: nodeTypes.indexOf((nodeType !== "skill") ? nodeType : this.tree.data.properties.classs),
-            y: this.tree.selectedAbilities.includes(abilityID) ? 4 : 2,
+            y: nodeStateOffsets.indexOf(this.tree.getStateOfNode(abilityID)),
         };
     }
 
@@ -192,7 +208,7 @@ export class TreeCanvas {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    private iter(fun: (row: number, col: number, cell: Cell) => void) {
+    private iter(fun: (row: number, col: number, cell: Cell, cellKey: string) => void) {
         for (const key in this.tree.data.cellMap) {
             const index = parseInt(key) - 1;
             let row = Math.floor(index / TreeCanvas.columns);
@@ -201,7 +217,7 @@ export class TreeCanvas {
             if (this.isSkippedRow(row)) continue;
             const visualRow = this.toVisualRow(row);
 
-            fun(visualRow, col, this.tree.data.cellMap[key]);
+            fun(visualRow, col, this.tree.data.cellMap[key], key);
         }
     }
 
