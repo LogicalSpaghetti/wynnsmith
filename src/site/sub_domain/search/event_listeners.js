@@ -1,7 +1,8 @@
-import {copyImageById} from "../../common/image_exporting.js";
-import {saveImageById} from "../../common/image_exporting.js";
-import {getItemFromSearch} from "../../logic/item/item_search.ts";
-import {getHoverTextForItem} from "../../common/minecraft_html.js";
+import {copyImageById} from "../../misc/image_exporting.js";
+import {saveImageById} from "../../misc/image_exporting.js";
+import {getItemFromSearch} from "../../database/item_database.ts";
+
+import {getHoverTextForItem} from "../../hover_html/item_html.ts";
 
 window.addEventListener("load", function () {
     const item = getItemFromSearch(window.location.search);

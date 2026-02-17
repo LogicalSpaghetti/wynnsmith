@@ -1,7 +1,8 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
-import {TreeCanvas} from "./logic/ability/tree_canvas.ts";
-import {ItemInputs, TomeInputs} from "./logic/item/item_inputs.ts";
-import {HistoryLedger} from "./common/history.ts";
+import {TreeCanvas} from "./ability/tree_canvas.ts";
+import {ItemInputs, TomeInputs} from "./item/item_inputs.ts";
+import {HistoryLedger} from "./misc/history.ts";
+import major_ids from "../js_data/major_ids";
 
 // code entry point:
 if (document.readyState === "loading") {
@@ -51,3 +52,5 @@ function handler(e: KeyboardEvent) {
 }
 
 document.addEventListener("keydown", handler, {capture: true});
+
+console.log(JSON.stringify(major_ids));

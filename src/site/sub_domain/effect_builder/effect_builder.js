@@ -1,8 +1,9 @@
 // noinspection DuplicatedCode
 import punscake from "../../../js_data/trees.js";
-import {getHoverTextForAbility, minecraftAsElement, minecraftToHTML} from "../../common/minecraft_html.js";
-import * as codeDictionary from "../../../js_data/code_dictionary.js";
-import {hideHoverTooltip, renderHoverTooltip} from "../../common/tooltip.js";
+import {minecraftAsElement, minecraftToHTML} from "../../hover_html/minecraft_html.js";
+import * as codeDictionary from "../../../js_data/code_dictionary.ts";
+import {hideHoverTooltip, renderHoverTooltip} from "../../misc/tooltip.js";
+import {ability_html} from "../../hover_html/ability_html.js";
 
 export class Editor {
     effect;
@@ -196,7 +197,7 @@ export class Tree {
         abilityContainer.classList.add("minecraftTooltip");
 
         select.addEventListener("change", () => {
-            abilityContainer.innerHTML = getHoverTextForAbility(select.value, this.wynnClass);
+            abilityContainer.innerHTML = ability_html(select.value, this.wynnClass);
         });
 
         select.dispatchEvent(new Event("change"));
@@ -340,7 +341,7 @@ class Ability {
         nameplate.style.flex = "1 1 auto";
 
         nameplate.addEventListener("mouseover", () => {
-            renderHoverTooltip(getHoverTextForAbility(this.id, this.tree.wynnClass));
+            renderHoverTooltip(ability_html(this.id, this.tree.wynnClass));
         });
         nameplate.addEventListener("mouseout", () => {
             hideHoverTooltip();

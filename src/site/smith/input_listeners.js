@@ -1,15 +1,14 @@
-import * as ability_tree from "../logic/ability/ability.js";
-import * as numbers from "../common/numbers.ts";
-import {itemDatabase} from "../logic/item/item_search.ts";
-import {addTooltipListener, hideHoverTooltip, renderHoverTooltip} from "../common/tooltip.js";
-import copyTreeAsANSI from "../logic/ability/ansi_tree.js";
-import {balanceSP} from "../logic/skill_point/skill_points.js";
-import {getHoverTextForItem} from "../common/minecraft_html.js";
-import {decimalToRoman} from "../common/numbers.ts";
-import {add, addAll, addAllElem, addElem, dispatch} from "../common/event_listener.js";
+import * as ability_tree from "../ability/ability.js";
+import * as numbers from "../misc/numbers.ts";
+import {itemDatabase} from "../database/item_database.ts";
+import {addTooltipListener, hideHoverTooltip, renderHoverTooltip} from "../misc/tooltip.js";
+import copyTreeAsANSI from "../ability/ansi_tree.js";
+import {decimalToRoman} from "../misc/numbers.ts";
+import {add, addAll, addAllElem, addElem, dispatch} from "../misc/event_listener.js";
 import updateBuild from "./update_build.js";
 import * as settings from "./settings.js";
 import {loadBoolean, toggleBoolean} from "./settings.js";
+import {getHoverTextForItem} from "../hover_html/item_html.ts";
 
 export function addInputListeners() {
     console.log("adding input Listeners");
@@ -25,11 +24,6 @@ export function addInputListeners() {
     add("effect_toggles", "click", toggleEffectToggle);
 
     addAll("sp_input", "input", updateBuild);
-
-    add("balance_dmg", "click", () => {
-        balanceSP();
-        updateBuild();
-    });
 
     // Tree:
     addElem(treeElement, "click", ability_tree.treeClicked);
