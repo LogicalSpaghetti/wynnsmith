@@ -2,7 +2,7 @@ import {getItemAddedSP, getSkillPointName} from "../skill_point/skill_points.ts"
 import * as search from "../database/item_database.ts";
 import {damageTypePrefixes} from "../misc/small_stuff.ts";
 import {addWarning} from "./warnings.js";
-import {minecraftToHTML} from "../hover_html/minecraft_html.js";
+import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
 import {renderHighlights, setToggles, validateTree} from "../ability/ability.js";
 import {displayStats, displayForDevelopment} from "../stats/display_stats.js";
 import addDamageDisplays from "../attack/attack_display.js";

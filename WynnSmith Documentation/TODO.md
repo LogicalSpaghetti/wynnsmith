@@ -3,7 +3,7 @@
 - Reformat all images as sprite sheets so they don't need pre-loading or `public/`
 - Things like Ability Tree, Aspects, MaIds, Ultimates, etc. should be abstracted as a dependency that can almost be imported and exported from, that way them and anything else added later already has a system in place of mutual reliance.
 - Re-add `tsc &&` to the build script once TypeScript has been made happy.
-
+- Make use of get and set keywords inside of classes.
 # Bug-fix:
 
 # Move:
@@ -303,3 +303,6 @@
     6. mobile support
     7. Full damage equations dynamically generated with labels
 	    1. [MathQuill](http://mathquill.com/)
+$$
+d((1+f(s)) * (1 - f(t)) + (2 + f(s) + criticalDamageBonus) * f(t))
+$$

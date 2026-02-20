@@ -1,6 +1,6 @@
 import punscake from "../../js_data/trees.js";
 import {maxPlayerLevel} from "../misc/small_stuff.ts";
-import {minecraftToHTML} from "../hover_html/minecraft_html.js";
+import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
 import aspect_descriptions from "../../js_data/aspects.js";
 import {decimalToRoman} from "../misc/numbers.ts";
 import * as codeDictionary from "../../js_data/code_dictionary.ts";
@@ -8,7 +8,7 @@ import {addWarning} from "../smith/warnings.js";
 import {hideHoverTooltip, renderHoverTooltip} from "../misc/tooltip.js";
 import classEffects from "../../js_data/effects.js";
 import updateBuild from "../smith/update_build.js";
-import {ability_html} from "../hover_html/ability_html.js";
+import {getHoverTextForAbility} from "../hover_html/ability_description.ts";
 
 const treeColumns = 9;
 const abilityPointsAtLevel = [
@@ -239,7 +239,7 @@ function mapHTML(tree, abilityTree, wynnClass) {
         };
         img.ondragstart = () => false;
         img.addEventListener("mouseover", () => {
-            renderHoverTooltip(ability_html(ability.abilityID, wynnClass));
+            renderHoverTooltip(getHoverTextForAbility(ability.abilityID, wynnClass));
         });
         img.addEventListener("mouseout", () => {
             hideHoverTooltip();

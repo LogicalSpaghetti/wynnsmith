@@ -1,7 +1,7 @@
 import * as codeDictionary from "../../js_data/code_dictionary.ts";
 import {attackSpeedMultipliers, damageTypeNames} from "./small_stuff.ts";
 import {roundForDisplay} from "./numbers.ts";
-import {stripMinecraftFormatting} from "../hover_html/minecraft_html.js";
+import {stripMinecraftFormatting} from "../hover_html/minecraft_html.ts";
 
 const classSpellNames = {
     archer: ["Arrow Storm", "Escape", "Arrow Bomb", "Arrow Shield"],

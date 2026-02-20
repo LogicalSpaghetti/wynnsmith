@@ -2,7 +2,7 @@ import connectionsUrl from "../../../assets/img/ability/connections.png";
 import activeUrl from "../../../assets/img/ability/active_connections.png";
 import nodesUrl from "../../../assets/img/ability/nodes.png";
 import {ImageLoader} from "../misc/image_loader.ts";
-import {getHoverTextForAbility} from "./ability_description.ts";
+import {getHoverTextForAbility} from "../hover_html/ability_description.ts";
 import {hideHoverTooltip, renderHoverTooltip} from "../misc/tooltip";
 import {AbilityTree, type Cell, type ClassName, nodeTypes, type TravelNode} from "./ability_tree.ts";
 import {HistoryLedger} from "../misc/history.ts";
@@ -10,6 +10,8 @@ import {maxPlayerLevel} from "../misc/small_stuff.ts";
 
 const nodeStateOffsets = ["blocked", "unavailable", "available", "error", "selected"] as const;
 
+// TODO: this class is doing way too much, make a deeper layer, holding the displays and computers for all parts of the tree/aspects
+//  Make Aspects first
 export class TreeCanvas {
     static readonly columns = 9;
 
@@ -28,7 +30,7 @@ export class TreeCanvas {
     private activeConnections?: HTMLImageElement;
     private nodes?: HTMLImageElement;
 
-    private tree: AbilityTree;
+    private readonly tree: AbilityTree;
 
     private readonly rotate: boolean;
 
@@ -236,7 +238,7 @@ export class TreeCanvas {
     private getHoverText(mouseX: number, mouseY: number) {
         const abilityID = this.getIDAtLocation(mouseX, mouseY);
         if (!abilityID) return;
-        return getHoverTextForAbility(this.tree.data.abilities, abilityID);
+        return getHoverTextForAbility(this.tree.data.abilities, this.tree.data.abilities[abilityID]);
     }
 
     private mouseClick(mouseX: number, mouseY: number) {

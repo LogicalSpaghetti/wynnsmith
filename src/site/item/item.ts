@@ -4,7 +4,7 @@ import indexedInternalNameGroups from "../../js_data/indexed_names.js";
 import {binaryToDecimal, BitReader, decimalToBinaryByMaximum, getBinaryLength} from "../misc/numbers.ts";
 import {Powders} from "./powders.js";
 import type {NormalItemData, WeaponItemType} from "./item_types.ts";
-import type {ItemSubType, ItemTypeType} from "../../generated/item_types.ts";
+import type {ItemSubType, ItemTypeType} from "./api_item_types.ts";
 
 const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"];
 const weaponCategory = "weapon";

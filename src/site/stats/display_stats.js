@@ -1,6 +1,6 @@
 import {roundForDisplay} from "../misc/numbers.ts";
 import {attackSpeedMap, orderedAttackSpeed} from "../misc/small_stuff.ts";
-import {minecraftToHTML} from "../hover_html/minecraft_html.js";
+import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
 import {player_bps} from "./stat_calculations.js";
 import * as codeDictionary from "../../js_data/code_dictionary.ts";
 

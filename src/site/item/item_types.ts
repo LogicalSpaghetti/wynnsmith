@@ -6,7 +6,7 @@ import type {
     ItemSubType,
     ItemTypeType, TomeSubType,
     WeaponSubType,
-} from "../../generated/item_types.ts";
+} from "./api_item_types.ts";
 
 export type ItemData = NormalItemData | CraftedItemData | CustomItemData | ModifiedItemData
 

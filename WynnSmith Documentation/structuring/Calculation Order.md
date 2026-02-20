@@ -37,10 +37,16 @@
 5. Add tree cost modifiers
 6. Set to the max of itself and 1
 7. Apply Mask multipliers
-$$
-\begin{bsmallmatrix} n\\ e\\ t\\ w\\ f\\ a \end{bsmallmatrix}\odot
-$$
+```js
+let cost = initialSpellCost;
+cost *= 1 - ( 0.5 * ( intelligenceMultiplier / maxSPMultiplier ) );
+cost += rawSpellCost;
+cost *= 1 + pctSpellCost / 100;
+cost += treeCostModifiers;
+cost = max(1,cost);
+cost = cost * shamanMaskMultiplier;
+```
 
 $$
-\sum_{n=0}^\infty(\frac 1{n!}-4\frac{(-1)^n}{2n+1})
+\begin{bsmallmatrix} n\\ e\\ t\\ w\\ f\\ a \end{bsmallmatrix}\odot
 $$

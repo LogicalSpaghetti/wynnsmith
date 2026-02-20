@@ -1,6 +1,6 @@
 import * as codeDictionary from "../../js_data/code_dictionary.ts";
 
-export function minecraftAsElement(text, minecraftFont = false) {
+export function minecraftAsElement(text: string, minecraftFont = false) {
     const htmlText = minecraftToHTML(text);
     const span = document.createElement("span");
     span.innerHTML = htmlText;
@@ -84,7 +84,7 @@ function anyToHTML(text = "") {
 
 function splitByColorFormats(string) {
     let result = [{
-        color: null, content: ""
+        color: null, content: "",
     }];
 
     if (string === "") return result;
@@ -123,7 +123,7 @@ function splitByColorFormats(string) {
 function splitByOtherFormats(string = "") {
 
     let result = [
-        {decoration: null, style: null, content: ""}
+        {decoration: null, style: null, content: ""},
     ];
 
     if (string.length === 0) return result;
@@ -174,31 +174,91 @@ export function insertStringBeforeSelected(insertString) {
     activeElement.dispatchEvent(new Event("input"));
 }
 
-export class TextSections {
-    sections = [];
+export class SectionedText {
+    private sections: TextSection[] = [];
 
-    addByLine(line) {
-        this.add(new TextSection(line));
+    constructor(section?: string) {
+        if (section !== undefined) this.addSection(section);
     }
 
-    add(section) {
-        if (section && !section.isEmpty()) this.sections.push(section);
+    static of(...lines: string[]) {
+        return new SectionedText().addSections(...lines);
+    }
+
+    addSection(arg: string | TextSection): this {
+        if (typeof arg === "string" && arg.length === 0) return this;
+
+        const section = typeof arg === "string"
+            ? new TextSection(arg) : arg;
+
+        if (!section.isEmpty()) this.sections.push(section);
+        return this;
+    }
+
+    addSections(...sections: (string | TextSection)[]): this {
+        for (const section of sections) this.addSection(section);
+        return this;
+    }
+
+    addIf(condition: unknown, builder: () => string | TextSection): this {
+        if (!condition) return this;
+        return this.addSection(builder());
+    }
+
+    addManyIf(condition: unknown, builder: () => (string | TextSection)[]): this {
+        if (!condition) return this;
+        return this.addSections(...builder());
+    }
+
+    appendToLast(...lines: string[]): this {
+        if (this.sections.length !== 0)
+            this.sections[this.sections.length - 1].addLines(...lines);
+        return this;
+    }
+
+    appendToLastIf(condition: unknown, ...lines: string[]) {
+        if (!condition) return this;
+        return this.appendToLast(...lines);
     }
 
     toString() {
         return this.sections.join("\n\n");
     }
+
+    toMinecraftHTML() {
+        return minecraftToHTML(this.toString());
+    }
 }
 
 export class TextSection {
-    lines = [];
+    private lines: string[] = [];
 
-    constructor(string) {
-        this.add(string);
+    constructor(string?: string) {
+        if (string !== undefined) this.addLine(string);
     }
 
-    add(line) {
-        if (line && line.length > 0) this.lines.push(line);
+    static of(...lines: string[]) {
+        return new TextSection().addLines(...lines);
+    }
+
+    addLine(line: string): this {
+        if (line.length > 0) this.lines.push(line);
+        return this;
+    }
+
+    addLines(...lines: string[]): this {
+        for (const line of lines) this.addLine(line);
+        return this;
+    }
+
+    addIf(condition: unknown, builder: () => string): this {
+        if (!condition) return this;
+        return this.addLine(builder());
+    }
+
+    addManyIf(condition: unknown, builder: () => string[]): this {
+        if (!condition) return this;
+        return this.addLines(...builder());
     }
 
     toString() {
