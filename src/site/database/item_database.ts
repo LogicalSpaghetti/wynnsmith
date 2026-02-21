@@ -1,4 +1,4 @@
-import {snakeToTitle} from "../misc/display_item.js";
+import {snakeToTitle} from "../hover_html/display_item.js";
 import type {NormalItemData} from "../item/item_types.ts";
 import {Database} from "./database.ts";
 import type {ItemCategory} from "../item/item.ts";

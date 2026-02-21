@@ -1,3 +1,5 @@
+// TODO: this is over-abstraction, remove.
+
 export function add(id, type, lambda) {
     document.getElementById(id).addEventListener(type, lambda);
 }

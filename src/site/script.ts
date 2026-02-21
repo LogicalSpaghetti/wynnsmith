@@ -1,7 +1,7 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
 import {TreeCanvas} from "./ability/tree_canvas.ts";
 import {ItemInputs, TomeInputs} from "./item/item_inputs.ts";
-import {HistoryLedger} from "./misc/history.ts";
+import {HistoryLedger} from "./history/history.ts";
 
 // code entry point:
 if (document.readyState === "loading") {

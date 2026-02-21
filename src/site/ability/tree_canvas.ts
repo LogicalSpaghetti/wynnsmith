@@ -1,11 +1,11 @@
 import connectionsUrl from "../../../assets/img/ability/connections.png";
 import activeUrl from "../../../assets/img/ability/active_connections.png";
 import nodesUrl from "../../../assets/img/ability/nodes.png";
-import {ImageLoader} from "../misc/image_loader.ts";
+import {ImageLoader} from "../database/image_loader.ts";
 import {getHoverTextForAbility} from "../hover_html/ability_description.ts";
-import {hideHoverTooltip, renderHoverTooltip} from "../misc/tooltip";
+import {hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip";
 import {AbilityTree, type Cell, type ClassName, nodeTypes, type TravelNode} from "./ability_tree.ts";
-import {HistoryLedger} from "../misc/history.ts";
+import {HistoryLedger} from "../history/history.ts";
 import {maxPlayerLevel} from "../misc/small_stuff.ts";
 
 const nodeStateOffsets = ["blocked", "unavailable", "available", "error", "selected"] as const;

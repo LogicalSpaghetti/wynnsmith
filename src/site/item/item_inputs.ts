@@ -1,5 +1,5 @@
 import {ItemInput, WeaponInput} from "./item_input.ts";
-import {HistoryLedger, TypedEventTarget} from "../misc/history.ts";
+import {HistoryLedger, TypedEventTarget} from "../history/history.ts";
 
 export type EquipmentInputs = [
     ItemInput, // helmet

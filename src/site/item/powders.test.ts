@@ -1,6 +1,6 @@
 import {expect, test} from "vitest";
 import {Powder, Powders} from "./powders.ts";
-import {BitReader} from "../misc/numbers.ts";
+import {BitReader} from "../encoding/numbers.ts";
 
 test("powders", () => {
     expect(new Powder("f", 5).equals(new Powder("f", 5))).toEqual(true);

@@ -1,3 +1,5 @@
+// TODO: move to other files.
+
 export type ElementalArray = [number, number, number, number, number, number]
 
 export const damageTypeCount = 6;

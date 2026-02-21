@@ -6,7 +6,7 @@ import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
 import {renderHighlights, setToggles, validateTree} from "../ability/ability.js";
 import {displayStats, displayForDevelopment} from "../stats/display_stats.js";
 import addDamageDisplays from "../attack/attack_display.js";
-import * as codeDictionary from "../../js_data/code_dictionary.ts";
+import * as codeDictionary from "../hover_html/code_dictionary.ts";
 
 export function displayBuilds(input, builds) {
     if (!builds?.[0]) return;

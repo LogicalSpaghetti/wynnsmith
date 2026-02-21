@@ -1,11 +1,11 @@
 import {type ItemCategory} from "./item.ts";
-import {snakeToTitle} from "../misc/display_item";
+import {snakeToTitle} from "../hover_html/display_item";
 import {itemDatabase} from "../database/item_database.ts";
 import type {NormalItemData} from "./item_types.ts";
 import {Powders} from "./powders.ts";
-import {hideHoverTooltip, renderHoverTooltip} from "../misc/tooltip";
-import {mod} from "../misc/numbers.ts";
-import {type HistoryEvents, HistoryTarget} from "../misc/history.ts";
+import {hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip";
+import {mod} from "../encoding/numbers.ts";
+import {type HistoryEvents, HistoryTarget} from "../history/history.ts";
 import {getHoverTextForItem} from "../hover_html/item_html.ts";
 
 type ItemInputEvents = {

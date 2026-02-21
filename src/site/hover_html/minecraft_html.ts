@@ -1,4 +1,4 @@
-import * as codeDictionary from "../../js_data/code_dictionary.ts";
+import * as codeDictionary from "./code_dictionary.ts";
 
 export function minecraftAsElement(text: string, minecraftFont = false) {
     const htmlText = minecraftToHTML(text);

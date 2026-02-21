@@ -1,10 +1,10 @@
-import * as codeDictionary from "../../js_data/code_dictionary.js";
+import * as codeDictionary from "./code_dictionary.js";
 import {attackSpeedMap} from "../misc/small_stuff.ts";
 import {
     base_stats, categorizedBaseStats, categorizedRegularIds,
     identifications,
     orderedSkillPointIds,
-} from "../../js_data/base_and_ids.js";
+} from "../item/base_and_ids.js";
 import {
     getAverageDPS,
     getFormattedBase,
@@ -13,7 +13,7 @@ import {
     snakeToTitle,
     upperFirst,
     wrapText,
-} from "../misc/display_item.js";
+} from "./display_item.js";
 import {skillPointNames} from "../skill_point/skill_points.js";
 import {TextSection, SectionedText} from "./minecraft_html.js";
 import type {GenericGearItemType, WeaponItemType} from "../item/item_types.ts";

@@ -1,8 +1,8 @@
-import {roundForDisplay} from "../misc/numbers.ts";
+import {roundForDisplay} from "../encoding/numbers.ts";
 import {attackSpeedMap, orderedAttackSpeed} from "../misc/small_stuff.ts";
 import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
 import {player_bps} from "./stat_calculations.js";
-import * as codeDictionary from "../../js_data/code_dictionary.ts";
+import * as codeDictionary from "../hover_html/code_dictionary.ts";
 
 export function displayStats(build) {
     const support = document.getElementById("support_display");

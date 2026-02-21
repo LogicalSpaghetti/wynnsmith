@@ -1,4 +1,4 @@
-import {BitReader, decimalToBinary} from "../misc/numbers.ts";
+import {BitReader, decimalToBinary} from "../encoding/numbers.ts";
 import {type CapitalizedElement, type ElementalArray, elementTypeCount} from "../misc/small_stuff.ts";
 
 

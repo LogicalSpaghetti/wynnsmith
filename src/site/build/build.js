@@ -3,7 +3,7 @@ import {maxPlayerLevel} from "../misc/small_stuff.ts";
 import {Abilities} from "../ability/ability.js";
 import * as search from "../database/item_database.ts";
 import {getItemAddedSP, getSkillPointModifiers, skillPointNames} from "../skill_point/skill_points.ts";
-import {base64ToBinary} from "../misc/numbers.ts";
+import {base64ToBinary} from "../encoding/numbers.ts";
 import permuteOrders from "../misc/permutation.js";
 
 // TODO: should be part of the database

@@ -1,4 +1,4 @@
-import {addElem} from "./event_listener.js";
+import {addElem} from "../misc/event_listener.js";
 
 export function addTooltipListener() {
     initTooltip();

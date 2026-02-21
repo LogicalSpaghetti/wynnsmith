@@ -1,9 +1,9 @@
 import {damage_type_count, DamageExtremes, MinMax} from "./attacks.js";
 import {minecraftAsElement} from "../hover_html/minecraft_html.ts";
-import {roundForDisplay} from "../misc/numbers.ts";
+import {roundForDisplay} from "../encoding/numbers.ts";
 import {SkillPointIndexes} from "../skill_point/skill_points.ts";
 import * as settings from "../smith/settings.js";
-import * as codeDictionary from "../../js_data/code_dictionary.ts";
+import * as codeDictionary from "../hover_html/code_dictionary.ts";
 
 const damageColors = Object.freeze([
     "#fca800",

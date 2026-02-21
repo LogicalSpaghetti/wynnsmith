@@ -1,9 +1,9 @@
 import * as ability_tree from "../ability/ability.js";
-import * as numbers from "../misc/numbers.ts";
+import * as numbers from "../encoding/numbers.ts";
 import {itemDatabase} from "../database/item_database.ts";
-import {addTooltipListener, hideHoverTooltip, renderHoverTooltip} from "../misc/tooltip.js";
+import {addTooltipListener, hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip.js";
 import copyTreeAsANSI from "../ability/ansi_tree.js";
-import {decimalToRoman} from "../misc/numbers.ts";
+import {decimalToRoman} from "../encoding/numbers.ts";
 import {add, addAll, addAllElem, addElem, dispatch} from "../misc/event_listener.js";
 import updateBuild from "./update_build.js";
 import * as settings from "./settings.js";
