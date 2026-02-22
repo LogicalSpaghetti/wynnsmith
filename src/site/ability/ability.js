@@ -1,4 +1,3 @@
-import punscake from "../../js_data/trees.js";
 import {maxPlayerLevel} from "../misc/small_stuff.ts";
 import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
 import aspect_descriptions from "../../js_data/aspects.js";
@@ -9,6 +8,7 @@ import {hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip.js";
 import classEffects from "../../js_data/effects.js";
 import updateBuild from "../smith/update_build.js";
 import {getHoverTextForAbility} from "../hover_html/ability_description.ts";
+import {treeDatabase} from "../database/tree_database.ts";
 
 const treeColumns = 9;
 const abilityPointsAtLevel = [
@@ -94,7 +94,7 @@ export class Tree {
     }
 
     static getDataFromClass(wynnClass) {
-        return punscake[wynnClass];
+        return treeDatabase.getTree(wynnClass);
     }
 
     static markClear() {
@@ -115,21 +115,6 @@ class Node {
 // endregion
 
 function changeAbilityTree(wynnClass) {
-    const abilityTree = document.getElementById("ability_tree");
-    abilityTree.innerHTML = "";
-
-    abilityTree.dataset.class = wynnClass || abilityTree.dataset.class;
-
-    const tree = punscake[wynnClass];
-
-    abilityTree.hidden = !tree;
-
-    if (!tree) return;
-
-    mapHTML(tree, abilityTree, wynnClass);
-
-    for (const img of document.querySelectorAll(".node_img"))
-        img.ondragstart = () => false;
 }
 
 function changeAspects(wynnClass) {
@@ -258,7 +243,7 @@ export function validateTree(level = maxPlayerLevel, wynnClass) {
         // return;
     }
 
-    const tree = punscake[wynnClass];
+    const tree = treeDatabase.getTree(wynnClass);
     if (!tree) return;
 
     // reset tree highlights
