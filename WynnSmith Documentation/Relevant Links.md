@@ -9,10 +9,11 @@
 
 
 https://anseki.github.io/leader-line/
-- Looks cool, do something with?
 
 [Tailwind CSS](https://tailwindcss.com/)
 [Bootstrap](https://getbootstrap.com/)
 [Vitest](https://vitest.dev/)
 
 [MathQuill](http://mathquill.com/)
+[Marked](https://marked.js.org/)
+[Latex-to-Mathjs](https://github.com/SENODROOM/LaTeX-To-MathJs)
