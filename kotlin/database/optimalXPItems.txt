@@ -1,0 +1,94 @@
+level, bonus, item
+bow:
+    1, 5%, Refined Bow
+    6, 8%, Tormenter
+    9, 10%, Refined Longbow
+    11, 20%, Crackshot
+    32, 25%, Precision
+    55, 30%, Joyous
+    76, 33%, Hope
+    90, 39%, Wybel Fluff Bow
+dagger:
+    6, 9%, Pin
+    15, 10%, Iron Knuckle
+    19, 13%, Someone Else's Knife
+    29, 22%, Abolition
+    38, 25%, Influence
+    89, 30%, Alizarin
+    90, 39%, Wybel Tooth Dagger
+wand:
+    1, 5%, Quartzite Wand
+    7, 8%, Detlas' Stick
+    9, 10%, Clock Stick
+    15, 16%, Golem's Arm
+    18, 20%, Reticence
+    47, 33%, Sage
+    65, 39%, Pure
+relik:
+    2, 8%, Bumblebee
+    12, 13%, Fire Brand
+    14, 25%, Stress
+    49, 30%, Bibliotek
+    90, 39%, Wybel Carved Relik
+spear:
+    7, 13%, Maltic's Old Spear
+    16, 16%, Hilt
+    28, 22%, Cross
+    45, 25%, Hillich
+    76, 33%, Gungnir
+    90, 39%, Wybel Horn Spear
+helmet:
+    1, 3%, Tosach
+    5, 5%, The Queen's Tiara
+    7, 7%, Skin Cap
+    8, 16%, Heliophilia
+    23, 20%, Sound of Silence
+    39, 22%, Faded
+    64, 26%, Upgraded Orc Mask
+    80, 39%, Gale's Sight
+chestplate:
+    3, 10%, The King's Robe
+    5, 18%, Guard's Garment
+    29, 20%, Detlas' Skin
+    54, 33%, Geis
+    77, 39%, Papyrus
+leggings:
+    7, 7%, Waist Apron
+    11, 13%, Opulenity
+    23, 18%, Regal Chaps
+    38, 21%, Chained Pixels
+    51, 26%, Bridge of the Divide
+    58, 39%, Greaves of Honor
+    94, 40%, Trench Scourer
+boots:
+    2, 5%, Sargasso
+    5, 8%, Bright Boots
+    9, 13%, Audacity
+    10, 20%, Silken Slippers
+    36, 25%, Prologue
+    60, 42%, Bad Wolf
+ring:
+    1, 9%, Rarity
+    12, 10%, Onion Ring
+    30, 12%, Law of the Jungle
+    41, 13%, Precious
+    84, 14%, Worship
+    97, 18%, Fehu
+necklace:
+    4, 4%, Swift
+    6, 5%, Beauty
+    10, 7%, Travel Charm
+    12, 8%, Witherhead's Talisman
+    25, 13%, Durum's Serenity
+    45, 20%, Constrict Collar
+    51, 21%, Hexed Amulet
+    80, 25%, Altum Spatium
+bracelet:
+    1, 7%, Secret
+    3, 8%, Enzan's Lucky Charm
+    25, 10%, Laen's Curiosity
+    35, 12%, Glass Skin
+    50, 13%, Binding Brace
+    66, 16%, Rayshyroth's Knowledge
+    79, 22%, Double Vision
+    99, 33%, Knucklebones

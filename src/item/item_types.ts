@@ -1,21 +1,17 @@
 import type {
-    AccessorySubType,
-    ArmourSubType,
     AttackSpeedType, BaseType,
     IdentificationsType,
     ItemSubType,
-    ItemTypeType, TomeSubType,
-    WeaponSubType,
+    ItemTypeType,
 } from "./api_item_types.ts";
 
 export type ItemData = NormalItemData | CraftedItemData | CustomItemData | ModifiedItemData
 
-export type NormalItemData = WeaponItemType | ArmourItemType | AccessoryItemType | TomeItemType | IngredientType | CharmType | MaterialType
 export type CraftedItemData = null // TODO
 export type CustomItemData = null // TODO
 export type ModifiedItemData = null // TODO
 
-export type GenericItemType = {
+export type NormalItemData = {
     name: string
     internalName: string
     type: ItemTypeType
@@ -36,20 +32,22 @@ export type GenericItemType = {
         name: string
         type: string
     }
-}
-
-
-export type GenericGearItemType = GenericItemType & {
-    rarity: "common" | "unique" | "set" | "rare" | "legendary"| "fabled" | "mythic"
+    tier?: number
+    craftable?: string[]
+    rarity?: "common" | "unique" | "set" | "rare" | "legendary" | "fabled" | "mythic"
     majorIds?: { [key: string]: string }
     powderSlots?: number
     lore?: string
-    dropRestriction: string
+    dropRestriction?: string
     restrictions?: "untradable" | "quest item"
     base?: { [key in BaseType]: { min: number, max: number, raw: number } | number }
     identifications?: { [key in IdentificationsType]: { min: number, max: number, raw: number } | number }
-    requirements: {
+    requirements?: {
         level: number
+        levelRange: {
+            min: number
+            max: number
+        }
         strength?: number
         dexterity?: number
         intelligence?: number
@@ -57,40 +55,17 @@ export type GenericGearItemType = GenericItemType & {
         agility?: number
         quest?: string
         classRequirement?: string
+        skills: [number, number, number, number, number, number]
     }
-}
+    armourMaterial?: string
+    attackSpeed?: AttackSpeedType
+    averageDPS?: number
 
-export type WeaponItemType = GenericGearItemType & {
-    type: "weapon"
-    subType: WeaponSubType
-    attackSpeed: AttackSpeedType
-    averageDPS: number
-}
-
-export type ArmourItemType = GenericGearItemType & {
-    type: "armour"
-    subType: ArmourSubType
-    armourMaterial: string
-}
-
-export type AccessoryItemType = GenericGearItemType & {
-    type: "accessory"
-    subType: AccessorySubType
-}
-
-export type TomeItemType = GenericGearItemType & {
-    type: "tome"
-    subType: TomeSubType
-}
-
-export type IngredientType = GenericItemType & {
-    type: "ingredient"
-    tier: number
-    consumableOnlyIDs: {
+    consumableOnlyIDs?: {
         duration: number
         charges: number
     }
-    ingredientPositionModifiers: {
+    ingredientPositionModifiers?: {
         left: number
         right: number
         above: number
@@ -98,30 +73,12 @@ export type IngredientType = GenericItemType & {
         touching: number
         not_touching: number
     }
-    itemOnlyIDs: {
+    itemOnlyIDs?: {
         durability_modifier: number
         strength_requirement: number
         dexterity_requirement: number
         intelligence_requirement: number
         defence_requirement: number
         agility_requirement: number
-    }
-    requirements: {
-        skills: [number, number, number, number, number, number]
-    }
-}
-
-export type MaterialType = GenericItemType & {
-    tier: number
-    craftable: string[]
-}
-
-export type CharmType = GenericItemType & {
-    type: "charm"
-    requirements: {
-        levelRange: {
-            min: number
-            max: number
-        }
     }
 }

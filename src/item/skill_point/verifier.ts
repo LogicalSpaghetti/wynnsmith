@@ -1,22 +1,37 @@
-import {sp_indexes} from "./skill_points.ts";
+import {getItemAddedSP, getItemSPReqs, sp_indexes} from "./skill_points.ts";
+import type {NormalItemData} from "../item_types.ts";
 
 type SimpleItem = {
     reqs: number[],
     given: number[]
 }
 
-// TODO: take in weapons, gear, and modified SP, output total SP assignment and remaining SP
+// TODO: set bonuses, abnormal items (consider modifying the API item data)
+export function solveSP(weaponData: NormalItemData, offhandsData: NormalItemData[], gearData: NormalItemData[], assignedSP: number[] = [0, 0, 0, 0, 0]): number[] {
+    const weapon = itemToSimpleItem(weaponData);
+    const offhands = offhandsData.map(item => itemToSimpleItem(item));
+    const gear = gearData.map(item => itemToSimpleItem(item));
+    assignedSP = [...assignedSP];
 
-export function optimizeGear(items: SimpleItem[], assignedSP = [0, 0, 0, 0, 0]): number[] {
-    const minimum = [...assignedSP];
+    const givenSP = sumGiven(gear);
 
-    const given = sumGiven(items);
+    restrictMinimumsBy(assignedSP, givenSP, true, weapon, ...offhands);
+    restrictMinimumsBy(assignedSP, givenSP, false, ...gear);
+
+    return assignedSP;
+}
+
+function restrictMinimumsBy(assignedSP: number[], givenSP: number[], isWeapon: boolean, ...items: SimpleItem[]) {
     for (const item of items)
-        for (let i = 0; i < sp_indexes; i++)
-            if (item.reqs[i] > 0)
-                minimum[i] = Math.max(minimum[i], item.reqs[i] + item.given[i] - given[i]);
+        applyMinimums(item, assignedSP, givenSP, isWeapon);
+}
 
-    return minimum;
+function applyMinimums(item: SimpleItem, assignedSP: number[], givenSP: number[], isWeapon = false) {
+    for (let i = 0; i < sp_indexes; i++)
+        if (item.reqs[i] > 0)
+            assignedSP[i] = Math.max(
+                assignedSP[i],
+                item.reqs[i] - givenSP[i] + (isWeapon ? 0 : item.given[i]));
 }
 
 function sumGiven(items: SimpleItem[]): number[] {
@@ -28,4 +43,12 @@ function sumGiven(items: SimpleItem[]): number[] {
         },
         [0, 0, 0, 0, 0],
     );
+}
+
+function itemToSimpleItem(item: NormalItemData) {
+    const given: number[] = getItemAddedSP(item);
+
+    const reqs: number[] = getItemSPReqs(item)
+
+    return {reqs, given};
 }

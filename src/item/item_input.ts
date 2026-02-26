@@ -179,14 +179,12 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
 
     private updateWeaponIcon(newData: NormalItemData) {
         if (!this.isWeapon) return;
-        const name = "requirements" in newData && "classRequirement" in newData.requirements
-            ? newData.requirements.classRequirement!
-            : ItemInput.defaultWeaponIcon;
+        const name = newData.requirements?.classRequirement ?? ItemInput.defaultWeaponIcon;
         this.icon.src = `img/cat_icon/${name}.png`;
     }
 
     private updateRarity(newData: NormalItemData | null) {
-        this.input.dataset.rarity = newData && "rarity" in newData ? newData.rarity : "";
+        this.input.dataset.rarity = newData?.rarity ?? "";
     }
 
     private changePowders() {
@@ -229,7 +227,7 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
     private updatePowderSlots(newData: NormalItemData | null) {
         const powderInput = this.powderInput;
         if (!powderInput) return;
-        const powderSlots = newData && "powderSlots" in newData ? newData.powderSlots! : 0;
+        const powderSlots = newData?.powderSlots ?? 0;
         if (powderSlots === this.powderSlots) return;
         this.powderSlots = powderSlots;
 
@@ -273,7 +271,7 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
     }
 
     private newSearchElement(itemData: NormalItemData, index: number) {
-        if (!("rarity" in itemData)) return "";
+        if (!itemData.rarity) return "";
         const li = document.createElement("li");
         li.classList.add("slot_li");
         li.dataset.rarity = itemData.rarity;

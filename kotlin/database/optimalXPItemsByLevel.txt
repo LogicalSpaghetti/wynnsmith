@@ -1,0 +1,50 @@
+level 1: Refined Bow, Quartzite Wand, Tosach, Rarity, Secret
+level 2: Bumblebee, Sargasso
+level 3: The King's Robe, Enzan's Lucky Charm
+level 4: Swift
+level 5: The Queen's Tiara, Guard's Garment, Bright Boots
+level 6: Tormenter, Pin, Beauty
+level 7: Detlas' Stick, Maltic's Old Spear, Skin Cap, Waist Apron
+level 8: Heliophilia
+level 9: Refined Longbow, Clock Stick, Audacity
+level 10: Silken Slippers, Travel Charm
+level 11: Crackshot, Opulenity
+level 12: Fire Brand, Onion Ring, Witherhead's Talisman
+level 14: Stress
+level 15: Iron Knuckle, Golem's Arm
+level 16: Hilt
+level 18: Reticence
+level 19: Someone Else's Knife
+level 23: Sound of Silence, Regal Chaps
+level 25: Durum's Serenity, Laen's Curiosity
+level 28: Cross
+level 29: Abolition, Detlas' Skin
+level 30: Law of the Jungle
+level 32: Precision
+level 35: Glass Skin
+level 36: Prologue
+level 38: Influence, Chained Pixels
+level 39: Faded
+level 41: Precious
+level 45: Hillich, Constrict Collar
+level 47: Sage
+level 49: Bibliotek
+level 50: Binding Brace
+level 51: Bridge of the Divide, Hexed Amulet
+level 54: Geis
+level 55: Joyous
+level 58: Greaves of Honor
+level 60: Bad Wolf
+level 64: Upgraded Orc Mask
+level 65: Pure
+level 66: Rayshyroth's Knowledge
+level 76: Hope, Gungnir
+level 77: Papyrus
+level 79: Double Vision
+level 80: Gale's Sight, Altum Spatium
+level 84: Worship
+level 89: Alizarin
+level 90: Wybel Fluff Bow, Wybel Tooth Dagger, Wybel Carved Relik, Wybel Horn Spear
+level 94: Trench Scourer
+level 97: Fehu
+level 99: Knucklebones

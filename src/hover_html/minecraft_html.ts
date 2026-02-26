@@ -182,7 +182,7 @@ export class SectionedText {
     }
 
     static of(...lines: string[]) {
-        return new SectionedText().addSections(...lines);
+        return new SectionedText().add(...lines);
     }
 
     addSection(arg: string | TextSection): this {
@@ -195,30 +195,15 @@ export class SectionedText {
         return this;
     }
 
-    addSections(...sections: (string | TextSection)[]): this {
+    add(...sections: (string | TextSection)[]): this {
         for (const section of sections) this.addSection(section);
         return this;
     }
 
-    addIf(condition: unknown, builder: () => string | TextSection): this {
-        if (!condition) return this;
-        return this.addSection(builder());
-    }
-
-    addManyIf(condition: unknown, builder: () => (string | TextSection)[]): this {
-        if (!condition) return this;
-        return this.addSections(...builder());
-    }
-
     appendToLast(...lines: string[]): this {
         if (this.sections.length !== 0)
-            this.sections[this.sections.length - 1].addLines(...lines);
+            this.sections[this.sections.length - 1].add(...lines);
         return this;
-    }
-
-    appendToLastIf(condition: unknown, ...lines: string[]) {
-        if (!condition) return this;
-        return this.appendToLast(...lines);
     }
 
     toString() {
@@ -238,7 +223,7 @@ export class TextSection {
     }
 
     static of(...lines: string[]) {
-        return new TextSection().addLines(...lines);
+        return new TextSection().add(...lines);
     }
 
     addLine(line: string): this {
@@ -246,19 +231,9 @@ export class TextSection {
         return this;
     }
 
-    addLines(...lines: string[]): this {
+    add(...lines: string[]): this {
         for (const line of lines) this.addLine(line);
         return this;
-    }
-
-    addIf(condition: unknown, builder: () => string): this {
-        if (!condition) return this;
-        return this.addLine(builder());
-    }
-
-    addManyIf(condition: unknown, builder: () => string[]): this {
-        if (!condition) return this;
-        return this.addLines(...builder());
     }
 
     toString() {

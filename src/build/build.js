@@ -2,7 +2,12 @@ import {OldItems} from "../item/item.ts";
 import {maxPlayerLevel} from "../to_sort/small_stuff.ts";
 import {Abilities} from "../ability/ability.js";
 import * as search from "../database/item_database.ts";
-import {getItemAddedSP, getSkillPointModifiers, skillPointNames} from "../item/skill_point/skill_points.ts";
+import {
+    getItemAddedSP,
+    getItemSPReqs,
+    getSkillPointModifiers,
+    skillPointNames,
+} from "../item/skill_point/skill_points.ts";
 import {base64ToBinary} from "../encoding/numbers.ts";
 import permuteOrders from "../to_sort/permutation.js";
 
@@ -130,11 +135,6 @@ function getSPRequirementForAllWeapons(weapons) {
         const reqs = getItemSPReqs(search.getItemByName(weapon.name));
         return mins.map((min, i) => Math.max(min, reqs[i]));
     }, [0, 0, 0, 0, 0]);
-}
-
-function getItemSPReqs(item) {
-    const reqs = item?.requirements ?? {};
-    return skillPointNames.map(name => Number(reqs[name] ?? 0));
 }
 
 function mergeEquipOrder(pre, central, post, nothing, centralOrder) {

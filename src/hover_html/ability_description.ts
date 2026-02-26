@@ -9,16 +9,16 @@ export function getHoverTextForAbility(abilities: TreeAbilities, ability: TreeAb
     sections
         .addSection(ability.name)
         .addSection(ability.description)
-        .addIf(ability.unlockingWillBlock.length, () => TextSection.of(
+        .add(ability.unlockingWillBlock.length ? TextSection.of(
             "§cUnlocking will block:",
-            ...(ability.unlockingWillBlock.map(id => `§c- §7${abilities[id]._plainname}`)),
-        ))
-        .addIf(ability.archetype, () => `${ability.archetype} Archetype`)
+            ...(ability.unlockingWillBlock.map(id => `§c- §7${abilities[id]._plainname}`))): ""
+        )
+        .add(ability.archetype ? `${ability.archetype} Archetype` : "")
         .addSection(TextSection.of(`§7Ability points: §f${ability.pointsRequired}`)
-            .addIf(ability.requires !== -1, () =>
-                `§7Required Ability: §f${abilities[ability.requires]._plainname}`)
-            .addIf(needsArchetypeLine, () =>
-                `§7Min ${stripMinecraftFormatting(ability.archetype)} Archetype: §f${ability.archetypePointsRequired}`),
+            .add(ability.requires !== -1 ?
+                `§7Required Ability: §f${abilities[ability.requires]._plainname}` : "")
+            .add(needsArchetypeLine ?
+                `§7Min ${stripMinecraftFormatting(ability.archetype)} Archetype: §f${ability.archetypePointsRequired}` : ""),
         );
 
     return sections.toMinecraftHTML();

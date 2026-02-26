@@ -3,7 +3,7 @@ import {itemDatabase} from "../database/item_database.js";
 import indexedInternalNameGroups from "../js_data/indexed_names.js";
 import {binaryToDecimal, BitReader, decimalToBinaryByMaximum, getBinaryLength} from "../encoding/numbers.ts";
 import {Powders} from "./powders.js";
-import type {NormalItemData, WeaponItemType} from "./item_types.ts";
+import type {NormalItemData} from "./item_types.ts";
 import type {ItemSubType, ItemTypeType} from "./api_item_types.ts";
 
 const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"];
@@ -38,12 +38,12 @@ export class OldItem {
 
         const itemData = search.getItemInGroup(slot, inputValue);
         if (!itemData) return null;
-        const powderSlots = ("powderSlots" in itemData ? itemData.powderSlots : 0) ?? 0;
+        const powderSlots = itemData.powderSlots ?? 0;
         const itemPowders = Powders.fromCluster(cluster, powderSlots, fixCluster);
 
         if (fixCluster) {
-            if (slot === "weapon") OldItem.#setWeaponIcon(cluster, "requirements" in itemData && "classRequirement" in itemData.requirements ? itemData.requirements.classRequirement : "archer");
-            OldItem.#colorSlot(cluster, "rarity" in itemData ? itemData.rarity : "");
+            if (slot === "weapon") OldItem.#setWeaponIcon(cluster, itemData.requirements?.classRequirement ?? "archer");
+            OldItem.#colorSlot(cluster, itemData.rarity ?? "");
             OldItem.#setLink(cluster, itemData.name);
         }
 

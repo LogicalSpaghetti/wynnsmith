@@ -182,9 +182,14 @@ export function capSkillPoint(sp: number) {
 }
 
 export function getItemAddedSP(item: NormalItemData | null) {
-    if (!item || !("identifications" in item)) return [0, 0, 0, 0, 0];
+    if (!item || item.identifications) return [0, 0, 0, 0, 0];
     return capitalizedSkillPointNames.map((name) =>
         Number(item.identifications?.[`raw${name}`] ?? 0));
+}
+
+export function getItemSPReqs(item: NormalItemData | null) {
+    const reqs = item?.requirements;
+    return reqs ? skillPointNames.map(name => Number(reqs[name] ?? 0)) : [0, 0, 0, 0, 0];
 }
 
 export function getSkillPointName(index: number, capitalize = true) {
