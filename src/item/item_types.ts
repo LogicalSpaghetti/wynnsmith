@@ -5,13 +5,7 @@ import type {
     ItemTypeType,
 } from "./api_item_types.ts";
 
-export type ItemData = NormalItemData | CraftedItemData | CustomItemData | ModifiedItemData
-
-export type CraftedItemData = null // TODO
-export type CustomItemData = null // TODO
-export type ModifiedItemData = null // TODO
-
-export type NormalItemData = {
+export type ItemData = {
     name: string
     internalName: string
     type: ItemTypeType
@@ -40,8 +34,8 @@ export type NormalItemData = {
     lore?: string
     dropRestriction?: string
     restrictions?: "untradable" | "quest item"
-    base?: { [key in BaseType]: { min: number, max: number, raw: number } | number }
-    identifications?: { [key in IdentificationsType]: { min: number, max: number, raw: number } | number }
+    base?: { [key in BaseType]?: { min: number, max: number, raw: number } | number }
+    identifications?: { [key in IdentificationsType]?: { min: number, max: number, raw: number } | number }
     requirements?: {
         level: number
         levelRange: {
@@ -54,7 +48,7 @@ export type NormalItemData = {
         defence?: number
         agility?: number
         quest?: string
-        classRequirement?: string
+        classRequirement?: "archer" | "assassin" | "mage" | "shaman" | "warrior"
         skills: [number, number, number, number, number, number]
     }
     armourMaterial?: string
@@ -81,4 +75,7 @@ export type NormalItemData = {
         defence_requirement: number
         agility_requirement: number
     }
+    // TODO: crafted properties
+    // TODO: custom properties?
+    // TODO: modified properties?
 }

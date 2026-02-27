@@ -3,7 +3,7 @@ import {itemDatabase} from "../database/item_database.js";
 import indexedInternalNameGroups from "../js_data/indexed_names.js";
 import {binaryToDecimal, BitReader, decimalToBinaryByMaximum, getBinaryLength} from "../encoding/numbers.ts";
 import {Powders} from "./powders.js";
-import type {NormalItemData} from "./item_types.ts";
+import type {ItemData} from "./item_types.ts";
 import type {ItemSubType, ItemTypeType} from "./api_item_types.ts";
 
 const slots = ["weapon", "helmet", "chestplate", "leggings", "boots", "ring", "ring", "bracelet", "necklace"];
@@ -23,11 +23,11 @@ const ItemTypes = {
 export type ItemCategory = ItemTypeType | ItemSubType
 
 export class OldItem {
-    data: NormalItemData;
+    data: ItemData;
     type = ItemTypes.NORMAL;
     powders;
 
-    constructor(data: NormalItemData, powders: Powders = new Powders()) {
+    constructor(data: ItemData, powders: Powders = new Powders()) {
         this.data = data;
         this.powders = powders;
     }
@@ -118,11 +118,11 @@ export class OldItem {
 }
 
 export class Item {
-    data: NormalItemData;
+    data: ItemData;
     type;
     powders;
 
-    constructor(data: NormalItemData, type: number, powders: Powders = new Powders()) {
+    constructor(data: ItemData, type: number, powders: Powders = new Powders()) {
         this.data = data;
         this.type = type;
         this.powders = powders;
@@ -147,7 +147,7 @@ export class Item {
         return new Item(data, type, powders);
     }
 
-    static normalDataFromBinary(binary: BitReader, category: ItemCategory): NormalItemData | null {
+    static normalDataFromBinary(binary: BitReader, category: ItemCategory): ItemData | null {
         const id = binary.readNumberByMaximum(itemDatabase.getSize() + 1) - 1;
         if (id < 0) return null;
         return itemDatabase.getItemById(id);

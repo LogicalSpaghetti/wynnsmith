@@ -120,7 +120,6 @@ export const categorizedRegularIds = [
     ],
     // Spell Costs
     [
-
         "1stSpellCost",
         "2ndSpellCost",
         "3rdSpellCost",
@@ -132,7 +131,8 @@ export const categorizedRegularIds = [
     ],
 ] as const;
 
-// TODO: remove the symbols from the name, (while keeping the color split between ex. "Neutral" and "Damage")
+export type IdStyler = {[key: string]: {name: string, color?: string, suffix?: string}}
+
 export const base_stats = {
     "baseHealth": {name: "§4⚔ Health", color: "health", symbol: "health"},
     "baseEarthDefence": {name: "§2✤ Earth§7 Defence", color: "earth", symbol: "earth"},

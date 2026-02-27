@@ -1,3 +1,5 @@
+import {getMax} from "../attack/attacks";
+
 export const genericSymbols = {
     "mana": "§b✺",
     "health": "§4⚔",
@@ -110,9 +112,14 @@ export const skillPointColor = {
     "agility": "§f",
 } as const;
 
+export function positivityColor(state: boolean | "true" | "false") {
+    if (typeof state === "boolean") state = state ? "true" : "false";
+    return positivityColors[state];
+}
+
 export const positivityColors = {
-    "true": "§a",
-    "false": "§c",
+    true: "§a",
+    false: "§c",
 } as const;
 
 export const decoration = {

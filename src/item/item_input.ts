@@ -1,12 +1,11 @@
 import {type ItemCategory} from "./item.ts";
-import {snakeToTitle} from "../hover_html/display_item";
 import {itemDatabase} from "../database/item_database.ts";
-import type {NormalItemData} from "./item_types.ts";
+import type {ItemData} from "./item_types.ts";
 import {Powders} from "./powders.ts";
 import {hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip";
 import {mod} from "../encoding/numbers.ts";
 import {type HistoryEvents, HistoryTarget} from "../history/history.ts";
-import {getHoverTextForItem} from "../hover_html/item_html.ts";
+import {getHoverTextForItem, snakeToTitle} from "../hover_html/item_html.ts";
 
 type ItemInputEvents = {
     change: void,
@@ -40,7 +39,7 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
     readonly category;
     readonly isWeapon;
 
-    itemData: NormalItemData | null = null;
+    itemData: ItemData | null = null;
     powders: Powders = new Powders();
     private powderSlots = 0;
 
@@ -177,13 +176,13 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
         this.updateRarity(newData);
     }
 
-    private updateWeaponIcon(newData: NormalItemData) {
+    private updateWeaponIcon(newData: ItemData) {
         if (!this.isWeapon) return;
         const name = newData.requirements?.classRequirement ?? ItemInput.defaultWeaponIcon;
         this.icon.src = `img/cat_icon/${name}.png`;
     }
 
-    private updateRarity(newData: NormalItemData | null) {
+    private updateRarity(newData: ItemData | null) {
         this.input.dataset.rarity = newData?.rarity ?? "";
     }
 
@@ -224,7 +223,7 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
         this.powderInput.dataset.error = String(powders.powders.length * 2 !== this.powderInput.value.length);
     }
 
-    private updatePowderSlots(newData: NormalItemData | null) {
+    private updatePowderSlots(newData: ItemData | null) {
         const powderInput = this.powderInput;
         if (!powderInput) return;
         const powderSlots = newData?.powderSlots ?? 0;
@@ -270,7 +269,7 @@ export class ItemInput<Events extends ItemInputEvents = ItemInputEvents> extends
             .map((itemData, i) => this.newSearchElement(itemData, i)));
     }
 
-    private newSearchElement(itemData: NormalItemData, index: number) {
+    private newSearchElement(itemData: ItemData, index: number) {
         if (!itemData.rarity) return "";
         const li = document.createElement("li");
         li.classList.add("slot_li");

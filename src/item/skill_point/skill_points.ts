@@ -1,5 +1,5 @@
 import {damageTypePrefixes} from "../../to_sort/small_stuff.ts";
-import type {NormalItemData} from "../item_types.ts";
+import type {ItemData} from "../item_types.ts";
 
 export const sp_indexes = 5;
 const sp_cap = 150;
@@ -181,13 +181,13 @@ export function capSkillPoint(sp: number) {
     return isNaN(sp) ? 0 : Math.min(Math.max(sp, 0), sp_cap);
 }
 
-export function getItemAddedSP(item: NormalItemData | null) {
+export function getItemAddedSP(item: ItemData | null) {
     if (!item || item.identifications) return [0, 0, 0, 0, 0];
     return capitalizedSkillPointNames.map((name) =>
         Number(item.identifications?.[`raw${name}`] ?? 0));
 }
 
-export function getItemSPReqs(item: NormalItemData | null) {
+export function getItemSPReqs(item: ItemData | null) {
     const reqs = item?.requirements;
     return reqs ? skillPointNames.map(name => Number(reqs[name] ?? 0)) : [0, 0, 0, 0, 0];
 }

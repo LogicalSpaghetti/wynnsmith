@@ -2,7 +2,7 @@ import {
     attackSpeedMultipliers,
     damageTypeNames,
     damageTypePrefixes,
-    orderedAttackSpeed
+    orderedAttackSpeed,
 } from "../to_sort/small_stuff.ts";
 import {getPowderData} from "../item/powders.ts";
 import {SkillPointIndexes} from "../item/skill_point/skill_points.ts";
@@ -16,7 +16,7 @@ export const DamageExtremes = Object.freeze({
     MIN: 0,
     MAX: 1,
     MINC: 2,
-    MAXC: 3
+    MAXC: 3,
 });
 
 export const neutral_index = 0;
@@ -31,6 +31,26 @@ export class DamageArray extends Array {
     summon() {
         console.log("summon");
     }
+}
+
+export function getMin(id) {
+    if (id instanceof MinMax)
+        return id[DamageExtremes.MIN];
+    else if (typeof id === "number")
+        return id;
+    else if ("max" in id)
+        return id.min;
+    else throw new Error(`invalid input of "${id}"`);
+}
+
+export function getMax(id) {
+    if (id instanceof MinMax)
+        return id[DamageExtremes.MAX];
+    else if (typeof id === "number")
+        return id;
+    else if ("max" in id)
+        return id.max;
+    else throw new Error(`invalid input of "${id}"`);
 }
 
 // TODO: make use of methods instead of handling elsewhere
@@ -123,7 +143,7 @@ class DamageTicks extends Array {
                 is_melee: a.is_melee,
                 extra_hits: a.extra_hits,
                 frequency: a.frequency,
-                duration: a.duration
+                duration: a.duration,
             };
         }
     }
@@ -142,15 +162,15 @@ class DamageTicks extends Array {
                 base.baseThunderDamage.min,
                 base.baseWaterDamage.min,
                 base.baseFireDamage.min,
-                base.baseAirDamage.min
+                base.baseAirDamage.min,
             ), new DamageArray(
                 base.baseDamage.max,
                 base.baseEarthDamage.max,
                 base.baseThunderDamage.max,
                 base.baseWaterDamage.max,
                 base.baseFireDamage.max,
-                base.baseAirDamage.max
-            )
+                base.baseAirDamage.max,
+            ),
         );
 
         for (let powder of powders) for (let i in baseDamage)
@@ -163,7 +183,7 @@ class DamageTicks extends Array {
         return baseDamage.map(extreme => {
             const extremeTotal = extreme.reduce((a, b) => a + b);
             return extreme.map((x, i) =>
-                (x * conversion[i] + (i !== neutral_index ? conversion[i] * extremeTotal : 0)) / 100
+                (x * conversion[i] + (i !== neutral_index ? conversion[i] * extremeTotal : 0)) / 100,
             );
         });
     };
@@ -176,7 +196,7 @@ class DamageTicks extends Array {
     parseRaw(ids) {
         const raw = {
             MainAttack: new DamageArray(),
-            Spell: new DamageArray()
+            Spell: new DamageArray(),
         };
 
         for (let i in damageTypeNames) for (let category in raw)
@@ -245,7 +265,7 @@ class DamageTicks extends Array {
 
         const percent = {
             MainAttack: new DamageArray(),
-            Spell: new DamageArray()
+            Spell: new DamageArray(),
         };
 
         damageTypePrefixes.forEach((prefix, i) => {
@@ -334,7 +354,7 @@ class DamageTicks extends Array {
             tick.damages = {
                 nonCrit,
                 crit,
-                average: crit.toMultiply(critChance).addMinMax(nonCrit.toMultiply(1 - critChance))
+                average: crit.toMultiply(critChance).addMinMax(nonCrit.toMultiply(1 - critChance)),
             };
         }
     }
@@ -357,7 +377,7 @@ class DamageVariants {
             this[key] = {
                 label: variantEffect.label,
                 damages,
-                conversion: damageTick.conversion.map(x => x * multiplier)
+                conversion: damageTick.conversion.map(x => x * multiplier),
             };
         }
     }
