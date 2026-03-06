@@ -1,5 +1,3 @@
-import {getMax} from "../attack/attacks";
-
 export const genericSymbols = {
     "mana": "§b✺",
     "health": "§4⚔",

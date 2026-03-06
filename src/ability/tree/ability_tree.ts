@@ -1,5 +1,5 @@
 import {treeDatabase} from "../../database/tree_database.ts";
-import {type HistoryEvents, HistoryTarget} from "../../history/history.ts";
+import {type HistoryEvents, HistoryTarget} from "../../change_handling/history.ts";
 
 const abilityPointsAtLevel = [
     0,

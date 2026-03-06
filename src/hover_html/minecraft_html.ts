@@ -19,8 +19,8 @@ export function minecraftToHTML(text = "") {
         let pendingContent = "";
 
         let spansToClose = 0;
-        let pendingTextDecorations = {};
-        let pendingTextStyles = {};
+        let pendingTextDecorations: { [key: string]: boolean } = {};
+        let pendingTextStyles: { [key: string]: boolean } = {};
 
         const formatSplitArr = splitByOtherFormats(colorSplit["content"]);
 
@@ -30,9 +30,8 @@ export function minecraftToHTML(text = "") {
             const style = formatSplit["style"];
             const content = formatSplit["content"];
 
-            if (decoration != null && codeDictionary.decoration[decoration] != null) pendingTextDecorations[decoration] = true;
-
-            if (style != null && codeDictionary.style[style] != null) pendingTextStyles[style] = true;
+            if (decoration != null && decoration in codeDictionary.decoration) pendingTextDecorations[decoration] = true;
+            if (style != null && style in codeDictionary.style) pendingTextStyles[style] = true;
 
             if (content == null || content === "") return;
 
@@ -48,14 +47,15 @@ export function minecraftToHTML(text = "") {
             if (bUseDecorations) {
                 pendingContent += " style=\"text-decoration:";
 
-                for (let decoration of decorations) pendingContent += " " + codeDictionary.decoration[decoration];
+                for (let decoration of decorations)
+                    pendingContent += " " + codeDictionary.decoration[decoration as keyof typeof codeDictionary.decoration];
 
                 pendingContent += "; text-decoration-thickness: 2px;\"";
             }
 
             if (bUseStyles) {
                 pendingContent += " class=\"";
-                for (let style of styles) pendingContent += " " + codeDictionary.style[style];
+                for (let style of styles) pendingContent += " " + codeDictionary.style[style as keyof typeof codeDictionary.style];
                 pendingContent += "\"";
             }
 
@@ -68,8 +68,12 @@ export function minecraftToHTML(text = "") {
 
         const color = colorSplit["color"];
 
-        if (color != null) if (codeDictionary.color[color] != null) result += `<span style="color:${codeDictionary.color[color]}">`; else result += `<span style="color:${sanitizeHTML(color)}">`; else result += "<span>";
-
+        if (color != null) {
+            const colorCode = codeDictionary.color[color as keyof typeof codeDictionary.color];
+            result += colorCode != null
+                ? `<span style="color:${colorCode}">`
+                : `<span style="color:${sanitizeHTML(color)}">`;
+        } else result += "<span>";
         result += pendingContent;
 
         for (spansToClose; spansToClose >= 0; spansToClose--) result += "</span>";
@@ -82,8 +86,13 @@ function anyToHTML(text = "") {
     return sanitizeHTML(text).replace(/\r\n|\r|\n/g, "<br>").replace(/ /g, "&nbsp;").replace(/-/g, "-&#8288;");
 }
 
-function splitByColorFormats(string) {
-    let result = [{
+type ColorFormatSplit = {
+    color: null | string
+    content: string
+}
+
+function splitByColorFormats(string: string) {
+    let result: ColorFormatSplit[] = [{
         color: null, content: "",
     }];
 
@@ -94,7 +103,7 @@ function splitByColorFormats(string) {
 
         let char = string[i];
 
-        if (!codeDictionary.minecraftDelimiters[char]) {
+        if (!(char in codeDictionary.minecraftDelimiters)) {
             result[result.length - 1]["content"] += char;
             continue;
         }
@@ -120,9 +129,15 @@ function splitByColorFormats(string) {
 
 }
 
+type OtherFormatSplit = {
+    decoration: null | string
+    style: null | string
+    content: string
+}
+
 function splitByOtherFormats(string = "") {
 
-    let result = [
+    let result: OtherFormatSplit[] = [
         {decoration: null, style: null, content: ""},
     ];
 
@@ -132,41 +147,47 @@ function splitByOtherFormats(string = "") {
     for (i; i < string.length - 1; i++) {
         const char = string[i];
 
-        if (!codeDictionary.minecraftDelimiters[char]) {
-            result[result.length - 1]["content"] += char;
+        if (!(char in codeDictionary.minecraftDelimiters)) {
+            result[result.length - 1].content += char;
             continue;
         }
 
         i++;
         const code = string[i];
 
-        if (code in codeDictionary.style) result.push({style: code, content: ""});
+        if (code in codeDictionary.style) result.push({style: code, content: "", decoration: null});
 
-        else if (code in codeDictionary.decoration) result.push({decoration: code, content: ""});
+        else if (code in codeDictionary.decoration) result.push({decoration: code, content: "", style: null});
     }
-    if (i < string.length && !codeDictionary.minecraftDelimiters[string[string.length - 1]]) result[result.length - 1]["content"] += string[string.length - 1];
+    if (i < string.length && !(string[string.length - 1] in codeDictionary.minecraftDelimiters))
+        result[result.length - 1]["content"] += string[string.length - 1];
 
     return result;
 }
 
-function sanitizeHTML(text) {
+function sanitizeHTML(text: string) {
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-export function insertStringBeforeSelected(insertString) {
+export function insertStringBeforeSelected(insertString: string) {
     const activeElement = document.activeElement;
-    if (!activeElement || !(activeElement.type === "textarea" || activeElement.type === "text")) {
-        return;
-    }
 
-    if (activeElement.maxLength != null && activeElement.maxLength > -1 && activeElement.value.length + insertString.length > activeElement.maxLength) {
+    if (
+        !activeElement
+        || !(activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement)
+        || (activeElement.maxLength !== -1
+            && activeElement.value.length + insertString.length > activeElement.maxLength)
+    ) {
         return;
     }
 
     const currentValue = activeElement.value;
-    const cursorPosition = activeElement.selectionStart;
+    const cursorPosition = activeElement.selectionStart ?? 0;
 
-    activeElement.value = currentValue.substring(0, cursorPosition) + insertString + currentValue.substring(cursorPosition, currentValue.length);
+    activeElement.value =
+        currentValue.substring(0, cursorPosition) +
+        insertString +
+        currentValue.substring(cursorPosition, currentValue.length);
 
     activeElement.selectionStart = cursorPosition + insertString.length;
     activeElement.selectionEnd = activeElement.selectionStart;

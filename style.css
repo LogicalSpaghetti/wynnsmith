@@ -1,7 +1,8 @@
 :root {
   --ls-background: #121212;
   --ls-background2: #333;
-  --ls-background3: #666;
+  --ls-background3: #222;
+  --ls-background4: #666;
   --ls-background-hover: #383838;
   --ls-trim-hover: #464646;
   --ls-trim: #353535;
@@ -170,10 +171,42 @@ input[type="checkbox"] {
 
 /* -- Inputs: -- */
 
-.input_cluster {
+.input-row {
   display: flex;
+  flex-wrap: nowrap;
   line-height: 0;
   padding: 0;
+}
+
+.alts-ul {
+  padding-left: 0;
+  margin: 0;
+}
+
+.alts-ul li {
+  position: relative;
+  padding-left: 1rem;
+  margin-left: 1px;
+}
+
+.alts-ul input {
+  background: var(--ls-background);
+}
+
+/* TODO: overcomplicated solution, use list-style-type or ::marker instead */
+.alts-ul li::before {
+  content: "↳";
+  position: absolute;
+  left: 0;
+  width: 1rem;
+  text-align: center;
+
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.input-row span {
+  gap: 0;
 }
 
 .slot_img {
@@ -211,7 +244,7 @@ input[type="checkbox"] {
 }
 
 .slot_li[data-selected="true"] {
-  background-color: var(--ls-background3);
+  background-color: var(--ls-background4);
 }
 
 input:disabled {

@@ -1,11 +1,12 @@
 
 # Feature:
 - Reformat all images as sprite sheets so they don't need pre-loading or `public/`
-- Things like Ability Tree, Aspects, MaIds, Ultimates, etc. should be abstracted as a dependency that can almost be imported and exported from, that way them and anything else added later already has a system in place of mutual reliance.
-- Re-add `tsc &&` to the build script once TypeScript has been made happy.
+- Things like Ability Tree, Aspects, Major Ids, etc. should be abstracted as a dependency that can almost be imported and exported from, that way them and anything else added later already has a system in place of mutual reliance.
+- Re-add `tsc &&` to the build script once TS has been made happy.
 - Make use of get and set keywords inside of classes.
 - Equation fields
-- 
+- Instead of detecting "Morph-", clicking a slot icon should bring up a Wynn-Atlas-style menu which will include a sets section where you can select a set that includes that slot and fill in all of it or deselect specific members.
+- Auto-generate ability tree/item changelogs.
 # Bug-fix:
 
 # Move:

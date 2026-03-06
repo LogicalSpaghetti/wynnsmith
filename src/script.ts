@@ -1,7 +1,7 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
 import {TreeCanvas} from "./ability/tree/ability_tree_canvas.ts";
-import {ItemInputs, TomeInputs} from "./item/item_inputs.ts";
-import {HistoryLedger} from "./history/history.ts";
+import {GearInputs, TomeInputs} from "./item/input/item_inputs.ts";
+import {HistoryLedger} from "./change_handling/history.ts";
 
 // code entry point:
 if (document.readyState === "loading") {
@@ -21,8 +21,9 @@ function loadSite() {
     addSettingsListeners();
 }
 
-const inputs = new ItemInputs();
+const inputs = new GearInputs();
 document.getElementById("item_inputs")?.prepend(inputs.holder());
+inputs.addEventListener("change", () => console.log(inputs.getData()));
 
 const tomeInputs = new TomeInputs();
 document.getElementById("tome_inputs")?.prepend(tomeInputs.holder());
@@ -31,7 +32,8 @@ const treeCanvas = new TreeCanvas("archer", false);
 document.getElementById("ability_tree")?.appendChild(treeCanvas.holder());
 
 const ledger = new HistoryLedger(100);
-inputs.registerTo(ledger);
+ledger.register(inputs);
+ledger.register(tomeInputs);
 treeCanvas.registerTo(ledger);
 
 function handler(e: KeyboardEvent) {

@@ -5,7 +5,7 @@ import {ImageLoader} from "../../database/image_loader.ts";
 import {getHoverTextForAbility} from "../../hover_html/ability_description.ts";
 import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip";
 import {AbilityTree, type Cell, type ClassName, nodeTypes, type TravelNode} from "./ability_tree.ts";
-import {HistoryLedger} from "../../history/history.ts";
+import {HistoryLedger} from "../../change_handling/history.ts";
 import {maxPlayerLevel} from "../../to_sort/small_stuff.ts";
 
 const nodeStateOffsets = ["blocked", "unavailable", "available", "error", "selected"] as const;
