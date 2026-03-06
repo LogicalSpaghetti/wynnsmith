@@ -1,6 +1,5 @@
 import {maxPlayerLevel} from "../to_sort/small_stuff.ts";
 import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
-import aspect_descriptions from "../js_data/aspects.js";
 import {decimalToRoman} from "../encoding/numbers.ts";
 import * as codeDictionary from "../hover_html/code_dictionary.ts";
 import {addWarning} from "../smith/warnings.js";
@@ -118,7 +117,7 @@ function changeAbilityTree(wynnClass) {
 }
 
 function changeAspects(wynnClass) {
-    const aspects = aspect_descriptions[wynnClass];
+    const aspects = {} // aspect_descriptions[wynnClass];
 
     const activeHolder = document.getElementById("active_aspects");
     const inactiveHolder = document.getElementById("inactive_aspects");
