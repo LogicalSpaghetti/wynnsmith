@@ -1,5 +1,5 @@
 fun main() {
-//    item()
+    item()
 //    tree()
 //    typeGen()
 //    buildConnectionSheet(18, "images/connections", "connections.png")
@@ -18,5 +18,5 @@ fun main() {
 //        arrayOf("white", "yellow", "purple", "blue", "red", "archer", "assassin", "mage", "shaman", "warrior"),
 //        arrayOf("_blocked", "", "_open", "_error", "_active")
 //    )
-    findOptimalXPItems()
+//    findOptimalXPItems()
 }

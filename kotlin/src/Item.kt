@@ -35,14 +35,11 @@ fun removeItems(apiItems: List<JSONObject>, nonApiItems: JSONArray, itemData: JS
         val item = itemData.getJSONObject(i)
         val itemName = item.getString("internalName")
         if (apiNames.indexOf(itemName) > -1 || nonApiNames.indexOf(itemName) > -1) continue
-        itemData.put(i, JSONObject.NULL)
-        for (groupKey in arrayOf("type", "subType")) {
-            if (!item.has(groupKey)) continue
-            val group = groupIndexes.getJSONArray(item.getString(groupKey))
-            val nameIndex = group.indexOf(itemName)
-            if (nameIndex != -1)
-                group.put(nameIndex, JSONObject.NULL)
-        }
+        val emptyItem = JSONObject()
+        emptyItem.put("internalItem", itemName)
+        if (item.has("name"))
+            emptyItem.put("name", item.getString("name"))
+        itemData.put(i, emptyItem)
     }
 }
 
