@@ -288,9 +288,14 @@ input:focus {
   -webkit-appearance: none;
 }
 
-.sp_cluster {
+.sp-sections {
+  display: flex;
+}
+
+.sp-holder {
   margin-left: 0.5ch;
   margin-right: 0.5ch;
+  text-align: center;
 }
 
 #gif_holder {
@@ -307,7 +312,7 @@ input:focus {
   width: 4rem;
 }
 
-.sp_input {
+.sp-input {
   width: 4ch;
   text-align: center;
 }

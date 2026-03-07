@@ -29,7 +29,7 @@ function displayPrimaryBuild(build) {
 }
 
 function displaySkillPoints(input) {
-    const spClusters = document.getElementById("sp_section").querySelectorAll(".sp_cluster");
+    const spClusters = document.getElementById("sp_section").querySelectorAll(".sp-holder");
     const spRemaining = document.getElementById("remaining_sp");
 
     // TODO: needs 1st build info to know Tome SP, and id multiplier SP.

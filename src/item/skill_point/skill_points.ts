@@ -197,12 +197,12 @@ export function getSkillPointName(index: number, capitalize = true) {
 }
 
 export function getSkillPointModifiers() {
-    const spClusters = document.getElementById("sp_section")?.querySelectorAll(".sp_cluster");
+    const spClusters = document.getElementById("sp_section")?.querySelectorAll(".sp-holder");
     if (!spClusters) return;
 
     const totals = [];
     for (let cluster of spClusters) {
-        const modifierInput = cluster.querySelector(".sp_input") as HTMLInputElement;
+        const modifierInput = cluster.querySelector(".sp-input") as HTMLInputElement;
         if (!modifierInput) return;
         const index = damageTypePrefixes.indexOf(((cluster as HTMLElement).dataset.element) as typeof damageTypePrefixes[number]) - 1;
 

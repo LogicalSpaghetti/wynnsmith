@@ -120,6 +120,13 @@ export const positivityColors = {
     false: "§c",
 } as const;
 
+export const formattingSymbols = {
+    "bold": "§l",
+    "italic": "§o",
+    "strikethrough": "§m",
+    "underline": "§n",
+}
+
 export const decoration = {
     "m": "line-through", "n": "underline",
 } as const;

@@ -112,7 +112,6 @@ export class TreeCanvas extends EventTarget<TreeCanvasEvents> {
 
         this.iter((loc, cellIndex) => {
             const cell = tree.getCell(cellIndex);
-            console.log(loc, cellIndex);
             if (cell) this.drawConnection(connections, loc, cell.travelNode);
         });
         this.iter((loc, cellIndex) => {
