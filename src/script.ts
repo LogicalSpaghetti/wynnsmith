@@ -37,7 +37,7 @@ const sp = new SkillPointInputs();
 document.getElementById("sp_section")?.appendChild(sp.holder());
 
 const ledger = new HistoryLedger(100);
-ledger.register(inputs, tomeInputs, tree);
+ledger.register(inputs, tomeInputs, tree, sp);
 
 function handler(e: KeyboardEvent) {
     if ((e.target as HTMLElement).classList.contains("allow-undo")) return;

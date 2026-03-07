@@ -59,14 +59,16 @@ class SkillPointInput extends HistoryTarget<SPEvents> {
         input.placeholder = "0";
         input.autocomplete = "off";
 
-        input.addEventListener("change", () => this.changeSP());
+        input.addEventListener("input", () => this.changeSP(input.value));
 
         return input;
     }
 
-    private changeSP() {
+    private changeSP(value: string) {
         const previousValue = this.previousValue;
-        const nextValue = this.previousValue = this.input.value;
+        this.input.value = value;
+        const nextValue = value;
+        this.previousValue = nextValue;
 
         this.dispatchEvent("log", {
             undo: () => this.setSP(previousValue),
@@ -76,6 +78,7 @@ class SkillPointInput extends HistoryTarget<SPEvents> {
 
     private setSP(value: string) {
         this.input.value = value;
+        // console.log(value)
         this.dispatchEvent("change");
     }
 
@@ -96,7 +99,7 @@ export class SkillPointInputs extends HistoryTarget<SPEvents> {
         container.classList.add("sp-sections");
 
         for (const element of elements) {
-            const input = this.initInput(element)
+            const input = this.initInput(element);
             this.inputs.push(input);
             container.appendChild(input.holder());
         }
@@ -105,7 +108,7 @@ export class SkillPointInputs extends HistoryTarget<SPEvents> {
     private initInput(element: ElementName) {
         const input = new SkillPointInput(element);
         input.addEventListener("log", (log) => this.dispatchEvent("log", log));
-        input.addEventListener("change", () => this.dispatchEvent("change"))
+        input.addEventListener("change", () => this.dispatchEvent("change"));
         return input;
     }
 

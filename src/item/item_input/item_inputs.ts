@@ -1,5 +1,6 @@
 import {ItemInput} from "./item_input.ts";
 import {type HistoryEvents, HistoryTarget} from "../../change_handling/history.ts";
+import type {ItemCategory} from "../item.ts";
 
 export type ItemInputsGroup = ItemInput[]
 
@@ -61,23 +62,18 @@ abstract class ItemInputs<Events extends ItemInputsEvents = ItemInputsEvents> ex
 }
 
 export class TomeInputs extends ItemInputs {
+    static names: ItemCategory[] = [
+        "guild_tome", "lootrun_tome",
+        "armour_tome", "armour_tome", "armour_tome", "armour_tome",
+        "mysticism_tome", "mysticism_tome",
+        "weapon_tome", "weapon_tome",
+        "expertise_tome", "expertise_tome",
+        "marathon_tome", "marathon_tome",
+    ] as const;
+
     protected getInputs(): ItemInput[] {
-        return [
-            new ItemInput("guild_tome", false, false),
-            new ItemInput("lootrun_tome", false, false),
-            new ItemInput("armour_tome", false, false),
-            new ItemInput("armour_tome", false, false),
-            new ItemInput("armour_tome", false, false),
-            new ItemInput("armour_tome", false, false),
-            new ItemInput("mysticism_tome", false, false),
-            new ItemInput("mysticism_tome", false, false),
-            new ItemInput("weapon_tome", false, false),
-            new ItemInput("weapon_tome", false, false),
-            new ItemInput("expertise_tome", false, false),
-            new ItemInput("expertise_tome", false, false),
-            new ItemInput("marathon_tome", false, false),
-            new ItemInput("marathon_tome", false, false),
-        ];
+        return TomeInputs.names.map(name =>
+            new ItemInput(name, false, false, false));
     }
 
     protected focusUp(): void {

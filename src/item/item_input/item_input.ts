@@ -414,13 +414,13 @@ export class ItemInput extends HistoryTarget<ItemInputEvents> {
 
     private readonly icon: ItemIcon;
     private readonly slot: ItemSlot;
-    private readonly addButton: HTMLButtonElement;
+    private readonly addButton?: HTMLButtonElement;
 
     private readonly alts: ItemAltSlots;
 
     private readonly isWeapon;
 
-    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean) {
+    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, addButton = true) {
         super();
         this.isWeapon = isWeapon;
 
@@ -436,8 +436,10 @@ export class ItemInput extends HistoryTarget<ItemInputEvents> {
         this.slot = this.initSlot(category, hasPowders);
         inputContainer.appendChild(this.slot.holder());
 
-        this.addButton = this.initAddButton(isWeapon);
-        inputContainer.appendChild(this.addButton);
+        if (addButton) {
+            this.addButton = this.initAddButton(isWeapon);
+            inputContainer.appendChild(this.addButton);
+        }
 
         this.alts = this.initAlts(category, hasPowders, isWeapon);
         this.container.appendChild(this.alts.holder());
@@ -468,11 +470,16 @@ export class ItemInput extends HistoryTarget<ItemInputEvents> {
         const alts = new ItemAltSlots(category, hasPowders, isWeapon);
         alts.addEventListener("change", () => this.dispatchEvent("change"));
         alts.addEventListener("log", (payload) => this.dispatchEvent("log", payload));
-        alts.addEventListener("showAdd", () => this.addButton.hidden = false);
-        alts.addEventListener("hideAdd", () => this.addButton.hidden = true);
+        alts.addEventListener("showAdd", () => this.addVisibility(false));
+        alts.addEventListener("hideAdd", () => this.addVisibility(true));
         alts.addEventListener("focusUp", (powders) => this.focusSlot(powders));
         alts.addEventListener("focusDown", (powders) => this.dispatchEvent("focusDown", powders));
         return alts;
+    }
+
+    private addVisibility(hidden: boolean) {
+        if (!this.addButton) return;
+        this.addButton.hidden = hidden;
     }
 
     private changePrimary() {
