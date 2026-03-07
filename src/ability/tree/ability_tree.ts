@@ -1,5 +1,8 @@
 import {treeDatabase} from "../../database/tree_database.ts";
 import {type HistoryEvents, HistoryTarget} from "../../change_handling/history.ts";
+import {TreeCanvas, type TreeLocation} from "./ability_tree_canvas.ts";
+import {getHoverTextForAbility} from "../../hover_html/ability_description.ts";
+import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip";
 
 const abilityPointsAtLevel = [
     0,
@@ -69,11 +72,11 @@ export type TreeProperties = {
     useAlternativeAbilityIcons: boolean,
 }
 
-type BranchState = {
-    up?: boolean
-    down?: boolean
-    left?: boolean
-    right?: boolean
+export type BranchState = {
+    up: boolean
+    down: boolean
+    left: boolean
+    right: boolean
 }
 
 type NodeState = {
@@ -101,6 +104,9 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends History
         left: -1,
         right: 1,
     } as const;
+
+    canvas: TreeCanvas;
+
     data: TreeData;
     wynnClass;
     level;
@@ -114,12 +120,89 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends History
     private nodeStates: { [key: string]: NodeHighlight } = {};
     private connectionHighlights: { [key: string]: BranchState } = {};
 
+    private swipeSelects: boolean = true;
+    private swipeID?: string;
+
     constructor(wynnClass: string, level: number) {
         super();
         this.level = level;
         this.data = treeDatabase.getTree(wynnClass);
         this.wynnClass = this.data.properties.classs;
+
+        this.canvas = this.initCanvas();
+
         this.updateStates();
+    }
+
+    private initCanvas() {
+        const canvas = new TreeCanvas();
+        canvas.addEventListener("requestTree", () => this.canvas.tryDraw(this));
+        canvas.addEventListener("startSwipe", (loc) => this.startSwipe(loc));
+        canvas.addEventListener("continueSwipe", (loc) => this.continueSwipe(loc));
+        canvas.addEventListener("endSwipe", () => this.endSwipe());
+        canvas.addEventListener("hover", (loc) => this.hoverOver(loc));
+        canvas.addEventListener("click", (loc) => this.clickCell(loc));
+        return canvas;
+    }
+
+    private startSwipe(loc: TreeLocation | null) {
+        if (!loc) {
+            this.swipeSelects = true;
+            return;
+        }
+        const index = loc.row * AbilityTree.columns + loc.col + 1;
+        const cell = this.data.cellMap[index];
+        const id = cell?.abilityID;
+        this.swipeSelects = !(id != null && this.abilityIsSelected(id));
+    }
+
+    private continueSwipe(loc: TreeLocation | null) {
+
+        const newID = loc ? this.getCellAt(loc)?.abilityID : undefined;
+        if (newID === this.swipeID) return;
+        this.swipeID = newID;
+
+        if (!newID) return;
+        if (this.swipeSelects) this.selectAbility(newID);
+        else this.deselectAbility(newID);
+    }
+
+    private endSwipe() {
+        this.swipeID = undefined;
+        this.swipeSelects = true;
+    }
+
+    private clickCell(loc: TreeLocation | null) {
+        if (loc == null) return;
+        const id = this.getCellAt(loc)?.abilityID;
+        if (!id || id === this.swipeID) return;
+        this.endSwipe();
+        this.toggleAbility(id);
+    }
+
+    private hoverOver(loc: TreeLocation | null) {
+        const tooltip = this.getHoverText(loc);
+        if (tooltip == null) hideHoverTooltip();
+        else renderHoverTooltip(tooltip);
+    }
+
+    private getHoverText(loc: TreeLocation | null) {
+        if (!loc) return null;
+        const abilityID = this.getCellAt(loc)?.abilityID;
+        if (!abilityID) return;
+        return getHoverTextForAbility(this.data.abilities, this.data.abilities[abilityID]);
+    }
+
+    public getCellAt(loc: TreeLocation): Cell | undefined {
+        return this.getCell(this.locationToIndex(loc));
+    }
+
+    public getCell(index: number): Cell | undefined {
+        return this.data.cellMap[index];
+    }
+
+    private locationToIndex(loc: TreeLocation) {
+        return loc.row * AbilityTree.columns + loc.col + 1;
     }
 
     public changeLevel(level: number) {
@@ -140,14 +223,15 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends History
         this.wynnClass = wynnClass;
         this.data = treeDatabase.getTree(wynnClass);
         this.selectedAbilities = [];
+        this.updateStates();
     }
 
     public selectAbility(id: string) {
-        if (!this.abilityIsSelected(id)) this.toggleAbility(id)
+        if (!this.abilityIsSelected(id)) this.toggleAbility(id);
     }
 
     public deselectAbility(id: string) {
-        if (this.abilityIsSelected(id)) this.toggleAbility(id)
+        if (this.abilityIsSelected(id)) this.toggleAbility(id);
     }
 
     public toggleAbility(abilityID: string) {
@@ -174,6 +258,13 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends History
         return {
             usedAP: this.usedAP,
             maxAP: this.maxAP,
+        };
+    }
+
+    private getState() {
+        return {
+            wynnClass: this.wynnClass,
+            selectedAbilities: [...this.selectedAbilities],
         };
     }
 
@@ -239,6 +330,7 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends History
         this.connectionHighlights = highlightState.highlights;
         this.nodeStates = highlightState.nodesToStatus();
 
+        this.canvas.tryDraw(this);
         this.dispatchEvent("change");
     }
 
@@ -261,17 +353,14 @@ export class AbilityTree<Events extends TreeEvents = TreeEvents> extends History
         this.updateStates();
     }
 
-    private getState() {
-        return {
-            wynnClass: this.wynnClass,
-            selectedAbilities: [...this.selectedAbilities],
-        };
-    }
-
     private applyState(state: { wynnClass: ClassName, selectedAbilities: string[] }) {
         this.setClass(state.wynnClass);
         this.selectedAbilities = state.selectedAbilities;
         this.updateStates();
+    }
+
+    public holder() {
+        return this.canvas.holder();
     }
 }
 

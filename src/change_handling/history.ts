@@ -18,12 +18,13 @@ export class HistoryLedger {
 
     maxEntries;
 
-    constructor(maxEntries: number) {
+    constructor(maxEntries: number = 128) {
         this.maxEntries = maxEntries;
     }
 
-    public register(target: HistoryTarget) {
-        target.addEventListener("log", this.handleLog);
+    public register(...targets: HistoryTarget[]) {
+        for (const target of targets)
+            target.addEventListener("log", this.handleLog);
     }
 
     private handleLog = (command: HistoryCommand) => {
