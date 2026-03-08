@@ -30,13 +30,13 @@ jobs:
         run: ls -R dist
 
       - name: SFTP-Deploy-Action
-        uses: milanmk/actions-file-deployer@master
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          remote-protocol: sftp
-          remote-host: ${{ secrets.FTP_HOST }}
-          remote-user: ${{ secrets.FTP_USER }}
-          remote-password: ${{ secrets.FTP_PASSWORD }}
+          protocol: sftp
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
 
-          local-path: dist # compiled output
-          remote-path: /wynnsmith
-          remote-port: 22
+          port: 22
+          local-dir: dist/ # compiled output
+          server-dir: /wynnsmith
