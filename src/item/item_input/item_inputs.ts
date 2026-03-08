@@ -106,16 +106,19 @@ export class GearInputs extends ItemInputs {
     }
 
     protected getInputs(): ItemInput[] {
-        return [
-            new ItemInput("helmet", true, false),
-            new ItemInput("chestplate", true, false),
-            new ItemInput("leggings", true, false),
-            new ItemInput("boots", true, false),
-            new ItemInput("ring", false, false),
-            new ItemInput("ring", false, false),
-            new ItemInput("bracelet", false, false),
-            new ItemInput("necklace", false, false),
+        const gear = [
+            new ItemInput("helmet", true),
+            new ItemInput("chestplate", true),
+            new ItemInput("leggings", true),
+            new ItemInput("boots", true),
+            new ItemInput("ring", false),
+            new ItemInput("ring", false),
+            new ItemInput("bracelet", false),
+            new ItemInput("necklace", false),
         ];
+        for (const item of gear)
+            item.addEventListener("change", () => this.dispatchEvent("change"));
+        return gear;
     }
 
     protected focusUp(): void {

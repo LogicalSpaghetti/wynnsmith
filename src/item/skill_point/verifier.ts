@@ -21,7 +21,10 @@ type SimpleItem = {
  *
  * @returns A new SP assignment array that meets all item requirements.
  */
-export function solveSP(weaponData: ItemData, offhandsData: ItemData[], gearData: ItemData[], assignedSP: number[] = [0, 0, 0, 0, 0]): number[] {
+export function solveSP(weaponData: ItemData, offhandsData: ItemData[], gearData: ItemData[], assignedSP: number[] = [0, 0, 0, 0, 0]): {
+    assigned: number[]
+    given: number[]
+} {
     const weapon = itemToSimpleItem(weaponData);
     const offhands = offhandsData.map(itemToSimpleItem);
     const gear = gearData.map(itemToSimpleItem);
@@ -32,7 +35,12 @@ export function solveSP(weaponData: ItemData, offhandsData: ItemData[], gearData
     restrictMinimumsBy(assignedSP, givenSP, false, weapon, ...offhands);
     restrictMinimumsBy(assignedSP, givenSP, true, ...gear);
 
-    return assignedSP;
+    const postWeaponGiven = givenSP.map((x, i) => x + weapon.given[i]);
+
+    return {
+        assigned: assignedSP,
+        given: postWeaponGiven,
+    };
 }
 
 function restrictMinimumsBy(assignedSP: number[], givenSP: number[], givesRealSP: boolean, ...items: SimpleItem[]) {

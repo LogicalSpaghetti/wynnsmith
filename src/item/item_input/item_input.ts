@@ -160,6 +160,8 @@ export class ItemSlot extends HistoryTarget<ItemSlotEvents> {
             false); // document.activeElement === this.input || document.activeElement === this.powderInput
         if (this.powderInput && state.powderValue !== undefined)
             this.applyPowderValue(state.powderValue);
+
+        this.dispatchEvent("change");
     }
 
     private updatePowderSlots(newData: ItemData | null) {
@@ -378,7 +380,6 @@ class ItemAltSlots extends HistoryTarget<ItemAltSlotsEvents> {
         this.dispatchEvent("showAdd");
     }
 
-    // TODO: moving focus between alt slots and out up/down
     focusUp(powders: boolean) {
         this.slots[this.slots.length - 1].focus(powders);
     }
@@ -420,7 +421,7 @@ export class ItemInput extends HistoryTarget<ItemInputEvents> {
 
     private readonly isWeapon;
 
-    constructor(category: ItemCategory, hasPowders: boolean, isWeapon: boolean, addButton = true) {
+    constructor(category: ItemCategory, hasPowders: boolean, isWeapon = false, addButton = true) {
         super();
         this.isWeapon = isWeapon;
 

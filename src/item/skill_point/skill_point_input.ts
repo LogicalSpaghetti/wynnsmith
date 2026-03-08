@@ -66,20 +66,28 @@ class SkillPointInput extends HistoryTarget<SPEvents> {
 
     private changeSP(value: string) {
         const previousValue = this.previousValue;
-        this.input.value = value;
-        const nextValue = value;
-        this.previousValue = nextValue;
+        this.setSP(value);
+        const newValue = value;
+        this.previousValue = newValue;
 
         this.dispatchEvent("log", {
             undo: () => this.setSP(previousValue),
-            redo: () => this.setSP(nextValue),
+            redo: () => this.setSP(newValue),
         });
+    }
+
+    public display(assigned: number, total: number) {
+        this.assignDisplay.textContent = assigned.toString();
+        this.totalDisplay.textContent = total.toString();
     }
 
     private setSP(value: string) {
         this.input.value = value;
-        // console.log(value)
         this.dispatchEvent("change");
+    }
+
+    public getData() {
+        return parseInt(this.input.value || "0");
     }
 
     public holder() {
@@ -89,20 +97,43 @@ class SkillPointInput extends HistoryTarget<SPEvents> {
 
 export class SkillPointInputs extends HistoryTarget<SPEvents> {
     container: HTMLDivElement;
+    inputsContainer: HTMLDivElement;
 
     inputs: SkillPointInput[] = [];
+
+    remaining: HTMLSpanElement;
 
     constructor() {
         super();
 
         const container = this.container = document.createElement("div");
-        container.classList.add("sp-sections");
+        const inputsContainer = this.inputsContainer = document.createElement("div");
+        inputsContainer.classList.add("sp-sections");
 
         for (const element of elements) {
             const input = this.initInput(element);
             this.inputs.push(input);
-            container.appendChild(input.holder());
+            inputsContainer.appendChild(input.holder());
         }
+
+        container.appendChild(inputsContainer);
+
+        this.remaining = document.createElement("span");
+        this.remaining.textContent = "200";
+        this.remaining.classList.add("positive");
+
+        container.appendChild(document.createTextNode("Remaining SP: "));
+        container.appendChild(this.remaining);
+    }
+
+    public display(assigned: number[], total: number[], remaining: number) {
+        this.inputs.forEach((input, i) => input.display(assigned[i], total[i]));
+
+        this.remaining.textContent = String(remaining);
+
+        const positive = remaining >= 0;
+        this.remaining.classList.toggle("positive", positive);
+        this.remaining.classList.toggle("negative", !positive);
     }
 
     private initInput(element: ElementName) {
@@ -110,6 +141,10 @@ export class SkillPointInputs extends HistoryTarget<SPEvents> {
         input.addEventListener("log", (log) => this.dispatchEvent("log", log));
         input.addEventListener("change", () => this.dispatchEvent("change"));
         return input;
+    }
+
+    public getData() {
+        return this.inputs.map(input => input.getData());
     }
 
     public holder() {

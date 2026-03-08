@@ -1,9 +1,8 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
-import {GearInputs, TomeInputs} from "./item/item_input/item_inputs.ts";
 import {HistoryLedger} from "./change_handling/history.ts";
 import {AbilityTree} from "./ability/tree/ability_tree.ts";
 import {maxPlayerLevel} from "./to_sort/small_stuff.ts";
-import {SkillPointInputs} from "./item/skill_point/skill_point_input.ts";
+import {ItemParser} from "./item/item_parser.ts";
 
 // code entry point:
 if (document.readyState === "loading") {
@@ -23,21 +22,17 @@ function loadSite() {
     addSettingsListeners();
 }
 
-const inputs = new GearInputs();
-document.getElementById("item_inputs")?.prepend(inputs.holder());
-inputs.addEventListener("change", () => console.log(inputs.getData()));
+const parser = new ItemParser();
 
-const tomeInputs = new TomeInputs();
-document.getElementById("tome_inputs")?.prepend(tomeInputs.holder());
+document.getElementById("item_inputs")?.prepend(parser.itemHolder());
+document.getElementById("tome_inputs")?.prepend(parser.tomeHolder());
+document.getElementById("sp_section")?.appendChild(parser.spHolder());
 
 const tree = new AbilityTree("archer", maxPlayerLevel);
 document.getElementById("ability_tree")?.appendChild(tree.holder());
 
-const sp = new SkillPointInputs();
-document.getElementById("sp_section")?.appendChild(sp.holder());
-
 const ledger = new HistoryLedger(100);
-ledger.register(inputs, tomeInputs, tree, sp);
+ledger.register(parser, tree);
 
 function handler(e: KeyboardEvent) {
     if ((e.target as HTMLElement).classList.contains("allow-undo")) return;

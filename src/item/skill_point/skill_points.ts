@@ -182,7 +182,7 @@ export function capSkillPoint(sp: number) {
 }
 
 export function getItemAddedSP(item: ItemData | null) {
-    if (!item || item.identifications) return [0, 0, 0, 0, 0];
+    if (!item || !item.identifications) return [0, 0, 0, 0, 0];
     return capitalizedSkillPointNames.map((name) =>
         Number(item.identifications?.[`raw${name}`] ?? 0));
 }
