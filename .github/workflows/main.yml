@@ -2,7 +2,7 @@ name: Update personal website with changes.
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   SFTP-Deploy-Action:
@@ -26,6 +26,9 @@ jobs:
       - name: Build Vite site
         run: npm run build
 
+      - name: Check build output
+        run: ls -R dist
+
       - name: SFTP-Deploy-Action
         uses: milanmk/actions-file-deployer@master
         with:
@@ -34,6 +37,6 @@ jobs:
           remote-user: ${{ secrets.FTP_USER }}
           remote-password: ${{ secrets.FTP_PASSWORD }}
 
-          local-path: dist/** # compiled output
+          local-path: dist # compiled output
           remote-path: /wynnsmith
           remote-port: 22
