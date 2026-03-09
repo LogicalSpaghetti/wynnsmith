@@ -2,7 +2,7 @@ name: Update personal website with changes.
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   SFTP-Deploy-Action:
@@ -26,15 +26,17 @@ jobs:
       - name: Build Vite site
         run: npm run build
 
-      - name: SFTP-Deploy-Action
-        uses: milanmk/actions-file-deployer@master
+      - name: Deploy via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
-          remote-protocol: sftp
-          remote-host: ${{ secrets.FTP_HOST }}
-          remote-user: ${{ secrets.FTP_USER }}
-          remote-password: ${{ secrets.FTP_PASSWORD }}
+          username: ${{ secrets.FTP_USER }}
+          server: ${{ secrets.FTP_HOST }}
+          ssh_private_key: ${{ secrets.FTP_PASSWORD }} # TODO: look into SSH keys
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 22
 
-          local-path: ./dist/ # compiled output
+          local_path: ./dist/*
+          remote_path: ./wynnsmith/
 
-          remote-path: ./wynnsmith/
-          remote-port: 22
+          sftp_only: true
+          sftpArgs: '-o StrictHostKeyChecking=no -o ConnectTimeout=10'
