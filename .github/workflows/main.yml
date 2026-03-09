@@ -36,7 +36,7 @@ jobs:
           port: 22
 
           local_path: ./dist
-          remote_path: ./wynnsmith_new
+          remote_path: /gabriel/wynnsmith/
 
           sftp_only: true
           sftpArgs: '-o StrictHostKeyChecking=no -o ConnectTimeout=10'
