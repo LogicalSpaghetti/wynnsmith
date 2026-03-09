@@ -1,39 +1,32 @@
-name: Update personal website with changes.
+name: Deploy personal website
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  SFTP-Deploy-Action:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Vite site
+      - name: Build site
         run: npm run build
 
-      - name: SFTP-Deploy-Action
-        uses: milanmk/actions-file-deployer@master
-        with:
-          remote-protocol: sftp
-          remote-host: ${{ secrets.FTP_HOST }}
-          remote-user: ${{ secrets.FTP_USER }}
-          remote-password: ${{ secrets.FTP_PASSWORD }}
-
-          local-path: ./dist # compiled output
-          remote-path: /wynnsmith
-          remote-port: 22
+      - name: Deploy via rsync
+        run: |
+          sudo apt-get install -y sshpass
+          sshpass -p "${{ secrets.FTP_PASSWORD }}" rsync -avz --delete \
+            -e "ssh -p 22 -o StrictHostKeyChecking=no" \
+            dist/ \
+            ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:/wynnsmith/
