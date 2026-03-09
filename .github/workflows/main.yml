@@ -34,6 +34,6 @@ jobs:
           remote-user: ${{ secrets.FTP_USER }}
           remote-password: ${{ secrets.FTP_PASSWORD }}
 
-          local-path: ./dist/** # compiled output
+          local-path: dist/ # compiled output
           remote-path: /wynnsmith
           remote-port: 22
