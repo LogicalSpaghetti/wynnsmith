@@ -26,20 +26,17 @@ jobs:
       - name: Build Vite site
         run: npm run build
 
-      - name: Install lftp
-        run: sudo apt update && sudo apt install -y lftp
+      - name: Deploy via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
+        with:
+          username: ${{ secrets.FTP_USER }}
+          server: ${{ secrets.FTP_HOST }}
+          ssh_private_key: ${{ secrets.FTP_PASSWORD }} # TODO: look into SSH keys
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 22
 
-      - name: Deploy dist/ contents to wynnsmith/
-        env:
-          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          lftp -c "
-            set sftp:auto-confirm yes
-            open -u ${{ secrets.FTP_USER }},\$LFTP_PASSWORD sftp://${{ secrets.FTP_HOST }}:22
-            cd ./wynnsmith || mkdir -p ./wynnsmith && cd ./wynnsmith
-            lcd ./dist
-            mirror --reverse --delete --parallel=4 --verbose \
-              --exclude .git* --exclude *.map --exclude node_modules \
-              ./
-            bye
-          "
+          local_path: ./dist
+          remote_path: ./wynnsmith_new
+
+          sftp_only: true
+          sftpArgs: '-o StrictHostKeyChecking=no -o ConnectTimeout=10'
