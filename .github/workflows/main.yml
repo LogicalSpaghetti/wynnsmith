@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
 
-          local_path: ./dist
+          local_path: ./dist/*
           remote_path: ./wynnsmith
 
           sftp_only: true
