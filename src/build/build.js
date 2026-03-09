@@ -1,7 +1,7 @@
 import {OldItems} from "../item/item.ts";
 import {maxPlayerLevel} from "../to_sort/small_stuff.ts";
 import {Abilities} from "../ability/ability.js";
-import * as search from "../database/item_database.ts";
+import {itemDatabase as search} from "../database/item_database.ts";
 import {
     getItemAddedSP,
     getItemSPReqs,

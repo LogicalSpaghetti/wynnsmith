@@ -1,5 +1,4 @@
-import * as search from "../database/item_database.js";
-import {itemDatabase} from "../database/item_database.js";
+import {itemDatabase as search} from "../database/item_database.js";
 import indexedInternalNameGroups from "../js_data/indexed_names.js";
 import {binaryToDecimal, BitReader, decimalToBinaryByMaximum, getBinaryLength} from "../encoding/numbers.ts";
 import {Powders} from "./powders.js";
@@ -58,7 +57,7 @@ export class OldItem {
 
         const internalName = indexedInternalNameGroups[category][itemIndex];
 
-        const data = itemDatabase.getItem(internalName);
+        const data = search.getItem(internalName);
 
         const hasPowders = binary.readFlag();
         const powders = hasPowders ? Powders.fromBinary(binary) : undefined;
@@ -148,9 +147,9 @@ export class Item {
     }
 
     static normalDataFromBinary(binary: BitReader, category: ItemCategory): ItemData | null {
-        const id = binary.readNumberByMaximum(itemDatabase.getSize() + 1) - 1;
+        const id = binary.readNumberByMaximum(search.getSize() + 1) - 1;
         if (id < 0) return null;
-        return itemDatabase.getItemById(id);
+        return search.getItemById(id);
     }
 
     static fromString(input: string, category = "") {
