@@ -1,10 +1,24 @@
 import Navigo, {type Match} from 'navigo';
 
+let base = '/';
 
-// Create the router instance
-// root = '/' → clean URLs (uses History API)
-// If you later deploy to a subfolder (e.g. /app/), change to new Navigo('/app/')
-const router = new Navigo('/wynnsmith/', { hash: false });
+// try using Vite's
+if (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== './') {
+    base = import.meta.env.BASE_URL;
+} else {
+    // Fallback
+    const pathname = window.location.pathname;
+
+    if (pathname.startsWith('/gabriel/wynnsmith/')) {
+        base = '/gabriel/wynnsmith/';
+    } else if (pathname.startsWith('/wynnsmith/')) {
+        base = '/wynnsmith/';
+    }
+}
+
+const router = new Navigo(base, { hash: false });
+
+console.log('Navigo base detected as:', base);
 
 function render(content: string): void {
     const app = document.getElementById('app');
