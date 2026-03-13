@@ -7,10 +7,11 @@
 [Vitest](https://vitest.dev/)
 
 ### Math:
-- [Nerdamer](https://nerdamer.com/)- Light weight evaluation, zero fluff
-[MathQuill](http://mathquill.com/)
-[Marked](https://marked.js.org/)
-[Latex-to-Mathjs](https://github.com/SENODROOM/LaTeX-To-MathJs)
+- [MathQuill](http://mathquill.com/)
+- [Marked](https://marked.js.org/)
+- [Latex-to-Mathjs](https://github.com/SENODROOM/LaTeX-To-MathJs)
+- https://mathlive.io/mathfield/
+	- https://mathlive.io/compute-engine/
 ### Examples:
 - https://burnysc2.github.io/sc2-planner - Similar to WynnSolver
 ### Decoration:

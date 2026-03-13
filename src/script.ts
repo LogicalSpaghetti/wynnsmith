@@ -1,5 +1,5 @@
 import {addInputListeners, addSettingsListeners} from "./smith/input_listeners";
-import {HistoryLedger} from "./change_handling/history.ts";
+import {initDocumentHistory} from "./change_handling/history.ts";
 import {AbilityTree} from "./ability/tree/ability_tree.ts";
 import {maxPlayerLevel} from "./to_sort/small_stuff.ts";
 import {ItemParser} from "./item/item_parser.ts";
@@ -31,23 +31,5 @@ document.getElementById("sp_section")?.appendChild(parser.spHolder());
 const tree = new AbilityTree("archer", maxPlayerLevel);
 document.getElementById("ability_tree")?.appendChild(tree.holder());
 
-const ledger = new HistoryLedger(100);
+const ledger = initDocumentHistory();
 ledger.register(parser, tree);
-
-function handler(e: KeyboardEvent) {
-    if ((e.target as HTMLElement).classList.contains("allow-undo")) return;
-    const ctrl = e.metaKey || e.ctrlKey;
-
-    if (!ctrl) return;
-
-    if (e.key === "z" || e.key === "Z") {
-        e.preventDefault();
-        if (e.shiftKey) ledger.redo();
-        else ledger.undo();
-    } else if (e.key === "y" || e.key === "Y") {
-        e.preventDefault();
-        ledger.redo();
-    }
-}
-
-document.addEventListener("keydown", handler, {capture: true});

@@ -9,8 +9,7 @@ export type HistoryEvents = {
     log: HistoryCommand;
 };
 
-export abstract class HistoryTarget<Events extends HistoryEvents = HistoryEvents>
-    extends EventTarget<Events> {}
+export abstract class HistoryTarget<Events extends HistoryEvents = HistoryEvents> extends EventTarget<Events> {}
 
 export class HistoryLedger {
     private history: HistoryCommand[] = [];
@@ -56,4 +55,28 @@ export class HistoryLedger {
         this.index++;
         this.history[this.index].redo();
     }
+}
+
+export function initDocumentHistory(): HistoryLedger {
+    const ledger = new HistoryLedger(100);
+
+    function handler(e: KeyboardEvent) {
+        if ((e.target as HTMLElement).classList.contains("allow-undo")) return;
+        const ctrl = e.metaKey || e.ctrlKey;
+
+        if (!ctrl) return;
+
+        if (e.key === "z" || e.key === "Z") {
+            e.preventDefault();
+            if (e.shiftKey) ledger.redo();
+            else ledger.undo();
+        } else if (e.key === "y" || e.key === "Y") {
+            e.preventDefault();
+            ledger.redo();
+        }
+    }
+
+    document.addEventListener("keydown", handler, {capture: true});
+
+    return ledger;
 }
