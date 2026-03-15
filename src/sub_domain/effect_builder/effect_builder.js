@@ -1,6 +1,6 @@
 import {minecraftAsElement, minecraftToHTML} from "../../hover_html/minecraft_html.ts";
 import * as codeDictionary from "../../hover_html/code_dictionary.ts";
-import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip.js";
+import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip.ts";
 import {getHoverTextForAbility} from "../../hover_html/ability_description.ts";
 import {treeDatabase} from "../../database/tree_database.ts";
 

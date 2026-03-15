@@ -2,7 +2,7 @@ import {treeDatabase} from "../../database/tree_database.ts";
 import {type HistoryEvents, HistoryTarget} from "../../change_handling/history.ts";
 import {TreeCanvas, type TreeLocation} from "./ability_tree_canvas.ts";
 import {getHoverTextForAbility} from "../../hover_html/ability_description.ts";
-import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip";
+import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip.ts";
 
 const abilityPointsAtLevel = [
     0,

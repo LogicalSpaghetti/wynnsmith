@@ -1,7 +1,7 @@
 import * as ability_tree from "../ability/ability.js";
 import * as numbers from "../encoding/numbers.ts";
 import {itemDatabase} from "../database/item_database.ts";
-import {addTooltipListener, hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip.js";
+import {hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip.ts";
 import copyTreeAsANSI from "../ability/ansi_tree.js";
 import {decimalToRoman} from "../encoding/numbers.ts";
 import {add, addAll, addAllElem, addElem, dispatch} from "../to_sort/event_listener.js";
@@ -12,8 +12,6 @@ import {getHoverTextForItem} from "../hover_html/item_html.ts";
 
 export function addInputListeners() {
     console.log("adding input Listeners");
-
-    addTooltipListener();
 
     // Input:
     document.querySelectorAll(".input_cluster").forEach((cluster) => addListenersToInputCluster(cluster));

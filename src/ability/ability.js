@@ -3,7 +3,7 @@ import {minecraftToHTML} from "../hover_html/minecraft_html.ts";
 import {decimalToRoman} from "../encoding/numbers.ts";
 import * as codeDictionary from "../hover_html/code_dictionary.ts";
 import {addWarning} from "../smith/warnings.js";
-import {hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip.js";
+import {hideHoverTooltip, renderHoverTooltip} from "../hover_html/tooltip.ts";
 import classEffects from "../js_data/effects.js";
 import updateBuild from "../smith/update_build.js";
 import {getHoverTextForAbility} from "../hover_html/ability_description.ts";

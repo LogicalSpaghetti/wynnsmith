@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Ability Creator</title>
-    <link rel="icon" href="/img/icons/w.png"/>
+    <link rel="icon" href="/assets/img/icons/w.png"/>
     <link rel="stylesheet" href="../style.css"/>
 </head>
 <body>
@@ -98,7 +98,6 @@
 <script type="module">
     import {Editor} from "../src/sub_domain/effect_builder/effect_builder.js";
     import {Tree} from "../src/sub_domain/effect_builder/effect_builder.js";
-    import {addTooltipListener} from "../src/hover_html/tooltip.js";
 
 
     let editor = new Editor(null);
@@ -140,8 +139,6 @@
     function loadNewFromClass(wynn_class) {
         tree = new Tree(wynn_class, editor);
     }
-
-    addTooltipListener();
 </script>
 </body>
 </html>

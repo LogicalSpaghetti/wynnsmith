@@ -1,0 +1,206 @@
+import yayIcon from '../../assets/img/icons/yay.png';
+import wynntreeIcon from '../../assets/img/icons/wynntree.png';
+import wynnpoolIcon from '../../assets/img/icons/wynnpool.ico';
+import wynnabilityIcon from '../../assets/img/icons/wynnability_clear.png';
+
+import {ItemParser} from "../item/item_parser.ts";
+import {AbilityTree} from "../ability/tree/ability_tree.ts";
+import {maxPlayerLevel} from "../to_sort/small_stuff.ts";
+import {initDocumentHistory} from "../change_handling/history.ts";
+import {setPageIcon, setPageName} from "./common.ts";
+import wIcon from "../../assets/img/icons/w.png";
+
+// function loadSite() {
+//     console.log("loading project");
+//     //  read Link
+//     //  parse Build from Link
+//     //  Initialize Input HTML values from Link
+//     addInputListeners();
+//     addSettingsListeners();
+// }
+
+export function showWynnSmith(render: (content: string) => void) {
+    render(getHTML());
+    setPageName("WynnSmith");
+    setPageIcon(wIcon);
+
+    const parser = new ItemParser();
+
+    document.getElementById("item_inputs")?.prepend(parser.itemHolder());
+    document.getElementById("tome_inputs")?.prepend(parser.tomeHolder());
+    document.getElementById("sp_section")?.appendChild(parser.spHolder());
+
+    const tree = new AbilityTree("archer", maxPlayerLevel);
+    document.getElementById("ability_tree")?.appendChild(tree.holder());
+
+    const ledger = initDocumentHistory();
+    ledger.register(parser, tree);
+}
+
+// TODO: should be HTMLElements instead of a string, remove all ids.
+function getHTML() {
+    return `
+<div class="sidenav">
+  <div>
+    <button popovertarget="settings" popovertargetaction="show">
+      <img src="${yayIcon}" alt="settings" class="settings">
+      <b>Settings</b>
+    </button>
+  </div>
+  <div>
+    <hr>
+    <a href="/tree" data-navigo>
+      <img src="${wynntreeIcon}" alt=" ">
+      <b>Wynntree</b>
+    </a>
+    <hr>
+    <a href="https://www.wynnpool.com/" target="_blank">
+      <img src="${wynnpoolIcon}" alt=" ">
+      <b>Wynnpool</b>
+    </a>
+    <a href="https://punscake.github.io/wynnability" target="_blank">
+      <img src="${wynnabilityIcon}" alt=" ">
+      <b>Wynnability</b>
+    </a>
+    <a href="https://wynnmana.github.io/" target="_blank">
+      <img src="${yayIcon}" alt=" ">
+      <b>Wynnmana</b>
+    </a>
+    <br>
+  </div>
+</div>
+<div id="content" style="margin-left: 6ch">
+  <div class="flexCol">
+    <!-- Column -->
+    <section>
+      <div class="m1">
+        <div>AP: <span id="assigned_ap_display">0</span>/<span id="max_ap_display">45</span> AP</div>
+        <div id="ability_tree"></div>
+        <br>
+        <button id="clear_tree">Clear Tree</button>
+        <button id="clear_reds">Clear Errors</button>
+        <br>
+        <button id="ansi_tree" class="copy_button" data-default="Copy ANSI Tree">Copy ANSI Tree</button>
+        <br>
+        <button id="tree_img" class="copy_button" data-default="Copy Tree as Image" hidden>Copy Tree as Image
+        </button>
+      </div>
+    </section>
+    <!-- Column -->
+    <section>
+      <div id="item_inputs" class="inputs_holder">
+        <div id="gif_holder"><img id="miku" src="" alt=""/></div>
+        <label for="level_input">Level:</label>
+        <input type="number" inputmode="numeric"
+               min="1" max="106"
+               id="level_input" class="input level_input hide_number_increment" placeholder="level"
+               value="106"/>
+      </div>
+      <br>
+      <div class="copy_buttons">
+        <button id="copy_short" class="copy_button" data-default="Copy Link">Copy Link</button>
+        <button id="copy_long" class="copy_button" data-default="Share Build">Share Build</button>
+      </div>
+      <br>
+      <div id="sp_section" style="display: flex"></div>
+      <br>
+      <button id="balance_dmg">Balance Str/Dex</button>
+      <br>
+      <br>
+      <div id="aspects_background" style="margin-left: 1ch">
+        <div id="active_aspects">
+        </div>
+        <div id="inactive_aspects">
+        </div>
+      </div>
+      <br>
+      <div id="tome_inputs"></div>
+    </section>
+    <!-- Column -->
+    <section class="m1">
+      <div id="support_display">
+      </div>
+      <br>
+      <button popovertarget="edit_identifications" popovertargetaction="show">Edit Identifications</button>
+      <br>
+      <div id="warnings" class="fire medium-font m1" style="text-wrap: wrap; width: 35ch;">
+        Warnings!
+      </div>
+      <br>
+      <div id="effects_holder" style="width: 24ch">
+        <div style="text-align: center">
+          <label for="effect_toggles">Active Effects:</label>
+        </div>
+        <div id="effect_toggles">
+        </div>
+        <div id="effect_sliders">
+        </div>
+      </div>
+      <br>
+      <br>
+      <div style="background-color: #181818; text-align: center">
+        <b id="equip_order"></b>
+      </div>
+    </section>
+    <!-- Column -->
+    <section>
+      <button popovertarget="compare_section" popovertargetaction="show">Compare Build...</button>
+      <div class="m1">
+        <div id="attack_display">
+          <div class="attack-holder">
+            Input Weapon
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<div popover id="settings">
+  <div>
+    <input id="selvs" type="checkbox">
+    <label for="selvs">Display Damage in Selvs</label>
+  </div>
+  <div>
+    <input id="detailed_damage" type="checkbox">
+    <label for="detailed_damage">Show Detailed Damage</label>
+  </div>
+  <div>
+    <label for="gif_input">Set GIF:</label>
+    <input accept="image/gif" id="gif_input" type="file"/>
+    <br><br>
+    <label for="opacity_slider">GIF Opacity:</label>
+    <input id="opacity_slider" class="slider" type="range" value="15" style="width: 210px"/>
+  </div>
+  <div>
+  </div>
+  <br>
+  <button popovertarget="settings" popovertargetaction="hide">Close Settings</button>
+  <br><br><br><br>
+  <div id="dev_output" class="output font-minecraft"></div>
+</div>
+<div popover id="compare_section">
+  <h1>Compare build to</h1>
+  <div style="display: inline-block;">
+    Compare to Offhand:
+    <br>
+    <select id="offhand_select">
+      <option value="">-none-</option>
+    </select>
+  </div>
+  <div style="display: inline-block;">
+    Compare to link:
+    <br>
+    <input placeholder="paste link here" type="text" id="second_build_link">
+  </div>
+  <br>
+  <br>
+  <button popovertarget="compare_section" popovertargetaction="hide">Close</button>
+</div>
+<div popover id="edit_identifications">
+  <h1>TODO</h1>
+  <br>
+  <br>
+  <button popovertarget="edit_identifications" popovertargetaction="hide">Close</button>
+</div>
+    `;
+}

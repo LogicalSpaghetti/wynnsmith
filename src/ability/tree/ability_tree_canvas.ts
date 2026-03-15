@@ -2,7 +2,7 @@ import connectionsUrl from "../../../assets/img/ability/connections.png";
 import activeUrl from "../../../assets/img/ability/active_connections.png";
 import nodesUrl from "../../../assets/img/ability/nodes.png";
 import {ImageLoader} from "../../database/image_loader.ts";
-import {hideHoverTooltip} from "../../hover_html/tooltip";
+import {hideHoverTooltip} from "../../hover_html/tooltip.ts";
 import {
     AbilityTree,
     type BranchState,

@@ -2,7 +2,7 @@ import {type ItemCategory} from "../item.ts";
 import {itemDatabase} from "../../database/item_database.ts";
 import type {ItemData} from "../item_types.ts";
 import {Powders} from "../powders.ts";
-import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip";
+import {hideHoverTooltip, renderHoverTooltip} from "../../hover_html/tooltip.ts";
 import {type HistoryEvents, HistoryTarget} from "../../change_handling/history.ts";
 import {getHoverTextForItem, snakeToTitle} from "../../hover_html/item_html.ts";
 import {itemSearch} from "./item_search.ts";

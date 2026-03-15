@@ -1,4 +1,6 @@
 import Navigo, {type Match} from 'navigo';
+import {showWynnSmith} from "./pages/wynnsmith.ts";
+import {showItem} from "./pages/item.ts";
 
 let base = '/';
 
@@ -16,27 +18,32 @@ if (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== './') {
     }
 }
 
-const router = new Navigo(base, { hash: false });
+const router = new Navigo(base, {hash: false});
 
 console.log('Navigo base detected as:', base);
 
-function render(content: string): void {
-    const app = document.getElementById('app');
-    if (app) app.innerHTML = content;
-    else console.error('No #app element found');
+// TODO: should be phased out
+function renderAppString(content: string): void {
+    getApp().innerHTML = content;
 }
 
-const showBuilder = () => {
-    render(`
-    <h1>Builder Page</h1>
-    <p>This is the main builder interface.</p>
-    <a href="/item" data-navigo>Go to Item</a> •
-    <a href="/item/advanced" data-navigo>Advanced Item</a>
-  `);
-};
+// TODO: consider exporting this or getApp() instead of passing it into everything
+function replaceAppChildren(...elements: Node[]): void {
+    getApp().replaceChildren(...elements);
+}
 
-const showItem = () => {
-    render(`
+function getApp() {
+    let app = document.getElementById('app');
+    if (!app) {
+        app = document.createElement('div');
+        app.id = 'app';
+        document.body.appendChild(app);
+    }
+    return app;
+}
+
+const items = () => {
+    renderAppString(`
     <h1>Item Page</h1>
     <p>Standard item view.</p>
     <a href="/" data-navigo>Back to Builder</a> •
@@ -45,7 +52,7 @@ const showItem = () => {
 };
 
 const showItemAdvanced = () => {
-    render(`
+    renderAppString(`
     <h1>Advanced Item Settings</h1>
     <p>Extra controls and options here.</p>
     <a href="/item" data-navigo>Back to Item</a> •
@@ -53,43 +60,37 @@ const showItemAdvanced = () => {
   `);
 };
 
-const showDynamicItem = (match: Match | undefined) => {
+const item = (match: Match | undefined) => {
+
     // Safely access the captured :name parameter
-    const itemName = match?.data?.name || 'Unknown';
-
-    // Optional: clean/normalize the name (kebab-case → title case)
-    const displayName = itemName
-        .split(/[-_]/)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ');
-
-    render(`
-    <h1>Item: ${displayName}</h1>
-    <p>This is the dynamic page for <strong>${itemName}</strong>.</p>
-    <p>URL slug: ${itemName}</p>
-    <a href="/item/advanced" data-navigo>Advanced settings</a><br>
-    <a href="/" data-navigo>Back to Builder</a>
-  `);
+    const itemName = match?.data?.name || '';
+    showItem(itemName, replaceAppChildren);
 };
 
 // 404 fallback
 const showNotFound = () => {
-    render(`
+    renderAppString(`
     <h1>404 - Not Found</h1>
     <p>Sorry, that page doesn't exist.</p>
     <a href="/" data-navigo>Go to Builder</a>
   `);
 };
 
+const wynnSmith = () => showWynnSmith(renderAppString);
+
 router
-    .on('/', showBuilder)
-    .on('/item', showItem)
-    .on('/item/:name', showDynamicItem)
+    .on('/', wynnSmith)
+    .on('/item', items)
+    .on('/item/:name', item)
     .on('/item/advanced', showItemAdvanced)
     .notFound(showNotFound);
 
 // Start the router (must call resolve() after defining routes)
 router.resolve();
+
+export function navigateTo(loc: string) {
+    router.navigate(loc);
+}
 
 // Optional: If you dynamically add/remove links or change DOM heavily,
 // call this afterward:

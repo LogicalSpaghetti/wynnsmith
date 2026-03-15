@@ -7,6 +7,7 @@
 - Equation fields
 - Instead of detecting "Morph-", clicking a slot icon should bring up a Wynn-Atlas-style menu which will include a sets section where you can select a set that includes that slot and fill in all of it or deselect specific members.
 - Auto-generate ability tree/item changelogs.
+- Re-add clicking icon to open /item/\<item-name\>
 # Bug-fix:
 
 # Move:
