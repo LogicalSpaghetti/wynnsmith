@@ -1,13 +1,8 @@
-import yayIcon from '../../assets/img/icons/yay.png';
-import wynntreeIcon from '../../assets/img/icons/wynntree.png';
-import wynnpoolIcon from '../../assets/img/icons/wynnpool.ico';
-import wynnabilityIcon from '../../assets/img/icons/wynnability_clear.png';
-
 import {ItemParser} from "../item/item_parser.ts";
 import {AbilityTree} from "../ability/tree/ability_tree.ts";
 import {maxPlayerLevel} from "../to_sort/small_stuff.ts";
 import {initDocumentHistory} from "../change_handling/history.ts";
-import {setPageIcon, setPageName} from "./common.ts";
+import {renderApp, setPageIcon, setPageName} from "./common.ts";
 import wIcon from "../../assets/img/icons/w.png";
 
 // function loadSite() {
@@ -19,8 +14,10 @@ import wIcon from "../../assets/img/icons/w.png";
 //     addSettingsListeners();
 // }
 
-export function showWynnSmith(render: (content: string) => void) {
-    render(getHTML());
+export function showWynnSmith() {
+    const div = document.createElement("div");
+    div.innerHTML = getHTML();
+    renderApp(div);
     setPageName("WynnSmith");
     setPageIcon(wIcon);
 
@@ -40,36 +37,7 @@ export function showWynnSmith(render: (content: string) => void) {
 // TODO: should be HTMLElements instead of a string, remove all ids.
 function getHTML() {
     return `
-<div class="sidenav">
-  <div>
-    <button popovertarget="settings" popovertargetaction="show">
-      <img src="${yayIcon}" alt="settings" class="settings">
-      <b>Settings</b>
-    </button>
-  </div>
-  <div>
-    <hr>
-    <a href="/tree" data-navigo>
-      <img src="${wynntreeIcon}" alt=" ">
-      <b>Wynntree</b>
-    </a>
-    <hr>
-    <a href="https://www.wynnpool.com/" target="_blank">
-      <img src="${wynnpoolIcon}" alt=" ">
-      <b>Wynnpool</b>
-    </a>
-    <a href="https://punscake.github.io/wynnability" target="_blank">
-      <img src="${wynnabilityIcon}" alt=" ">
-      <b>Wynnability</b>
-    </a>
-    <a href="https://wynnmana.github.io/" target="_blank">
-      <img src="${yayIcon}" alt=" ">
-      <b>Wynnmana</b>
-    </a>
-    <br>
-  </div>
-</div>
-<div id="content" style="margin-left: 6ch">
+<div id="content">
   <div class="flexCol">
     <!-- Column -->
     <section>

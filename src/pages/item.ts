@@ -1,10 +1,13 @@
 import {itemDatabase} from "../database/item_database.ts";
 import {getHoverTextForItem} from "../hover_html/item_html.ts";
 import searchIcon from "../../assets/img/icons/glass.png";
-import {setPageIcon} from "./common.ts";
+import {renderUndecoratedApp, setPageIcon} from "./common.ts";
 import {navigateTo} from "../router.ts";
+import type {Match} from "navigo";
 
-export function showItem(itemName: string, render: (...elements: Node[]) => void) {
+export function showItem(match: Match | undefined) {
+    const itemName = match?.data?.name || '';
+
     const item = itemDatabase.getItemByName(itemName);
     if (!item) {
         // TODO: more advanced search input using more than just one param
@@ -26,7 +29,7 @@ export function showItem(itemName: string, render: (...elements: Node[]) => void
     if (item) wikiLink.href =
         "https://wynncraft.wiki.gg/wiki/Special:Search?search=" + item.name;
 
-    render(itemDisplay, wikiLink);
+    renderUndecoratedApp(itemDisplay, wikiLink);
 }
 
 function scaleDisplay(display: HTMLDivElement) {

@@ -1,6 +1,8 @@
-import Navigo, {type Match} from 'navigo';
+import Navigo from 'navigo';
 import {showWynnSmith} from "./pages/wynnsmith.ts";
 import {showItem} from "./pages/item.ts";
+import {showTreeSmith} from "./pages/treesmith.ts";
+import {renderAppString} from "./pages/common.ts";
 
 let base = '/';
 
@@ -22,26 +24,6 @@ const router = new Navigo(base, {hash: false});
 
 console.log('Navigo base detected as:', base);
 
-// TODO: should be phased out
-function renderAppString(content: string): void {
-    getApp().innerHTML = content;
-}
-
-// TODO: consider exporting this or getApp() instead of passing it into everything
-function replaceAppChildren(...elements: Node[]): void {
-    getApp().replaceChildren(...elements);
-}
-
-function getApp() {
-    let app = document.getElementById('app');
-    if (!app) {
-        app = document.createElement('div');
-        app.id = 'app';
-        document.body.appendChild(app);
-    }
-    return app;
-}
-
 const items = () => {
     renderAppString(`
     <h1>Item Page</h1>
@@ -60,13 +42,6 @@ const showItemAdvanced = () => {
   `);
 };
 
-const item = (match: Match | undefined) => {
-
-    // Safely access the captured :name parameter
-    const itemName = match?.data?.name || '';
-    showItem(itemName, replaceAppChildren);
-};
-
 // 404 fallback
 const showNotFound = () => {
     renderAppString(`
@@ -76,12 +51,11 @@ const showNotFound = () => {
   `);
 };
 
-const wynnSmith = () => showWynnSmith(renderAppString);
-
 router
-    .on('/', wynnSmith)
+    .on('/', showWynnSmith)
+    .on("/tree", showTreeSmith)
     .on('/item', items)
-    .on('/item/:name', item)
+    .on('/item/:name', showItem)
     .on('/item/advanced', showItemAdvanced)
     .notFound(showNotFound);
 

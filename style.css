@@ -74,12 +74,13 @@ input[type="checkbox"] {
   transition-property: width;
   transition-duration: 0.15s;
 
-  display: flex;
-  flex-direction: column;
-
   justify-content: space-between;
 
   box-sizing: border-box;
+}
+
+.appWithSidenav {
+  margin-left: 3vw;
 }
 
 .sidenav:hover {
