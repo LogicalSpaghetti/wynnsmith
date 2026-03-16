@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Build Vite site
-        run: npm run build
+        run: npm run build:ionos
 
       - name: Deploy via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.6

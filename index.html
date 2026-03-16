@@ -4,6 +4,15 @@
   <title>WynnSmith</title>
   <link rel="icon" href="/assets/img/icons/w.png"/>
   <meta charset="UTF-8"/>
+  <script>
+      const redirect = window.location.search.match(/[?&]p=([^&]*)/);
+      if (redirect && redirect[1]) {
+          const path = redirect[1].replace(/~and~/g, '&');
+          window.history.replaceState(null, null,
+              window.location.pathname.slice(0, window.location.pathname.lastIndexOf('/') + 1) + path,
+          );
+      }
+  </script>
 </head>
 <body>
 <div id="app"></div>

@@ -1,5 +1,11 @@
-RewriteEngine On
-RewriteBase /gabriel/wynnsmith/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . index.html [L]
+<IfModule mod_rewrite.c>
+
+  RewriteEngine On
+  RewriteBase /gabriel/wynnsmith/
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteRule . /gabriel/wynnsmith/index.html [L]
+
+</IfModule>

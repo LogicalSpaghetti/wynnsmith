@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>WynnSmith</title>
-  <link rel="icon" href="/assets/img/icons/w.png"/>
-  <meta charset="UTF-8"/>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script type="text/javascript">
+      // This script takes the current URL path and converts it into a query string
+      // so the main index.html can read it and tell Navigo where to go.
+      const pathSegmentsToKeep = 2; // Adjust this based on your subdirectory depth
+
+      const l = window.location;
+      l.replace(
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+          l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=' +
+          l.pathname.split('/').slice(1 + pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+          (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+      );
+  </script>
 </head>
 <body>
-<div id="app"></div>
-<script type=module src="/src/main.ts"></script>
 </body>
 </html>
